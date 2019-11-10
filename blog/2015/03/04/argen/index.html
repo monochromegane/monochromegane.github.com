@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width">
+  <meta name="author" content="">
+  
+    <title>Go言語でActiveRecordライクなORMをつくった &middot; THINKING MEGANE</title>
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@monochromegane">
+  <meta property="og:description" content="Goで DataMapperじゃなく、ActiveRecordライクにDB操作したいと思ってつくってみました。
+go/parserとgo/astでソースを解析、個々の構造体ごとにARなコードを生成します。
+argen ActiveRecord** Gen**eratorでargenです。
+&lt;a href=&#34;https://github.com/monochromegane/argen&#34;&gt;monochromegane/argen&lt;/a&gt; クイックスタート テーブルを表す構造体に&#43;ARアノテーションをマークします。
+//&#43;AR type User struct { Name string }  ファイルに対してargenコマンドを実行します。
+$ argen xxx.go  ActiveRecordライクなメソッドが定義された*_gen.goが出力されます。あとはそれを使ってコード書いていくだけです。
+こんな感じで使います。
+db, _ := sql.Open(&quot;sqlite3&quot;, &quot;foo.db&quot;) Use(db) u := User{Name: &quot;test&quot;, Age: 20} u.Save() //// INSERT INTO users (name, age) VALUES (?, ?); [test 20] User{}.Where(&quot;name&quot;, &quot;test&quot;).And(&quot;age&quot;, &quot;&gt;&quot;, 20).Query() //// SELECT users.id, users.name, users.age FROM users WHERE name = ? AND age &gt; ?; [test 20]  アソシエーション 構造体に関連を表すメソッドを定義しておくことでアソシエーション系のメソッドを出力します。">
+  <meta property="og:title" content="Go言語でActiveRecordライクなORMをつくった">
+  <meta property="og:url" content="https://blog.monochromegane.com/blog/2015/03/04/argen/">
+  <meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+  
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Source+Code+Pro' type='text/css'>
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Montserrat' type='text/css'>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css">
+  <link rel="stylesheet" href="/css/text.css">
+  <link rel="stylesheet" href="/css/color.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="/images/apple-touch-icon-57-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="/images/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
+  <link rel="canonical" href="https://blog.monochromegane.com/blog/2015/03/04/argen/">
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="THINKING MEGANE" />
+  
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async>
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: {
+               Macros: {
+                        bm: ["\\boldsymbol{#1}", 1],
+                        argmax: ["\\mathop{\\rm arg\\,max}\\limits"],
+                        argmin: ["\\mathop{\\rm arg\\,min}\\limits"]},
+               extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                   displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+  </script>
+</head>
+
+  <body>
+    <div class="header">
+  <header>
+    <h1 class="logo"><a href="https://blog.monochromegane.com">THINKING MEGANE</a></h1>
+    <nav>
+      <ul class="menu">
+        <li><a href="/self-introduction/">Home</a></li>
+        <li><a href="/post/">Archives</a></li>
+        <li><a href="/diary/">Diary</a></li>
+        <li><a href="http://thinking-megane.blogspot.jp/">Old Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+</div>
+
+    <div class="container">
+      <article>
+  <div class="post">
+    <header>
+      <h1><a href="https://blog.monochromegane.com/blog/2015/03/04/argen/">Go言語でActiveRecordライクなORMをつくった</a></h1>
+      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2015-03-04</div></time>
+    </header>
+    <div class="post-inner">
+      
+
+<p>Goで DataMapperじゃなく、ActiveRecordライクにDB操作したいと思ってつくってみました。</p>
+
+<p><code>go/parser</code>と<code>go/ast</code>でソースを解析、個々の構造体ごとにARなコードを生成します。</p>
+
+<hr />
+
+<h1 id="argen">argen</h1>
+
+<p><strong>A</strong>ctive<strong>R</strong>ecord** Gen**eratorで<code>argen</code>です。</p>
+
+<iframe src="//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fargen" title="monochromegane/argen" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;">&lt;a href="https://github.com/monochromegane/argen"&gt;monochromegane/argen&lt;/a&gt;</iframe>
+
+<h2 id="クイックスタート">クイックスタート</h2>
+
+<p>テーブルを表す構造体に<code>+AR</code>アノテーションをマークします。</p>
+
+<pre><code class="language-go">//+AR
+type User struct {
+	Name string
+}
+</code></pre>
+
+<p>ファイルに対して<code>argen</code>コマンドを実行します。</p>
+
+<pre><code class="language-sh">$ argen xxx.go
+</code></pre>
+
+<p>ActiveRecordライクなメソッドが定義された<code>*_gen.go</code>が出力されます。あとはそれを使ってコード書いていくだけです。</p>
+
+<p>こんな感じで使います。</p>
+
+<pre><code class="language-go">db, _ := sql.Open(&quot;sqlite3&quot;, &quot;foo.db&quot;)
+Use(db)
+
+u := User{Name: &quot;test&quot;, Age: 20}
+u.Save()
+//// INSERT INTO users (name, age) VALUES (?, ?); [test 20]
+
+User{}.Where(&quot;name&quot;, &quot;test&quot;).And(&quot;age&quot;, &quot;&gt;&quot;, 20).Query()
+//// SELECT users.id, users.name, users.age FROM users WHERE name = ? AND age &gt; ?; [test 20]
+</code></pre>
+
+<h2 id="アソシエーション">アソシエーション</h2>
+
+<p>構造体に関連を表すメソッドを定義しておくことでアソシエーション系のメソッドを出力します。</p>
+
+<pre><code class="language-go">func (m User) hasManyPosts() *ar.Association {
+	return nil
+}
+</code></pre>
+
+<p>こんな感じで使います。</p>
+
+<pre><code class="language-go">user, _ := User{}.Create(UserParams{Name: &quot;user1&quot;})
+user.BuildPost(PostParams{Name: &quot;post1&quot;}).Save()
+
+// Get the related records
+user.Posts()
+//// SELECT posts.id, posts.user_id, posts.name FROM posts WHERE user_id = ?; [1]
+
+// Join
+user.JoinsPosts()
+//// SELECT users.id, users.name, users.age FROM users INNER JOIN posts ON posts.user_id = users.id;
+
+</code></pre>
+
+<h2 id="バリデーション">バリデーション</h2>
+
+<p>構造体に検証ルールを表すメソッドを定義しておくことでバリデーション系のメソッドを出力します。</p>
+
+<pre><code class="language-go">func (u User) validatesName() ar.Rule {
+	// Define rule for &quot;name&quot; column
+	return ar.MakeRule().Format().With(&quot;[a-z]&quot;)
+}
+</code></pre>
+
+<p>バリデーションは構造体のSave時に実行されるように組み込まれます。エラーは以下のように扱うことができます。</p>
+
+<pre><code class="language-go">u := User{Name: &quot;invalid name !!1&quot;}
+_, errs := u.IsValid()
+if errs != nil {
+	fmt.Errorf(&quot;%v\n&quot;, errs.Messages)
+	//// map[name:[is invalid]]
+}
+</code></pre>
+
+<p>OnCreateなどの実行トリガー、独自バリデーションにも対応しています。</p>
+
+<h2 id="go-generate">go generate</h2>
+
+<p>Go1.4から導入された<code>go generate</code>を使うことで複数ファイルに対して一括でargenを適用させることができます。</p>
+
+<p>ファイルの先頭に以下を定義。</p>
+
+<pre><code class="language-go">//go:generate argen
+</code></pre>
+
+<p>あとは定義を変更したときに<code>go generate</code>コマンドを実行すればOK。</p>
+
+<hr />
+
+<h4 id="ジェネレーターか">ジェネレーターか〜</h4>
+
+<p>はい。</p>
+
+<p>「設計書からアプリケーションを全て生成します」みたいなものではなくて、最小限の定義に対して定型的なコードを生成してくれるという範囲で扱う分には悪いものではないと思っています。</p>
+
+<p>特にGo言語だと現時点でジェネリクスがサポートされていないため、今回のような任意の構造体に共通のメソッドを持たせつつ、扱える型は個々のものにするといった場合は、構造体の埋込やインターフェースだと呼び出し側の型アサーションが必要になるので、ジェネレーターを利用してしまうのもひとつのやり方かなと思います。</p>
+
+<p>(任意の型に対応するためにリフレクションを使うこともできますが、残念ながら実行速度に影響が出ますし、実行時エラーの可能性がどうしても高くなってしまいます)</p>
+
+<p>このあたり、よりよいやり方についてコメントもらえるとうれしいです。</p>
+
+<hr />
+
+<p><code>argen</code>、まだまだライブラリとしては不足がありますが、よければご利用ください。PRお待ちしております。</p>
+
+<ul>
+<li><a href="https://github.com/monochromegane/argen">monochromegane/argen</a></li>
+</ul>
+
+    </div>
+    <footer class="tag">
+      <i class="fa fa-tags tag-icon"></i>
+      <ul>
+      
+        <li><a class="tag-link" href="/tags/golang">golang</a></li>
+      
+        <li><a class="tag-link" href="/tags/activerecord">activerecord</a></li>
+      
+        <li><a class="tag-link" href="/tags/argen">argen</a></li>
+      
+        <li><a class="tag-link" href="/tags/generate">generate</a></li>
+      
+      </ul>
+      <div class="clear"></div>
+    </footer>
+  </div>
+</article>
+
+      <div class="social-btn">
+  <div>
+    <a href="http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2015/03/04/argen/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="en" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+  <div>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-via="monochromegane">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  </div>
+</div>
+
+    </div>
+    <footer class="footer">
+  <div class="author"></div>
+  <p class="author-name"><a href="https://twitter.com/monochromegane" target="_blank">@monochromegane</a></p>
+  
+    <p>monochromegane (モノクロめがね) と申します。</p>
+  
+    <p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+  
+  <ul class="social">
+    <li><a href="https://twitter.com/monochromegane" target="_blank"><i class="fa fa-twitter"></i></a></li>
+    <li><a href="https://github.com/monochromegane" target="_blank"><i class="fa fa-github"></i></a></li>
+    <li><a href="/index.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
+  </ul>
+  <p class="copyright">
+    <small>&copy;  <span class="">Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>, Designed by <a href="https://twitter.com/keita_kawamoto" target="_blank">&copy;keita_kawamoto</a></span></small>
+  </p>
+</footer>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+    
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-38374674-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+  </body>
+</html>

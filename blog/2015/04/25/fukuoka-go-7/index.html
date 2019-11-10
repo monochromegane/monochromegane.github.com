@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width">
+  <meta name="author" content="">
+  
+    <title>Fukuoka.go#7 ソースコードリーディングvol.1を開催しました &middot; THINKING MEGANE</title>
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@monochromegane">
+  <meta property="og:description" content="今年入ってちょっと休憩していたFukuoka.goなんですが、@nobkzさんがソースコードリーディングやろうという企画を持ちかけてくれたので久々に開催しました。
+ Fukuoka.go#7 ソースコードリーディングの会vol.1  今回は発表はしましたが、会場準備などの裏方だったので参加者としても勉強会を楽しむことができたのが個人的にはうれしかったです。
+発表 ダウンタイム・ゼロを支える技術 in Go Goでアプリをダウンタイムなしで運用するための方法あれこれを発表しました。
+ アプリでがんばるところとインフラでがんばるところのバランスは難しいですね。 ベストなやり方を取れるように検討することは大事だと思います。
+並列とGo @nobkzさんの発表です。
+ Go初学者向けにコードリーティングやりやすくなるようにgoroutineまわりなどを解説してくれました。
+lexer実装について (@keizo_bookman) @keizo_bookmanさんの発表。
+資料まだアップしていないとのこと。goroutineとchannelを使ったきれいなlexer実装のお話でした。
+ソースコードリーディング vol.1 ソースコードリーディングは3〜4人のチームに分かれて Go製のApacheBenchを読みました。
+ rakyll/boom - HTTP(S) load generator, ApacheBench (ab) replacement, written in Go  30分ぐらいでざっと読んでそのあとチームごとにプロダクトの概要や気になった点、よいと思った点などを発表していく流れ。
+ チームで読むことで自分の考えを言葉に出して伝えるので理解が深まる 時間制限があるので全体を把握するため最短で読む方法を模索する なぜそうなっているのかなど有識者の意見を聞ける  などなど。チームで読むというのはとてもおもしろいのでまたやっていきたい。
+大きなプロダクトだと機能や範囲を絞らないと読みきれないと思うのでお題のチョイスは重要。 今回のboomは初回としてはgoroutine扱いながらもコンパクトなプロダクトだったので@nobkzさん良いチョイスだったと思います。
+様子です 雰囲気など感じてもらえれば。
+ Fukuoka.go#7 ソースコードリーディングの会vol.1 - Togetterまとめ  所感 勉強会やコミュニティを続けていくのはひとりでは息切れしてしまうので、今回みたいに別の勉強会とかで知り合った人から企画あげてもらえたのはうれしかったです。 また、今回は集客を積極的にやってくれた仲間もいて、つくづく繋がりなのだなあと思えたFukuoka.goでした。
+またFukuoka.goぼちぼち続けていきます。福岡でGoに興味がある方気軽にご参加ください〜。 ソースコードリーディングだけではなくてLT大会、もくもく会もまたやっていこうと思います。
+ʕ◔ϖ◔ʔ &lt; Go!">
+  <meta property="og:title" content="Fukuoka.go#7 ソースコードリーディングvol.1を開催しました">
+  <meta property="og:url" content="https://blog.monochromegane.com/blog/2015/04/25/fukuoka-go-7/">
+  <meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+  
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Source+Code+Pro' type='text/css'>
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Montserrat' type='text/css'>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css">
+  <link rel="stylesheet" href="/css/text.css">
+  <link rel="stylesheet" href="/css/color.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="/images/apple-touch-icon-57-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="/images/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
+  <link rel="canonical" href="https://blog.monochromegane.com/blog/2015/04/25/fukuoka-go-7/">
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="THINKING MEGANE" />
+  
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async>
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: {
+               Macros: {
+                        bm: ["\\boldsymbol{#1}", 1],
+                        argmax: ["\\mathop{\\rm arg\\,max}\\limits"],
+                        argmin: ["\\mathop{\\rm arg\\,min}\\limits"]},
+               extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                   displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+  </script>
+</head>
+
+  <body>
+    <div class="header">
+  <header>
+    <h1 class="logo"><a href="https://blog.monochromegane.com">THINKING MEGANE</a></h1>
+    <nav>
+      <ul class="menu">
+        <li><a href="/self-introduction/">Home</a></li>
+        <li><a href="/post/">Archives</a></li>
+        <li><a href="/diary/">Diary</a></li>
+        <li><a href="http://thinking-megane.blogspot.jp/">Old Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+</div>
+
+    <div class="container">
+      <article>
+  <div class="post">
+    <header>
+      <h1><a href="https://blog.monochromegane.com/blog/2015/04/25/fukuoka-go-7/">Fukuoka.go#7 ソースコードリーディングvol.1を開催しました</a></h1>
+      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2015-04-25</div></time>
+    </header>
+    <div class="post-inner">
+      
+
+<p>今年入ってちょっと休憩していたFukuoka.goなんですが、<a href="https://twitter.com/nobkz">@nobkz</a>さんがソースコードリーディングやろうという企画を持ちかけてくれたので久々に開催しました。</p>
+
+<ul>
+<li><a href="https://fukuokago.doorkeeper.jp/events/23212">Fukuoka.go#7 ソースコードリーディングの会vol.1</a></li>
+</ul>
+
+<p>今回は発表はしましたが、会場準備などの裏方だったので参加者としても勉強会を楽しむことができたのが個人的にはうれしかったです。</p>
+
+<hr />
+
+<h1 id="発表">発表</h1>
+
+<h2 id="ダウンタイム-ゼロを支える技術-in-go">ダウンタイム・ゼロを支える技術 in Go</h2>
+
+<p>Goでアプリをダウンタイムなしで運用するための方法あれこれを発表しました。</p>
+
+<iframe src="http://www.storyboards.jp/widget/7xay4r" width="640" height="480"></iframe>
+
+<p>アプリでがんばるところとインフラでがんばるところのバランスは難しいですね。
+ベストなやり方を取れるように検討することは大事だと思います。</p>
+
+<h2 id="並列とgo">並列とGo</h2>
+
+<p><a href="https://twitter.com/nobkz">@nobkz</a>さんの発表です。</p>
+
+<iframe src="//slides.com/nobukazuhanada/go/embed" width="640" height="480" scrolling="no" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+
+<p>Go初学者向けにコードリーティングやりやすくなるようにgoroutineまわりなどを解説してくれました。</p>
+
+<h2 id="lexer実装について-keizo-bookman">lexer実装について (@keizo_bookman)</h2>
+
+<p><a href="https://twitter.com/keizo_bookman">@keizo_bookman</a>さんの発表。</p>
+
+<p>資料まだアップしていないとのこと。goroutineとchannelを使ったきれいなlexer実装のお話でした。</p>
+
+<hr />
+
+<h1 id="ソースコードリーディング-vol-1">ソースコードリーディング vol.1</h1>
+
+<p>ソースコードリーディングは3〜4人のチームに分かれて Go製のApacheBenchを読みました。</p>
+
+<ul>
+<li><a href="https://github.com/rakyll/boom">rakyll/boom - HTTP(S) load generator, ApacheBench (ab) replacement, written in Go</a></li>
+</ul>
+
+<p>30分ぐらいでざっと読んでそのあとチームごとにプロダクトの概要や気になった点、よいと思った点などを発表していく流れ。</p>
+
+<ul>
+<li>チームで読むことで自分の考えを言葉に出して伝えるので理解が深まる</li>
+<li>時間制限があるので全体を把握するため最短で読む方法を模索する</li>
+<li>なぜそうなっているのかなど有識者の意見を聞ける</li>
+</ul>
+
+<p>などなど。チームで読むというのはとてもおもしろいのでまたやっていきたい。</p>
+
+<p>大きなプロダクトだと機能や範囲を絞らないと読みきれないと思うのでお題のチョイスは重要。
+今回のboomは初回としてはgoroutine扱いながらもコンパクトなプロダクトだったので<a href="https://twitter.com/nobkz">@nobkz</a>さん良いチョイスだったと思います。</p>
+
+<h2 id="様子です">様子です</h2>
+
+<p>雰囲気など感じてもらえれば。</p>
+
+<ul>
+<li><a href="http://togetter.com/li/812438">Fukuoka.go#7 ソースコードリーディングの会vol.1 - Togetterまとめ</a></li>
+</ul>
+
+<hr />
+
+<h1 id="所感">所感</h1>
+
+<p>勉強会やコミュニティを続けていくのはひとりでは息切れしてしまうので、今回みたいに別の勉強会とかで知り合った人から企画あげてもらえたのはうれしかったです。
+また、今回は集客を積極的にやってくれた仲間もいて、つくづく繋がりなのだなあと思えたFukuoka.goでした。</p>
+
+<p>またFukuoka.goぼちぼち続けていきます。福岡でGoに興味がある方気軽にご参加ください〜。
+ソースコードリーディングだけではなくてLT大会、もくもく会もまたやっていこうと思います。</p>
+
+<p>ʕ◔ϖ◔ʔ &lt; Go!</p>
+
+    </div>
+    <footer class="tag">
+      <i class="fa fa-tags tag-icon"></i>
+      <ul>
+      
+        <li><a class="tag-link" href="/tags/golang">golang</a></li>
+      
+        <li><a class="tag-link" href="/tags/fukuoka.go">fukuoka.go</a></li>
+      
+      </ul>
+      <div class="clear"></div>
+    </footer>
+  </div>
+</article>
+
+      <div class="social-btn">
+  <div>
+    <a href="http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2015/04/25/fukuoka-go-7/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="en" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+  <div>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-via="monochromegane">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  </div>
+</div>
+
+    </div>
+    <footer class="footer">
+  <div class="author"></div>
+  <p class="author-name"><a href="https://twitter.com/monochromegane" target="_blank">@monochromegane</a></p>
+  
+    <p>monochromegane (モノクロめがね) と申します。</p>
+  
+    <p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+  
+  <ul class="social">
+    <li><a href="https://twitter.com/monochromegane" target="_blank"><i class="fa fa-twitter"></i></a></li>
+    <li><a href="https://github.com/monochromegane" target="_blank"><i class="fa fa-github"></i></a></li>
+    <li><a href="/index.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
+  </ul>
+  <p class="copyright">
+    <small>&copy;  <span class="">Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>, Designed by <a href="https://twitter.com/keita_kawamoto" target="_blank">&copy;keita_kawamoto</a></span></small>
+  </p>
+</footer>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+    
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-38374674-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+  </body>
+</html>

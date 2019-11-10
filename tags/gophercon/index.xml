@@ -1,0 +1,1115 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Gophercon on THINKING MEGANE</title>
+    <link>https://blog.monochromegane.com/tags/gophercon/</link>
+    <description>Recent content in Gophercon on THINKING MEGANE</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Sun, 11 Aug 2019 16:57:47 +0900</lastBuildDate>
+    <atom:link href="/tags/gophercon/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>初めて海外カンファレンス登壇するためにやったこと</title>
+      <link>https://blog.monochromegane.com/blog/2019/08/11/toward_the_oversea_conference/</link>
+      <pubDate>Sun, 11 Aug 2019 16:57:47 +0900</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2019/08/11/toward_the_oversea_conference/</guid>
+      <description>
+
+&lt;p&gt;7/24から27にかけてアメリカ、サンディエゴで開催されたGopherCon 2019で人生初となる海外カンファレンスに登壇してきました（発表の様子は&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/08/10/gophercon_2019/&#34;&gt;こちら&lt;/a&gt;にまとめました）。
+GopherConはGo関連で最大級の国際カンファレンスです。
+6年目となる今年は世界中から1,800名のGopherが参加し、200名以上の応募の中から選ばれた36名がスピーカーとして登壇しました。
+その中で、僕は「Optimization for Number of goroutines Using Feedback Control」というタイトルで45分の&lt;a href=&#34;https://www.gophercon.com/agenda/speakers/442434&#34;&gt;チュートリアルセッション&lt;/a&gt;を務めました。&lt;/p&gt;
+
+&lt;p&gt;これまで海外カンファレンス登壇経験はなく、英語にも不慣れであるものの、現在の自分にとって非常に重要な位置付けのイベントであり、1月のCfPから7月の発表に至るまでの長丁場を非常に高い優先度で取り組んできました。
+これらの取り組みについて、自分自身の次の登壇への振り返りとして、何より今後、僕と同じように海外カンファレンス登壇を目指す方にとって何かしら参考になればと思いまとめておきます。&lt;/p&gt;
+
+&lt;h1 id=&#34;採択に向けて&#34;&gt;採択に向けて&lt;/h1&gt;
+
+&lt;h2 id=&#34;投稿のネタを育てておく&#34;&gt;投稿のネタを育てておく&lt;/h2&gt;
+
+&lt;p&gt;まずは話すネタがなければ投稿できません。
+普段の業務やOSS活動で得た生の経験や実績は、頭の中にあるだけではやがて自分にとって当たり前になり輝きを失っていきます。
+そのため、普段から忘れないように登壇ネタとしてメモしておくだけでも有効です。
+ただ、実際には、ブログや国内の勉強会での登壇などを通して、カタチを与えて上げておくと良いと思います。
+このアウトプット作業に暗黙的に含まれる他人に伝えるという制約によって、ただの経験が洗練されてよそゆきの顔になっていくからです。
+つまり、曖昧だったり複雑な部分を解きほぐし自分の理解が深まることで提案や動機付けに対する説得力が生まれます。&lt;/p&gt;
+
+&lt;p&gt;今回の僕のネタは、幸いにもこの機会に恵まれました。
+関連研究も含めるとWSA研究会とGoCon東京の計3回の発表とフィードバックを通して（現在進行形で）育てています。&lt;/p&gt;
+
+&lt;h2 id=&#34;投稿のネタを選ぶ&#34;&gt;投稿のネタを選ぶ&lt;/h2&gt;
+
+&lt;p&gt;どのようなネタであってもぜひ挑戦させてあげてください。
+採択される可能性が限りなく高いネタはあっても絶対に通るネタはないのではないかなと思います。
+なぜならカンファレンスの特徴や査読者のバックグラウンド、他の発表とのバランスなど採択には色々なパラメタも影響するからです。
+なので、僕は&lt;a href=&#34;https://twitter.com/tenntenn&#34;&gt;@tenntenn&lt;/a&gt;さんのこのスタンスで良いと思います。&lt;/p&gt;
+
+&lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;CfPに応募する時の1番の秘訣は自分で諦めないこと。自分って案外自分に厳しいので、このレベルじゃ駄目でしょと決めつけがち。選ぶのは自分じゃないし、落ちてもデメリットないので応募するのが一番得。&lt;/p&gt;&amp;mdash; tenntennʕ ◔ϖ◔ʔ ==Go (@tenntenn) &lt;a href=&#34;https://twitter.com/tenntenn/status/1113254427488509954?ref_src=twsrc%5Etfw&#34;&gt;April 3, 2019&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;提出することで査読者からのフィードバックがもらえることもありますし、カンファレンス登壇に興味があればまずは応募してみましょう&amp;hellip;!&lt;/p&gt;
+
+&lt;p&gt;ただし、発表実現性が著しく低いものは避けましょう。
+発表までに実装や評価は間に合いますか？（採択されたら当日までにやることは他にもたくさんあります）
+プロポーザルを書くコスト、査読するコストは発表実現性が高いものへ。&lt;/p&gt;
+
+&lt;h2 id=&#34;プロポーザルの書き方を学ぶ&#34;&gt;プロポーザルの書き方を学ぶ&lt;/h2&gt;
+
+&lt;p&gt;いかにして提案を査読者にアピールするかは重要であり難しい取り組みです。
+ただし、査読者が求める事項は一般に共通しており、それゆえにベストプラクティスはあります。
+今回、僕は@tenntennさんから教えてもらった以下のサイトに目を通してプロポーザル執筆に臨みました。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://carolynvanslyck.com/blog/2018/12/talk-at-gophercon/&#34;&gt;Submit a Talk to GopherCon!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://medium.com/@fox/how-to-write-a-successful-conference-proposal-4461509d3e32&#34;&gt;How to write a successful conference proposal&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://dave.cheney.net/2017/02/12/how-to-write-a-successful-conference-proposal&#34;&gt;How to write a successful conference proposal (by Dave Cheney)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://russolsen.com/articles/2012/06/21/acing-the-technical-talk-getting-your-proposal-through-the-door.html&#34;&gt;Talking Tech: Getting Your Proposal Through the Door&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.builderscon.io/entry/2017/05/09/090000&#34;&gt;おすすめなカンファレンス用プロポーザルの書き方&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;もちろん対象のカンファレンスの選考基準も目を通します。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;The selection criteria:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Relevance. The talk is relevant to the Go community. GopherCon is not a general software conference, our audience wants to hear about topics that relate to the Go programming language.&lt;/li&gt;
+&lt;li&gt;Clarity. You’ve clearly explained what you are going to talk about.&lt;/li&gt;
+&lt;li&gt;Correctness. You’ve demonstrated knowledge of your topic. You don’t have to be an expert, but you are expected to be speaking from experience.&lt;/li&gt;
+&lt;li&gt;Achievability. You’ve thought about how to present your material in the time available.&lt;/li&gt;
+&lt;li&gt;Impact. The goal of the talk. What new idea, technique, tool, or information will the audience leave your presentation with?&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;僕はこの辺の書き方は論文執筆と同じだなあという感想を持ちました。
+つまり、提案の新規性、有用性、信頼性などをわかりやすい構成で伝える技術です。
+一方で、上で引用したGopherConの選考基準では、「専門家である必要はないが経験から語ることが期待される」と言う文言がありました。
+これは一般論で終わらないことを伝えていると捉えられますが、やったことをそのまま出せばいいというわけでもないはずです。
+つまり、経験から得られたものを一般化したり、潜在的な課題へと結びつけて、より多くの人に何かを持ち帰ってもらえるように思考することが求められます。
+そういう意味ではやはり論文執筆に通じるものを感じます。&lt;/p&gt;
+
+&lt;p&gt;ただ、先の選考基準は「自分で」敷居を上げすぎるなという側面もあるとは思っていて、まずやったことを書く、それから上記を意識しながら少しづつ改善していくことが大切なのだろうと思います。&lt;/p&gt;
+
+&lt;h2 id=&#34;プロポーザルを書く&#34;&gt;プロポーザルを書く&lt;/h2&gt;
+
+&lt;p&gt;プロポーザルの書き方に従い、選んだネタを使ってプロポーザルを書きます。
+英語に慣れていない場合はまず日本語で書くと良いと思います。
+問題をわかりやすく整理して、可読性の高い構成にするのは難しい仕事なので、日本語で作って英語にする方が結果的に時間的・品質的に満足できるからです。&lt;/p&gt;
+
+&lt;p&gt;提案型の場合、汎用的には以下のような流れで文字数制限に応じて分量を調整していけると思います。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;1. 現状（現状における問題の定義。つまり理想状態との差）&lt;/li&gt;
+&lt;li&gt;2. 背景（定義した問題に対する従来のアプローチの整理。それらのアプローチの持つ課題を&amp;rdquo;自分なりに&amp;rdquo;整理）&lt;/li&gt;
+&lt;li&gt;3. 提案（その課題を解決する方法を提案）&lt;/li&gt;
+&lt;li&gt;4. 評価（提案手法の有効性を評価する方法、あれば結果を含める）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;従来ツールによる解決であれば、3はそのツールの紹介に、4は導入事例になります。
+いずれにせよ、このようにしておくと各ステップの検討事項が分離できるので順番に議論すれば後戻りが発生しません。
+つまり査読者の思考の流れを妨げません。
+理想状態を念頭に、解決したい本当の問題と、従来アプローチの制約事項をうまく分離してあげるように考えるのがコツでしょうか。
+これは難しいので投稿ネタを育てる工程で意識しながら繰り返しやっておくと良いと思います。
+なお、論文だと理想状態がなぜ理想なのかの説明も求められるので大変ですが、エンジニア系のカンファレンスだとコンテキストが共有できているのでそこに文字数を割かなくても大丈夫です。
+また、エレベータピッチなどの極端に文字数が少ない場合は、1の理想と2の整理した課題だけを述べて3に繋げています（4は含めない）&lt;/p&gt;
+
+&lt;p&gt;参考までに、僕が今回提出したプロポーザルを下記に置いておきます。
+タイムテーブルのセクションは@tenntennさんの以前のプロポーザルを参考にさせてもらいました。
+査読者目線からも、提案の整合性や発表内容に対する時間配分の妥当性などが分かるのでとても良いセクションだと思います。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/conference-proposals/blob/master/2019-07-24-gophercon-2019.md&#34;&gt;Proposal for GopherCon 2019&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;プロポーザルを英語化する&#34;&gt;プロポーザルを英語化する&lt;/h2&gt;
+
+&lt;p&gt;まず、Google翻訳に放り込みたくなる気持ちをぐっと我慢します。
+Google翻訳の進歩は目覚ましいですが、元となる日本語の文章に曖昧な点があるとどうしても翻訳の精度は下がります。
+また、係り受けの複雑な日本語の文章も、いたずらに長い文章へ翻訳され、文字数あたりの情報量が減ることもあるでしょう。
+査読者の思考を妨げないためには、簡潔で明解な英語文章が必要です。
+そのためには、元の日本語の文章を以下の点でチェックすると良さそうです。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;主語・述語があるか&lt;/li&gt;
+&lt;li&gt;主語・述語がねじれていないか&lt;/li&gt;
+&lt;li&gt;事実か意見かが判断できるか&lt;/li&gt;
+&lt;li&gt;係り受けが適切か（不要な修飾を減らす、修飾順番を整理）&lt;/li&gt;
+&lt;li&gt;文章が複数の主張を含んでいないか（文の分割を検討）&lt;/li&gt;
+&lt;li&gt;接続助詞（〜が、〜て、〜ので）は従属節との関係を曖昧にしていないか（厳密な接続助詞への変更か文を分割）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;校正後の日本語文章に対しては、比較的短く基本的な構文だけで英作文ができるはずです。
+なお、専門用語や言い回しについては、普段から興味のある分野で論文や技術書を英語のものを読んで、レパートリーを増やしておくと良いです（自戒を込めて）。&lt;/p&gt;
+
+&lt;h2 id=&#34;ギリギリの提出を避ける&#34;&gt;ギリギリの提出を避ける&lt;/h2&gt;
+
+&lt;p&gt;提出時期は早ければ早いほど良いでしょう。
+今回、締め切りの5日前に提出しましたが、アーリーフィードバックとして、セッション枠の変更（25分ではなく45分へ）をはじめとする幾つかの提案をもらいました。
+これが締め切り寸前だと、もらえなかったかもしれず、そうすると時間に対するコンテンツ過剰によって発表の実現性が低く採点され、採択されなかった可能性もあります。&lt;/p&gt;
+
+&lt;p&gt;実際、投稿数の遷移について、締め切り3日前が87、前日で130、当日の中間発表で192のように駆け込みで投稿数が一気に増える様が伝えられています。
+査読者数も限界があるため、締め切り前の全員分にアーリーフィードバックを返せないとすると、提出は早いほうがオススメです。&lt;/p&gt;
+
+&lt;p&gt;僕がもらったフィードバックはこのようなものでした。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-txt&#34;&gt;I have some early feedback from the reviewers. The general feeling is this is too much content to cover in a 25 minute keynote slot and may not be generally applicable to the full audience. The recommendation from the reviewers is to revise this proposal as a 45 minute tutorial session
+
+You can edit your proposal at any time before the end of the month. Best of luck!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;英語学習&#34;&gt;英語学習&lt;/h1&gt;
+
+&lt;p&gt;英語によるコミュニケーションは普段からの積み重ねが全てです（はい&amp;hellip;）。
+この章に関しては誇れるものではないので参考までにお読みください。&lt;/p&gt;
+
+&lt;p&gt;僕の場合、発作的に英語をやって身につかずに終わるというのを長年繰り返していました。
+そこで、今回、&lt;a href=&#34;https://www.progrit.co.jp/&#34;&gt;PROGRIT&lt;/a&gt;という英語コーチングサービスを使ってカリキュラムを組んでもらい継続的な学習をサポートしてもらうことにしました。
+結構なお値段（いやほんと）します。
+カリキュラムも画期的な手法というよりは地道にやることで効果が見込める王道のものを組み合わせていて、これを如何に継続してやり抜くかをサポートすることがサービスのコアかなと感じます。
+なので、自分にあった勉強法を見つけて継続してやれている方にとってはあまり意味のないサービスかもしれません。
+とはいえ、前述の英語に対する僕のニーズにはあっていたので今回利用しました。
+結果的に、Versantという英語コミュニケーション能力を図るテストは3ヶ月のカリキュラムを終えて5点上がり（TOEICだと75点UPぐらい？）、やはり継続は力だなと感じています。&lt;/p&gt;
+
+&lt;h2 id=&#34;カリキュラム&#34;&gt;カリキュラム&lt;/h2&gt;
+
+&lt;p&gt;最終的に日々のカリキュラムは以下のように落ち着きました。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;瞬間英作文(60min)&lt;/li&gt;
+&lt;li&gt;単語(30min)&lt;/li&gt;
+&lt;li&gt;シャドーイング(45min)&lt;/li&gt;
+&lt;li&gt;多読(45min)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;登壇と質疑応答、そしてスピーカーディナーで自分の考えを述べられることを目標に進めました。
+英文法についてはなんとか理解しているものの、それらを「使う」ことの準備がほぼできていないことが分かったため、そこを補強するカリキュラムとなっています。
+つまり、英語を使ったコミュニケーションに必要な、文章や単語を通した概念と音声の変換に関する、知覚と瞬発力を鍛えます。&lt;/p&gt;
+
+&lt;p&gt;まず単語は何をやるにも基礎となるのでひたすらボキャブラリを増やします。
+僕はキクタンを使って自分のレベルにあったものから進めました。
+一方で、発表に向けては普段から興味のある分野で論文や技術書を英語のものを読んで、ボキャブラリを増やしておくと良いのだろうなとも思いました。&lt;/p&gt;
+
+&lt;p&gt;次に、概念と文章をつなぐ瞬発力向上のために、瞬間英作文をやりました。
+機械的に翻訳するような平易なものを瞬間で解くのはパズルのようで面白いですが、繰り返すと飽きてくるので覚えた英単語と組み合わせたりして応用するものいいかもしれません。&lt;/p&gt;
+
+&lt;p&gt;逆に、文章を概念につなぐ瞬発力向上には、多読をやりました。
+戻り読みをしないという制約で、なるべく意味を理解しながらなるべく速く読みます（85%ぐらい理解しつつ1分あたり何word読めるかのスコアを伸ばす）。
+音が明確に聞こえたとしても（つまりテキストとして渡されたとしても）それを読んで理解できるスピード以上には意味理解が追いつかないよねという経験を経てこれも頑張るようになりました。
+自分にあったレベルのやつでやらないと途端につまらなくなるので教材選びが大事かも。&lt;/p&gt;
+
+&lt;p&gt;音と文章（単語）をつなぐ知覚向上にはシャドーイングをやりました。
+英語音源をテキストを見ずに少し遅れて聞こえたまま繰り返すという学習法です。
+30秒から60秒ぐらいの音源を1日50回とか繰り返しました&amp;hellip;
+最初は聞こえないし口がついていかないしで「こんなんできるかボケ」と面談で悪態をついてばかりいたのですが、最終的にはこれがヒアリング力の向上につながったと思っています。
+では素直にヒアリング練習で良いのではないかと思えますが、口が回るようになったところが聞こえるようになるという経験を経て、頑張って繰り返すようになりました。
+また、多読と並行することで、こちらでは意味理解よりも知覚に集中できるようになったのも良かったです。
+以前に比べれば耳の解像度が上がったんじゃないかなあとVersantを前後で受けて見て思えます。&lt;/p&gt;
+
+&lt;p&gt;文章（単語）と音をつなぐ発話、発音は今回やっていません。
+最初の面談で、まあ全く通じないというわけではないでしょうということで、上記のものを優先して進めました。
+とはいえ、実際の発表ではやはりもう少しうまく発音できたらなあと思うこともあったので引き続きやっていこうと思います。&lt;/p&gt;
+
+&lt;p&gt;また、オンライン英会話についても（少ししか）やっていません。
+本当は実践が一番なのでしょうが、あまりにも引き出しが少ないと英会話の時間が苦痛になるため、英語学習がだれてきた時のカンフル剤としてたまにやる感じにして基礎を頑張りました。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;毎日3時間を確実に取れたわけではなく、発表前は資料作成の方へ専念したりもしましたが、それなりの時間を投入しながらも全然使いこなせる感じがしないので、英語学習は奥が深いなあと思います。
+それでも続けることで成果は出るので地道にやっていきましょう。&lt;/p&gt;
+
+&lt;h1 id=&#34;発表資料&#34;&gt;発表資料&lt;/h1&gt;
+
+&lt;p&gt;資料は一ヶ月ぐらい前から作り始めました。
+日本語の元となる資料があることだし十分余裕を持って着手したつもりでしたが、もう少し早くに着手しても良かったなというのが終わって見ての感想です。
+理由は母国語に頼らず説明するためには、資料の刷新と英語スクリプトの準備が必要だったからです。
+更には、発表練習についても日本語で行う時よりも何倍も時間をかける必要がありました。
+ですので、国際カンファレンスに臨むにあたっては余裕を持った準備をお勧めします（実際には渡航のための準備ややるべき仕事もありますし）。&lt;/p&gt;
+
+&lt;h2 id=&#34;発表資料-1&#34;&gt;発表資料&lt;/h2&gt;
+
+&lt;p&gt;スライドの構成は、基本的にプロポーザルの内容に沿うことになります。
+先ほどの例であれば、イントロダクション（現状、背景）、提案、評価、まとめの流れが王道でしょうか。&lt;/p&gt;
+
+&lt;p&gt;大きなカンファレンスでの発表資料はイントロダクションを少し工夫すると良いかもしれません。
+なぜなら同じカンファレンスであっても参加者が多い場合は個々のバックグラウンドや問題意識が多様であり、導入部分で揃えておかなければならないからです。
+具体的には、トークの対象となるキーワードや問いなどを簡潔な形で伝えます。
+GopherConでは、キーワードを端的に表す写真とともに、「〜のような経験はないか」のような共感を引く導入が多かったように思えました。
+僕の資料では、少し前提が複雑だったので、最初の立てた問いをいくつかの実験結果を通して変化させていくような導入にして、より詳しい問題意識を共有するような作りにしました。&lt;/p&gt;
+
+&lt;p&gt;また、各所の構成はやや冗長であっても、大枠を示してから詳細に移るのを意識しました。
+これは聴衆が置いてけぼりになることを避けるためです。
+もちろん母国語の資料であっても気をつけるべきところではありますが、残念ながら、英語力が足りない場合、細かなフォローアップがその場その場でできないこともあり、資料の時点でその工夫はしておいた方が良いと思われます。
+簡単な例であれば、例えば解決したい課題が3つあるならば、先に列挙してそれらに番号を振っておくでもいいですし、解決編では先にゴールを述べておくでも良いと思います。
+僕の資料では、簡単なアプローチから出発して少しづつ課題を解決していくようにすることで、比較的複雑な箇所の説明の際に飛躍がないよう気をつけました。&lt;/p&gt;
+
+&lt;p&gt;図で説明できるものは図を用意する方が良いと思います。
+ただし、図に頼って文章を考えなくていいわけではないので、あくまで聴衆の理解を助ける機会をできるだけ増やすという意識で用意します。&lt;/p&gt;
+
+&lt;p&gt;細かい点ですが、ページ番号は必ずスライドテンプレートに組み込んでおきましょう。
+質疑の時のやりとりがスムーズになります。
+また、ページ番号もそうですが、グラフの凡例なども視認できる大きさのフォントにしておくのも大切です（僕のは凡例が小さかった）&lt;/p&gt;
+
+&lt;p&gt;僕の発表資料はこちらです。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://speakerdeck.com/monochromegane/optimization-for-number-of-goroutines-using-feedback-control&#34;&gt;Optimization for Number of goroutines Using Feedback Control&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;発表者ノート-英語スクリプト&#34;&gt;発表者ノート（英語スクリプト）&lt;/h2&gt;
+
+&lt;p&gt;英語に不慣れな場合は、一度、発表者ノート（英語スクリプト）を書き出しておくのをお勧めします。
+発表者ノートを作成する利点は以下の通りです。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;曖昧な箇所や飛躍がある点を潰すことができる&lt;/li&gt;
+&lt;li&gt;原稿段階で英語話者に並行してチェックしてもらえる&lt;/li&gt;
+&lt;li&gt;発表の再現性が高まる（特に時間）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;いずれも伝えるべきことを全て伝えられるようにするために必要なことだと思います。
+そのため、暗記するにしても読み上げるにしても、英語スクリプトは作っておく方が良いでしょう。&lt;/p&gt;
+
+&lt;p&gt;Keynoteであれば発表者ノート機能で手元に写しながら発表に臨むことができます。
+ただし、演台があるか手元にPCが置けるかなどは事前に問い合わせて確認しておきましょう。&lt;/p&gt;
+
+&lt;p&gt;発表原稿では以下を気をつけました。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;章や節の始めに、ここでは何を説明するのかを一言で伝える。&lt;/li&gt;
+&lt;li&gt;章や節の終わりに、ここで伝えたかったことのサマリ、次に何を説明するかを一言入れる。&lt;/li&gt;
+&lt;li&gt;1ページあたりの文章が多いのであればページの分割を検討する（発表時に発表者ノートをスクロールするのは結構大変）&lt;/li&gt;
+&lt;li&gt;平易な文で記述する&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;最後の平易な文については、自分の理解できるレベルの文章でスクリプトを作っておくということです。
+発表時は発表者ノートに釘付けで話すわけにはいかないため、さっと見て、ある程度自分自身で意味がわかる文法や単語で構成していないと、強調する文章なのか判断つかずに読み上げる不自然な感じになってしまいます。
+不慣れな言語でも自分自身が納得して説明できるように書いておきましょう（残念ながらここの段階で急には英語力は伸びません）。&lt;/p&gt;
+
+&lt;p&gt;また、できるだけ英語話者に原稿はチェックしてもらうと良いでしょう。
+結構な分量になるので、知り合いに頼むとかよりもできるだけお金を払って英文校正サービスなどでチェックをすると良いと思います。
+僕の場合は、先ほどのコーチが買って出てくれたのでお願いできました（コーチによるのでこれを期待してPROGRIT申し込まないように）&lt;/p&gt;
+
+&lt;p&gt;僕の英語スクリプトはこちらです。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/08/10/gophercon_2019/&#34;&gt;GopherCon 2019: Optimization for Number of goroutines Using Feedback Control&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;発表練習&#34;&gt;発表練習&lt;/h2&gt;
+
+&lt;p&gt;英語に不慣れな場合、暗記かスクリプトの読み上げになってしまいますが、一本調子だと聴衆はどこで共感するか反応するかの情報量が少なくなり混乱してしまいます。
+その余裕を持つために、英語スクリプトを自分自身で意味がわかる文法や単語で構成することを提案しました。
+それでもまだ目が滑ってしまう場合は、文に区切りを入れるのも良いでしょう。
+区切りは関係詞や節の間で適当な単語数のところで入れました（変なところで区切ると逆に不自然になるので気をつけます）&lt;/p&gt;
+
+&lt;p&gt;僕の発表者ノートはこんな感じになっています。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-txt&#34;&gt;I am developing a fast grep tool / named &amp;quot;the platinum searcher&amp;quot;.
+One day I conducted a measurement / of the optimal number of goroutines / to achieve good performance.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;そして、定型の言い回し（I found that など）なるべく流暢にしたり、強調したいところは少しゆっくり大きく言うような工夫を入れました。&lt;/p&gt;
+
+&lt;p&gt;ただし、これはあくまで、僕の場合のネイティブの発音じゃない状態で文全体を早口で言うよりはこの方が伝わる可能性が高いねとコーチと試行錯誤した結果です。
+つまり「今の」英語力でできるだけ伝えるための工夫であり、本来は継続的な英語の学習によって自然な状態に近づけていくようにすることが大切だと思います。&lt;/p&gt;
+
+&lt;p&gt;あとは、英語話者もしくは読み上げ機能で録音した音源を繰り返し聞き、繰り返し練習します。
+また、良く出てきたり重要な単語は個別に練習しておくと良いでしょう（僕の場合はperformanceやdetermineなど）&lt;/p&gt;
+
+&lt;h2 id=&#34;資料のバックアップ&#34;&gt;資料のバックアップ&lt;/h2&gt;
+
+&lt;p&gt;現地の環境がわからないので、資料は複数の手段でアクセスできるようにしておくべきです。
+GopherConの場合は、持参したPCとプロジェクタとの接続がうまくいかない場合に備えて、USBメモリにファイルをバックアップしておくよう指示がありました。
+僕は発表者ノートが見れない状況を想定して念のため日本でスクリプトを印刷してカバンに忍ばせておきました。
+また現地の発表練習では、代替機がMacとは限らないのでPDFや画像ファイルといったポータブルな形式にしたり、クラウドストレージやSpeakerdeckにアップロードしておいたりスクリプトもクラウドストレージにアップロードしてiPhoneから見れるようにしておいてもいいかもねとコメントもらいました。&lt;/p&gt;
+
+&lt;h1 id=&#34;渡航&#34;&gt;渡航&lt;/h1&gt;
+
+&lt;p&gt;アメリカの場合、パスポートの他にESTAの申請が必要なので忘れないようにしましょう。
+何もなければパスポートは10日間、ESTAは2週間ほどで発行・承認されますが、ギリギリにやると不測の事態に対応できないため、採択されたらすぐ申請ぐらいでいいと思います。
+渡航前は発表練習であまり余裕ないので&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;また、海外渡航に不慣れな人は時差ボケを解消する時間も込みで日程を組むことを忘れないようにしましょう。
+僕は時差-16時間のサンディエゴで発表でしたが、現地時間の前日入り(日本の7/24 夕方発 現地7/24午前着)してしまい、翌日のお昼すぎ(&lt;sup&gt;7&lt;/sup&gt;&amp;frasl;&lt;sub&gt;25&lt;/sub&gt; 日本時間 午前6時)という時差ボケが激しい時間帯に発表になってしまいました。
+@tenntennさんに「なんてやんちゃな日程だ」と言われてしまった&amp;hellip;
+この場合は最低でももう一日前(日本の7/23 夕方発 現地7/23午前着)して、翌日(&lt;sup&gt;7&lt;/sup&gt;&amp;frasl;&lt;sub&gt;24&lt;/sub&gt;)で日中眠らずに現地時間に合わせて当日(&lt;sup&gt;7&lt;/sup&gt;&amp;frasl;&lt;sub&gt;25&lt;/sub&gt;)に合わせるぐらいがいいらしいです。
+時差ボケは自分の発表だけでなく、他の発表を聞くときの集中力にも影響してくるのでできるだけ万全の体制で臨めるようにしたいものです。&lt;/p&gt;
+
+&lt;p&gt;現地の移動はタクシーではなくUberを使いました。
+Uberであれば、アプリから先に行き先を入力し、評価の高いドライバーを選択し、金額を確定しておくことができます。
+Comfort系を選ぶとちょっと高いですがゆったりした車になるので複数名の場合はそちらを選ぶと良いみたいです。
+サンディエゴだと大体10分ほどで来てくれます。
+ドライバの現在地、車種とナンバーが事前に分かっているので、それを探します。
+また、アプリは画面に色がつくので、その画面を振ってドライバに見つけてもらう感じです。
+移動はアプリで現在地が分かるため安心です（そもそも事前に金額確定なので遠回りして稼ぐような動機がない）。
+日本でアプリをインストールし、クレジットカードまで登録しておくと良いでしょう。
+それから、自分のアカウントにきちんと顔写真登録しておく方が良いみたいです（ドライバーさん側への安心感かな？）
+決済は到着後にプッシュ通知が来るのでチップの額を上乗せして終了です。便利便利。&lt;/p&gt;
+
+&lt;h1 id=&#34;発表&#34;&gt;発表&lt;/h1&gt;
+
+&lt;p&gt;あとはこれまでやって来たことを信じて発表するだけです。
+せっかく自分の提案を国際カンファレンスで聞いてもらえる機会なので楽しんでいきましょう。
+会場の雰囲気はとても良く、とても積極的に聞いてくれます。
+なぜならカンファレンスに来ている人は、上手い下手をジャッジしに来てるのではなくて、僕たちの提案を経験をできるだけ聞きたいと言う姿勢で来てくれているからです。
+どうしても緊張する人は、前方の10人だけをターゲットに最初の挨拶を元気に言うことだけ考えましょう。
+あとは練習した通りに体と口が動いてくれます。&lt;/p&gt;
+
+&lt;p&gt;発表後は、おそらく色々なところで質問や感想のために声をかけてもらえます。
+これはスピーカーとしてカンファレンスに参加したときの特典なので是非とも活かしたいところです。
+ですので、余裕があれば想定問答や提案のサマリ、自己紹介などを事前にまとめておくと良いと思います。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>GopherCon 2019で初の海外カンファレンス登壇をしてきました</title>
+      <link>https://blog.monochromegane.com/blog/2019/08/10/gophercon_2019/</link>
+      <pubDate>Sat, 10 Aug 2019 20:52:57 +0900</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2019/08/10/gophercon_2019/</guid>
+      <description>
+
+&lt;p&gt;7/24から27にかけてアメリカ、サンディエゴで開催された&lt;a href=&#34;https://www.gophercon.com/home&#34;&gt;GopherCon 2019&lt;/a&gt;で人生初となる海外カンファレンスに登壇してきました。&lt;/p&gt;
+
+&lt;p&gt;GopherConはGo関連で最大級の国際カンファレンスです。
+6年目となる今年は世界中から1,800名のGopherが参加し、200名以上の応募の中から選ばれた36名がスピーカーとして登壇しました。
+今回のGopherConではPre-Conference Workshopと呼ばれるカンファレンス前日に終日行われるワークショップと、カンファレンス期間中に行われる25分のキーノートセッション、そして45分のチュートリアルセッションがありました。
+その中で、僕は「Optimization for Number of goroutines Using Feedback Control」というタイトルで45分の&lt;a href=&#34;https://www.gophercon.com/agenda/speakers/442434&#34;&gt;チュートリアルセッション&lt;/a&gt;を務めました。&lt;/p&gt;
+
+&lt;h1 id=&#34;動画&#34;&gt;動画&lt;/h1&gt;
+
+&lt;iframe width=&#34;560&#34; height=&#34;315&#34; src=&#34;https://www.youtube.com/embed/O_R7Nwsix1c&#34; frameborder=&#34;0&#34; allow=&#34;accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture&#34; allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;h1 id=&#34;スライド&#34;&gt;スライド&lt;/h1&gt;
+
+&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;aa53e4353d9b4efc9064eefba40e13b7&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
+
+&lt;h1 id=&#34;スピーカーノート&#34;&gt;スピーカーノート&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/07/25/gophercon_2019_kaburaya/&#34;&gt;GopherCon 2019: Optimization for Number of goroutines Using Feedback Control&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;発表内容&#34;&gt;発表内容&lt;/h1&gt;
+
+&lt;p&gt;今回の発表は以前東京で開催されたGo Conference 2018 Autumnで発表した&lt;a href=&#34;https://speakerdeck.com/monochromegane/optimization-of-goroutine-numbers-by-feedback-control&#34;&gt;フィードバック制御によるGoroutine起動数の最適化&lt;/a&gt;を英語化したものです。
+また、今回向けに実際に&lt;a href=&#34;https://github.com/monochromegane/the_platinum_searcher&#34;&gt;The Platinum Searcher&lt;/a&gt;に組み込んで有効性を評価する実験結果を追加しています。&lt;/p&gt;
+
+&lt;p&gt;発表資料については、45分という時間で母国語を使わずにできるだけわかりやすく伝えるため、結果的にほぼ刷新する形となりましたが、母国語の慣れに頼らずとも説明可能なわかりやすい資料になったのではないかと自分では思っています。
+具体的には、まずイントロダクションとバックグラウンドの章を少し手厚くしました。
+今回の手法は、フィードバック制御を用いてgoroutine数を継続的に最適に保つことを目的としています。
+しかしながら、そもそもGo言語の並行処理においては、goroutineのコストの低さとランタイムがgoroutineを効果的に切り替えることから、その必要性はないのではないかと考えることができます。
+そこで、リソース競合や枯渇などの影響も受けてしまう可能性があること、それらを考慮した汎用的な並行設計に対する難しさを、実際にプラチナサーチャーによるパフォーマンスチューニングの例を踏まえながら前提を合わせるようにしました。
+また、手法の説明では、簡単なアプローチから出発して少しづつ課題を解決していくようにすることで、比較的複雑な箇所の説明の際に飛躍がないように気をつけました。&lt;/p&gt;
+
+&lt;p&gt;発表について、普段は資料のみで臨んでもそれなりに話せると自負していますが、初の英語での登壇となるため今回は発表内容のスクリプトを用意して、伝えるべきことを全て伝えられるようにしました。
+また、不慣れな言語でも自分自身が納得して説明できるように、できるだけ平易な文で説明することで、発表資料と同様に曖昧な箇所や飛躍がある点を潰すことができたと思います。&lt;/p&gt;
+
+&lt;p&gt;本番の発表は、4スクリーンある300-400人規模の会場ではありましたが、とても熱心に頷いてくれる方がいたり日本から来たメンバが前に座っていたりして、幸いにも落ち着いて自分のペースで登壇することができたと思います。
+発表では、あまり一本調子にならないように、文の中でも意味や文法上切れる箇所は間をおいたり、定型の言い回し（I found that など）なるべく流暢にしたり、強調したいところは少しゆっくり大きく言うなど、「今の」英語力でできる工夫をしていきました。
+一方で、個別の単語の発音などはまだまだ課題意識があるので、今後、そちらも重点的に取り組んでいきたいと感じました。&lt;/p&gt;
+
+&lt;p&gt;質疑の時間は登壇時間には含まれなかったのですが、終了して台を降りると同時に7人ぐらいに囲まれて質問責めに会い、発表に興味を持ってくれたことをとても嬉しく思いました。
+質問としては、発表内容について理解があっているか確認するものと、実装上の質問などがあり、資料やKaburayaのコードを見ながら説明していきました。
+それでも、今の英語力では、発表内容以外の部分については拙い説明になることも多々あり、これも今後改めて英語をやるモチベーションが高まりました。
+また、発表後もカンファレンス期間中に何度も感想や質問をもらう機会があり、これがとても嬉しかったです。&lt;/p&gt;
+
+&lt;h3 id=&#34;会場と発表の様子&#34;&gt;会場と発表の様子&lt;/h3&gt;
+
+&lt;div class=&#34;parent_iframe&#34; style=&#34;position:relative;width:75%;height:0;padding-top:75%;&#34;&gt;
+  &lt;iframe class=&#34;embed_iframe&#34; src=&#34;https://s.insta360.com/p/28b6fbdd988f775d97328c5179e8061a?e=true&amp;locale=en-us&#34; frameborder=&#34;0&#34; width=&#34;666&#34; height=&#34;413&#34; style=&#34;position:absolute;top:0;left:0;width:100%;height:100%;&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;.&lt;a href=&#34;https://twitter.com/monochromegane?ref_src=twsrc%5Etfw&#34;&gt;@monochromegane&lt;/a&gt; is giving talk about Go&amp;#39;s concurrency mechanism and his proposal to optimize the number of goroutine. &lt;a href=&#34;https://twitter.com/hashtag/gophercon?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#gophercon&lt;/a&gt; &lt;a href=&#34;https://t.co/LXnnx5vQ6D&#34;&gt;pic.twitter.com/LXnnx5vQ6D&lt;/a&gt;&lt;/p&gt;&amp;mdash; Yoshi Yamaguchi 🇯🇵 (@ymotongpoo) &lt;a href=&#34;https://twitter.com/ymotongpoo/status/1154500168181379072?ref_src=twsrc%5Etfw&#34;&gt;July 25, 2019&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;発表に関する反応&#34;&gt;発表に関する反応&lt;/h3&gt;
+
+&lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;Thanks to Yusuke Miyake for speaking to us on the Optimization for Number of goroutines Using Feedback Control! The &lt;a href=&#34;https://twitter.com/hashtag/gophercon?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#gophercon&lt;/a&gt; tutorial sessions are killin&amp;#39; it! &lt;a href=&#34;https://t.co/4I5ihE1wKG&#34;&gt;pic.twitter.com/4I5ihE1wKG&lt;/a&gt;&lt;/p&gt;&amp;mdash; GopherCon (@GopherCon) &lt;a href=&#34;https://twitter.com/GopherCon/status/1154502084634406917?ref_src=twsrc%5Etfw&#34;&gt;July 25, 2019&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;This was a really good talk, &lt;a href=&#34;https://twitter.com/monochromegane?ref_src=twsrc%5Etfw&#34;&gt;@monochromegane&lt;/a&gt; is very smart! Also it was really interesting hearing about the fukuoka Golang community. I need to read slides again. &lt;a href=&#34;https://t.co/bdGZK7p6DX&#34;&gt;https://t.co/bdGZK7p6DX&lt;/a&gt; &lt;a href=&#34;https://t.co/82GKvlFseO&#34;&gt;pic.twitter.com/82GKvlFseO&lt;/a&gt;&lt;/p&gt;&amp;mdash; Jamal Yusuf (@JamalYusuf_) &lt;a href=&#34;https://twitter.com/JamalYusuf_/status/1154587450242502656?ref_src=twsrc%5Etfw&#34;&gt;July 26, 2019&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;&lt;a href=&#34;https://twitter.com/monochromegane?ref_src=twsrc%5Etfw&#34;&gt;@monochromegane&lt;/a&gt; talking about dynamic concurrency scaling with a PID controller and dynamic semaphores. &lt;a href=&#34;https://twitter.com/hashtag/golang?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#golang&lt;/a&gt; &lt;a href=&#34;https://twitter.com/hashtag/gophercon?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#gophercon&lt;/a&gt; &lt;a href=&#34;https://t.co/dufxZNhKEZ&#34;&gt;https://t.co/dufxZNhKEZ&lt;/a&gt; &lt;a href=&#34;https://t.co/5eyRazxg2g&#34;&gt;pic.twitter.com/5eyRazxg2g&lt;/a&gt;&lt;/p&gt;&amp;mdash; Andy Walker (@flowchartsman) &lt;a href=&#34;https://twitter.com/flowchartsman/status/1154503310327439360?ref_src=twsrc%5Etfw&#34;&gt;July 25, 2019&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;Really interesting thoughts on controlling &lt;a href=&#34;https://twitter.com/hashtag/golang?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#golang&lt;/a&gt; concurrency dynamically while a program is running. Thanks to Yusuke Miyake for traveling from Japan to present this at &lt;a href=&#34;https://twitter.com/hashtag/gophercon?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#gophercon&lt;/a&gt;! &lt;a href=&#34;https://t.co/WWfsJo5nNi&#34;&gt;pic.twitter.com/WWfsJo5nNi&lt;/a&gt;&lt;/p&gt;&amp;mdash; Daniel Whitenack (@dwhitena) &lt;a href=&#34;https://twitter.com/dwhitena/status/1154500909713383424?ref_src=twsrc%5Etfw&#34;&gt;July 25, 2019&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;カンファレンス&#34;&gt;カンファレンス&lt;/h1&gt;
+
+&lt;p&gt;会場はカリフォルニア サンディエゴのホテル &lt;a href=&#34;https://www.gophercon.com/page/1388212/hotel&#34;&gt;Marriott Marquis San Diego Marina&lt;/a&gt;でした。
+サンディエゴが比較的温暖な気候であること、ホテルもいわゆるリゾートホテルのような感じであったことも手伝って、期間中はとても快適に過ごせました。&lt;/p&gt;
+
+&lt;p&gt;GopherConのタイムテーブルは朝が早いものの（最初のセッションがAM9:00から）、2-3セッションごとに30-40分の空き時間が設けられており、この時間に登壇者とディスカッションしたり、ポップアップミーティングスペースやスポンサーブースでコミュニティや企業への関係を作ったりすることができました。
+日本でも学術系のシンボジウムだとこういったタイムテーブルは見かけるものの、GopherConではより積極的に関係を作っていこう、そしてそのために運営がその接点を作る機会（場所、時間）やホスピタリティを提供していこうという気概が感じられました。
+また、Welcome Partyが本物の空母の上で開催されたのはめちゃくちゃ驚きました。こういう「楽しんでるぞ」というのが一貫して感じられるのも良かったです。
+実際に #gophercon ハッシュタグを追っていると、たくさんの知見や関係を得たという感想と合わせて一種のバケーションを楽しんだような満足感を持っている方が多かったようです。
+ちょうど、GoCon福岡を2週間前に開催したところであったため、「カンファレンス」をどういう設計で進めるのかという観点はとても勉強になりました。&lt;/p&gt;
+
+&lt;p&gt;トークについては、どれも最新の情報だけでなく、スピーカーの方の実際の経験に基づく興味深く、かつ面白いセッションばかりでとてもためになりました。
+それでも、自分の発表前後の緊張や疲れ、時差ボケなどで万全の状態で全てを聞くことはできなかったのが悔やまれますが、幸い個別のトークについては今後動画も公開されるようです。
+&lt;a href=&#34;https://www.gophercon.com/agenda&#34;&gt;Agenda&lt;/a&gt;を見て興味あるセッションを是非ご覧ください。&lt;/p&gt;
+
+&lt;h1 id=&#34;スピーカーディナー&#34;&gt;スピーカーディナー&lt;/h1&gt;
+
+&lt;p&gt;発表は7/25でしたが、実は7/26の夜にスピーカーディナーなるものが控えていました。
+登壇者ばかりが集う3時間の立食パーティーを英語で乗り切るという、ある意味では登壇よりもプレッシャーのかかるイベントでした。
+それでも、とてもよい機会であるし無駄にはしたくないと、できるだけ話に加わり自分の意見や要望を伝えることができたと思います。
+特に日本や福岡のコミュニティ活動やカンファレンスに何人か興味を持ってもらうことができたのは非常に有意義でした。
+また、ワークショップを担当したエンジニアの方とは日本に戻ってからも連絡を取り合っており、今後何か面白いことが一緒にできるといいなあと考えています。&lt;/p&gt;
+
+&lt;p&gt;とにかくこの3時間は僕の英語に対する心理的な苦手意識を取り除いてくれる絶好の機会となりました。
+同時にやはり英語力の足りなさを痛感したことで、引き続き英語もやっていきたいと強く思えました。&lt;/p&gt;
+
+&lt;h1 id=&#34;おわりに&#34;&gt;おわりに&lt;/h1&gt;
+
+&lt;p&gt;2014年の東京のGoConference 2014 springで発表したのが僕にとって初めての全国区のカンファレンス登壇でした。
+そこから、自分のキャリアや興味範囲が広がっていく中でも、Go言語はずっと相棒として付き合ってくれる言語でしたし、Go言語を中心に色々な付き合いができていると感じています。
+また、ここ数年の研究職としての試行錯誤がなければ今回の発表内容はありませんでした。
+その意味で、今回のGopherCon 2019は現時点の僕の集大成で臨んだカンファレンスとなりました。
+幸いにも、発表に対して興味を持ってもらえたこと、一定の反響があったことを、非常に嬉しく思っています。
+同時に、このような大きな海外のカンファレンスで発表できたことは（2014にGoConで発表した時と同じように）素直に自信につながりました。
+（当日聞いたのですが、スピーカーのうち、ワークショップを行われた約10名の応募枠は別だったとのことで今回は改めて狭き門を抜けることができたんだなあと感じています）&lt;/p&gt;
+
+&lt;p&gt;この登壇に向けてアドバイスや協力をいただいた皆様、本当に感謝いたします。
+このカンファレンスで得た様々な知見や関係、そして至らなかった点は次へ活かし、この契機となったGoコミュニティの活発化に繋がるよう引き続き”楽しみながら“やっていきたいと思います。&lt;/p&gt;
+
+&lt;h3 id=&#34;俺たちが日本代表だ&#34;&gt;俺たちが日本代表だ！&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2019/08/gophercon_japan.jpg&#34; alt=&#34;gophercon_japan&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;LTセッションで登壇した&lt;a href=&#34;https://twitter.com/hajimehoshi&#34;&gt;@hajimehoshi&lt;/a&gt;さんと&lt;a href=&#34;https://twitter.com/hgsgtk&#34;&gt;@hgsgtk&lt;/a&gt;さんと共に。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;そして最後に、Russ Coxと隣に扱われる機会ってそうそうないので記念に&lt;a href=&#34;https://www.gophercon.com/page/1388210/speakers&#34;&gt;スピーカー一覧&lt;/a&gt;のスクショを置いておきます、えへへ。（ただのアルファベット順だけど）&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2019/08/gophercon_russ.jpg&#34; alt=&#34;gophercon_russ&#34; /&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>GopherCon 2019: Optimization for Number of goroutines Using Feedback Control</title>
+      <link>https://blog.monochromegane.com/blog/2019/07/25/gophercon_2019_kaburaya/</link>
+      <pubDate>Thu, 25 Jul 2019 14:00:00 +0900</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2019/07/25/gophercon_2019_kaburaya/</guid>
+      <description>
+
+&lt;p&gt;&lt;strong&gt;The slides and speaker-notes about optimization for the number of goroutines I talked at &lt;a href=&#34;https://www.gophercon.com/agenda/speakers/442434&#34;&gt;GopherCon 2019&lt;/a&gt;.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;aa53e4353d9b4efc9064eefba40e13b7&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;The design for the number of concurrency is important to achieve both speed and stability. To give a good performance without depending on platform and load conditions, it’s desirable for the number to be dynamic and rapidly controlled. In this talk, I will propose an architecture to solve this by utilizing feedback control.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&#34;1-title&#34;&gt;1. Title&lt;/h1&gt;
+
+&lt;p&gt;Good afternoon, everyone.
+Thank you very much for coming today.&lt;/p&gt;
+
+&lt;h1 id=&#34;2-self-introduction&#34;&gt;2. Self-introduction&lt;/h1&gt;
+
+&lt;p&gt;My name is Yusuke MIYAKE.
+My social account is @monochromegane.
+I am a researcher of internet and operation technology, as well as a web developer.&lt;/p&gt;
+
+&lt;h1 id=&#34;3-go-and-i&#34;&gt;3. Go and I&lt;/h1&gt;
+
+&lt;p&gt;Let me introduce the relation between Go and me.
+I am a Japanese gopher who loves writing OSS using Go.
+My popular repositories are here (the_platinum_searcher is a fast grep tool).
+And I am an organizer of the local Go community in Fukuoka, Japan.
+So, we held Go Conference’19 summer in Fukuoka on &lt;sup&gt;7&lt;/sup&gt;&amp;frasl;&lt;sub&gt;13&lt;/sub&gt; which was 2 weeks ago.
+200 gophers in Japan gathered and enjoyed 30 sessions.
+It was a lot of fun!
+This is our conference gopher.
+He has ramen which is a Japanese famous food on his head.
+Isn&amp;rsquo;t he good?&lt;/p&gt;
+
+&lt;h1 id=&#34;4-agenda&#34;&gt;4. Agenda&lt;/h1&gt;
+
+&lt;p&gt;Today I am here to talk to you about optimization for the number of goroutines.
+My talk has 5 parts.
+I’ll start by talking about why there is a need for optimization for the number of goroutines through the introduction and background section.
+After that, I&amp;rsquo;ll introduce my proposal that optimizes the number using feedback control.
+And I will evaluate the efficacy of the method.
+Finally, I will conclude about possible and some issues of the method.&lt;/p&gt;
+
+&lt;h1 id=&#34;5-introduction&#34;&gt;5. Introduction&lt;/h1&gt;
+
+&lt;p&gt;To begin with let’s speak to my experience of performance tuning of my OSS tool.&lt;/p&gt;
+
+&lt;h1 id=&#34;6-how-many-are-the-optimal-number-of-goroutines&#34;&gt;6. How many are the optimal number of goroutines?&lt;/h1&gt;
+
+&lt;p&gt;I am developing a fast grep tool named &amp;ldquo;the platinum searcher&amp;rdquo;.
+One day I conducted a measurement of the optimal number of goroutines to achieve good performance.&lt;/p&gt;
+
+&lt;h1 id=&#34;7-performance-tuning-in-case-of-pt&#34;&gt;7. Performance tuning in case of pt&lt;/h1&gt;
+
+&lt;p&gt;&amp;ldquo;the platinum searcher&amp;rdquo; uses many goroutines to search string matching to pattern from files.
+So, I measured performance while bounding concurrency using a semaphore.
+Here is a result.
+The X-axis represents the number of goroutines.
+It is a log scale.
+The Y-axis represents the speedup of processing time against sequential processing.
+The result shows 8 or 32 goroutines make performance good.
+This is 2 or 8 times more than the number of CPUs.&lt;/p&gt;
+
+&lt;h1 id=&#34;8-performance-tuning-in-case-of-pt&#34;&gt;8. Performance tuning in case of pt&lt;/h1&gt;
+
+&lt;p&gt;However, measurement in different environments showed a different result.
+The result shows 16 goroutines make performance good.
+This is 2 times more than the number of CPUs.
+But I found that more goroutines cause performance degradation.
+In this environment, the real-time virus scan process was running at the same time.
+The process turns system-call of opening file slow and consumes CPU resources.
+As a result, performance is degraded when searching for many files at the same time.&lt;/p&gt;
+
+&lt;h1 id=&#34;9-performance-tuning-in-case-of-pt&#34;&gt;9. Performance tuning in case of pt&lt;/h1&gt;
+
+&lt;p&gt;Besides, there were other results.
+When the real-time virus scan process stops, 4 goroutines made performance good.
+This is half times less than the number of CPUs.
+I don&amp;rsquo;t know how many the optimal number of goroutines are?&lt;/p&gt;
+
+&lt;h1 id=&#34;10-performance-tuning-in-case-of-pt&#34;&gt;10. Performance tuning in case of pt&lt;/h1&gt;
+
+&lt;p&gt;Currently, &amp;ldquo;the platinum searcher&amp;rdquo; is bounding concurrency using the number of CPUs.
+Namely, I am choosing a safer way.
+But it isn&amp;rsquo;t the fastest.&lt;/p&gt;
+
+&lt;h1 id=&#34;11-how-many-are-the-optimal-number-of-goroutines-in-each-case&#34;&gt;11. How many are the optimal number of goroutines in each case?&lt;/h1&gt;
+
+&lt;p&gt;So, that concludes this part of my talk on my experience of performance tuning.
+Achieving both speed and stability, we have to decide optimum number of goroutines through our experiences and continuous tuning.
+And, in most case, the environment on which the program is tuned and the environment on which it will be executed are different.
+Thus, I&amp;rsquo;d like to consider optimization for number of goroutines without depending on environments.&lt;/p&gt;
+
+&lt;h1 id=&#34;12-background&#34;&gt;12. Background&lt;/h1&gt;
+
+&lt;p&gt;In this section, I will organize the issues about design for concurrency.&lt;/p&gt;
+
+&lt;h1 id=&#34;13&#34;&gt;13.&lt;/h1&gt;
+
+&lt;p&gt;I’m going to organize these issues in the following order;
+Let us start with the first, which is the complexity of concurrency.
+Then we come to the next, which is the contribution of Go to solve the complexity.
+We will find an approach to solve the remaining issues, finally.&lt;/p&gt;
+
+&lt;h1 id=&#34;14-concurrency-and-complexity&#34;&gt;14. Concurrency and complexity&lt;/h1&gt;
+
+&lt;p&gt;In this page, I will organize the relation of concurrency and complexity.&lt;/p&gt;
+
+&lt;p&gt;We introduce concurrency to improve performance.
+Concurrency brings our application good performance and complexity.
+Because concurrent processing is often considered as compared to simple serial processing.
+This figure shows the common issues of concurrency.
+We have to consider efficient thread management from a parallelism of view.
+And we have to avoid race conditions and synchronize memory access.
+And we have to design to be scalable.
+Like this, we are dealing with many issues to improve performance.&lt;/p&gt;
+
+&lt;h1 id=&#34;15&#34;&gt;15.&lt;/h1&gt;
+
+&lt;p&gt;Then, I will organize the contribution of Go to solve the complexity.&lt;/p&gt;
+
+&lt;h1 id=&#34;16-concurrency-and-go&#34;&gt;16. Concurrency and Go&lt;/h1&gt;
+
+&lt;p&gt;This is one of the reasons why we are interested in Go.
+&amp;ldquo;Go&amp;rdquo; hides some complexities.
+Because Go has rich features that support concurrency.
+For example, we are freed from managing thread by runtime scheduler of Go.
+And we also can avoid race conditions by using a channel.
+In other words, Go decouples between your code and the complexity of parallelism.&lt;/p&gt;
+
+&lt;h1 id=&#34;17-runtime-scheduler-of-go&#34;&gt;17. Runtime scheduler of Go&lt;/h1&gt;
+
+&lt;p&gt;In this page, I&amp;rsquo;ll explain how Go&amp;rsquo;s runtime hide the complexity.
+This figure shows Go’s scheduler workflow.
+Go’s scheduler has three basic concepts.
+G is goroutine.
+M is an OS thread.
+P is a processor.
+P handles multiplexing some goroutines onto some OS threads.&lt;/p&gt;
+
+&lt;p&gt;So, We can think of Goroutines as application-level threads. 
+OS thread behaves like a worker for goroutine using a run queue.
+What is important is P uses a smart scheduling strategy called a work-stealing algorithm.
+Therefore P efficiently schedules available goroutines onto OS threads.
+As Go&amp;rsquo;s runtime automatically dose these, we don&amp;rsquo;t need to consider the complexity of parallelism.&lt;/p&gt;
+
+&lt;h1 id=&#34;18-new-g&#34;&gt;18. New “g”&lt;/h1&gt;
+
+&lt;p&gt;Besides, lightweight goroutines make Go&amp;rsquo;s scheduler more practical.
+Creating a goroutine is cheap.
+Because a newly created goroutine is allocated only 2kB stack.
+Switching a goroutine is also cheap.
+Because goroutine has only minimal context.
+These points show that many goroutines can run at the same time.
+As this practical runtime gives the illusion of parallelism more than the actual number of CPUs, we don&amp;rsquo;t need to consider the complexity of parallelism.&lt;/p&gt;
+
+&lt;h1 id=&#34;19&#34;&gt;19.&lt;/h1&gt;
+
+&lt;p&gt;Finally, I will organize the remaining issues and find an approach to solve them.&lt;/p&gt;
+
+&lt;h1 id=&#34;20-concurrency-and-application&#34;&gt;20. Concurrency and application&lt;/h1&gt;
+
+&lt;p&gt;Due to Go hides the complexity of parallelism, we can focus on concurrency issues in our application.
+One of them is the design of the number of concurrency.
+The reason is that the number of concurrency affects the performance depending on the characteristics of the application.
+Certainly, the cost of generating and switching goroutines is very cheap.
+On the other hand, when tasks on goroutine use shared resources, the upper limit of shared resources become a bottleneck.
+Therefore, in this case, it is necessary to find the optimal number of concurrency to improve performance.&lt;/p&gt;
+
+&lt;h1 id=&#34;21-concurrency-and-application&#34;&gt;21. Concurrency and application&lt;/h1&gt;
+
+&lt;p&gt;But the design for the number of concurrency is difficult.
+Because the optimal number depends on app, environments and load condition.
+And, in most cases, the environment in which the program is tuned and the environment in which it will be executed is different.
+Thus, I&amp;rsquo;d like to consider optimization for the number of goroutines without depending on environments.
+In order to achieve this, it&amp;rsquo;s desirable for the number of concurrency to be determined dynamically and be controlled rapidly by detection the bottleneck on running program.&lt;/p&gt;
+
+&lt;h1 id=&#34;22-proposal&#34;&gt;22. Proposal&lt;/h1&gt;
+
+&lt;p&gt;In this section, I&amp;rsquo;ll introduce my proposal that optimizes the number of concurrency.&lt;/p&gt;
+
+&lt;h1 id=&#34;23-goal&#34;&gt;23. Goal&lt;/h1&gt;
+
+&lt;p&gt;The proposed method&amp;rsquo;s goal is here.
+The optimal number of concurrency to be determined dynamically and be controlled rapidly.&lt;/p&gt;
+
+&lt;h1 id=&#34;24-basic-idea&#34;&gt;24. Basic idea&lt;/h1&gt;
+
+&lt;p&gt;To begin with let’s speak to the basic idea of the method.
+At first, It increases the number of goroutines to performance target.&lt;/p&gt;
+
+&lt;h1 id=&#34;25-basic-idea&#34;&gt;25. Basic idea&lt;/h1&gt;
+
+&lt;p&gt;After that, it stops increasing the number of goroutines if it meets the performance target.&lt;/p&gt;
+
+&lt;h1 id=&#34;26-basic-idea&#34;&gt;26. Basic idea&lt;/h1&gt;
+
+&lt;p&gt;After a while, it attempts to decrease the number of goroutines.
+If it fails to meet the performance target, it backs to step 1.&lt;/p&gt;
+
+&lt;h1 id=&#34;27-issues-to-solve-for-the-realization&#34;&gt;27. Issues to solve for the realization&lt;/h1&gt;
+
+&lt;p&gt;We have two issues to solve for the realization of the idea.&lt;/p&gt;
+
+&lt;p&gt;First, Selection of performance metrics
+Next, finding how to control rapidly and continuously&lt;/p&gt;
+
+&lt;p&gt;In the following subsections, I try to realize the proposal while solving these problems.&lt;/p&gt;
+
+&lt;h1 id=&#34;28-performance-metrics&#34;&gt;28. Performance metrics&lt;/h1&gt;
+
+&lt;p&gt;In this subsection, I will consider performance metrics that are without depending on application characteristics.&lt;/p&gt;
+
+&lt;h1 id=&#34;29-performance-metrics&#34;&gt;29. Performance metrics&lt;/h1&gt;
+
+&lt;p&gt;In the basic idea subsection, I was assuming that there is a performance target.&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s desirable for the performance target not to depend on resource type whom task use.
+Because different applications have different bottlenecks.
+For example, I/O, Capacity of memory and processing load due to the external process.
+If we find an ideal performance target, it will allow us to use the proposed method in as many applications as possible.&lt;/p&gt;
+
+&lt;p&gt;I think that CPU usage or throughput suits for the purpose.
+Go&amp;rsquo;s scheduler turns blocking tasks into as CPU bound as possible by switching tasks continuously.
+Thus, I adopt the CPU usage of the Go application as the performance target.&lt;/p&gt;
+
+&lt;h1 id=&#34;30-performance-metrics&#34;&gt;30. Performance metrics&lt;/h1&gt;
+
+&lt;p&gt;But the performance upper limit is different for each application.
+In other words, we don&amp;rsquo;t know the actual value of the target.
+Thus, it is calculated on running.&lt;/p&gt;
+
+&lt;p&gt;At first, it sets the target value high.
+It increases the number of goroutines to performance targets.&lt;/p&gt;
+
+&lt;h1 id=&#34;31-performance-metrics&#34;&gt;31. Performance metrics&lt;/h1&gt;
+
+&lt;p&gt;If it doesn&amp;rsquo;t meet the performance target, it regards the point as metrics upper limit.
+After that, it gradually adjusts it to the new upper limit value.&lt;/p&gt;
+
+&lt;p&gt;So, that concludes this part of my talk on performance metrics.
+The summary is the following:
+The proposed method uses CPU usage upper limit as the performance target.
+And the value is calculated on running.&lt;/p&gt;
+
+&lt;h1 id=&#34;32-determining&#34;&gt;32. Determining&lt;/h1&gt;
+
+&lt;p&gt;In this subsection, I will consider how to determine the number of concurrency rapidly, continuously and accurately.&lt;/p&gt;
+
+&lt;h1 id=&#34;33-determine-the-number-of-goroutines&#34;&gt;33. Determine the number of goroutines&lt;/h1&gt;
+
+&lt;p&gt;In the previous subsection, we defined performance metrics and dynamic value.
+Next, we have to consider how to determine the number of goroutines to meet the target value.
+In the basic idea subsection, we increased goroutine one by one
+But it has to determine rapidly, continuously, accurately to adjust the number of goroutines to rapid changes in the actual environment.
+I think that feedback control is a good way to meet these conditions.&lt;/p&gt;
+
+&lt;h1 id=&#34;34-feedback-control&#34;&gt;34. Feedback control&lt;/h1&gt;
+
+&lt;p&gt;In this page, I will explain the basis of feedback control.&lt;/p&gt;
+
+&lt;p&gt;This figure shows the structure of a feedback loop.
+There is a system with input and output.
+The output is sent back and compared to the set-point to calculate a new input.
+The error is a deviation of the output from the set-point.
+The controller calculates how much to increase (or decrease) based on the error.&lt;/p&gt;
+
+&lt;p&gt;Feedback control applies an automatic correction continuously.
+Determining set-point and Identifying suitable input/output is important.
+Instead, Feedback control does not need to know the detail of the system.
+I think that the robustness of feedback control is effective for rapid changes in the actual environment.&lt;/p&gt;
+
+&lt;h1 id=&#34;35-pid-controller-1-2&#34;&gt;35. PID Controller (&lt;sup&gt;1&lt;/sup&gt;&amp;frasl;&lt;sub&gt;2&lt;/sub&gt;)&lt;/h1&gt;
+
+&lt;p&gt;In this page, I will explain a controller used frequently.&lt;/p&gt;
+
+&lt;p&gt;As I mentioned before, the job of controllers is to calculate the value of new input based on the error.
+PID Controller applies a correction rapidly and accurately.
+The controller has three sub-controllers inside.
+The output is a combination of its proportional, integral and derivative subcontrol.&lt;/p&gt;
+
+&lt;p&gt;Now I’d like to look at the strategy of each sub-controller.&lt;/p&gt;
+
+&lt;h1 id=&#34;36-pid-controller-2-2&#34;&gt;36. PID Controller (&lt;sup&gt;2&lt;/sup&gt;&amp;frasl;&lt;sub&gt;2&lt;/sub&gt;)&lt;/h1&gt;
+
+&lt;p&gt;The proportional control output is proportional to the error.
+Namely, a large error will lead to a large adjustment.
+KP is the controller gain.&lt;/p&gt;
+
+&lt;p&gt;The integral control output is proportional to the integral of the error over time.
+The output becomes a cumulative sum of the error if it is a computer implementation.
+KI is the controller gain.
+The I controller deal with the small error that the P controller loses its effectiveness.&lt;/p&gt;
+
+&lt;p&gt;The derivative control output is proportional to the derivative of the error.
+The output becomes the amount that has changed since the previous time step if it is a computer implementation.
+KD is the controller gain.
+The D controller encourages converge using the output.&lt;/p&gt;
+
+&lt;p&gt;So, that concludes this part of my talk on basic of PID controller.
+The controller is intended to take the system closer to a set-point.
+However, the set-point has to be determined beforehand.
+In the proposed method, the value of the set-point is calculated on running.&lt;/p&gt;
+
+&lt;p&gt;Now I’d like to consider the structure of the controller to meet this condition.&lt;/p&gt;
+
+&lt;h1 id=&#34;37-dynamic-target-controller&#34;&gt;37. Dynamic Target Controller&lt;/h1&gt;
+
+&lt;p&gt;This figure shows the structure of the controller of the proposed method.
+This controller has two nested control loops.
+The inner loop is the PID controller which we have learned just before.
+The inner loop&amp;rsquo;s input is current CPU usage and its output is the number of goroutines.
+The inner loop attempts to increase goroutine until CPU usage upper limit which is a set-point.
+However, the value of the set-point needs to be calculated on running.
+The job of the outer loop is to calculate this value.
+The outer loop&amp;rsquo;s input is current CPU usage as same as the inner loop.
+Its output is a new set-point of the inner loop.
+Namely, the inner loop&amp;rsquo;s set-point is changed by the outer loop&amp;rsquo;s output.&lt;/p&gt;
+
+&lt;p&gt;The outer loop behavior has been mentioned at the performance metrics subsection.
+When CPU usage reached the upper limit by many goroutines, the outer loop begins to use its value as a new set-point.
+In the current implementation, the outer loop sets a new set-point when CPU usage changes significantly.
+Because Go&amp;rsquo;s scheduler attempts to consume CPU resources incessantly by switching goroutines.
+Namely, CPU usage stays on the upper limit in most cases.
+Therefore, I figured it would be easier to detect change points in short-term observations than to detect stability in long-term observations.&lt;/p&gt;
+
+&lt;p&gt;(If time remains)
+Indeed the design for the controller is pretty hard.
+The current controller version is 11.
+I published past designs and their evaluation.
+if you have an interest in it, let&amp;rsquo;s conversation about a better way during this conference.&lt;/p&gt;
+
+&lt;p&gt;So, that concludes this talk of my talk on dynamic target controller.
+Now, we should be able to determine the optimal number of goroutines rapidly, continuously, accurately.
+Finally, I’d like to consider how to bound concurrency with the determined number.&lt;/p&gt;
+
+&lt;h1 id=&#34;38-bounding&#34;&gt;38. Bounding&lt;/h1&gt;
+
+&lt;p&gt;In this subsection, I will explain about bounding concurrency dynamically.&lt;/p&gt;
+
+&lt;h1 id=&#34;39-to-bound-concurrency&#34;&gt;39. To bound concurrency&lt;/h1&gt;
+
+&lt;p&gt;This is a Go code that appeared after a long time.
+We often write such code to bound concurrency in Go.
+We usually use the buffered channel as a semaphore.
+In this example, the buffer for the channel is 3.
+Therefore, only three goroutines run at the same time.&lt;/p&gt;
+
+&lt;p&gt;On the other hand, in the proposed method the optimal number of goroutines will be different in every iteration of the feedback loop.
+However, we can&amp;rsquo;t change the buffer size of the channel later.
+Therefore, we need a dynamic semaphore for the method.&lt;/p&gt;
+
+&lt;h1 id=&#34;40-elastic-semaphore&#34;&gt;40. Elastic semaphore&lt;/h1&gt;
+
+&lt;p&gt;This figure shows the elastic semaphore.
+This elastic semaphore provides &amp;ldquo;wait&amp;rdquo; and &amp;ldquo;signal&amp;rdquo; operations as same as a semaphore.
+&amp;ldquo;wait&amp;rdquo; operation decrements the value of the semaphore variable.
+If the new value of the semaphore variable is negative, it is blocked.
+&amp;ldquo;signal&amp;rdquo; operation increments the value of the semaphore variable.
+&amp;ldquo;incrementLimit&amp;rdquo; changes upper of the semaphore variable.
+The value of the limit is determined by the feedback controller in the proposed method.
+This elastic semaphore ensures the atomicity of these operations.&lt;/p&gt;
+
+&lt;p&gt;(If time remains)&lt;/p&gt;
+
+&lt;p&gt;This semaphore is not strict.
+Because it allows that goroutines more than the upper limit run temporarily.
+For example, 10 goroutines are running when the upper limit is 10.
+After that, if the upper limit turns 5, 10 goroutines are still running until they finish their every task.
+Of course, generating new goroutine is blocked.
+Therefore, a long term goroutine like a worker process is not suitable for the elastic semaphore.
+Fortunately, generating goroutine is cheap in Go.
+So, we can generate it each time.&lt;/p&gt;
+
+&lt;h1 id=&#34;41-kaburaya&#34;&gt;41. Kaburaya&lt;/h1&gt;
+
+&lt;p&gt;In this subsection, I will explain kaburaya as the implementation of the proposed method.&lt;/p&gt;
+
+&lt;h1 id=&#34;42-architecture-of-kaburaya&#34;&gt;42. Architecture of kaburaya&lt;/h1&gt;
+
+&lt;p&gt;As I mentioned before, the goal of the proposed method is here.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;d like to determine the number of concurrency dynamically.
+I&amp;rsquo;d like to control the number of concurrency rapidly.&lt;/p&gt;
+
+&lt;p&gt;For the purpose,&lt;/p&gt;
+
+&lt;p&gt;Firstly, we decided to use CPU usage upper limit as performance metrics.
+The value is calculated on running.
+Secondly, we decided to determine the optimal number of goroutine using the metrics.
+The value is determined rapidly, continuously, accurately using feedback control.
+Finally, we decided to bound concurrency using the number.
+The concurrency is bounded using elastic semaphore dynamically.&lt;/p&gt;
+
+&lt;p&gt;I am developing this implementation as OSS named kaburaya.
+The URL is here.&lt;/p&gt;
+
+&lt;p&gt;As a side note, Kaburaya is the name of a Japanese arrow with a whistle.&lt;/p&gt;
+
+&lt;h1 id=&#34;43-monochromegane-kaburaya&#34;&gt;43. monochromegane/kaburaya&lt;/h1&gt;
+
+&lt;p&gt;This code is the usage of kaburaya.
+It is very similar to the code of bounding concurrency with buffered channels.&lt;/p&gt;
+
+&lt;p&gt;&amp;ldquo;NewSem&amp;rdquo; specifies the period for feedback control and creates a new semaphore.
+We can use &amp;ldquo;Wait&amp;rdquo; and &amp;ldquo;Signal&amp;rdquo; like a send or receive of a channel.
+Kaburaya changes the limit of semaphore variables automatically and continuously.
+So, we don&amp;rsquo;t need the &amp;ldquo;incrementLimit&amp;rdquo; operation.
+Lastly, if the tasks finished, we have to stop kaburaya to stop the feedback loop.&lt;/p&gt;
+
+&lt;p&gt;So, that concludes this part of my talk on the proposed method and its implementation.
+I’d like to speak about the evaluation of kaburaya.&lt;/p&gt;
+
+&lt;h1 id=&#34;44-evaluation&#34;&gt;44. Evaluation&lt;/h1&gt;
+
+&lt;p&gt;In this section, I will explain the evaluation of kaburaya.&lt;/p&gt;
+
+&lt;h1 id=&#34;45-evaluation&#34;&gt;45. Evaluation&lt;/h1&gt;
+
+&lt;p&gt;There are 6 patterns of environments.
+I evaluated the efficacy of kaburaya in each environment.
+There are 3 contents.
+They are speedup of processing, CPU usage based on time series, and limit of semaphore on time series.
+I found good and not so good points in each environment accordingly.&lt;/p&gt;
+
+&lt;h1 id=&#34;46-pt-mac-scan&#34;&gt;46. pt_mac-scan&lt;/h1&gt;
+
+&lt;p&gt;At first, I will explain this environment and task.&lt;/p&gt;
+
+&lt;p&gt;In this environment, &amp;ldquo;the platinum searcher&amp;rdquo; runs on Mac with a real-time virus scan.
+The number of CPU is 8 and the memory size is 16GB.
+GOMAXPROCS is set 8.&lt;/p&gt;
+
+&lt;p&gt;The graph represents performance against the number of goroutines.
+The X-axis represents the number of goroutines.
+It is a log scale.
+The Y-axis represents the speedup of processing time against sequential processing.
+The result shows 16 goroutines make performance itself good.
+This task is more degradation of performance due to increased goroutines&lt;/p&gt;
+
+&lt;p&gt;Next, I’d like to take a look at the experiment result of kaburaya.&lt;/p&gt;
+
+&lt;h1 id=&#34;47-pt-mac-scan&#34;&gt;47. pt_mac-scan&lt;/h1&gt;
+
+&lt;p&gt;This is a good pattern.
+Because kaburaya achieved both speed and stability.&lt;/p&gt;
+
+&lt;p&gt;These figures show the results of the evaluation in the environment.
+The number of the left graph which is 11 represents the median value of goroutine number determined by kaburaya.
+As a consequence, kaburaya let processing time 6 times faster than sequential processing.&lt;/p&gt;
+
+&lt;p&gt;There are 3 plots based on time series in the right graph.
+The blue dash line represents the set-point of CPU usage.
+The blue line represents the actual value of CPU usage.
+And the green line represents the number of semaphores determined by kaburaya.&lt;/p&gt;
+
+&lt;p&gt;In this environment and task, Kaburaya found good set points and adjust numbers within the ideal range.
+Kaburaya was able to avoid performance degradation by determining the minimum number of the semaphore to meet the performance metrics.
+As a result, not the best, but it achieved a good speedup.
+Namely, kaburaya achieved both speed and stability.&lt;/p&gt;
+
+&lt;h1 id=&#34;48-task-pt-mac-no-scan&#34;&gt;48. Task: pt_mac-no-scan&lt;/h1&gt;
+
+&lt;p&gt;This is also a good pattern.
+In this environment, I stopped the real-time virus scan process and ran &amp;ldquo;the platinum searcher&amp;rdquo;.&lt;/p&gt;
+
+&lt;p&gt;The result shows 4 goroutines make performance good.
+This task is less degradation of performance due to increased goroutines.&lt;/p&gt;
+
+&lt;h1 id=&#34;49-task-pt-mac-no-scan-good&#34;&gt;49. Task: pt_mac-no-scan (Good)&lt;/h1&gt;
+
+&lt;p&gt;In this environment and task, Kaburaya found good set points and adjust numbers within the ideal range.&lt;/p&gt;
+
+&lt;p&gt;Please pay attention to the blue dash line in the right graph.
+This shows that the feedback controller continued to set a new set-point when CPU usage changed significantly.
+As a result, kaburaya adjusted the number of semaphore within a good range.
+Not the best, but it achieved a good speedup as few concurrency as possible.&lt;/p&gt;
+
+&lt;h1 id=&#34;50-task-pt-mac-no-scan-bad&#34;&gt;50. Task: pt_mac-no-scan (Bad)&lt;/h1&gt;
+
+&lt;p&gt;Unfortunately, there is a bad pattern.
+This is the same as the previous environment.
+But the number of semaphores continued to increase.
+Because kaburaya failed to reset the set point.
+Therefore actual CPU usage was always lower than set-point.&lt;/p&gt;
+
+&lt;p&gt;The cause is the range of change rate is too large.
+It is used as a condition of determining set-point.&lt;/p&gt;
+
+&lt;p&gt;So, I have to adjust the value in order to improve the controller.&lt;/p&gt;
+
+&lt;p&gt;#51. Task: pt_linux&lt;/p&gt;
+
+&lt;p&gt;This is not so bad pattern.&lt;/p&gt;
+
+&lt;p&gt;In this environment, &amp;ldquo;the platinum searcher&amp;rdquo; runs on Linux.
+The number of CPU is 4 and the memory size is 4GB.
+GOMAXPROCS is set 4.&lt;/p&gt;
+
+&lt;p&gt;The result shows 8 or 32 goroutines make performance good.
+This task is less degradation of performance due to increased goroutines.&lt;/p&gt;
+
+&lt;h1 id=&#34;52-task-pt-linux-not-so-bad&#34;&gt;52. Task: pt_linux (Not so bad)&lt;/h1&gt;
+
+&lt;p&gt;The number of the left graph which is 15 represents the median value of goroutine number determined by kaburaya.
+As a consequence, kaburaya let processing time 3.5 times faster than sequential processing.&lt;/p&gt;
+
+&lt;p&gt;In this environment and task, Kaburaya found good set points and adjust numbers within the ideal range.
+However, at the end of the period, the number of semaphores increased due to the failure to reset the set point.&lt;/p&gt;
+
+&lt;p&gt;The cause is the same as before.
+So, I have to adjust the range of change rate.&lt;/p&gt;
+
+&lt;h1 id=&#34;53-task-mem-4096000-10000&#34;&gt;53. Task: mem_4096000_10000&lt;/h1&gt;
+
+&lt;p&gt;Here is another task.
+The task uses the memory of a shared resource.
+In this case, the size is 4MB.
+Many concurrencies will cause starvation of resources.&lt;/p&gt;
+
+&lt;p&gt;The number of CPU is 4 and the memory size is 4GB.
+GOMAXPROCS is set 4.&lt;/p&gt;
+
+&lt;p&gt;Better concurrent is 512.
+This task leads to more degradation of performance (swap out) due to increased goroutines.&lt;/p&gt;
+
+&lt;h1 id=&#34;54-task-mem-4096000-10000-good&#34;&gt;54. Task: mem_4096000_10000 (Good)&lt;/h1&gt;
+
+&lt;p&gt;The number of the left graph which is 63 represents the median value of goroutine number determined by kaburaya.
+As a consequence, kaburaya let processing time 3 times faster than sequential processing.
+So, Kaburaya found good set points and adjust numbers within the ideal range.&lt;/p&gt;
+
+&lt;p&gt;What is important is that it avoided the starvation of resources.
+These results show the good set-point keep an ideal number of semaphore.&lt;/p&gt;
+
+&lt;h1 id=&#34;55-task-mem-40960-1000000&#34;&gt;55. Task: mem_40960_1000000&lt;/h1&gt;
+
+&lt;p&gt;This is also a good pattern.&lt;/p&gt;
+
+&lt;p&gt;I changed memory size to 40kb from 4MB.
+The environment is the same as before.
+Better concurrent are from 4 to 64.&lt;/p&gt;
+
+&lt;h1 id=&#34;56-task-mem-40960-1000000-good&#34;&gt;56. Task: mem_40960_1000000 (Good)&lt;/h1&gt;
+
+&lt;p&gt;The number of the left graph which is 19 represents the median value of goroutine number determined by kaburaya.
+As a consequence, kaburaya let processing time 2.5 times faster than sequential processing.
+So, Kaburaya found good set points and adjust numbers within the ideal range.&lt;/p&gt;
+
+&lt;h1 id=&#34;57-task-mem-409600-100000&#34;&gt;57. Task: mem_409600_100000&lt;/h1&gt;
+
+&lt;p&gt;At last, I will show you an interesting pattern.&lt;/p&gt;
+
+&lt;p&gt;I changed memory size to 400kB.
+The environment is the same as before.&lt;/p&gt;
+
+&lt;p&gt;Although when the number of the semaphore is 16 it seemed performance reached the limit, more goroutines made performance good.
+Perhaps better concurrent will be over 1024.&lt;/p&gt;
+
+&lt;h1 id=&#34;58-task-mem-409600-100000-not-so-good&#34;&gt;58. Task: mem_409600_100000 (Not so good)&lt;/h1&gt;
+
+&lt;p&gt;The number of the left graph which is 29 represents the median value of goroutine number determined by kaburaya.
+As a consequence, kaburaya let processing time 2 times faster than sequential processing.&lt;/p&gt;
+
+&lt;p&gt;The results show kaburaya solved this task with a local solution.
+Certainly, Kaburaya found set points and adjusted the numbers within a range.
+But it didn&amp;rsquo;t reach the upper of performance metrics.&lt;/p&gt;
+
+&lt;p&gt;So, I think that Kaburaya has to explore the set-point aggressively when the set-point is too low.&lt;/p&gt;
+
+&lt;h1 id=&#34;59-experimental-results&#34;&gt;59. Experimental results&lt;/h1&gt;
+
+&lt;p&gt;In this page, I conclude experimental results.&lt;/p&gt;
+
+&lt;p&gt;Kaburaya finds a good set point and adjusts numbers within ideal range by feedback control and elastic semaphore continuously.&lt;/p&gt;
+
+&lt;p&gt;On the other hand, we found some key factors to improve kaburaya.&lt;/p&gt;
+
+&lt;p&gt;The most important is the prediction accuracy of the set point.
+The improvement will avoid that the number of the semaphore is too much or too less.&lt;/p&gt;
+
+&lt;p&gt;And finding optimal parameters is also important.
+Based on my experience, I got good results in most cases when the gain of the feedback controller is from 0.1 to 0.3 and the range of change rate is 0.3.
+However, I think that we have to tune the parameters as necessary.&lt;/p&gt;
+
+&lt;p&gt;I expect that there is a solution in the related researches on feedback control.&lt;/p&gt;
+
+&lt;h1 id=&#34;60-conclusion&#34;&gt;60. Conclusion&lt;/h1&gt;
+
+&lt;p&gt;OK, This is a conclusion.&lt;/p&gt;
+
+&lt;h1 id=&#34;61-conclusion&#34;&gt;61. Conclusion&lt;/h1&gt;
+
+&lt;p&gt;I proposed kaburaya to control the number of goroutines without depending on the platform, runtime, and current load.
+Experimental results show possible and some issues of kaburaya.
+In particular, improvement in detecting performance upper limit of the task is important.
+In the future, I will also consider the application to auto-scaling of cloud computing.&lt;/p&gt;
+
+&lt;h1 id=&#34;62-appendix&#34;&gt;62. Appendix&lt;/h1&gt;
+
+&lt;p&gt;This is the Appendix.&lt;/p&gt;
+
+&lt;h1 id=&#34;63-reference&#34;&gt;63. Reference&lt;/h1&gt;
+
+&lt;p&gt;Here is Reference.
+If you want to learn more about kaburaya, you can jump to the link.
+Sorry, some texts are in Japanese.&lt;/p&gt;
+
+&lt;h1 id=&#34;64-go-gopher&#34;&gt;64. Go gopher&lt;/h1&gt;
+
+&lt;p&gt;The Go gophers in this slide were drawn by Keita Kawamoto.&lt;/p&gt;
+
+&lt;h1 id=&#34;65-thank-you&#34;&gt;65. Thank you!&lt;/h1&gt;
+
+&lt;p&gt;Thank you for listening.
+It was a pleasure being here today.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

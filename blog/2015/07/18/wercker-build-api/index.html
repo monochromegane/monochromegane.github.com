@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width">
+  <meta name="author" content="">
+  
+    <title>werckerのtriggerBuild APIを使ってビルドパイプラインをつくる &middot; THINKING MEGANE</title>
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@monochromegane">
+  <meta property="og:description" content="先日、Hugoに移行した際、ブログ本体のリポジトリとテーマのリポジトリを分けるようにしました。ブログ本体のほうはweckerと連携しておりpushすることでGitHubPagesに公開されるようにしましたが、テーマ側を更新したときも同様のことができるようにAPIを使ってビルドパイプラインっぽいのをつくってみました。
+triggerBuild API werckerが提供するビルドをキックするためのAPIです。
+ Triggering builds with the wercker API API Doc  ここの手順に従い、トークンを取得して利用します。
+curl -H &#39;Content-Type: application/json&#39; \ -H &quot;Authorization: Bearer &lt;token&gt;&quot; \ -X POST -d &#39;{&quot;applicationId&quot;: &quot;&lt;applicationId&gt;&quot;, &quot;branch&quot;:&quot;master&quot;, &quot;message&quot;:&quot;&lt;your custom message&gt;&quot;}&#39; \ https://app.wercker.com/api/v3/builds  のようにして使います。
+applicationIdは、ビルドを実行したいアプリケーションのIDです。 自分の登録しているアプリケーションのURLにIDがついているのでそこで確認できます。
+https://app.wercker.com/#applications/&lt;applicationId&gt;  ビルドパイプライン あとは特定のアプリケーションのビルドから、他のアプリケーションのビルドを呼ぶように設定するだけです。
+wercker.yml 自分の場合、テーマのリポジトリのほうに以下のようなwercker.ymlをおいています。
+box: debian build: steps: - script: name: echo code: | echo &#39;Update theme&#39; deploy: steps: - script: name: install curl code: | apt-get update apt-get -y install curl - script: name: trigger THINKING MEGANE build code: | curl -H &#39;Content-Type: application/json&#39; -H &quot;Authorization: Bearer $WERCKER_TOKEN&quot; -X POST -d &quot;{\&quot;applicationId\&quot;: \&quot;$WERCKER_APP_ID\&quot;, \&quot;branch\&quot;:\&quot;master\&quot;, \&quot;message\&quot;:\&quot;Update theme\&quot;}&quot; https://app.">
+  <meta property="og:title" content="werckerのtriggerBuild APIを使ってビルドパイプラインをつくる">
+  <meta property="og:url" content="https://blog.monochromegane.com/blog/2015/07/18/wercker-build-api/">
+  <meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+  
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Source+Code+Pro' type='text/css'>
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Montserrat' type='text/css'>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css">
+  <link rel="stylesheet" href="/css/text.css">
+  <link rel="stylesheet" href="/css/color.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="/images/apple-touch-icon-57-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="/images/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
+  <link rel="canonical" href="https://blog.monochromegane.com/blog/2015/07/18/wercker-build-api/">
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="THINKING MEGANE" />
+  
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async>
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: {
+               Macros: {
+                        bm: ["\\boldsymbol{#1}", 1],
+                        argmax: ["\\mathop{\\rm arg\\,max}\\limits"],
+                        argmin: ["\\mathop{\\rm arg\\,min}\\limits"]},
+               extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                   displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+  </script>
+</head>
+
+  <body>
+    <div class="header">
+  <header>
+    <h1 class="logo"><a href="https://blog.monochromegane.com">THINKING MEGANE</a></h1>
+    <nav>
+      <ul class="menu">
+        <li><a href="/self-introduction/">Home</a></li>
+        <li><a href="/post/">Archives</a></li>
+        <li><a href="/diary/">Diary</a></li>
+        <li><a href="http://thinking-megane.blogspot.jp/">Old Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+</div>
+
+    <div class="container">
+      <article>
+  <div class="post">
+    <header>
+      <h1><a href="https://blog.monochromegane.com/blog/2015/07/18/wercker-build-api/">werckerのtriggerBuild APIを使ってビルドパイプラインをつくる</a></h1>
+      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2015-07-18</div></time>
+    </header>
+    <div class="post-inner">
+      
+
+<p>先日、Hugoに移行した際、ブログ本体のリポジトリとテーマのリポジトリを分けるようにしました。ブログ本体のほうはweckerと連携しておりpushすることでGitHubPagesに公開されるようにしましたが、テーマ側を更新したときも同様のことができるようにAPIを使ってビルドパイプラインっぽいのをつくってみました。</p>
+
+<h1 id="triggerbuild-api">triggerBuild API</h1>
+
+<p>werckerが提供するビルドをキックするためのAPIです。</p>
+
+<ul>
+<li><a href="http://blog.wercker.com/2015/06/23/Trigger-builds-with-the-api.html">Triggering builds with the wercker API</a></li>
+<li><a href="http://devcenter.wercker.com/api/endpoints/builds.html#trigger-a-build">API Doc</a></li>
+</ul>
+
+<p><a href="http://devcenter.wercker.com/api/getting-started/authentication.html">ここの手順</a>に従い、トークンを取得して利用します。</p>
+
+<pre><code class="language-sh">curl -H 'Content-Type: application/json' \
+     -H &quot;Authorization: Bearer &lt;token&gt;&quot;  \
+     -X POST -d '{&quot;applicationId&quot;: &quot;&lt;applicationId&gt;&quot;, &quot;branch&quot;:&quot;master&quot;, &quot;message&quot;:&quot;&lt;your custom message&gt;&quot;}' \
+     https://app.wercker.com/api/v3/builds
+</code></pre>
+
+<p>のようにして使います。</p>
+
+<p><code>applicationId</code>は、ビルドを実行したいアプリケーションのIDです。
+自分の登録しているアプリケーションのURLにIDがついているのでそこで確認できます。</p>
+
+<pre><code>https://app.wercker.com/#applications/&lt;applicationId&gt;
+</code></pre>
+
+<h1 id="ビルドパイプライン">ビルドパイプライン</h1>
+
+<p>あとは特定のアプリケーションのビルドから、他のアプリケーションのビルドを呼ぶように設定するだけです。</p>
+
+<h2 id="wercker-yml">wercker.yml</h2>
+
+<p>自分の場合、テーマのリポジトリのほうに以下のようなwercker.ymlをおいています。</p>
+
+<pre><code class="language-sh">box: debian
+build:
+  steps:
+    - script:
+        name: echo
+        code: |
+          echo 'Update theme'
+deploy:
+  steps:
+    - script:
+      name: install curl
+      code: |
+        apt-get update
+        apt-get -y install curl
+    - script:
+      name: trigger THINKING MEGANE build
+      code: |
+        curl -H 'Content-Type: application/json' -H &quot;Authorization: Bearer $WERCKER_TOKEN&quot; -X POST -d &quot;{\&quot;applicationId\&quot;: \&quot;$WERCKER_APP_ID\&quot;, \&quot;branch\&quot;:\&quot;master\&quot;, \&quot;message\&quot;:\&quot;Update theme\&quot;}&quot; https://app.wercker.com/api/v3/builds
+</code></pre>
+
+<p>buildのstepはwerckerで必須のようなのでダミーを入れています。</p>
+
+<p>（指定しないと <code>Failed step: setup environment - No 'build' pipeline definition in wercker.yml</code> エラーが出ます）</p>
+
+<h2 id="wercker">wercker</h2>
+
+<p>wercker側では <code>Deploy targets</code> &gt; <code>Custom Deploy</code> を選択し、<code>Auto deploy</code>にチェックを入れておきます。</p>
+
+<p>wercker.ymlで指定した、WERCKER_TOKENとWERCKER_APP_IDもここの <code>Deploy pipeline</code> &gt; <code>Add new variable</code> で追加します。</p>
+
+<p>少なくともWERCKER_TOKENは<code>protected</code>にチェックを入れるのを忘れないようにしましょう。</p>
+
+<h2 id="ビルド">ビルド</h2>
+
+<p>あとは、テーマのリポジトリにpushするとブログのほうで設定したGitHub Pagesへの公開するビルドが実行されます。
+ブログコンテンツ側のビルド設定は、<a href="/blog/2015/07/12/octopress-to-hugo/">前回のエントリ</a>を参考にしてください。</p>
+
+<hr />
+
+<p>ビルド起動がAPIでできるとビルドパイプラインだけでなく、いろいろ応用できそう。
+werckerのAPIは最近充実してきているようなのでいいですね。</p>
+
+    </div>
+    <footer class="tag">
+      <i class="fa fa-tags tag-icon"></i>
+      <ul>
+      
+        <li><a class="tag-link" href="/tags/wercker">wercker</a></li>
+      
+        <li><a class="tag-link" href="/tags/hugo">hugo</a></li>
+      
+      </ul>
+      <div class="clear"></div>
+    </footer>
+  </div>
+</article>
+
+      <div class="social-btn">
+  <div>
+    <a href="http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2015/07/18/wercker-build-api/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="en" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+  <div>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-via="monochromegane">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  </div>
+</div>
+
+    </div>
+    <footer class="footer">
+  <div class="author"></div>
+  <p class="author-name"><a href="https://twitter.com/monochromegane" target="_blank">@monochromegane</a></p>
+  
+    <p>monochromegane (モノクロめがね) と申します。</p>
+  
+    <p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+  
+  <ul class="social">
+    <li><a href="https://twitter.com/monochromegane" target="_blank"><i class="fa fa-twitter"></i></a></li>
+    <li><a href="https://github.com/monochromegane" target="_blank"><i class="fa fa-github"></i></a></li>
+    <li><a href="/index.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
+  </ul>
+  <p class="copyright">
+    <small>&copy;  <span class="">Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>, Designed by <a href="https://twitter.com/keita_kawamoto" target="_blank">&copy;keita_kawamoto</a></span></small>
+  </p>
+</footer>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+    
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-38374674-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+  </body>
+</html>

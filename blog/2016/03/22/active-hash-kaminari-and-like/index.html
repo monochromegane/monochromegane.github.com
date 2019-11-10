@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width">
+  <meta name="author" content="">
+  
+    <title>静的データを扱うActiveHashでページングとライク検索するgem達をつくった &middot; THINKING MEGANE</title>
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@monochromegane">
+  <meta property="og:description" content="静的データをActiveRecord的に扱えて便利なActiveHashですが、ページングとライク検索が必要になったのでgemをつくりました。
+ページングを行えるようにする active_hash-kaminari と、
+monochromegane/active_hash-kaminari ライク検索を行えるようにする active_hash-like です。
+monochromegane/active_hash-like active_hash-kaminari ページングを行いたいActiveHashのクラスにPaginatableモジュールをprependします。
+class Country &lt; ActiveHash::Base prepend ActiveHash::Paginatable ... end  ページングにはKaminariを使っています。モジュールをprependすることにより、検索結果が Kaminari::PaginatableArray でラップされるようになり、ページングが可能になります。
+Country.all.page(1).per(10)  もちろんViewでも使えます。
+&lt;%= paginate @counties %&gt;  active_hash-like gemをインストールすると、ActiveHashでlikeが使えるようになります。
+class Country &lt; ActiveHash::Base; end Country.like(name: &#39;Cana%&#39;)  複数条件のうち、ひとつをlikeで検索する場合はwhere内ActiveHash::Match::Like マッチャーを使います。
+Country.where(name: ActiveHash::Match::Like.new(&#39;Cana%&#39;))  Custom Matcher ActiveHash::Match::Likeはカスタムマッチャーのひとつで、マッチャーは独自でつくることが可能です。
+マッチャーはcallメソッドを持つ必要があります。
+class MyCustomMatcher attr_accessor :pattern def initialize(pattern) self.pattern = pattern end def call(value) # Case ignore matcher value.upcase == pattern.upcase end end Country.">
+  <meta property="og:title" content="静的データを扱うActiveHashでページングとライク検索するgem達をつくった">
+  <meta property="og:url" content="https://blog.monochromegane.com/blog/2016/03/22/active-hash-kaminari-and-like/">
+  <meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+  
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Source+Code+Pro' type='text/css'>
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Montserrat' type='text/css'>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css">
+  <link rel="stylesheet" href="/css/text.css">
+  <link rel="stylesheet" href="/css/color.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="/images/apple-touch-icon-57-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="/images/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
+  <link rel="canonical" href="https://blog.monochromegane.com/blog/2016/03/22/active-hash-kaminari-and-like/">
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="THINKING MEGANE" />
+  
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async>
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: {
+               Macros: {
+                        bm: ["\\boldsymbol{#1}", 1],
+                        argmax: ["\\mathop{\\rm arg\\,max}\\limits"],
+                        argmin: ["\\mathop{\\rm arg\\,min}\\limits"]},
+               extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                   displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+  </script>
+</head>
+
+  <body>
+    <div class="header">
+  <header>
+    <h1 class="logo"><a href="https://blog.monochromegane.com">THINKING MEGANE</a></h1>
+    <nav>
+      <ul class="menu">
+        <li><a href="/self-introduction/">Home</a></li>
+        <li><a href="/post/">Archives</a></li>
+        <li><a href="/diary/">Diary</a></li>
+        <li><a href="http://thinking-megane.blogspot.jp/">Old Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+</div>
+
+    <div class="container">
+      <article>
+  <div class="post">
+    <header>
+      <h1><a href="https://blog.monochromegane.com/blog/2016/03/22/active-hash-kaminari-and-like/">静的データを扱うActiveHashでページングとライク検索するgem達をつくった</a></h1>
+      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2016-03-22</div></time>
+    </header>
+    <div class="post-inner">
+      
+
+<p>静的データをActiveRecord的に扱えて便利な<a href="https://github.com/zilkey/active_hash">ActiveHash</a>ですが、ページングとライク検索が必要になったのでgemをつくりました。</p>
+
+<hr />
+
+<p>ページングを行えるようにする <code>active_hash-kaminari</code> と、</p>
+
+<iframe src="//hatenablog-parts.com/embed?url=https://github.com/monochromegane/active_hash-kaminari" title="monochromegane/active_hash-kaminari" class="embed-card embed-webcard" scrolling="no" frame border="0" style="width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;"><a href="https://github.com/monochromegane/active_hash-kaminari">monochromegane/active_hash-kaminari</a></iframe>
+
+<p>ライク検索を行えるようにする <code>active_hash-like</code> です。</p>
+
+<iframe src="//hatenablog-parts.com/embed?url=https://github.com/monochromegane/active_hash-like" title="monochromegane/active_hash-like" class="embed-card embed-webcard" scrolling="no" frame border="0" style="width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;"><a href="https://github.com/monochromegane/active_hash-like">monochromegane/active_hash-like</a></iframe>
+
+<h1 id="active-hash-kaminari">active_hash-kaminari</h1>
+
+<p>ページングを行いたいActiveHashのクラスに<code>Paginatable</code>モジュールを<code>prepend</code>します。</p>
+
+<pre><code class="language-rb">class Country &lt; ActiveHash::Base
+  prepend ActiveHash::Paginatable
+  ...
+end
+</code></pre>
+
+<p>ページングには<a href="https://github.com/amatsuda/kaminari">Kaminari</a>を使っています。モジュールをprependすることにより、検索結果が <code>Kaminari::PaginatableArray</code> でラップされるようになり、ページングが可能になります。</p>
+
+<pre><code class="language-rb">Country.all.page(1).per(10)
+</code></pre>
+
+<p>もちろんViewでも使えます。</p>
+
+<pre><code class="language-rb">&lt;%= paginate @counties %&gt;
+</code></pre>
+
+<h1 id="active-hash-like">active_hash-like</h1>
+
+<p>gemをインストールすると、ActiveHashで<code>like</code>が使えるようになります。</p>
+
+<pre><code class="language-rb">class Country &lt; ActiveHash::Base; end
+
+Country.like(name: 'Cana%')
+</code></pre>
+
+<p>複数条件のうち、ひとつをlikeで検索する場合はwhere内<code>ActiveHash::Match::Like</code> マッチャーを使います。</p>
+
+<pre><code class="language-rb">Country.where(name: ActiveHash::Match::Like.new('Cana%'))
+</code></pre>
+
+<h2 id="custom-matcher">Custom Matcher</h2>
+
+<p><code>ActiveHash::Match::Like</code>はカスタムマッチャーのひとつで、マッチャーは独自でつくることが可能です。</p>
+
+<p>マッチャーは<code>call</code>メソッドを持つ必要があります。</p>
+
+<pre><code class="language-rb">class MyCustomMatcher
+  attr_accessor :pattern
+
+  def initialize(pattern)
+    self.pattern = pattern
+  end
+
+  def call(value)
+    # Case ignore matcher
+    value.upcase == pattern.upcase
+  end
+end
+
+Country.where(name: MyCustomMatcher.new('pattern'))
+</code></pre>
+
+<p><code>call</code>メソッドを持つ<code>Proc</code>オブジェクトも使うことができます。</p>
+
+<pre><code class="language-rb">Country.where(name: -&gt;(value){value == 'some value'})
+</code></pre>
+
+<h2 id="or-条件">OR 条件</h2>
+
+<p>あいまい検索という括りで<code>OR</code>検索も行うことができるようになります。</p>
+
+<pre><code class="language-rb">Country.where(name: 'Canada', or: {field1: 'foo', field2: 'bar'})
+#=&gt; name = 'Canada' and (field1 = 'foo' or field2 = 'bar')
+</code></pre>
+
+<p>OR条件の対象のカラムが同じ場合（IN相当）はまだ未実装なのでカスタムマッチャーを使ってください。</p>
+
+<pre><code class="language-rb">Country.where(name: -&gt;(val){val == 'Canada' || val == 'US'})
+</code></pre>
+
+<h1 id="まとめ">まとめ</h1>
+
+<p>ActiveHash、静的データを扱うのにとても便利なので、active_hash-kaminariとactive_hash-likeと組み合わせて更に便利に使ってみてはどうでしょうか。</p>
+
+    </div>
+    <footer class="tag">
+      <i class="fa fa-tags tag-icon"></i>
+      <ul>
+      
+        <li><a class="tag-link" href="/tags/ruby">ruby</a></li>
+      
+      </ul>
+      <div class="clear"></div>
+    </footer>
+  </div>
+</article>
+
+      <div class="social-btn">
+  <div>
+    <a href="http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2016/03/22/active-hash-kaminari-and-like/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="en" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+  <div>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-via="monochromegane">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  </div>
+</div>
+
+    </div>
+    <footer class="footer">
+  <div class="author"></div>
+  <p class="author-name"><a href="https://twitter.com/monochromegane" target="_blank">@monochromegane</a></p>
+  
+    <p>monochromegane (モノクロめがね) と申します。</p>
+  
+    <p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+  
+  <ul class="social">
+    <li><a href="https://twitter.com/monochromegane" target="_blank"><i class="fa fa-twitter"></i></a></li>
+    <li><a href="https://github.com/monochromegane" target="_blank"><i class="fa fa-github"></i></a></li>
+    <li><a href="/index.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
+  </ul>
+  <p class="copyright">
+    <small>&copy;  <span class="">Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>, Designed by <a href="https://twitter.com/keita_kawamoto" target="_blank">&copy;keita_kawamoto</a></span></small>
+  </p>
+</footer>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+    
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-38374674-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+  </body>
+</html>

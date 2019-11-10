@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Jenkins on THINKING MEGANE</title>
+    <link>https://blog.monochromegane.com/tags/jenkins/</link>
+    <description>Recent content in Jenkins on THINKING MEGANE</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Tue, 11 Nov 2014 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/tags/jenkins/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Jenkinsのジョブ定義でGitHub AccessTokenを隠す</title>
+      <link>https://blog.monochromegane.com/blog/2014/11/11/jenkins-mask-access-token/</link>
+      <pubDate>Tue, 11 Nov 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2014/11/11/jenkins-mask-access-token/</guid>
+      <description>
+
+&lt;p&gt;Jenkinsのジョブ定義にGitHubのAccessTokenを直接書きたくないときに使えるプラグインがあったのでメモしておきます。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://wiki.jenkins-ci.org/display/JENKINS/Mask+Passwords+Plugin&#34;&gt;Mask Passwords Plugin&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;使い方&#34;&gt;使い方&lt;/h2&gt;
+
+&lt;p&gt;プラグインをインストールすると、各ジョブ設定の&lt;code&gt;ビルド環境&lt;/code&gt;に&lt;code&gt;Mask passwords (and enable global passwords)&lt;/code&gt;という項目が追加されます。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;Name&lt;/code&gt;と&lt;code&gt;Password&lt;/code&gt;の組み合わせを追加すると、ビルドスクリプトのなかで&lt;code&gt;${Name}&lt;/code&gt;として利用することができます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2014/11/jenkins-mask-access-token.png&#34; alt=&#34;jenkins-mask-access-token&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;accesstokenを使う&#34;&gt;AccessTokenを使う&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2014/11/09/jenkins-github-commit-status/&#34;&gt;前回のエントリ&lt;/a&gt;の例だと
+&lt;code&gt;access_token&lt;/code&gt;という名前でトークンを保存して、シェル内で以下のように使えます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;curl -X POST -H &amp;quot;Authorization: token ${access_token}&amp;quot; \
+  https://api.github.com/repos/:owner/:repo/statuses/${revision} -d &amp;quot;{ \
+  \&amp;quot;state\&amp;quot;: \&amp;quot;${state}\&amp;quot;, \
+  \&amp;quot;target_url\&amp;quot;: \&amp;quot;${target_url}\&amp;quot;, \
+  \&amp;quot;description\&amp;quot;: \&amp;quot;${description}\&amp;quot; \
+}&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;実行結果もマスキングされるので安心です。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;+ curl -X POST -H &#39;Authorization: token ********&#39; https://api.github.com/repos/:owner/:repo/statuses/revision -d ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;その他、&lt;code&gt;Mask Passwords Plugin&lt;/code&gt;は、ジョブごとのパスワード設定だけではなく、グローバルで使えるパスワードやマスキング対象を設定できるみたいです。
+プラグインだと設定にパスワードフィールドが用意されていますが、自作のジョブでマスキングしたいときは使えるプラグインだと思います ╭( ･ㅂ･)و ̑̑ ｸﾞｯ !&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>すべてが╭( ･ㅂ･)و ̑̑ ｸﾞｯ ! になる - Jenkinsビルドパイプライン結果をプルリクエストに表示する</title>
+      <link>https://blog.monochromegane.com/blog/2014/11/09/jenkins-github-commit-status/</link>
+      <pubDate>Sun, 09 Nov 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2014/11/09/jenkins-github-commit-status/</guid>
+      <description>
+
+&lt;p&gt;Jenkinsのジョブ結果をプルリクエストに表示するときは&lt;a href=&#34;https://wiki.jenkins-ci.org/display/JENKINS/GitHub+pull+request+builder+plugin&#34;&gt;GitHub pull request builder plugin&lt;/a&gt;を使ってますが、単体のジョブでしか利用できなかったので、複数ジョブ（ビルドパイプライン構成）のときに結果を表示する方法をまとめておきます。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;ビルドパイプラインの構成&#34;&gt;ビルドパイプラインの構成&lt;/h1&gt;
+
+&lt;p&gt;今回のビルドパイプラインはこんな感じを想定しています。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2014/11/jenkins-build-pipeline.png&#34; alt=&#34;jenkins-build-pipeline&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;プルリクエストへの更新やコメントをトリガーにジョブが起動し、単体テスト、回帰テストを実行します。
+あわせて、実行中、失敗、成功の状態がプルリクエストに表示されます。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;成功したらプルリクエストに ╭( ･ㅂ･)و ̑̑ ｸﾞｯ ! って出ます。ｸﾞｯ ! って。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;これを満たす以下のジョブをつくっていきます。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;ジョブの結果をプルリクエストに表示する&lt;/li&gt;
+&lt;li&gt;複数のジョブをビルドパイプラインとして実行する&lt;/li&gt;
+&lt;li&gt;GitHub pull request builder plugin をトリガーとして利用する&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;1-ジョブの結果をプルリクエストに表示する&#34;&gt;1. ジョブの結果をプルリクエストに表示する&lt;/h1&gt;
+
+&lt;p&gt;ジョブの結果をプルリクエストに表示するには&lt;a href=&#34;https://developer.github.com/v3/repos/statuses/#create-a-status&#34;&gt;コミットのステータスを操作するAPI&lt;/a&gt;を使います。&lt;/p&gt;
+
+&lt;p&gt;このAPIは、コミットの状態や表示するメッセージ、URLをパラメータとして渡すことができるので、これをラップするようなJenkinsのジョブをつくって他のジョブから呼べるようにしておきます。&lt;/p&gt;
+
+&lt;h2 id=&#34;設定&#34;&gt;設定&lt;/h2&gt;
+
+&lt;p&gt;ここのポイントは&lt;code&gt;ビルドのパラメータ化&lt;/code&gt;を使って、ジョブがパラメタを受け取れるようにしておくことです。
+これによりジョブの汎用性が高まります。&lt;/p&gt;
+
+&lt;h3 id=&#34;プロジェクト名&#34;&gt;プロジェクト名&lt;/h3&gt;
+
+&lt;p&gt;change-github-commit-status&lt;/p&gt;
+
+&lt;h3 id=&#34;ビルドのパラメータ化&#34;&gt;ビルドのパラメータ化&lt;/h3&gt;
+
+&lt;h4 id=&#34;revision&#34;&gt;revision&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;テキスト&lt;/code&gt;として追加。対象となるコミット番号を指定します。&lt;/p&gt;
+
+&lt;h4 id=&#34;target-url&#34;&gt;target_url&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;テキスト&lt;/code&gt;として追加。ジョブの結果を確認するためのJenkinsのジョブステータスURLを指定します。&lt;/p&gt;
+
+&lt;h4 id=&#34;state&#34;&gt;state&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;選択&lt;/code&gt;として追加。ジョブの結果を指定します。&lt;/p&gt;
+
+&lt;p&gt;選択値は以下のとおり&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;pending&lt;/li&gt;
+&lt;li&gt;success&lt;/li&gt;
+&lt;li&gt;failure&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;ビルド&#34;&gt;ビルド&lt;/h3&gt;
+
+&lt;p&gt;以下の内容を&lt;code&gt;シェルの実行&lt;/code&gt;として追加&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;case &amp;quot;${state}&amp;quot; in
+  &amp;quot;pending&amp;quot; ) description=&amp;quot;|ω・)ﾐﾃﾏｽﾖ&amp;quot; ;;
+  &amp;quot;failure&amp;quot; ) description=&amp;quot;_(┐「ε:)_ｽﾞｺｰ&amp;quot; ;;
+  &amp;quot;success&amp;quot; ) description=&amp;quot;╭( ･ㅂ･)و ̑̑ ｸﾞｯ !&amp;quot; ;;
+  *) description=&amp;quot;&amp;quot;;;
+esac
+
+curl -X POST -H &amp;quot;Authorization: token ACCESS_TOKEN&amp;quot; \
+  https://api.github.com/repos/:owner/:repo/statuses/${revision} -d &amp;quot;{ \
+  \&amp;quot;state\&amp;quot;: \&amp;quot;${state}\&amp;quot;, \
+  \&amp;quot;target_url\&amp;quot;: \&amp;quot;${target_url}\&amp;quot;, \
+  \&amp;quot;description\&amp;quot;: \&amp;quot;${description}\&amp;quot; \
+}&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;このジョブは他のジョブから呼ばれることを想定していますが、&lt;code&gt;パラメータ付きビルド&lt;/code&gt;でパラメタを指定することで
+単体で実行可能です。&lt;/p&gt;
+
+&lt;p&gt;GitHubのプルリクエストに以下のように表示されれば実行成功です。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2014/11/commit-statuses.png&#34; alt=&#34;github-commit-statuses&#34; /&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;2-複数のジョブをビルドパイプラインとして実行する&#34;&gt;2. 複数のジョブをビルドパイプラインとして実行する&lt;/h1&gt;
+
+&lt;p&gt;Jenkinsにはジョブを続けて実行するためのビルドパイプラインという機能があります。&lt;/p&gt;
+
+&lt;p&gt;ひとつの大きなジョブにするよりも小さなジョブを組み合わせるほうが柔軟にジョブ構成を組み立てることができます。&lt;/p&gt;
+
+&lt;p&gt;今回は以下の構成をつくります。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;単体テストを実行する&lt;code&gt;unit-test&lt;/code&gt;
+
+&lt;ol&gt;
+&lt;li&gt;開始時に、コミットの状態を&lt;code&gt;実行中(Pending)&lt;/code&gt;にする&lt;/li&gt;
+&lt;li&gt;単体テストが失敗したら、コミットの状態を&lt;code&gt;失敗(Failure)&lt;/code&gt;にする&lt;/li&gt;
+&lt;li&gt;単体テストが成功したら、下流のジョブ(回帰テスト)を開始する&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;回帰テストを実行する&lt;code&gt;regression-test&lt;/code&gt;
+
+&lt;ol&gt;
+&lt;li&gt;回帰テストが失敗したら、コミットの状態を&lt;code&gt;失敗(Failure)&lt;/code&gt;にする&lt;/li&gt;
+&lt;li&gt;回帰テストが成功したら、コミットの状態を&lt;code&gt;成功(Success)&lt;/code&gt;にする&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;パラメタを下流プロジェクトに渡す&#34;&gt;パラメタを下流プロジェクトに渡す&lt;/h2&gt;
+
+&lt;p&gt;ビルドパイプラインでは対象とするGitのコミット番号やジョブの状態をパラメタとして下流のジョブに渡すことでジョブを連動させることができます。&lt;/p&gt;
+
+&lt;p&gt;今回は、こういった用途に便利な&lt;a href=&#34;https://wiki.jenkins-ci.org/display/JENKINS/Parameterized+Trigger+Plugin&#34;&gt;Parameterized Trigger Plugin&lt;/a&gt;をJenkinsのプラグインとして追加しておきます。&lt;/p&gt;
+
+&lt;h2 id=&#34;単体テストジョブの設定&#34;&gt;単体テストジョブの設定&lt;/h2&gt;
+
+&lt;h3 id=&#34;プロジェクト名-1&#34;&gt;プロジェクト名&lt;/h3&gt;
+
+&lt;p&gt;unit-test&lt;/p&gt;
+
+&lt;h3 id=&#34;ソースコード管理&#34;&gt;ソースコード管理&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;Git&lt;/code&gt;を選択&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;Repository URL&lt;/code&gt;は対象とするリポジトリのURLを指定、&lt;code&gt;Branches to build&lt;/code&gt;は対象とするブランチ名（空白だと全てのブランチが対象）を指定。&lt;/p&gt;
+
+&lt;h3 id=&#34;ビルド-トリガ&#34;&gt;ビルド・トリガ&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;SCMをポーリング&lt;/code&gt;を選択&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;スケジュール&lt;/code&gt;には以下のようにポーリングしたい間隔をCRON形式で指定&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;H/15 * * * *
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;ビルド-1&#34;&gt;ビルド&lt;/h3&gt;
+
+&lt;p&gt;ここでは、単体テストを実行するためのジョブ（シェルの実行）などに加え、
+開始時に、コミットの状態を&lt;code&gt;実行中(Pending)&lt;/code&gt;にするためのジョブを追加します。&lt;/p&gt;
+
+&lt;p&gt;ビルド手順の追加から&lt;code&gt;Trigger/call builds on other projects&lt;/code&gt;を選択します。&lt;/p&gt;
+
+&lt;p&gt;追加したビルドに以下の設定を行います。&lt;/p&gt;
+
+&lt;h4 id=&#34;projects-to-builds&#34;&gt;Projects to builds&lt;/h4&gt;
+
+&lt;p&gt;change-github-commit-status&lt;/p&gt;
+
+&lt;h4 id=&#34;block-until-the-triggered-projects-finish-their-builds&#34;&gt;Block until the triggered projects finish their builds&lt;/h4&gt;
+
+&lt;p&gt;チェック不要。Pendingに更新するのを待たずに単体テストを開始します。&lt;/p&gt;
+
+&lt;h4 id=&#34;add-parameters&#34;&gt;Add Parameters&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;Predefined parameters&lt;/code&gt;を選択します。&lt;/p&gt;
+
+&lt;p&gt;Parametersには以下を定義してください。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;revision=${GIT_COMMIT}
+target_url=${BUILD_URL}
+state=pending
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;これで、現在のコミット番号とJenkinsのジョブURL、実行中ステータスを&lt;code&gt;github-change-commit-status&lt;/code&gt;ジョブに渡して起動することができます。&lt;/p&gt;
+
+&lt;h3 id=&#34;ビルド後の処理-失敗時のコミット状態の更新&#34;&gt;ビルド後の処理（失敗時のコミット状態の更新）&lt;/h3&gt;
+
+&lt;p&gt;まず、失敗時にコミットの状態を&lt;code&gt;失敗(Failure)&lt;/code&gt;にするビルドを追加します。&lt;/p&gt;
+
+&lt;p&gt;ビルド後の処理の追加から&lt;code&gt;Trigger/call builds on other projects&lt;/code&gt;を選択します。&lt;/p&gt;
+
+&lt;h4 id=&#34;projects-to-builds-1&#34;&gt;Projects to builds&lt;/h4&gt;
+
+&lt;p&gt;change-github-commit-status&lt;/p&gt;
+
+&lt;h4 id=&#34;trigger-when-build-is&#34;&gt;Trigger when build is&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;Unstable or Failed but not stable&lt;/code&gt;を選択します。&lt;/p&gt;
+
+&lt;p&gt;これでジョブ失敗時にのみこの処理が実行されるようになります。&lt;/p&gt;
+
+&lt;h4 id=&#34;add-parameters-1&#34;&gt;Add Parameters&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;Predefined parameters&lt;/code&gt;を選択します。&lt;/p&gt;
+
+&lt;p&gt;Parametersには以下を定義してください。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;revision=${GIT_COMMIT}
+target_url=${BUILD_URL}
+state=failure
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;ビルド後の処理-成功時の下流プロジェクトの実行&#34;&gt;ビルド後の処理（成功時の下流プロジェクトの実行）&lt;/h3&gt;
+
+&lt;p&gt;次に、成功時に下流プロジェクトを実行するビルドを追加します。&lt;/p&gt;
+
+&lt;p&gt;先ほど追加した&lt;code&gt;Trigger/call builds on other projects&lt;/code&gt;の下部にある&lt;code&gt;Add Trigger...&lt;/code&gt;でトリガーを追加します。&lt;/p&gt;
+
+&lt;h4 id=&#34;projects-to-builds-2&#34;&gt;Projects to builds&lt;/h4&gt;
+
+&lt;p&gt;regression-test&lt;/p&gt;
+
+&lt;h4 id=&#34;trigger-when-build-is-1&#34;&gt;Trigger when build is&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;Stable&lt;/code&gt;を選択します。&lt;/p&gt;
+
+&lt;p&gt;これでジョブ成功時にのみこの処理が実行されるようになります。&lt;/p&gt;
+
+&lt;h4 id=&#34;add-parameters-2&#34;&gt;Add Parameters&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;Pass-through Git Commit that was built&lt;/code&gt;を選択します。&lt;/p&gt;
+
+&lt;p&gt;これで、下流プロジェクトに対象のコミット番号が引き継がれます。&lt;/p&gt;
+
+&lt;h2 id=&#34;回帰テストジョブの設定&#34;&gt;回帰テストジョブの設定&lt;/h2&gt;
+
+&lt;h3 id=&#34;プロジェクト名-2&#34;&gt;プロジェクト名&lt;/h3&gt;
+
+&lt;p&gt;regression-test&lt;/p&gt;
+
+&lt;h3 id=&#34;ソースコード管理-1&#34;&gt;ソースコード管理&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;Git&lt;/code&gt;を選択&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;Repository URL&lt;/code&gt;は対象とするリポジトリのURLを指定、&lt;code&gt;Branches to build&lt;/code&gt;は対象とするブランチ名（空白だと全てのブランチが対象）を指定。&lt;/p&gt;
+
+&lt;h3 id=&#34;ビルド-トリガ-1&#34;&gt;ビルド・トリガ&lt;/h3&gt;
+
+&lt;p&gt;上流から起動されるジョブなので特に指定は不要。&lt;/p&gt;
+
+&lt;h3 id=&#34;ビルド-2&#34;&gt;ビルド&lt;/h3&gt;
+
+&lt;p&gt;回帰テストを実行するためのジョブ（シェルの実行）を追加します。&lt;/p&gt;
+
+&lt;h3 id=&#34;ビルド後の処理-実行結果に基づくコミット状態の更新&#34;&gt;ビルド後の処理（実行結果に基づくコミット状態の更新）&lt;/h3&gt;
+
+&lt;p&gt;実行結果に基づくコミット状態の更新を行うため、&lt;code&gt;Trigger/call builds on other projects&lt;/code&gt;を選択します。&lt;/p&gt;
+
+&lt;p&gt;設定内容は、単体テストのビルド後の処理でコミット状態を更新するトリガーを追加したときと同じです。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;Stable&lt;/code&gt;の場合に、stateを&lt;code&gt;success&lt;/code&gt;で、
+&lt;code&gt;Unstable or Failed but not stable&lt;/code&gt;の場合に、stateを&lt;code&gt;failure&lt;/code&gt;で指定すればOKです。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;3-github-pull-request-builder-plugin-をトリガーとして利用する&#34;&gt;3. GitHub pull request builder plugin をトリガーとして利用する&lt;/h1&gt;
+
+&lt;p&gt;上で述べた構成でビルドパイプラインの結果をプルリクエストに表示することができるようになりました。&lt;/p&gt;
+
+&lt;p&gt;しかし、現在のトリガーとしているSCMのポーリングでは、GitHub pull request builder pluginの
+ようなプルリクエストへのコメント(test this please)によるジョブ実行やアクセス制御は行えません。&lt;/p&gt;
+
+&lt;p&gt;GitHub pull request builder plugin はビルドパイプラインには適用できませんが、
+その機能をトリガーとしてだけ利用するジョブにすることで先程のビルドパイプラインに組み込めます。&lt;/p&gt;
+
+&lt;h2 id=&#34;システムの設定&#34;&gt;システムの設定&lt;/h2&gt;
+
+&lt;p&gt;GitHub Pull Request Builder をプラグインとしてインストールします。&lt;/p&gt;
+
+&lt;p&gt;このプラグインは &lt;code&gt;Jenkinsの管理&lt;/code&gt; &amp;gt; &lt;code&gt;システムの設定&lt;/code&gt; &amp;gt; &lt;code&gt;GitHub Pull Request Builder&lt;/code&gt;から
+設定が必要です。&lt;/p&gt;
+
+&lt;h3 id=&#34;github-server-api-url&#34;&gt;GitHub server api URL&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;https://api.github.com&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;access-token&#34;&gt;Access Token&lt;/h3&gt;
+
+&lt;p&gt;GitHubのアクセストークンを指定。&lt;/p&gt;
+
+&lt;h2 id=&#34;トリガーとなるジョブの作成&#34;&gt;トリガーとなるジョブの作成&lt;/h2&gt;
+
+&lt;h3 id=&#34;プロジェクト名-3&#34;&gt;プロジェクト名&lt;/h3&gt;
+
+&lt;p&gt;pull-request-trigger&lt;/p&gt;
+
+&lt;h3 id=&#34;github-project&#34;&gt;GitHub project&lt;/h3&gt;
+
+&lt;p&gt;対象となるGitHubリポジトリのURL(&lt;code&gt;http://github.com/:owner/:repo&lt;/code&gt;)&lt;/p&gt;
+
+&lt;h3 id=&#34;ソースコード管理-2&#34;&gt;ソースコード管理&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;Git&lt;/code&gt;を選択&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;Repository URL&lt;/code&gt;は対象とするリポジトリのURLを指定。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;Branches to build&lt;/code&gt;は&lt;code&gt;${sha1}&lt;/code&gt;を指定。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;高度な設定&lt;/code&gt; &amp;gt; &lt;code&gt;Refspec&lt;/code&gt; に以下を入力。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;+refs/pull/*:refs/remotes/origin/pr/*
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;ビルド-トリガ-2&#34;&gt;ビルド・トリガ&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;GitHub Pull Request Builder&lt;/code&gt;にチェック&lt;/p&gt;
+
+&lt;h3 id=&#34;ビルド後の処理&#34;&gt;ビルド後の処理&lt;/h3&gt;
+
+&lt;p&gt;下流のビルドを追加します。&lt;/p&gt;
+
+&lt;p&gt;ビルド後の処理の追加から&lt;code&gt;Trigger/call builds on other projects&lt;/code&gt;を選択します。&lt;/p&gt;
+
+&lt;h4 id=&#34;projects-to-builds-3&#34;&gt;Projects to builds&lt;/h4&gt;
+
+&lt;p&gt;unit-test&lt;/p&gt;
+
+&lt;h4 id=&#34;trigger-when-build-is-2&#34;&gt;Trigger when build is&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;Complete(always trigger)&lt;/code&gt;を選択します。&lt;/p&gt;
+
+&lt;p&gt;これで常にこの処理が実行されるようになります。&lt;/p&gt;
+
+&lt;h4 id=&#34;add-parameters-3&#34;&gt;Add Parameters&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;Predefined parameters&lt;/code&gt;を選択します。&lt;/p&gt;
+
+&lt;p&gt;Parametersには以下を定義してください。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;revision=${ghprbActualCommit}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;通常、下流プロジェクトにコミット番号を引き継ぐには、&lt;code&gt;Pass-through Git Commit that was built&lt;/code&gt;を選択しますが、GitHub pull request builderではうまくいきません。&lt;/p&gt;
+
+&lt;p&gt;これはmergeのコンフリクトを検証するため、内部でmerge commitを生成するためです。
+下流プロジェクトにはこのmerge commitされた番号が引き継がれ、そんなコミット番号知らないぞ、となるわけです。&lt;/p&gt;
+
+&lt;p&gt;そこで、元のコミット番号が保持されている&lt;code&gt;$ghprbActualCommit&lt;/code&gt;をビルドパラメタとして渡すようにします。&lt;/p&gt;
+
+&lt;h2 id=&#34;下流プロジェクトの設定変更&#34;&gt;下流プロジェクトの設定変更&lt;/h2&gt;
+
+&lt;p&gt;下流プロジェクトとなる&lt;code&gt;unit-test&lt;/code&gt;からトリガーを除外し、パラメタを受け付けるようにします。&lt;/p&gt;
+
+&lt;h3 id=&#34;ビルドのパラメータ化-1&#34;&gt;ビルドのパラメータ化&lt;/h3&gt;
+
+&lt;h4 id=&#34;revision-1&#34;&gt;revision&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;テキスト&lt;/code&gt;として追加。対象となるコミット番号を指定します。&lt;/p&gt;
+
+&lt;h3 id=&#34;ソースコード管理-3&#34;&gt;ソースコード管理&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;Branches to build&lt;/code&gt;でパラメタで受け取った&lt;code&gt;${revision}&lt;/code&gt;を使うようにします。&lt;/p&gt;
+
+&lt;h3 id=&#34;ビルド-トリガ-3&#34;&gt;ビルド・トリガ&lt;/h3&gt;
+
+&lt;p&gt;上流から起動されるため、&lt;code&gt;SCMのポーリング&lt;/code&gt;のチェックを外します。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;実際はトリガとなるGitHub Pull Request Builder がコミット状態を一度成功にしますが、下流プロジェクトで状態を上書きするという動作をします。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;設定は以上です。Jenkinsの設定を書き出していったら想定以上に長くなってしまいました&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;Jenkinsは単体ジョブで使うことが多かったのですが、Parameterized Trigger Plugin があれば汎用的なジョブをつくってビルドパイプラインを構成することで可能性が広がりそうです。&lt;/p&gt;
+
+&lt;p&gt;すべてのプルリクエストを ╭( ･ㅂ･)و ̑̑ ｸﾞｯ ! にしよう。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

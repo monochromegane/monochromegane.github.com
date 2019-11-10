@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Peco on THINKING MEGANE</title>
+    <link>https://blog.monochromegane.com/tags/peco/</link>
+    <description>Recent content in Peco on THINKING MEGANE</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Mon, 08 Sep 2014 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/tags/peco/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>pecoでVagrant操作を便利にする</title>
+      <link>https://blog.monochromegane.com/blog/2014/09/08/vagrant-peco/</link>
+      <pubDate>Mon, 08 Sep 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2014/09/08/vagrant-peco/</guid>
+      <description>
+
+&lt;p&gt;開発環境で利用するVagrantのVMの数が増えてきたのでpecoでVM選んで起動や停止をできるようにしてみました。&lt;/p&gt;
+
+&lt;h1 id=&#34;vagrant-peco&#34;&gt;vagrant-peco&lt;/h1&gt;
+
+&lt;p&gt;こんな感じで利用します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ vagrant-peco up
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/monochromegane/vagrant-peco/master/images/vagrant-peco-up.gif&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;うれしさ&#34;&gt;うれしさ&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;pecoでVMを選択できる。Vagrantfileのあるディレクトリに移動しなくてよい&lt;/li&gt;
+&lt;li&gt;VMを複数選択して一括で起動・停止できる&lt;/li&gt;
+&lt;li&gt;通常のvagrant global-statusよりも高速に表示&lt;/li&gt;
+&lt;li&gt;direnvとの連携&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;インストール&#34;&gt;インストール&lt;/h2&gt;
+
+&lt;p&gt;Vagrant1.6以降でつくったVMと&lt;code&gt;vagrant-peco&lt;/code&gt;、&lt;code&gt;vagrant-global-status&lt;/code&gt;が必要です。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;# vagrant-global-statusをインストール
+$ go get github.com/monochromegane/vagrant-global-status/...
+
+# vagrant-pecoをインストール
+$ cd [PATH] # PATHの通ったディレクトリ
+$ curl -O https://raw.githubusercontent.com/monochromegane/vagrant-peco/master/vagrant-peco
+$ chmod +x ./vagrant-peco
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;仕組み&#34;&gt;仕組み&lt;/h1&gt;
+
+&lt;h2 id=&#34;vagrant-global-status&#34;&gt;vagrant global-status&lt;/h2&gt;
+
+&lt;p&gt;Vagrantの1.6からglobal-statusプラグインが取り込まれ、一度起動したVMにIDが割り振られるようになりました。&lt;/p&gt;
+
+&lt;p&gt;IDは&lt;code&gt;vagrant global-status&lt;/code&gt;コマンドで確認します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ vagrant global-status
+id       name          provider   state    directory
+-------------------------------------------------------------------------------
+14c9626  cross_compile virtualbox poweroff /Users/miyakey/Documents/vm/golang
+dffc2a5  develop       virtualbox poweroff /Users/miyakey/Documents/vm/golang
+ae3968b  web1          virtualbox poweroff /Users/miyakey/Documents/vm/dev
+825680e  web2          virtualbox poweroff /Users/miyakey/Documents/vm/dev
+e0aa5e9  db            virtualbox poweroff /Users/miyakey/Documents/vm/dev
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;このIDを使うことでVagrantfileのあるディレクトリに移動することなく任意のVMを操作できます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ vagrant up 14c9626
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;pecoと連携する&#34;&gt;pecoと連携する&lt;/h2&gt;
+
+&lt;p&gt;毎度、IDを選ぶのは面倒なので peco で選べるようにします。&lt;/p&gt;
+
+&lt;p&gt;先に公開されている@gongoさんの&lt;a href=&#34;https://github.com/gongo/pecrant&#34;&gt;pecrant&lt;/a&gt;でほぼばっちりです。&lt;/p&gt;
+
+&lt;p&gt;ただ、自分の環境だと&lt;code&gt;vagrant global-status&lt;/code&gt;の起動が少し遅く感じたのと、Vagarntディレクトリごとの&lt;code&gt;direnv&lt;/code&gt;定義を使いたかったので、以下のようにして解決しています。&lt;/p&gt;
+
+&lt;h3 id=&#34;vagrant-global-status-1&#34;&gt;vagrant-global-status&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/vagrant-global-status&#34;&gt;vagrant-global-status&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code&gt;vagrant global-status&lt;/code&gt;の起動が遅い問題を解決するためにつくりました。&lt;br /&gt;
+同コマンドが参照するファイルを直接解析して結果を出力しています。ちょっとお行儀が悪いです。&lt;/p&gt;
+
+&lt;p&gt;自分の環境だと、1秒弱短縮できました。さくさく起動します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ time vagrant global-status
+vagrant global-status  0.97s user 0.09s system 99% cpu 1.072 total
+
+$ time vagrant-global-status
+vagrant-global-status  0.00s user 0.00s system 68% cpu 0.007 total # fast!!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;vagrant-peco-1&#34;&gt;vagrant-peco&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/vagrant-peco&#34;&gt;vagrant-peco&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Vagrant起動時に&lt;code&gt;direnv&lt;/code&gt;を適用したかったのでつくりました。&lt;br /&gt;
+&lt;code&gt;vagrant-global-status&lt;/code&gt;で選択したIDで操作する前に、該当ディレクトリの&lt;code&gt;.envrc&lt;/code&gt;を読み込みます。&lt;/p&gt;
+
+&lt;p&gt;Vagrantfileはプロジェクト共通でマウントするソースファイルのディレクトリは個人ごとに環境変数で指定するような場合に都合がよいです。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;vagrant-pecoは、だいぶ自分の環境にあわせた感じになってしまいましたが、VagrantのVMが増えてきた方、pecrant含めて、使ってみてはどうでしょうか。&lt;/p&gt;
+
+&lt;p&gt;いや〜、peco、便利。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

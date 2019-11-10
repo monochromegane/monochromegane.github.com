@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Oss on THINKING MEGANE</title>
+    <link>https://blog.monochromegane.com/tags/oss/</link>
+    <description>Recent content in Oss on THINKING MEGANE</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Thu, 17 Jan 2019 23:01:13 +0900</lastBuildDate>
+    <atom:link href="/tags/oss/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>OSS Gateにサポーターとして参加した（東京・福岡）</title>
+      <link>https://blog.monochromegane.com/blog/2019/01/17/oss-gate-as-supporter/</link>
+      <pubDate>Thu, 17 Jan 2019 23:01:13 +0900</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2019/01/17/oss-gate-as-supporter/</guid>
+      <description>
+
+&lt;p&gt;&lt;a href=&#34;https://oss-gate-fukuoka.connpass.com/event/111602/&#34;&gt;OSS Gate Fukuoka&lt;/a&gt;にサポーターとして参加した．サポーターとしての二度目の参加で前回は&lt;a href=&#34;https://oss-gate.doorkeeper.jp/events/76041&#34;&gt;OSS Gate東京ワークショップ2018-10-27
+&lt;/a&gt;だった．&lt;/p&gt;
+
+&lt;p&gt;OSS Gateは&lt;code&gt;「OSSの開発に参加する」を実際に体験するワークショップ&lt;/code&gt; である．
+元々，OSS開発に関するノウハウなどを共有するためのOSS道場という個別相談会を社内でやっており，その関連でサポーター役を紹介をしてもらったという経緯がある．
+OSS道場が自分のOSSを作ることを通してエンジニアリングに必要な各種スキルを高める目的としているのに対して，OSS GateはOSS世界への参加の敷居を下げるために実際に既存のOSSプロジェクトに参加貢献するところを一緒にやっていきましょうというものになっている．&lt;/p&gt;
+
+&lt;p&gt;カリキュラム自体は非常に洗練されており，OSS未経験者であるビギナーはもちろんのこと，手伝う側のサポーターもOSS Gate自体が初めてでもいきなり参加できるようになっている．
+具体的な内容は&lt;a href=&#34;https://github.com/oss-gate/workshop/blob/master/tutorial/scenario.md#%E3%82%B7%E3%83%8A%E3%83%AA%E3%82%AA&#34;&gt;こちら&lt;/a&gt;を見ていただくとして，対象のOSSを見つけて実際にIssueやPullRequestを送るまで一連の流れを経験できる．&lt;/p&gt;
+
+&lt;p&gt;前回の東京開催の後に福岡開催できればなあと考えていたところ，同僚のうづらさんなどがうまい事引っ張ってきてくれたので渡りに船だった．福岡での開催も和気あいあいと良い雰囲気で進んだと思う．&lt;/p&gt;
+
+&lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
+
+&lt;p&gt;うづらさんも言っていたが，福岡でOSS Gateに参加してくれた人は，次にぜひFukuoka.rbやFukuoka.goなどのコミュニティに参加してほしい．
+どのコミュニティも技術を楽しんでいるところばかりで，OSSへの参加や自分のOSSを作ろうというモチベーションにきっと繋がると思う．&lt;/p&gt;
+
+&lt;p&gt;ちなみに&lt;a href=&#34;https://fukuokago.connpass.com/event/112073/&#34;&gt;Fukuoka.go#13&lt;/a&gt;は2月ですよ！&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

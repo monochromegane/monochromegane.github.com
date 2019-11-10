@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Conflag on THINKING MEGANE</title>
+    <link>https://blog.monochromegane.com/tags/conflag/</link>
+    <description>Recent content in Conflag on THINKING MEGANE</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Sat, 30 May 2015 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/tags/conflag/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Go言語でコマンドラインオプションをさくっと設定ファイル対応させるライブラリをつくった</title>
+      <link>https://blog.monochromegane.com/blog/2015/05/30/conflag/</link>
+      <pubDate>Sat, 30 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2015/05/30/conflag/</guid>
+      <description>
+
+&lt;p&gt;Goでコマンドラインオプションのあるツールを提供していると設定ファイルに定義できるようにしてほしいという要望が来ますが、意外とオプションと設定ファイルで定義が冗長になったりして煩わしいのでライブラリにしてみました。&lt;/p&gt;
+
+&lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fconflag&#34; title=&#34;monochromegane/conflag&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame    border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/conflag&#34;&amp;gt;monochromegane/conflag&amp;lt;/a&amp;gt;&lt;/iframe&gt;
+
+&lt;p&gt;conf+flagで&lt;code&gt;conflag&lt;/code&gt;です。&lt;/p&gt;
+
+&lt;p&gt;いつものコードに &lt;strong&gt;3行&lt;/strong&gt; 追加するだけでコマンドラインオプションを設定ファイルに書いておけるようになります。&lt;/p&gt;
+
+&lt;h2 id=&#34;使い方&#34;&gt;使い方&lt;/h2&gt;
+
+&lt;p&gt;以下のような感じで、flag.Parse()を実行する前に、設定ファイルからflagに設定する値を呼び出すコードを追加します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// フラグを定義します
+var procs int
+flag.IntVar(&amp;amp;procs, &amp;quot;procs&amp;quot;, runtime.NumCPU(), &amp;quot;GOMAXPROCS&amp;quot;)
+
+// コマンドラインオプションを解析する前に設定ファイルからフラグに値を設定します
+if args, err := conflag.ArgsFrom(&amp;quot;/path/to/config.toml&amp;quot;); err == nil {
+	flag.CommandLine.Parse(args)
+}
+
+// コマンドラインオプションを解析します
+flag.Parse()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;設定ファイルをつくります。ここではTOML形式の設定ファイルを使いました（その他の対応フォーマットは後述）&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;procs = 2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;この状態でコマンドラインオプションを渡さずに実行すると、設定ファイルに定義していた&lt;code&gt;2&lt;/code&gt;がflagに設定されます。&lt;/p&gt;
+
+&lt;p&gt;便利っぽい。&lt;/p&gt;
+
+&lt;h3 id=&#34;flagの優先順位&#34;&gt;flagの優先順位&lt;/h3&gt;
+
+&lt;p&gt;flagの優先順位は&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;コマンドラインオプション&lt;/code&gt; &amp;gt; &lt;code&gt;設定ファイルの値&lt;/code&gt; &amp;gt; &lt;code&gt;flagのデフォルト値&lt;/code&gt; となります。&lt;/p&gt;
+
+&lt;p&gt;上の例で言えば、こんな感じです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ myapp -procs 3 # 設定ファイルあり procs =&amp;gt; 3
+$ myapp          # 設定ファイルあり procs =&amp;gt; 2
+$ myapp          # 設定ファイルなし procs =&amp;gt; runtime.NumCPU() (flagのデフォルト値)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;オプションの位置&#34;&gt;オプションの位置&lt;/h3&gt;
+
+&lt;p&gt;そのツール用の設定ファイルがコマンドラインオプションだけを設定するものとは限らないので、適宜階層化されていると思います。
+conflagでは&lt;code&gt;ArgsFrom&lt;/code&gt;関数に渡す引数で設定ファイル内でコマンドラインオプションを定義している場所を指定できます。&lt;/p&gt;
+
+&lt;p&gt;このような設定ファイル構造の場合&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[options]
+flag = &amp;quot;value&amp;quot;
+
+[other settings]
+hoge = &amp;quot;fuga&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;第二引数に&lt;code&gt;options&lt;/code&gt;を指定します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// [options]の配下のみを解析します
+conflag.ArgsFrom(&amp;quot;/path/to/config.toml&amp;quot;, &amp;quot;options&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;階層が深い場合は、第三引数以降に続けて指定してください。&lt;/p&gt;
+
+&lt;h3 id=&#34;ファイルフォーマット&#34;&gt;ファイルフォーマット&lt;/h3&gt;
+
+&lt;p&gt;現在のところファイルフォーマットは&lt;code&gt;TOML&lt;/code&gt;と&lt;code&gt;JSON&lt;/code&gt;に対応しています。
+YAMLやHCLなども使いたいと思われた方、PullRequestチャンスです。&lt;/p&gt;
+
+&lt;h2 id=&#34;インストール&#34;&gt;インストール&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ go get github.com/monochromegane/conflag
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;です。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;実装について&#34;&gt;実装について&lt;/h1&gt;
+
+&lt;p&gt;実装すごい簡単です。&lt;/p&gt;
+
+&lt;p&gt;flagパッケージはデフォルトのFlagSetをCommandLineという名前で持っているのでそれに対してコマンドラインオプションを渡すことでflag.Parse()相当の処理が行えます。&lt;/p&gt;
+
+&lt;p&gt;あとは設定ファイルからコマンドラインオプション一覧を生成して渡すだけ。
+conflagは生成するところまでを担当します。&lt;/p&gt;
+
+&lt;p&gt;各種コマンドラインオプションの便利パッケージでも内部でflagパッケージ使っていれば実装によっては同じように利用できるかもしれません（できないかもしれません）&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
+
+&lt;p&gt;import文含めたら4行でした&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;今度&lt;a href=&#34;https://github.com/monochromegane/the_platinum_searcher&#34;&gt;プラチナサーチャー&lt;/a&gt;でも導入してみようと思います。&lt;/p&gt;
+
+&lt;p&gt;よければご利用ください。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

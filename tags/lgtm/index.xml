@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Lgtm on THINKING MEGANE</title>
+    <link>https://blog.monochromegane.com/tags/lgtm/</link>
+    <description>Recent content in Lgtm on THINKING MEGANE</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Mon, 23 Dec 2013 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/tags/lgtm/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>LGTMでめでたさを伝えるChrome拡張をつくった</title>
+      <link>https://blog.monochromegane.com/blog/2013/12/23/lgtm-chrome-extension/</link>
+      <pubDate>Mon, 23 Dec 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2013/12/23/lgtm-chrome-extension/</guid>
+      <description>
+
+&lt;p&gt;先日、&lt;a href=&#34;https://speakerdeck.com/hitode909/gao-su-nidotuguhudowoshi-berufang-fa&#34;&gt;高速にドッグフードを食べる方法&lt;/a&gt;を見て、LGTMと&lt;a href=&#34;http://www.lgtm.in/&#34;&gt;LGTM.in&lt;/a&gt;というサービスを知りました。&lt;/p&gt;
+
+&lt;p&gt;LGTMは、&lt;strong&gt;&amp;ldquo;looks good to me.&amp;rdquo;&lt;/strong&gt;の略で、GitHubのプルリクに対するOKコメント、LGTM.inは、そのコメントにノリのいい画像を添えて&lt;code&gt;spice up&lt;/code&gt;しようというサービスです。コードレビューの終わりに&lt;strong&gt;めでたさを伝え&lt;/strong&gt;てもらえれば、字面だけのLGTMよりもうれしいし、そういう小さな承認はお互いに大事。&lt;/p&gt;
+
+&lt;p&gt;ということで、LGTMでめでたさを伝えるChrome拡張をつくりました。&lt;/p&gt;
+
+&lt;h1 id=&#34;lgtm-chrome拡張&#34;&gt;LGTM Chrome拡張&lt;/h1&gt;
+
+&lt;p&gt;インストールはこちらから。 &lt;a href=&#34;https://chrome.google.com/webstore/detail/lgtm/oeacdmeoegfagkmiecjjikpfgebmalof?hl=ja&amp;amp;gl=JP&#34;&gt;Chrome ウェブストア/LGTM&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;拡張を起動するとLGTM.inから取得したランダム画像を3件表示します。&lt;/li&gt;
+&lt;li&gt;画像が気に入らないときは&lt;code&gt;More LGTM&lt;/code&gt;ボタンをクリックして画像を再取得できます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2013/12/LGTM_screenshot.png&#34; alt=&#34;LGTM&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;使い方&#34;&gt;使い方&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;使用したいLGTMの画像をクリックするとURLをクリップボードにコピーします。&lt;/li&gt;
+&lt;li&gt;GitHubのプルリクページを開いていれば、選択した画像のURLをマークダウン形式でコメント欄に入力します。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2013/12/LGTM_comment.png&#34; alt=&#34;LGTM&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;その他&#34;&gt;その他&lt;/h2&gt;
+
+&lt;p&gt;リポジトリはこちら。 &lt;a href=&#34;https://github.com/monochromegane/LGTM&#34;&gt;monochromegane/LGTM&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;LGTM.inはよいコンセプトだと思うのですが、プルリクのコメント書いているときに別のサイトを開いたり、提供されるBookmarkletがプレビューしづらかったりしてちょっと使いにくい。
+こういう取り組みはめんどくさくなると途端にやらなくなるので、やりやすい環境を準備してみました。&lt;/p&gt;
+
+&lt;p&gt;冒頭にも書きましたが&lt;code&gt;めでたさを伝える&lt;/code&gt;っていいことだと思うので、このChrome拡張でLGTM使ってみてはどうでしょうか。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Code Reading on THINKING MEGANE</title>
+    <link>https://blog.monochromegane.com/tags/code-reading/</link>
+    <description>Recent content in Code Reading on THINKING MEGANE</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Fri, 01 May 2015 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/tags/code-reading/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>今日のコードリーティング: tsenart/vegeta</title>
+      <link>https://blog.monochromegane.com/blog/2015/05/01/code-reading-vegeta/</link>
+      <pubDate>Fri, 01 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2015/05/01/code-reading-vegeta/</guid>
+      <description>
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/tsenart/vegeta&#34;&gt;HTTP load testing tool and library. It&amp;rsquo;s over 9000! - tsenart/vegeta&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;概要&#34;&gt;概要&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2015/04/30/code-reading-boom/&#34;&gt;前回&lt;/a&gt;読んだ &lt;code&gt;rakyll/boom&lt;/code&gt;と同じ負荷測定ツール。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ echo &amp;quot;GET http://google.com/&amp;quot; | vegeta attack -duration=2s | vegeta report
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;バージョン&#34;&gt;バージョン&lt;/h2&gt;
+
+&lt;p&gt;2015/4/30時点の&lt;strong&gt;master&lt;/strong&gt; (3739d8a2090cd61f4fe018e00adde281d824d3c6)&lt;/p&gt;
+
+&lt;h2 id=&#34;コード&#34;&gt;コード&lt;/h2&gt;
+
+&lt;p&gt;vegeta attack 処理を中心に必要なところだけを抜粋&lt;/p&gt;
+
+&lt;h3 id=&#34;サブコマンドと引数&#34;&gt;サブコマンドと引数&lt;/h3&gt;
+
+&lt;p&gt;サブコマンド(attack, report&amp;hellip;)ごとのコマンド構造体を定義。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;type command struct {
+	fs *flag.FlagSet	     // コマンドごとのオプション
+	fn func(args []string) error // コマンドごとの起点となるfunction
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;標準の&lt;code&gt;flag.Parse&lt;/code&gt;ではなくて&lt;code&gt;flag.FlagSet.Parse&lt;/code&gt;を使うことでParse対象に任意の引数を渡すことができるのでサブコマンドに必要な引数だけを渡している。便利。&lt;/p&gt;
+
+&lt;h3 id=&#34;attacker-attack&#34;&gt;(*Attacker) Attack&lt;/h3&gt;
+
+&lt;p&gt;並行数分のworkerの立ち上げと時間あたりのリクエストの配分を制御しているところ。
+処理に時間がかかるので戻り値として結果のchannelを返す。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func (a *Attacker) Attack(tr Targeter, rate uint64, du time.Duration) &amp;lt;-chan *Result {
+	workers := &amp;amp;sync.WaitGroup{}
+	results := make(chan *Result)
+	ticks := make(chan time.Time)
+	for i := uint64(0); i &amp;lt; a.workers; i++ {
+		go a.attack(tr, workers, ticks, results)
+	}
+
+	go func() {
+		for began, done := time.Now(), uint64(0); done &amp;lt; hits; done++ {
+			select {
+			case ticks &amp;lt;- max(next, now):
+				return
+			}
+		}
+	}()
+
+	return results
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;workerとして実際にリクエストを行う処理。time.Tick相当のタイマーでリクエストを行う。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func (a *Attacker) attack(tr Targeter, workers *sync.WaitGroup, ticks &amp;lt;-chan time.Time, results chan&amp;lt;- *Result) {
+	workers.Add(1)
+	defer workers.Done()
+	for tm := range ticks {
+		results &amp;lt;- a.hit(tr, tm)
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;このあたりもう少し改善の余地あると思った。&lt;/p&gt;
+
+&lt;p&gt;workerはタイマーを意識する必要はなくて単純にリクエストのjobキューを順番に処理していくだけにして、jobキューに投入する量をタイマーで制御するようにしたほうが見通しがよくなりそう。&lt;/p&gt;
+
+&lt;h3 id=&#34;attack&#34;&gt;attack&lt;/h3&gt;
+
+&lt;p&gt;上記Attackの結果を受信して、&lt;code&gt;gob.NewEncoder&lt;/code&gt;にシリアライズして出力する。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// gobパッケージを使ったエンコーダー
+enc := gob.NewEncoder(out)
+
+// 結果を受信
+for {
+	select {
+	// Attackの結果を受信
+	case r, ok := &amp;lt;-res:
+		// 結果をシリアライズして出力
+		if err = enc.Encode(r); err != nil {
+			return err
+		}
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://golang.org/pkg/encoding/gob/&#34;&gt;gob&lt;/a&gt;はGoで使えるシリアライザ。送信側と受信側でフィールド名と型があっていればデシリアライズしてくれる。&lt;code&gt;vegeta attack | vegeta report&lt;/code&gt; 間でシリアライズしたデータをやりとりしている。&lt;/p&gt;
+
+&lt;h2 id=&#34;雑感&#34;&gt;雑感&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;flag.FlagSet&lt;/code&gt;を使ったサブコマンドのオプション実装は参考になった&lt;/li&gt;
+&lt;li&gt;実装は&lt;code&gt;rakyll/boom&lt;/code&gt;のほうが洗練されてると思う&lt;/li&gt;
+&lt;li&gt;負荷測定は長くかかる処理なので&lt;code&gt;signal.Notify(sig, os.Interrupt)&lt;/code&gt;を使って明示的に終了処理を呼び出すようにしているのはよいと思った&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;gob&lt;/code&gt;知らなかったのでRPC的な処理をやるときの候補に入れておく&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>今日のコードリーディング: rakyll/boom</title>
+      <link>https://blog.monochromegane.com/blog/2015/04/30/code-reading-boom/</link>
+      <pubDate>Thu, 30 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2015/04/30/code-reading-boom/</guid>
+      <description>
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/rakyll/boom&#34;&gt;HTTP(S) load generator, ApacheBench (ab) replacement, written in Go - rakyll/boom&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;概要&#34;&gt;概要&lt;/h2&gt;
+
+&lt;p&gt;Goで書かれたのApacheBenchライクな負荷測定ツール。Python製の&lt;a href=&#34;https://github.com/tarekziade/boom&#34;&gt;tarekziade/boom&lt;/a&gt;がオリジナル。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# 合計100リクエストを10並行で実行する
+$ boom -n 100 -c 10 https://google.com
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;バージョン&#34;&gt;バージョン&lt;/h2&gt;
+
+&lt;p&gt;2015/04/29時点の&lt;strong&gt;master&lt;/strong&gt; (372ea3b0e6cb084657d1db7eacccdfae929af5b9)&lt;/p&gt;
+
+&lt;h2 id=&#34;コード&#34;&gt;コード&lt;/h2&gt;
+
+&lt;p&gt;リクエスト実行部分を中心に必要なところだけ抜粋。&lt;/p&gt;
+
+&lt;h3 id=&#34;boomer-run&#34;&gt;(*Boomer) Run&lt;/h3&gt;
+
+&lt;p&gt;結果格納用のchannelをつくってrun()&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func (b *Boomer) Run() {
+	b.results = make(chan *result, b.N)
+	b.run()
+	close(b.results)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;boomer-run-1&#34;&gt;(*Boomer) run&lt;/h3&gt;
+
+&lt;p&gt;リクエストの配分を行うところ。N個のリクエストをC個のworkerで処理している。
+NをCで割るんじゃなくてCをworker数として個別のworkerが処理できるだけやる。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func (b *Boomer) run() {
+	// 総リクエスト数をWaitGroupにAdd
+	var wg sync.WaitGroup
+	wg.Add(b.N)
+
+	// 総リクエスト分のバッファを持ったchannelを作成
+	jobs := make(chan *http.Request, b.N)
+	for i := 0; i &amp;lt; b.C; i++ {
+		// 並行数分だけworkerを起動
+		go func() {
+			b.worker(&amp;amp;wg, jobs)
+		}()
+	}
+
+	// jobsのchannelに総リクエスト分のリクエストを送信
+	for i := 0; i &amp;lt; b.N; i++ {
+		if b.Qps &amp;gt; 0 {
+			&amp;lt;-throttle
+		}
+		jobs &amp;lt;- b.Req.Request()
+	}
+	close(jobs)
+
+	// 全てのリクエストが処理されるまで待つ
+	wg.Wait()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;WaitGroupを各処理で&lt;code&gt;Add(1)&lt;/code&gt;せずに一度に&lt;code&gt;Add(N)&lt;/code&gt;しているのはAdd内での排他による待ちを回避したかったからだと思う。
+実行数が分かっているものは一度にAddしておくというのはよさそう。&lt;/p&gt;
+
+&lt;h3 id=&#34;boomer-worker&#34;&gt;(*Boomer) worker&lt;/h3&gt;
+
+&lt;p&gt;jobsから受信して実際にリクエスト、結果をb.resultsに送信&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func (b *Boomer) worker(wg *sync.WaitGroup, ch chan *http.Request) {
+	client := &amp;amp;http.Client{Transport: tr}
+	for req := range ch {
+		resp, err := client.Do(req)
+		wg.Done()
+		b.results &amp;lt;- &amp;amp;result{}
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;雑感&#34;&gt;雑感&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;必要な処理がコンパクトに実装され、非常に読みやすかった&lt;/li&gt;
+&lt;li&gt;waitGroupを使ったworkerパターンなどgoroutineの基本的な使い方例として教えるときによさそう&lt;/li&gt;
+&lt;li&gt;Add(N)については前述のとおり。&lt;/li&gt;
+&lt;li&gt;time.Tickを使ったworkerへのchannel送信の制御(throttleの部分)は覚えておいてよさそう。&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

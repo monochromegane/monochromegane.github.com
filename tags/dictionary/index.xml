@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Dictionary on THINKING MEGANE</title>
+    <link>https://blog.monochromegane.com/tags/dictionary/</link>
+    <description>Recent content in Dictionary on THINKING MEGANE</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Fri, 29 Nov 2013 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/tags/dictionary/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Alfredと辞書.appで高速快適な英語環境を手に入れる</title>
+      <link>https://blog.monochromegane.com/blog/2013/11/29/alfred-and-dictionary/</link>
+      <pubDate>Fri, 29 Nov 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2013/11/29/alfred-and-dictionary/</guid>
+      <description>
+
+&lt;p&gt;今まで英語の辞書に&lt;a href=&#34;http://ejje.weblio.jp/&#34;&gt;Weblio&lt;/a&gt;を使ってコーディングや、PullRequestのときの参考にしていたのですが、ネットワーク越しということもあり、遅く感じることがあったので、AlfredとMac標準の辞書.appを組み合わせて快適高速な英語環境をつくりました。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;alfredと辞書-app&#34;&gt;Alfredと辞書.app&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.alfredapp.com/&#34;&gt;Alfred&lt;/a&gt;は有名なランチャーアプリ。Hotkeyで起動して検索やアプリの起動をすばやく行うことができます。&lt;/p&gt;
+
+&lt;p&gt;辞書.appはMac標準の辞書アプリです。（自分の中では）全然目立たない存在だったけど、使ってみると実はかなり便利。&lt;/p&gt;
+
+&lt;p&gt;ローカルアプリケーションなので&lt;strong&gt;起動、検索が高速&lt;/strong&gt;、さらに&lt;strong&gt;インクリメンタルサーチ&lt;/strong&gt;にも対応しています。
+特にコーディングのときは、webの検索をじっと待つ時間はリズムが崩れるのでローカルアプリケーションの反応のよさは心地よいです。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;設定&#34;&gt;設定&lt;/h1&gt;
+
+&lt;h2 id=&#34;alfredから辞書-appを呼び出す&#34;&gt;Alfredから辞書.appを呼び出す&lt;/h2&gt;
+
+&lt;p&gt;Alfredはもともと辞書.appを呼び出す機能がありますが、より呼び出しやすくするために設定を変更します。&lt;/p&gt;
+
+&lt;p&gt;AlfredのPreferenceから、Featuresタブを選択し、サイドメニューからDictionaryを選択します。
+&lt;code&gt;Define a word&lt;/code&gt;の欄にチェックが入っていることを確認して、&lt;code&gt;define&lt;/code&gt;を&lt;code&gt;d&lt;/code&gt;に変更します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2013/11/alfred-preference.png&#34; alt=&#34;alfred-preference&#34; /&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;使い方&#34;&gt;使い方&lt;/h1&gt;
+
+&lt;h2 id=&#34;alfredから起動する&#34;&gt;Alfredから起動する&lt;/h2&gt;
+
+&lt;p&gt;Alfredを起動して、&lt;code&gt;d キーワード&lt;/code&gt;を入力します。必要なものを選択して、&lt;code&gt;Enter&lt;/code&gt;で選択したキーワードが検索された状態で辞書.appが起動します。&lt;/p&gt;
+
+&lt;p&gt;最初だけ、「すべて」タブになりますが、「英和和英」のタブを選択しておくと、次回以降、そちらが使われるようです。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2013/11/alfred.png&#34; alt=&#34;alfred&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;インクリメンタルサーチを使う&#34;&gt;インクリメンタルサーチを使う&lt;/h2&gt;
+
+&lt;p&gt;辞書.appにフォーカスがある状態で、再度キーワードを入力すると、インクリメンタルサーチが行われます。&lt;/p&gt;
+
+&lt;p&gt;サイドメニューに結果が表示され、上下キーで候補を選択することができます。
+動詞を検索したときに熟語もあわせて候補に出るので便利です。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2013/11/incremental_search.png&#34; alt=&#34;dictionary&#34; /&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;tipsなど&#34;&gt;Tipsなど&lt;/h1&gt;
+
+&lt;h2 id=&#34;辞書アプリのウィンドウどこだっけ&#34;&gt;辞書アプリのウィンドウどこだっけ&lt;/h2&gt;
+
+&lt;p&gt;辞書アプリのウィンドウがわからなくなったら、Alfredから起動するようにすればウィンドウを探しまわらなくてよいです。&lt;/p&gt;
+
+&lt;h2 id=&#34;urlスキーム&#34;&gt;URLスキーム&lt;/h2&gt;
+
+&lt;p&gt;Macの辞書アプリは &lt;code&gt;dict://&lt;/code&gt;というURLスキームで呼び出すことができるので、コマンドラインで&lt;code&gt;opne dict://キーワード&lt;/code&gt;で辞書アプリを起動します。
+Alfred以外、コマンドラインやVimから辞書を起動したいときは便利かもしれません。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;最近、英文法を勉強しなおしています。基本的なもの、他動詞、自動詞、前置詞などでも改めて意識してみると曖昧なまま使っていたり。しばらくは積極的に辞書を見て確かめながらいこうと思って、ストレスのない辞書環境を整えてみました。辞書.app、まだ使っていないのであればオススメです。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

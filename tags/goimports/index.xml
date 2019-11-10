@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Goimports on THINKING MEGANE</title>
+    <link>https://blog.monochromegane.com/tags/goimports/</link>
+    <description>Recent content in Goimports on THINKING MEGANE</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Wed, 23 Dec 2015 22:14:50 +0900</lastBuildDate>
+    <atom:link href="/tags/goimports/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>goimportsを高速化するdragon-importsコマンドをつくった</title>
+      <link>https://blog.monochromegane.com/blog/2015/12/23/dragon-imports/</link>
+      <pubDate>Wed, 23 Dec 2015 22:14:50 +0900</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2015/12/23/dragon-imports/</guid>
+      <description>
+
+&lt;p&gt;&lt;code&gt;goimports&lt;/code&gt;はコードのフォーマットに加えてインポート行の追加・削除を行ってくれる便利なコマンドですが、GOPATH配下に大量のリポジトリが存在するとインポートの解決に時間がかかるようになってしまいます。いつでも素早くインポートしたい！ということでdragon-importsというコマンドをつくってみました。&lt;/p&gt;
+
+&lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fdragon-imports&#34; title=&#34;monochromegane/dragon-imports&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/dragon-imports&#34;&amp;gt;monochromegane/dragon-imports&amp;lt;/a&amp;gt;&lt;/iframe&gt;
+
+&lt;h2 id=&#34;使い方&#34;&gt;使い方&lt;/h2&gt;
+
+&lt;p&gt;インストールして&lt;code&gt;dragon-imports&lt;/code&gt;コマンドを実行するだけです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ go get github.com/monochromegane/dragon-imports/...
+$ dragon-imports
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;コマンド実行後、&lt;code&gt;goimports&lt;/code&gt;コマンドが高速化されます。&lt;code&gt;GOPATH/src&lt;/code&gt;に230リポジトリある環境での実行時間の差は以下の通りです。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;strong&gt;goimports の実行時間(秒)&lt;/strong&gt;&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;right&#34;&gt;before&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;after&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;right&#34;&gt;0.893&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.019&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;体感では全く結果を待つ必要がなくなりました！&lt;/p&gt;
+
+&lt;h2 id=&#34;どうやって高速化するのか&#34;&gt;どうやって高速化するのか&lt;/h2&gt;
+
+&lt;h3 id=&#34;goimportsの動作&#34;&gt;goimportsの動作&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;goimports&lt;/code&gt;は標準パッケージのシンボルとインポートパスのマッピングを内部に保持しているため、それらに対するインポートパスの解決は即座に行われます。&lt;/p&gt;
+
+&lt;p&gt;ここで解決できなかった場合は、&lt;code&gt;GOPATH/src&lt;/code&gt;配下に対する探査が発生してしまうため、GOPATH配下に大量にリポジトリがある場合は、時間がかかるようになります（複数回インポートパスを追加する場合でも探査自体は一度しかしないようです）。&lt;/p&gt;
+
+&lt;h3 id=&#34;dragon-importsはどう解決するか&#34;&gt;dragon-importsはどう解決するか&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;dragon-imports&lt;/code&gt;は既存の&lt;code&gt;goimports&lt;/code&gt;コマンドを上書きします。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;dragon-imports&lt;/code&gt;は&lt;code&gt;GOPATH/src&lt;/code&gt;配下にあるエクスポートされた関数や型を上述のマッピングに追加して、時間のかかる探査自体を発生させないようにします。具体的には&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;1. &lt;code&gt;GOROOT/api&lt;/code&gt;配下の定義から標準パッケージのマッピングを取得&lt;/li&gt;
+&lt;li&gt;2. &lt;code&gt;GOPATH/src&lt;/code&gt;配下のパッケージからエクスポートされた関数や型のマッピングを生成&lt;/li&gt;
+&lt;li&gt;3. 上記1.と2.をあわせて&lt;code&gt;goimports&lt;/code&gt;のマッピング定義を上書き(zstdlib.go)&lt;/li&gt;
+&lt;li&gt;4. &lt;code&gt;goimports&lt;/code&gt;を再度インストール(go install -a)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;を行っています。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;以上、GOPATH爆発問題をちょっと強気に解決するdragon-importsを紹介させていただきました。
+現状使っている分には特に困っていないですが、やり方がやり方なだけにご利用は自己責任でお願いします。&lt;/p&gt;
+
+&lt;p&gt;それでも普段使うGOPATH配下のパッケージがストレスなくインポートされるのはやはり気持ちがよいですね。&lt;/p&gt;
+
+&lt;h3 id=&#34;やっぱりコワいんですけど&#34;&gt;やっぱりコワいんですけど&lt;/h3&gt;
+
+&lt;p&gt;安心してください、戻せますよ。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ cd $GOPATH/src/golang.org/x/tools
+$ git checkout imports/zstdlib.go
+$ cd $GOPATH/src/golang.org/x/tools/cmd/goimports
+$ go install -a .
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;todo&#34;&gt;TODO&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;パッケージの変更を検知してdragon-importsをバックグラウンドで実行する仕組み&lt;/li&gt;
+&lt;li&gt;dragon-importsの対象から除外するオプション&lt;/li&gt;
+&lt;li&gt;vim-goの&lt;code&gt;g:go_fmt_command = &amp;quot;goimports&amp;quot;&lt;/code&gt;でもう少し速度向上を実感できるようにする&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

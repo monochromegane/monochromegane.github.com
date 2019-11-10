@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>執筆活動 on THINKING MEGANE</title>
+    <link>https://blog.monochromegane.com/tags/%E5%9F%B7%E7%AD%86%E6%B4%BB%E5%8B%95/</link>
+    <description>Recent content in 執筆活動 on THINKING MEGANE</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Mon, 25 Dec 2017 17:32:24 +0900</lastBuildDate>
+    <atom:link href="/tags/%E5%9F%B7%E7%AD%86%E6%B4%BB%E5%8B%95/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>WEB&#43;DB PRESS Vol.102で「サービス改善につながるログ活用基盤の構築」を執筆させていただきました</title>
+      <link>https://blog.monochromegane.com/blog/2017/12/25/wdpress_102/</link>
+      <pubDate>Mon, 25 Dec 2017 17:32:24 +0900</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2017/12/25/wdpress_102/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;http://gihyo.jp/magazine/wdpress/archive/2018/vol102&#34;&gt;WEB+DB PRESS Vol.102&lt;/a&gt;で「&lt;strong&gt;サービス改善につながるログ活用基盤の構築&lt;/strong&gt;」を執筆させていただきました。この記事は連載「実践！ 先進的インフラ運用」の第四回目の担当記事です。&lt;/p&gt;
+
+&lt;p&gt;サービスにとって重要なログをFluentd、Rackミドルウェア、Treasure Dataなどを用いて収集し、ワークフローと組み合わせて分析、さらにサービスと連携させることで活用していく。そんなログ活用基盤の楽しさを詰め込んだ記事となっております。ぜひ年末年始のお供として手に取ってみてください。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2017/12/wdpress_102.jpg&#34; alt=&#34;wdpress_102&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;商業誌への執筆はいつかやりたいと思っていたことだったので、とても嬉しいです。実際に書籍として手にとるとニコニコしてしまいますね。えへへ。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

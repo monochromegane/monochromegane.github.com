@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width">
+  <meta name="author" content="">
+  
+    <title>agとUnite.vimで快適高速grep環境を手に入れる &middot; THINKING MEGANE</title>
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@monochromegane">
+  <meta property="og:description" content="今までVim内のgrepにはUnite.vimを使っていたんですが、ファイル数が多いときに遅く感じることがあったので、前回導入した ag(The Silver Searcher)と組み合わせて快適高速grep環境をつくりました。
+The Silver Searcher と Unite.vim The Silver Searcherは、grepやackより高速な検索が売りのパターン検索を行うコマンドです。
+また、Unite.vimは、様々なデータソースを共通のインターフェースで操作できるプラグインです。
+ディレクトリのファイル一覧や、バッファ一覧などを同じインターフェースで操作できるので使いはじめると手放せなくなるプラグインです。
+The Silver Searcherについてはこの辺が分かりやすいと思います。
+ ackを捨てて、より高速なag(The Silver Searcher)に切り替えた  インストール The Silver Searcher のインストール Macの場合、homebrewで提供されてます。
+$ brew install the_silver_searcher  Unite.vim のインストール BundleやNeoBundleによるインストールがおすすめです。
+Bundleの場合~/.vimrcに以下を記述してノーマルモードで:BundleInstallを実行、インストールします。
+Bundle &quot;Shougo/unite.vim&quot; Bundle &quot;git://github.com/Shougo/vimproc&quot;  インストール後、vimprocをコンパイルします。
+$ cd ~/.vim/bundle/vimproc $ make # Macの場合  makeファイルはOSごとに違うので公式のREADMEを確認してください。
+設定 ~/.vimrcに以下を記述します。
+&quot; insert modeで開始 let g:unite_enable_start_insert = 1 &quot; 大文字小文字を区別しない let g:unite_enable_ignore_case = 1 let g:unite_enable_smart_case = 1 &quot; grep検索 nnoremap &lt;silent&gt; ,g :&lt;C-u&gt;Unite grep:.">
+  <meta property="og:title" content="agとUnite.vimで快適高速grep環境を手に入れる">
+  <meta property="og:url" content="https://blog.monochromegane.com/blog/2013/09/18/ag-and-unite/">
+  <meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+  
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Source+Code+Pro' type='text/css'>
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Montserrat' type='text/css'>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css">
+  <link rel="stylesheet" href="/css/text.css">
+  <link rel="stylesheet" href="/css/color.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="/images/apple-touch-icon-57-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="/images/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
+  <link rel="canonical" href="https://blog.monochromegane.com/blog/2013/09/18/ag-and-unite/">
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="THINKING MEGANE" />
+  
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async>
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: {
+               Macros: {
+                        bm: ["\\boldsymbol{#1}", 1],
+                        argmax: ["\\mathop{\\rm arg\\,max}\\limits"],
+                        argmin: ["\\mathop{\\rm arg\\,min}\\limits"]},
+               extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                   displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+  </script>
+</head>
+
+  <body>
+    <div class="header">
+  <header>
+    <h1 class="logo"><a href="https://blog.monochromegane.com">THINKING MEGANE</a></h1>
+    <nav>
+      <ul class="menu">
+        <li><a href="/self-introduction/">Home</a></li>
+        <li><a href="/post/">Archives</a></li>
+        <li><a href="/diary/">Diary</a></li>
+        <li><a href="http://thinking-megane.blogspot.jp/">Old Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+</div>
+
+    <div class="container">
+      <article>
+  <div class="post">
+    <header>
+      <h1><a href="https://blog.monochromegane.com/blog/2013/09/18/ag-and-unite/">agとUnite.vimで快適高速grep環境を手に入れる</a></h1>
+      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2013-09-18</div></time>
+    </header>
+    <div class="post-inner">
+      
+
+<p>今までVim内のgrepにはUnite.vimを使っていたんですが、ファイル数が多いときに遅く感じることがあったので、前回導入した <a href="https://github.com/ggreer/the_silver_searcher">ag(The Silver Searcher)</a>と組み合わせて快適高速grep環境をつくりました。</p>
+
+<hr />
+
+<h1 id="the-silver-searcher-と-unite-vim">The Silver Searcher と Unite.vim</h1>
+
+<p>The Silver Searcherは、grepやackより高速な検索が売りのパターン検索を行うコマンドです。</p>
+
+<p>また、Unite.vimは、様々なデータソースを共通のインターフェースで操作できるプラグインです。</p>
+
+<p>ディレクトリのファイル一覧や、バッファ一覧などを同じインターフェースで操作できるので使いはじめると手放せなくなるプラグインです。</p>
+
+<p>The Silver Searcherについてはこの辺が分かりやすいと思います。</p>
+
+<ul>
+<li><a href="http://blog.glidenote.com/blog/2013/02/28/the-silver-searcher-better-than-ack/">ackを捨てて、より高速なag(The Silver Searcher)に切り替えた</a></li>
+</ul>
+
+<hr />
+
+<h1 id="インストール">インストール</h1>
+
+<h2 id="the-silver-searcher-のインストール">The Silver Searcher のインストール</h2>
+
+<p>Macの場合、homebrewで提供されてます。</p>
+
+<pre><code class="language-sh">$ brew install the_silver_searcher
+</code></pre>
+
+<h2 id="unite-vim-のインストール">Unite.vim のインストール</h2>
+
+<p>BundleやNeoBundleによるインストールがおすすめです。</p>
+
+<p>Bundleの場合<code>~/.vimrc</code>に以下を記述してノーマルモードで<code>:BundleInstall</code>を実行、インストールします。</p>
+
+<pre><code>Bundle &quot;Shougo/unite.vim&quot;
+Bundle &quot;git://github.com/Shougo/vimproc&quot; 
+</code></pre>
+
+<p>インストール後、vimprocをコンパイルします。</p>
+
+<pre><code class="language-sh">$ cd ~/.vim/bundle/vimproc
+$ make # Macの場合
+</code></pre>
+
+<p>makeファイルはOSごとに違うので<a href="https://github.com/Shougo/vimproc.vim">公式のREADME</a>を確認してください。</p>
+
+<hr />
+
+<h1 id="設定">設定</h1>
+
+<p><code>~/.vimrc</code>に以下を記述します。</p>
+
+<pre><code>&quot; insert modeで開始
+let g:unite_enable_start_insert = 1
+
+&quot; 大文字小文字を区別しない
+let g:unite_enable_ignore_case = 1
+let g:unite_enable_smart_case = 1
+
+&quot; grep検索
+nnoremap &lt;silent&gt; ,g  :&lt;C-u&gt;Unite grep:. -buffer-name=search-buffer&lt;CR&gt;
+
+&quot; カーソル位置の単語をgrep検索
+nnoremap &lt;silent&gt; ,cg :&lt;C-u&gt;Unite grep:. -buffer-name=search-buffer&lt;CR&gt;&lt;C-R&gt;&lt;C-W&gt;
+
+&quot; grep検索結果の再呼出
+nnoremap &lt;silent&gt; ,r  :&lt;C-u&gt;UniteResume search-buffer&lt;CR&gt;
+
+&quot; unite grep に ag(The Silver Searcher) を使う
+if executable('ag')
+  let g:unite_source_grep_command = 'ag'
+  let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
+  let g:unite_source_grep_recursive_opt = ''
+endif
+</code></pre>
+
+<hr />
+
+<h1 id="使い方">使い方</h1>
+
+<h2 id="カレントディレクトリ以下をパターン検索">カレントディレクトリ以下をパターン検索</h2>
+
+<p>ノーマルモードで<code>,g</code>を入力するとVimのコマンドラインに</p>
+
+<pre><code class="language-sh">Pattern:  
+</code></pre>
+
+<p>と表示されるので、検索したいパターンを入力、Enterでカレントディレクトリ以下のファイルに対して再帰的に検索が開始されます。</p>
+
+<p><img src="/images/2013/09/unite-grep.png" alt="Unite Grep" /></p>
+
+<p>こんな感じで候補が表示されるので、一番上のプロンプトで絞込語句を入力したり、<code>Ctrl+p</code> or <code>Ctrl+n</code>でカーソルを移動させることができます。</p>
+
+<p>Enterで対象のファイルが新しいバッファで開きます。</p>
+
+<h2 id="カーソル位置の単語でパターン検索">カーソル位置の単語でパターン検索</h2>
+
+<p>開いているファイル内に検索したい語句がある場合は、カーソルをそこまで持っていき、<code>,cg</code>でOKです。</p>
+
+<p>さきほどの<code>Pattern:</code>のところにカーソル位置の単語が入力された状態になります。
+あとの使い方は同じです。</p>
+
+<h2 id="検索結果の再呼び出し">検索結果の再呼び出し</h2>
+
+<p>候補を選択したあと、再度パターン検索の結果を表示したいときは、<code>,r</code>を入力します。</p>
+
+<p><code>,g</code>や<code>,cg</code>で検索した結果は<code>-buffer-name=search-buffer</code>オプションによりバッファに保存しており、このバッファを<code>UniteResume</code>で再利用することで再度結果を呼び出すことができます。</p>
+
+<p>別の検索を実行するとバッファは上書きされます。</p>
+
+<hr />
+
+<h1 id="tipsなど">Tipsなど</h1>
+
+<h2 id="パターン検索の起点ディレクトリを指定する">パターン検索の起点ディレクトリを指定する</h2>
+
+<p><code>,g</code>や<code>,cg</code>で呼び出すUnite grepはプロジェクトのトップディレクトリで使うことを想定おり、カレントディレクトリ配下をデフォルトで指定するようにしています。</p>
+
+<p>もしパターン検索の起点ディレクトリを毎回指定するときは、<code>Unite grep:.</code>の<code>:.</code>を削除してください。</p>
+
+<p><code>Pattern</code>プロンプトの前に、<code>Target:</code>が表示されるようになり、ここで起点ディレクトリを指定できるようになります。</p>
+
+<h2 id="euc-jp-shift-jisのファイルがパターン検索にひっかからない">EUC-JP/Shift-JISのファイルがパターン検索にひっかからない</h2>
+
+<p>The Silver SearcherはEUC-JP/Shift-JISのエンコードがされたファイルをバイナリと見なして検索対象から除外します。
+もしそれらのエンコードのファイルを利用する場合は、EUC-JP/Shift-JISのファイルも検索対象とする修正版を提供しているのでこちらを利用してみてください。</p>
+
+<p>詳細はこちら</p>
+
+<ul>
+<li><a href="/blog/2013/09/15/the-silver-searcher-detects-japanese-char-set/">ag(The Silver Searcher)でEUC-JP/Shift-JISのファイルも検索できるようにしてみた</a></li>
+</ul>
+
+<p>homebrewならインストールは簡単です。</p>
+
+<pre><code class="language-sh">brew install https://gist.github.com/morygonzalez/6588887/raw/b09a904e7ca9dd09abfef88b0e0e98a50a206d3b/the_legacy_searcher.rb
+</code></pre>
+
+<p>既存のコマンドは<code>brew uninstall the_silver_searcher</code>でアンインストールしておいてください。</p>
+
+<hr />
+
+<p>Unite.vimは標準でもgrepが同梱されているのですが、agと組み合わせることでより高速な環境を手にいれることができます。
+Unite.vimは他にもたくさんのことができるのでプラグインを探してみてください。</p>
+
+<p>ちなみに自分のdotfileはこちらに公開しています。参考になればー。</p>
+
+<p><a href="https://github.com/monochromegane/dotfiles">GitHub: monochromegane/dotfiles</a></p>
+
+    </div>
+    <footer class="tag">
+      <i class="fa fa-tags tag-icon"></i>
+      <ul>
+      
+        <li><a class="tag-link" href="/tags/ag">ag</a></li>
+      
+        <li><a class="tag-link" href="/tags/ack">ack</a></li>
+      
+        <li><a class="tag-link" href="/tags/unite.vim">unite.vim</a></li>
+      
+        <li><a class="tag-link" href="/tags/grep">grep</a></li>
+      
+        <li><a class="tag-link" href="/tags/the-silver-searcher">the-silver-searcher</a></li>
+      
+      </ul>
+      <div class="clear"></div>
+    </footer>
+  </div>
+</article>
+
+      <div class="social-btn">
+  <div>
+    <a href="http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/09/18/ag-and-unite/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="en" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+  <div>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-via="monochromegane">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  </div>
+</div>
+
+    </div>
+    <footer class="footer">
+  <div class="author"></div>
+  <p class="author-name"><a href="https://twitter.com/monochromegane" target="_blank">@monochromegane</a></p>
+  
+    <p>monochromegane (モノクロめがね) と申します。</p>
+  
+    <p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+  
+  <ul class="social">
+    <li><a href="https://twitter.com/monochromegane" target="_blank"><i class="fa fa-twitter"></i></a></li>
+    <li><a href="https://github.com/monochromegane" target="_blank"><i class="fa fa-github"></i></a></li>
+    <li><a href="/index.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
+  </ul>
+  <p class="copyright">
+    <small>&copy;  <span class="">Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>, Designed by <a href="https://twitter.com/keita_kawamoto" target="_blank">&copy;keita_kawamoto</a></span></small>
+  </p>
+</footer>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+    
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-38374674-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+  </body>
+</html>

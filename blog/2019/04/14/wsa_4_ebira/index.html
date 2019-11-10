@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width">
+  <meta name="author" content="">
+  
+    <title>Ebira: アクセス負荷に応じて継続的にスケーリング基準を最適化する汎用オートスケーリング機構 &middot; THINKING MEGANE</title>
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@monochromegane">
+  <meta property="og:description" content="このエントリは、第四回 Web System Architecture 研究会 (WSA研)の予稿です。
+はじめに Webサービスの運用において，急激なアクセス頻度の上昇に対する安定性を保つため，Webアプリケーションにスケーラビリティの仕組みが一般的に求められるようになった． これを支援するためにWebアプリケーションを稼働させるクラウドサービスやオーケストレーションツールから，オートスケーリング機能が提供されている． しかしながら，機能を利用するためのスケーリング契機となる指標や基準値は，運用するWebサービスの特性を考慮して個別に決定する必要がある． ホスティングサービスのように個々の運用対象に対する特性が不明かつ多様な環境においては，Webサービスの特性に依存しない汎用的なスケーリング戦略を備えた機構を 横断的に適用できることが，運用効率化並びに運用対象全体での安定化のために重要である．
+Webサービスの特性に依存しない汎用的なスケーリング戦略のためには，汎用的な指標や基準値が必要である．
+Webアプリケーションにおけるアプリケーションサーバは通常，複数のロールのサーバに処理を依頼し，これを統合してリクエストを返すことから， CPUやメモリといった単一サーバにおけるプリミティブな指標からはその負荷状態を表すことが難しい． 三宅らは仮想サーバの予測的オートスケーリングにおいて， アプリケーションの処理内容ではなく運用経験から得られたサーバ単位のスループットを指標として，これを予測するモデルによってサーバ台数調整機能を実現した．
+一方で基準となる値は運用経験から得られたものであり，運用対象に対する特性が不明な環境では用いることができない． そこで，この特性を明らかにするために，「全自動パラメータチューニングさん」のような探索的なアプローチ， または，予測的なアプローチが採用される． しかしながら，ホスティングのような環境では学習データの蓄積を含め，負荷の発生しうる操作の実施には慎重にならざるを得ない． クラウドサービスやオーケストレーションツールで利用可能な指標の基準値はCPU使用率や秒間クエリ数，コネクション数などシステムが許容可能とみなせる値であり，これらを導くための負荷検証も同様である．
+三宅はKaburaya: CPU負荷に応じて継続的に上限値を最適化する動的セマフォにおいて， 最適な並行数を継続的に求めるために処理対象の負荷の均衡点を目標とする方式を提案した． この方式では，目標値を動的に変更しフィードバック制御を用いることで，並行数が増えすぎないようにすることができるためオートスケール機能への転用も可能であると述べた． しかしながら，CLIツールを対象とした実装のため，目標値をCPU使用率と定めたこと，一定の負荷が継続的に発生することを前提としたことから，目標値への追従のため継続的に負荷が発生する．
+Webサービスの特性に依存しない汎用的なスケーリング戦略のためには，汎用的な指標として外形的な指標を用いながら，特性に依存しない基準値をWebサービスへの負担なく求めたい． 本研究では，アクセス負荷に応じて継続的にスケーリング基準を最適化する汎用オートスケーリング機構を提案する． 実装には，Kaburayaのうち，ダイナミックターゲットコントローラの仕組みをCPU負荷ではなくWebサービスのレスポンスタイムに対して適用する． すなわち，直近のレスポンスタイムが均衡する点に収束するような台数調整が行う． なお，算出する理想台数と実際に追加する台数は分離可能とすることで，ホストのコンピューティングリソースの限界を加味した運用が可能となる．
+評価 本報告では，提案手法を算出エンジンに用いたシミュレーション環境で評価する．
+シミュレーションは，同時アクセス数によってレスポンスタイムが変化するサーバーによって，水平スケーリングがリニアに有効な状況と 同様の傾向を持つ後段サーバーへのアクセスによるボトルネックが発生し，水平スケーリングがリニアには有効とならない状況を用意した． これらの環境において，単純なPID制御と比較して，提案手法が前提とする環境において有効であることを示す．
+シミュレーション環境 同時アクセス数によってレスポンスタイムが変化するサーバーは以下のようにモデル化した．
+$exp(c/el)-1&#43;r$
+ここで，cは同時アクセス数，rは最小レスポンスタイムである． elは伸長用の定数であり，これが大きければ同時アクセス数の増加に対してレスポンスタイムの増加が繰り延べされる．前段は100，後段は300とした． なお，後段は水平スケーリングが行われず，前段からのアクセス数の合計が後段に対するアクセス数となり，レスポンスタイムはこれを合算したものとする．
+それぞれのシミュレーション環境の最低な台数とレスポンスタイムを示す．
+水平スケーリングがリニアに有効な場合 PID制御と提案手法の比較を示す． PID制御は最小レスポンスタイムを平常時の運用において把握したとする． なお，提案手法では内部にPID制御を用いるが，最適値を動的に求めるため最小レスポンスタイムの把握は不要である．
+レスポンスタイムとスケーリングの台数が単純な関係である場合，実装は簡単である． PID制御は最小レスポンスタイムさえ取得できれば綺麗な適応をする． 一方で提案手法は下げ幅が不足して供給過剰な状態が発生した． これは目標値の変更を止めるための判定が早期に行われたためであり，間接的には変化率を直前との比較でしか行なっていないことが理由となる． 実運用では，この期間を延伸，さらには移動平均のような形で平滑化してこの精度を向上させる必要がある．
+ボトルネックがある場合 PID制御と提案手法の比較を示す． 最小レスポンスタイムに関する注釈は上記と同じである．
+このシミュレーションではボトルネックに達したことでPID制御によるスケーリングが最小レスポンスに到達しないことで永遠に台数を追加している． 実際にはシステムに最大上限が設けられるが，その最適な上限値についてもWebサービスの特性に依存することから容易に決定することはできない． 一方，提案システムでは，これらの情報を知らずとも目標値の修正によってこれに対処する． 下げ幅の不足については上記と同じ方法での解決が見込める．
+発表スライド  発表を終えて 今回の発表は前回のアイディアであるKaburayaの具体的な適用箇所を想定したものとした． 個人的な最近の一番の変化だと思っているのが，長期間付き合えるアイディアが出てくるようになったことだ． 長期間付き合えるというのは，1. ビジョンがあって長期間かけてそれらを実現していくもの，2. 汎用的なアイディアがあってそれらの適用先を広げていくもの，の2つがあると思う． 1.については，研究テーマであるなめらかなマッチングに対して一歩づつ進めており，2.についてはWSA研を始めとした個人の興味発のプロダクトがそのようになっている． 特に研究に携わるまでの個人の興味発のプロダクトはたくさんOSSとして公開していたものの，その場限りのもも多く，実際の適用や発展が少なかったように思う． Kaburayaを始めとする最近のプロダクトでは，なるべく実装から切り離して目的，妥当性，そして背景を整理しながらアーキテクチャ，機構，システムとしての骨組みを整え，自分なりにその本質に迫るようになった． そして，どのような評価をすればこれらの有効性を示せるかを踏まえた上で実装をする． これはまさに研究の論文的アプローチであり，これから生まれたプロダクトは以前と比べて芯があり発展性が増してきたように思える． 実際にKaburayaは，WSA研#3での発表を皮切りに東京のGoConで発表し今年サンディエゴであるGopherConにも採択された．そして今回のWSA#4ではオートスケーリングへの転用の可能性も示せた．">
+  <meta property="og:title" content="Ebira: アクセス負荷に応じて継続的にスケーリング基準を最適化する汎用オートスケーリング機構">
+  <meta property="og:url" content="https://blog.monochromegane.com/blog/2019/04/14/wsa_4_ebira/">
+  <meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+  
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Source+Code+Pro' type='text/css'>
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Montserrat' type='text/css'>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css">
+  <link rel="stylesheet" href="/css/text.css">
+  <link rel="stylesheet" href="/css/color.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="/images/apple-touch-icon-57-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="/images/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
+  <link rel="canonical" href="https://blog.monochromegane.com/blog/2019/04/14/wsa_4_ebira/">
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="THINKING MEGANE" />
+  
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async>
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: {
+               Macros: {
+                        bm: ["\\boldsymbol{#1}", 1],
+                        argmax: ["\\mathop{\\rm arg\\,max}\\limits"],
+                        argmin: ["\\mathop{\\rm arg\\,min}\\limits"]},
+               extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                   displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+  </script>
+</head>
+
+  <body>
+    <div class="header">
+  <header>
+    <h1 class="logo"><a href="https://blog.monochromegane.com">THINKING MEGANE</a></h1>
+    <nav>
+      <ul class="menu">
+        <li><a href="/self-introduction/">Home</a></li>
+        <li><a href="/post/">Archives</a></li>
+        <li><a href="/diary/">Diary</a></li>
+        <li><a href="http://thinking-megane.blogspot.jp/">Old Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+</div>
+
+    <div class="container">
+      <article>
+  <div class="post">
+    <header>
+      <h1><a href="https://blog.monochromegane.com/blog/2019/04/14/wsa_4_ebira/">Ebira: アクセス負荷に応じて継続的にスケーリング基準を最適化する汎用オートスケーリング機構</a></h1>
+      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2019-04-14</div></time>
+    </header>
+    <div class="post-inner">
+      
+
+<p>このエントリは、<a href="https://websystemarchitecture.hatenablog.jp/entry/2019/02/26/100725">第四回 Web System Architecture 研究会 (WSA研)</a>の予稿です。</p>
+
+<h1 id="はじめに">はじめに</h1>
+
+<p>Webサービスの運用において，急激なアクセス頻度の上昇に対する安定性を保つため，Webアプリケーションにスケーラビリティの仕組みが一般的に求められるようになった．
+これを支援するためにWebアプリケーションを稼働させるクラウドサービスやオーケストレーションツールから，オートスケーリング機能が提供されている．
+しかしながら，機能を利用するためのスケーリング契機となる指標や基準値は，運用するWebサービスの特性を考慮して個別に決定する必要がある．
+ホスティングサービスのように個々の運用対象に対する特性が不明かつ多様な環境においては，Webサービスの特性に依存しない汎用的なスケーリング戦略を備えた機構を
+横断的に適用できることが，運用効率化並びに運用対象全体での安定化のために重要である．</p>
+
+<p>Webサービスの特性に依存しない汎用的なスケーリング戦略のためには，汎用的な指標や基準値が必要である．</p>
+
+<p>Webアプリケーションにおけるアプリケーションサーバは通常，複数のロールのサーバに処理を依頼し，これを統合してリクエストを返すことから，
+CPUやメモリといった単一サーバにおけるプリミティブな指標からはその負荷状態を表すことが難しい．
+三宅らは<a href="https://www.ipsj.or.jp/event/fit/fit2018/FIT2018_program_web/data/html/abstract/CL-002.html">仮想サーバの予測的オートスケーリング</a>において，
+アプリケーションの処理内容ではなく運用経験から得られたサーバ単位のスループットを指標として，これを予測するモデルによってサーバ台数調整機能を実現した．</p>
+
+<p>一方で基準となる値は運用経験から得られたものであり，運用対象に対する特性が不明な環境では用いることができない．
+そこで，この特性を明らかにするために，<a href="https://blog.mirakui.com/entry/2013/02/20/003401">「全自動パラメータチューニングさん」</a>のような探索的なアプローチ，
+または，予測的なアプローチが採用される．
+しかしながら，ホスティングのような環境では学習データの蓄積を含め，負荷の発生しうる操作の実施には慎重にならざるを得ない．
+クラウドサービスやオーケストレーションツールで利用可能な指標の基準値はCPU使用率や秒間クエリ数，コネクション数などシステムが許容可能とみなせる値であり，これらを導くための負荷検証も同様である．</p>
+
+<p>三宅は<a href="https://blog.monochromegane.com/blog/2018/11/25/wsa_3_kaburaya/">Kaburaya: CPU負荷に応じて継続的に上限値を最適化する動的セマフォ</a>において，
+最適な並行数を継続的に求めるために処理対象の負荷の均衡点を目標とする方式を提案した．
+この方式では，目標値を動的に変更しフィードバック制御を用いることで，並行数が増えすぎないようにすることができるためオートスケール機能への転用も可能であると述べた． しかしながら，CLIツールを対象とした実装のため，目標値をCPU使用率と定めたこと，一定の負荷が継続的に発生することを前提としたことから，目標値への追従のため継続的に負荷が発生する．</p>
+
+<p>Webサービスの特性に依存しない汎用的なスケーリング戦略のためには，汎用的な指標として外形的な指標を用いながら，特性に依存しない基準値をWebサービスへの負担なく求めたい．
+本研究では，アクセス負荷に応じて継続的にスケーリング基準を最適化する汎用オートスケーリング機構を提案する．
+実装には，Kaburayaのうち，ダイナミックターゲットコントローラの仕組みをCPU負荷ではなくWebサービスのレスポンスタイムに対して適用する．
+すなわち，直近のレスポンスタイムが均衡する点に収束するような台数調整が行う．
+なお，算出する理想台数と実際に追加する台数は分離可能とすることで，ホストのコンピューティングリソースの限界を加味した運用が可能となる．</p>
+
+<h1 id="評価">評価</h1>
+
+<p>本報告では，提案手法を算出エンジンに用いたシミュレーション環境で評価する．</p>
+
+<p>シミュレーションは，同時アクセス数によってレスポンスタイムが変化するサーバーによって，水平スケーリングがリニアに有効な状況と
+同様の傾向を持つ後段サーバーへのアクセスによるボトルネックが発生し，水平スケーリングがリニアには有効とならない状況を用意した．
+これらの環境において，単純なPID制御と比較して，提案手法が前提とする環境において有効であることを示す．</p>
+
+<h2 id="シミュレーション環境">シミュレーション環境</h2>
+
+<p>同時アクセス数によってレスポンスタイムが変化するサーバーは以下のようにモデル化した．</p>
+
+<p>$exp(c/el)-1+r$</p>
+
+<p>ここで，cは同時アクセス数，rは最小レスポンスタイムである．
+elは伸長用の定数であり，これが大きければ同時アクセス数の増加に対してレスポンスタイムの増加が繰り延べされる．前段は100，後段は300とした．
+なお，後段は水平スケーリングが行われず，前段からのアクセス数の合計が後段に対するアクセス数となり，レスポンスタイムはこれを合算したものとする．</p>
+
+<p><img src="https://user-images.githubusercontent.com/1845486/56059986-804a1500-5da0-11e9-8916-10b66ae6e0ba.png" alt="expm1" /></p>
+
+<p>それぞれのシミュレーション環境の最低な台数とレスポンスタイムを示す．</p>
+
+<p><img src="https://user-images.githubusercontent.com/1845486/56057806-bedcd100-5d9a-11e9-947e-0424283270c9.png" alt="scalable-noope" />
+<img src="https://user-images.githubusercontent.com/1845486/56057928-10855b80-5d9b-11e9-8085-b518bfeebdc2.png" alt="non_scalable-noope" /></p>
+
+<h2 id="水平スケーリングがリニアに有効な場合">水平スケーリングがリニアに有効な場合</h2>
+
+<p>PID制御と提案手法の比較を示す．
+PID制御は最小レスポンスタイムを平常時の運用において把握したとする．
+なお，提案手法では内部にPID制御を用いるが，最適値を動的に求めるため最小レスポンスタイムの把握は不要である．</p>
+
+<p><img src="https://user-images.githubusercontent.com/1845486/56058043-5a6e4180-5d9b-11e9-80af-da6add2d8acd.png" alt="scalable-pid" />
+<img src="https://user-images.githubusercontent.com/1845486/56058136-8e496700-5d9b-11e9-9847-2d497f0664ec.png" alt="scalable-kaburaya" /></p>
+
+<p>レスポンスタイムとスケーリングの台数が単純な関係である場合，実装は簡単である．
+PID制御は最小レスポンスタイムさえ取得できれば綺麗な適応をする．
+一方で提案手法は下げ幅が不足して供給過剰な状態が発生した．
+これは目標値の変更を止めるための判定が早期に行われたためであり，間接的には変化率を直前との比較でしか行なっていないことが理由となる．
+実運用では，この期間を延伸，さらには移動平均のような形で平滑化してこの精度を向上させる必要がある．</p>
+
+<h2 id="ボトルネックがある場合">ボトルネックがある場合</h2>
+
+<p>PID制御と提案手法の比較を示す．
+最小レスポンスタイムに関する注釈は上記と同じである．</p>
+
+<p><img src="https://user-images.githubusercontent.com/1845486/56058547-a077d500-5d9c-11e9-8c8d-41da2ba4dfdc.png" alt="non_scalable-pid" />
+<img src="https://user-images.githubusercontent.com/1845486/56058588-beddd080-5d9c-11e9-9b34-ad8812f8f025.png" alt="non_scalable-kaburaya" /></p>
+
+<p>このシミュレーションではボトルネックに達したことでPID制御によるスケーリングが最小レスポンスに到達しないことで永遠に台数を追加している．
+実際にはシステムに最大上限が設けられるが，その最適な上限値についてもWebサービスの特性に依存することから容易に決定することはできない．
+一方，提案システムでは，これらの情報を知らずとも目標値の修正によってこれに対処する．
+下げ幅の不足については上記と同じ方法での解決が見込める．</p>
+
+<h1 id="発表スライド">発表スライド</h1>
+
+<script async class="speakerdeck-embed" data-id="70c79a7d33df43f59cb4c9a75aed39df" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
+
+<h1 id="発表を終えて">発表を終えて</h1>
+
+<p>今回の発表は前回のアイディアであるKaburayaの具体的な適用箇所を想定したものとした．
+個人的な最近の一番の変化だと思っているのが，長期間付き合えるアイディアが出てくるようになったことだ．
+長期間付き合えるというのは，1. ビジョンがあって長期間かけてそれらを実現していくもの，2. 汎用的なアイディアがあってそれらの適用先を広げていくもの，の2つがあると思う．
+1.については，研究テーマであるなめらかなマッチングに対して一歩づつ進めており，2.についてはWSA研を始めとした個人の興味発のプロダクトがそのようになっている．
+特に研究に携わるまでの個人の興味発のプロダクトはたくさんOSSとして公開していたものの，その場限りのもも多く，実際の適用や発展が少なかったように思う．
+Kaburayaを始めとする最近のプロダクトでは，なるべく実装から切り離して目的，妥当性，そして背景を整理しながらアーキテクチャ，機構，システムとしての骨組みを整え，自分なりにその本質に迫るようになった．
+そして，どのような評価をすればこれらの有効性を示せるかを踏まえた上で実装をする．
+これはまさに研究の論文的アプローチであり，これから生まれたプロダクトは以前と比べて芯があり発展性が増してきたように思える．
+実際にKaburayaは，WSA研#3での発表を皮切りに東京のGoConで発表し今年サンディエゴであるGopherConにも採択された．そして今回のWSA#4ではオートスケーリングへの転用の可能性も示せた．</p>
+
+<p>周りを見れば具体と抽象を自在に素早く行き来し，自由闊達かつ高度な意見を交わす人々ばかりで自信を失いかけるけれども，己だけを見た時には多少の成長も感じられるようにはなったと思う．
+研究職になってレベルが0になった時期もあったけれども，エンジニアとしての具体化能力との相乗効果が出せるようにこれからも精進して行きたい．</p>
+
+<p>普段の研究から少し離れながらも研究的なアプローチを進めることができているのはWSA研によるところも大きい．
+予稿をブログで書いておけばあとは当日の議論がメインであり，色々な観点からアイディアを練ることができる．このスピード感と濃密感は，エンジニア向けのカンファレンスと学会のいいとこ取りになっている．
+定期的にあるところも大変良くて，強制的にアイディアが形になり，進んでいく．</p>
+
+<p>総じて第四回もとても良い会であった．興味がある方は9月福岡で開催の第五回への参加を検討してみてはいかがだろうか．</p>
+
+    </div>
+    <footer class="tag">
+      <i class="fa fa-tags tag-icon"></i>
+      <ul>
+      
+        <li><a class="tag-link" href="/tags/wsa%E7%A0%94">WSA研</a></li>
+      
+      </ul>
+      <div class="clear"></div>
+    </footer>
+  </div>
+</article>
+
+      <div class="social-btn">
+  <div>
+    <a href="http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2019/04/14/wsa_4_ebira/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="en" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+  <div>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-via="monochromegane">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  </div>
+</div>
+
+    </div>
+    <footer class="footer">
+  <div class="author"></div>
+  <p class="author-name"><a href="https://twitter.com/monochromegane" target="_blank">@monochromegane</a></p>
+  
+    <p>monochromegane (モノクロめがね) と申します。</p>
+  
+    <p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+  
+  <ul class="social">
+    <li><a href="https://twitter.com/monochromegane" target="_blank"><i class="fa fa-twitter"></i></a></li>
+    <li><a href="https://github.com/monochromegane" target="_blank"><i class="fa fa-github"></i></a></li>
+    <li><a href="/index.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
+  </ul>
+  <p class="copyright">
+    <small>&copy;  <span class="">Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>, Designed by <a href="https://twitter.com/keita_kawamoto" target="_blank">&copy;keita_kawamoto</a></span></small>
+  </p>
+</footer>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+    
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-38374674-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+  </body>
+</html>

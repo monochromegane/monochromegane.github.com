@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Docker on THINKING MEGANE</title>
+    <link>https://blog.monochromegane.com/tags/docker/</link>
+    <description>Recent content in Docker on THINKING MEGANE</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Sun, 16 Aug 2015 15:05:04 +0900</lastBuildDate>
+    <atom:link href="/tags/docker/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Goのデプロイを「もっと」簡単にする。ビルドプロキシCargo。改めTorokko。</title>
+      <link>https://blog.monochromegane.com/blog/2015/08/16/deploy-golang-by-cargo/</link>
+      <pubDate>Sun, 16 Aug 2015 15:05:04 +0900</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2015/08/16/deploy-golang-by-cargo/</guid>
+      <description>
+
+&lt;p&gt;Goアプリのデプロイはバイナリをひとつ配布して完了なのでとても楽なのですが、バイナリ自体をどこで管理するかについては意外と頭を悩ませることになります。
+Goを使うにあたって、コードさえあればあとはバイナリも簡単に配布できる状態というのが望ましいと思い、仕組みを作ってみました。&lt;/p&gt;
+
+&lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Ftorokko&#34; title=&#34;monochromegane/torokko&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/torokko&#34;&amp;gt;monochromegane/torokko&amp;lt;/a&amp;gt;&lt;/iframe&gt;
+
+&lt;p&gt;&lt;strong&gt;2015/08/16追記: CargoはRustのパッケージマネージャーと名前がかぶってたのでTorokko(トロッコ)に改名しました！&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;TorokkoはGoアプリのビルドと成果物ダウンロード用のAPIを提供するビルドプロキシです。&lt;/p&gt;
+
+&lt;p&gt;リクエストのURLで対象リポジトリ、GOOS、GOARCH、バージョンを指定します。
+ビルドはDockerコンテナを用いて行い、バックエンドストレージに成果物が保存され、ビルドリクエストと同じURLでダウンロードを行うことができます。&lt;/p&gt;
+
+&lt;p&gt;Docker Hub の Automated Builds のGo版と考えてもらうとイメージしやすいかと思います。
+Torokkoは、特にGoの開発環境をつくりたくないサーバー上へのデプロイを簡単にすることを目的としています。&lt;/p&gt;
+
+&lt;h2 id=&#34;クイックスタート&#34;&gt;クイックスタート&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Torokkoサーバーを起動します&lt;/li&gt;
+&lt;li&gt;ビルド用のエンドポイントにアクセスします&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ curl -X POST http://torokko-server/{remote}/{owner}/{repo}/{GOOS}/{GOARCH}/{version}
+# e.g. http://torokko-server/github.com/monochromegane/torokko/linux/amd64/v0.0.1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;しばらく経つとビルドが完了しているので、ダウンロード用のエンドポイントにアクセスします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ curl -OJL http://torokko-server/{remote}/{owner}/{repo}/{GOOS}/{GOARCH}/{version}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://torokko.monochromegane.com&#34;&gt;こちら&lt;/a&gt;にデモ用のAPIサーバーを用意しているので使ってみてください。&lt;/p&gt;
+
+&lt;h2 id=&#34;torokkoの仕組み&#34;&gt;Torokkoの仕組み&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://cloud.githubusercontent.com/assets/1845486/9293092/eba8190c-4457-11e5-9176-19d9f7ac3363.jpg&#34; alt=&#34;torokko\_overview&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;基本的な仕組みは前述のとおりです。
+リクエストURLに応じたリポジトリをDockerコンテナでビルドし、ダウンロードできるようにバックエンドのストレージに保存しています。&lt;/p&gt;
+
+&lt;p&gt;ビルドとダウンロードを一元管理することで&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;リポジトリはコードを管理するだけでよい&lt;/li&gt;
+&lt;li&gt;デプロイ元のPCやデプロイ先のサーバーでビルドせずにダウンロードするだけでよい&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;といったメリットがあります。&lt;/p&gt;
+
+&lt;h2 id=&#34;カスタムビルド&#34;&gt;カスタムビルド&lt;/h2&gt;
+
+&lt;p&gt;TorokkoはGoアプリのビルドに&lt;code&gt;make&lt;/code&gt;を使います。
+単純なGoアプリの場合、Torokkoがデフォルトで用意するビルド手順で問題ないですが、Godepsやgo-bindata、go generateなどを使う場合、リポジトリにMakefileを準備してください。&lt;/p&gt;
+
+&lt;p&gt;なお、デフォルトのMakefileは以下のとおりです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-mak&#34;&gt;build:
+	go get -d ./...
+	go build
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;エンドポイント&#34;&gt;エンドポイント&lt;/h2&gt;
+
+&lt;p&gt;紹介した、ビルド、ダウンロードの他にビルドログを確認するためのエンドポイントがあります。
+詳しくは&lt;a href=&#34;https://github.com/monochromegane/torokko/blob/master/README.md&#34;&gt;README&lt;/a&gt;を参照ください。&lt;/p&gt;
+
+&lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
+
+&lt;p&gt;とりあえずざっと作った感じで、まだプロトタイプに近いので環境つくる手順も整備できていない、かつスケールしやすい構成とはとても言えない状態ですが、&lt;/p&gt;
+
+&lt;p&gt;CIサービスの設定 + GitHub Releaseへの紐付け + デプロイレシピの修正をしながら、&lt;/p&gt;
+
+&lt;p&gt;「オレは！このバイナリを！ひとつ！サーバーに！置きたいだけなの！！」&lt;/p&gt;
+
+&lt;p&gt;そう思ったことがあるひとは使ってみてもよいかもしれません。
+お盆休み明けから社内サーバーに入れてみて少しずつブラッシュアップしていきます。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

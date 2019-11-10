@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width">
+  <meta name="author" content="">
+  
+    <title>2015年のふりかえり &middot; THINKING MEGANE</title>
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@monochromegane">
+  <meta property="og:description" content="仕事 今年は7月頃に2年ほど携わっていたチームから異動して新しい環境になったのが一番大きな変化だった。異動前にPHPバージョンアップを成すことができたし、新しいチームでは新機能開発しながらも技術的な課題がサービスの発展を妨げることのないよう、継続的な改善ができる体制を取ることができた。今のチームは最高で、お互いに敬意を払いながらも得意領域で活躍し、不足しているところを補い合えているんじゃないかと思う。ただ、チームとしての成熟は変化に反応するための柔軟性を失う可能性も含んでいるので、新しい目標、例えば新しい技術への挑戦とか持っている技術の深掘りとかお互いを刺激し合える環境というのをつくっていきたいなあと思う。
+技術 2014年から引き続きGo言語一色の年になった。Top Go GitHub developers in Japanで3位に位置付けられてるのは素直に喜びたい。当たるか当たらないかに関係なく自分が必要と思ったらOSS前提でつくるようになれたし、発表も特に臆することなくできるようになったと思う。
+今は、OSSや発表も個人ベースだったりGo言語界隈という感じで範囲や関係する人が限定的なので、来年はそのあたりをもっと広げて新しい世界を見たいと思っている。
+OSS Go楽しい〜の一年だった。argenとかの大きめのプロダクトもつくれたし、The Platinum Searcherの高速化も達成できたのはよかった。
+ hoi(HoiとSlackで内緒話をする) argen(Go言語でActiveRecordライクなORMをつくった) mdt(CSVテキストをMarkdown形式のテーブルに変換するツールをつくった) conflag(Go言語でコマンドラインオプションをさくっと設定ファイル対応させるライブラリをつくった) Torokko(Goのデプロイを「もっと」簡単にする。ビルドプロキシCargo。改めTorokko。) mackerel-plugin-delayed-job-count dsn go-bincode(野良バイナリになっても大丈夫。Goのバイナリにソースコードを添付するツールをつくった。) slack-incoming-webhooks memcache_key mysql_dump_slow(MySQLのslow_logテーブルをサマライズするGemをつくった) be_strong(さくっとStrongParametersへ移行するbe_strongというgemをつくりました) dragon-imports(goimportsを高速化するdragon-importsコマンドをつくった)
+ V2! V2! Go言語製 高速検索ツールThe Platinum Searcherのv2をリリースしました
+ The Platinum Searcherを5倍高速化するためにやったこと
+  発表 200-300人規模の発表に参加していくことができたので少しづつ東京での勉強会でも顔見知りが増えてきたり声を掛けてもらえるようになったのはうれしい。地元でのFukuoka.goがあんまり開催できてないので、やり方検討しなおして来年はなんとか再開していきたい。
+ Fukuoka.go#7 ソースコードリーディングvol.1を開催しました
+ Go Conference 2015 summer で発表してきた
+ 第2回ペパボテックカンファレンスで発表してきた #pbtech
+ 「minne」技術戦略カンファレンスで発表してきた
+まとめ ペパボに入って3年経って、とにかくコードを書きたいという気持ちはOSSやアウトプットで消化の仕方が分かってきた。来年は楽しみとしている技術を専門職として業務にフィードバックできるようにひとつ成長したいところ。なんにせよ一年おつかれさまでした。">
+  <meta property="og:title" content="2015年のふりかえり">
+  <meta property="og:url" content="https://blog.monochromegane.com/blog/2015/12/31/retrospectives-2015/">
+  <meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+  
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Source+Code+Pro' type='text/css'>
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Montserrat' type='text/css'>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css">
+  <link rel="stylesheet" href="/css/text.css">
+  <link rel="stylesheet" href="/css/color.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="/images/apple-touch-icon-57-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="/images/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
+  <link rel="canonical" href="https://blog.monochromegane.com/blog/2015/12/31/retrospectives-2015/">
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="THINKING MEGANE" />
+  
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async>
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: {
+               Macros: {
+                        bm: ["\\boldsymbol{#1}", 1],
+                        argmax: ["\\mathop{\\rm arg\\,max}\\limits"],
+                        argmin: ["\\mathop{\\rm arg\\,min}\\limits"]},
+               extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                   displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+  </script>
+</head>
+
+  <body>
+    <div class="header">
+  <header>
+    <h1 class="logo"><a href="https://blog.monochromegane.com">THINKING MEGANE</a></h1>
+    <nav>
+      <ul class="menu">
+        <li><a href="/self-introduction/">Home</a></li>
+        <li><a href="/post/">Archives</a></li>
+        <li><a href="/diary/">Diary</a></li>
+        <li><a href="http://thinking-megane.blogspot.jp/">Old Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+</div>
+
+    <div class="container">
+      <article>
+  <div class="post">
+    <header>
+      <h1><a href="https://blog.monochromegane.com/blog/2015/12/31/retrospectives-2015/">2015年のふりかえり</a></h1>
+      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2015-12-31</div></time>
+    </header>
+    <div class="post-inner">
+      
+
+<h2 id="仕事">仕事</h2>
+
+<p>今年は7月頃に2年ほど携わっていたチームから異動して新しい環境になったのが一番大きな変化だった。異動前にPHPバージョンアップを成すことができたし、新しいチームでは新機能開発しながらも技術的な課題がサービスの発展を妨げることのないよう、継続的な改善ができる体制を取ることができた。今のチームは最高で、お互いに敬意を払いながらも得意領域で活躍し、不足しているところを補い合えているんじゃないかと思う。ただ、チームとしての成熟は変化に反応するための柔軟性を失う可能性も含んでいるので、新しい目標、例えば新しい技術への挑戦とか持っている技術の深掘りとかお互いを刺激し合える環境というのをつくっていきたいなあと思う。</p>
+
+<h2 id="技術">技術</h2>
+
+<p><img src="/images/2015/12/contributions_2015.png" alt="" /></p>
+
+<p>2014年から引き続きGo言語一色の年になった。<a href="http://github-awards.com/users?country=japan&amp;language=Go&amp;type=country">Top Go GitHub developers in Japan</a>で3位に位置付けられてるのは素直に喜びたい。当たるか当たらないかに関係なく自分が必要と思ったらOSS前提でつくるようになれたし、発表も特に臆することなくできるようになったと思う。</p>
+
+<p>今は、OSSや発表も個人ベースだったりGo言語界隈という感じで範囲や関係する人が限定的なので、来年はそのあたりをもっと広げて新しい世界を見たいと思っている。</p>
+
+<h3 id="oss">OSS</h3>
+
+<p>Go楽しい〜の一年だった。<a href="https://github.com/monochromegane/argen">argen</a>とかの大きめのプロダクトもつくれたし、<a href="https://github.com/monochromegane/the_platinum_searcher">The Platinum Searcher</a>の高速化も達成できたのはよかった。</p>
+
+<ul>
+<li><a href="https://github.com/monochromegane/hoi">hoi</a>(<a href="/blog/2015/03/01/hoi-and-slack/">HoiとSlackで内緒話をする</a>)</li>
+<li><a href="https://github.com/monochromegane/argen">argen</a>(<a href="/blog/2015/03/04/argen/">Go言語でActiveRecordライクなORMをつくった</a>)</li>
+<li><a href="https://github.com/monochromegane/mdt">mdt</a>(<a href="/blog/2015/05/17/csv-to-markdown-table/">CSVテキストをMarkdown形式のテーブルに変換するツールをつくった</a>)</li>
+<li><a href="https://github.com/monochromegane/conflag">conflag</a>(<a href="/blog/2015/05/30/conflag/">Go言語でコマンドラインオプションをさくっと設定ファイル対応させるライブラリをつくった</a>)</li>
+<li><a href="https://github.com/monochromegane/torokko">Torokko</a>(<a href="/blog/2015/08/16/deploy-golang-by-cargo/">Goのデプロイを「もっと」簡単にする。ビルドプロキシCargo。改めTorokko。</a>)</li>
+<li><a href="https://github.com/monochromegane/mackerel-plugin-delayed-job-count">mackerel-plugin-delayed-job-count</a></li>
+<li><a href="https://github.com/monochromegane/dsn">dsn</a></li>
+<li><a href="https://github.com/monochromegane/go-bincode">go-bincode</a>(<a href="/blog/2015/08/23/go-bincode/">野良バイナリになっても大丈夫。Goのバイナリにソースコードを添付するツールをつくった。</a>)</li>
+<li><a href="https://github.com/monochromegane/slack-incoming-webhooks">slack-incoming-webhooks</a></li>
+<li><a href="https://github.com/monochromegane/memcache_key">memcache_key</a></li>
+<li><a href="https://github.com/monochromegane/mysql_dump_slow">mysql_dump_slow</a>(<a href="/blog/2015/07/20/mysql-dump-slow/">MySQLのslow_logテーブルをサマライズするGemをつくった</a>)</li>
+<li><a href="https://github.com/monochromegane/be_strong">be_strong</a>(<a href="http://tech.pepabo.com/2015/12/18/upgrade-to-strong-parameters/">
+さくっとStrongParametersへ移行するbe_strongというgemをつくりました</a>)</li>
+
+<li><p><a href="https://github.com/monochromegane/dragon-imports">dragon-imports</a>(<a href="/blog/2015/12/23/dragon-imports/">goimportsを高速化するdragon-importsコマンドをつくった</a>)</p></li>
+
+<li><p><a href="/blog/2015/12/08/the-platinum-searcher-v2/">V2! V2! Go言語製 高速検索ツールThe Platinum Searcherのv2をリリースしました</a></p></li>
+
+<li><p><a href="/blog/2015/12/15/how-to-speed-up-the-platinum-searcher-v2/">The Platinum Searcherを5倍高速化するためにやったこと</a></p></li>
+</ul>
+
+<h3 id="発表">発表</h3>
+
+<p>200-300人規模の発表に参加していくことができたので少しづつ東京での勉強会でも顔見知りが増えてきたり声を掛けてもらえるようになったのはうれしい。地元でのFukuoka.goがあんまり開催できてないので、やり方検討しなおして来年はなんとか再開していきたい。</p>
+
+<iframe src="http://www.storyboards.jp/widget/7xay4r" width="640" height="480"></iframe>
+
+<p><a href="/blog/2015/04/25/fukuoka-go-7/">Fukuoka.go#7 ソースコードリーディングvol.1を開催しました</a></p>
+
+<script async class="speakerdeck-embed" data-id="baea21c51cb9413992b74786804e9109" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+
+<p><a href="/blog/2015/06/23/go-conference-2015-summer/">Go Conference 2015 summer で発表してきた</a></p>
+
+<script async class="speakerdeck-embed" data-id="dc3e7e96920d4412b24786d48114bd15" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+
+<p><a href="/blog/2015/07/05/pepabo-tech-conference-2-in-fukuoka/">第2回ペパボテックカンファレンスで発表してきた #pbtech</a></p>
+
+<script async class="speakerdeck-embed" data-id="ae6a096447944303a65456f6ef7af717" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+
+<p><a href="/blog/2015/10/24/minne-tech-conference/">「minne」技術戦略カンファレンスで発表してきた</a></p>
+
+<h2 id="まとめ">まとめ</h2>
+
+<p>ペパボに入って3年経って、とにかくコードを書きたいという気持ちはOSSやアウトプットで消化の仕方が分かってきた。来年は楽しみとしている技術を専門職として業務にフィードバックできるようにひとつ成長したいところ。なんにせよ一年おつかれさまでした。</p>
+
+    </div>
+    <footer class="tag">
+      <i class="fa fa-tags tag-icon"></i>
+      <ul>
+      
+      </ul>
+      <div class="clear"></div>
+    </footer>
+  </div>
+</article>
+
+      <div class="social-btn">
+  <div>
+    <a href="http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2015/12/31/retrospectives-2015/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="en" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+  <div>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-via="monochromegane">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  </div>
+</div>
+
+    </div>
+    <footer class="footer">
+  <div class="author"></div>
+  <p class="author-name"><a href="https://twitter.com/monochromegane" target="_blank">@monochromegane</a></p>
+  
+    <p>monochromegane (モノクロめがね) と申します。</p>
+  
+    <p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+  
+  <ul class="social">
+    <li><a href="https://twitter.com/monochromegane" target="_blank"><i class="fa fa-twitter"></i></a></li>
+    <li><a href="https://github.com/monochromegane" target="_blank"><i class="fa fa-github"></i></a></li>
+    <li><a href="/index.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
+  </ul>
+  <p class="copyright">
+    <small>&copy;  <span class="">Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>, Designed by <a href="https://twitter.com/keita_kawamoto" target="_blank">&copy;keita_kawamoto</a></span></small>
+  </p>
+</footer>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+    
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-38374674-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+  </body>
+</html>

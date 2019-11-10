@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width">
+  <meta name="author" content="">
+  
+    <title>拠点間勉強会を接続するリモート勉強会への誘い &middot; THINKING MEGANE</title>
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@monochromegane">
+  <meta property="og:description" content="主催するFukuoka.goは今月2回のリモート勉強会を実施しました。リモート勉強会に関心のある主催者の参考になればと思い、このエントリではリモート勉強会の開催に関するハウツーと利点、課題を整理します。タイトルは&rdquo;いざない&rdquo;と読んでください。雅ですね。
+経緯 私は福岡在住です。前回のGoConで東京に発表しに行った際に、岡山の岩田プロとお話しする機会がありました。 知り合えたのも何かの縁、福岡と岡山で何か面白いことやりましょうとふわっと約束したのを覚えています。 福岡への帰路、イベントのアイディアを考えながら、やはり物理的な距離の制約が面倒だなと思い至りました。 幸い、所属するGMOペパボでは東京オフィスと福岡オフィス間を繋いだ勉強会（PTF）を定期的に開催しており、この方式を社外の勉強会に転用するという着想を得ました。
+Fukuoka.go#13&#43;Okayama.goと銘打ったイベントの準備は順調に進み、当日は、両会場からの発表を行い会場を挟んだ質疑応答のコールアンドレスポンスも楽しめました。 気を良くして数日後に東京で行われたGo1.12 Release Partyにも接続させてもらい、東京会場の発表を聞いたり、福岡からも発表を行いました。当日は大阪会場も接続していたようです。 各回、各会場とも満足度が高く成功だったと言えるでしょう。
+いやあ，大成功じゃないですか〜楽しかった〜また繋いでやりましょう〜〜！！ #fukuokago #okayamago
+&mdash; モノクロメガネ研究員 (@monochromegane) 2019年2月12日 
+以下では、これらのリモート勉強会を通して得たハウツーや考察を紹介します。リモート勉強会の開催に興味を持った方は良ければ参考にしてください。
+1. リモート勉強会とは このエントリでは、勉強会を、一定人数が会場に集まり発表者の登壇を参加者が聴講し、必要に応じて質疑応答がなされる形式のものとします。 そして、リモート勉強会とは、そのような複数の勉強会会場がインターネット越しに音声と映像を双方向に中継され、同期したタイムテーブルの下で進行される形式のものとします。
+2. 接続方式と構成 接続 拠点間接続にはビデオ会議サービスを利用します。音声、映像、そして画面共有ができるものが必要です。 さらに参加時の敷居を下げるため特定のアプリケーションに依存せずブラウザ単体で動作するものが望ましいと考えます。 今回はこれらの要件を満たす、Google Hangouts Meetを利用しました。
+Hangouts MeetはG Suite利用者のみミーティングを作成することができますが、Googleアカウントを持っていれば（許可制ではありますが）G Suite利用者以外のアカウントも参加することが可能です。
+構成 会場ごとに少なくとも1台のPCから会議に参加している状態とします。会場参加者の映像や音声を伝えるのはこのPC（と外部接続のカメラやマイク）が担当します。 また発表資料のあるPC上（一般には発表者の個人PC）からも同様に会議に参加しておきます。会場の音声が重複することを避けるため、発表者PCではマイクをオフにしておきます。 映像は自由ですが、だいたい他の人の発表を聞いている時の間抜け面が全会場に配信されるため、特に理由がない限りカメラもオフにしておくと良いでしょう。 発表時は、発表者のPCから画面共有を行い、資料を全会場で閲覧できるようにします。
+小さい会場の場合は会場のPCと発表者のPCが兼業することになり、より直感的に準備が進むと思います。 大きな会場の場合は、会場のPCとカメラやマイクの外部接続が必要になります。ここについては共同主催者の@linyowsが別途、「リモート勉強会を支えるオーディオ技術」としてエントリを書いてくれるはずです。読みたい！
+なお、これまでの開催を通して、各会場のカメラは、登壇者を写すもの、会場の様子を写すものの2つがあると一体感が増すように感じました。 そのため各会場からはこれを担う2つのPCが会議に参加していると良さそうです（マイクは一台のみオンとする）。
+3. リモート勉強会におけるリモート会議サービスの実用性 現在のリモート会議サービスであれば十分リモート勉強会で利用することは可能だと考えます。
+特に、このエントリで定める勉強会方式、つまり情報の向きが単方向でシーケンシャルに制御されている、登壇と質疑応答のような方式にはビデオ会議サービスは非常に適していると思えました。 個人的には現実の会議ではリモート会議越しだと視線や挙動をうまくつかめずに同時に話してしまったり逆に沈黙があったりとまだ少しだけ違和感を感じますが、登壇形式であればそのような状況はあまり発生しません。
+また、別会場の音声が聞き取りにくいとストレスを感じますが、少なくともGoogle Hangouts Meetを使用している限りでは接続は非常に安定しており、ここを課題と感じることはありませんでした。 ただ、音声機器に関してはPC内蔵マイク/スピーカーと外付け機器を比較した場合、品質向上はもちろんのことボリューム調整なども容易になるため、予算に応じて良いものを手配した方が良いと思います。 関連して、Google Hangouts Meetの設定で外付け機器が適切に選択されていることも確認する操作も準備の際に忘れないようしたいところです（今まで二回ともこれでハマっている）
+準備についても初回こそ念のため別日に接続リハーサルを行いましたが、2回目からは初めての会場同士であっても開始1時間前に接続して音量チェックを行う程度で十分間に合いました。
+4. リモート勉強会、実施時の課題 別会場からの質問が届かない場合がある これは発表者のいる会場側でも同時に質問が上がった場合に発生します。おそらく音声が被って聞こえなかったのだと思われます。 会場間で情報をシーケンシャルに制御できないことに起因するものであり、例えば各会場の司会が明示的に会場を指定した質問の募集をする等、質疑応答の進め方を事前に相談しておくと良さそうです。
+発表者は、別会場のリアクションを知ることができない 発表者のPCはスライドモードで全画面が占められていることから、他の会場の映像を見ることができません。そのため渾身のネタがスベったのか笑いが発生したのか、今の説明が聴衆を置いてけぼりにしていないかなどの反応を知るためには自分の会場の聴衆をサンプルとする必要があります。 実際の発表中は、前の方の十数名ぐらいしか見ていないので問題はないのですが、例えば別会場の笑い声などをうまく伝えられるようにしたり、発表者が見ることができる別のディスプレイに他の会場の様子が映されていたりするのも良いかもしれません（嗚呼、どんどん設備が豪華になっていく&hellip;）
+反対に、会場間の聴衆側の雰囲気の共有については他のツールに移譲してしまって良いと思っています。 具体的にはTwitterのハッシュタグを共有するなどして実況ツイートが流れれば十分、会場間の一体感が感じられました。
+Google Hangouts MeetとKeynoteの画面共有で発表者ディスプレイモードが利用できない これはリモート勉強会というよりはGoogle Hangouts MeetとKeynoteの使い方の問題ですが、発表者ディスプレイモード（発表者の手元の表示が次のスライドや経過時間がわかるようになる）が利用できなかったため発表が若干やりにくかったです。 ウィンドウの共有からKeynoteを選択し、スライドを開始すると手元のディスプレイが真っ黒になるため、画面全体を共有してスライドを開始していますが、手元のディスプレイが発表者ディスプレイモード（次のスライドや経過時間がわかる表示）ではなく参加者が見ているのと同じ状態になってしまいます。">
+  <meta property="og:title" content="拠点間勉強会を接続するリモート勉強会への誘い">
+  <meta property="og:url" content="https://blog.monochromegane.com/blog/2019/02/23/remote-study-group/">
+  <meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+  
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Source+Code+Pro' type='text/css'>
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Montserrat' type='text/css'>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css">
+  <link rel="stylesheet" href="/css/text.css">
+  <link rel="stylesheet" href="/css/color.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="/images/apple-touch-icon-57-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="/images/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
+  <link rel="canonical" href="https://blog.monochromegane.com/blog/2019/02/23/remote-study-group/">
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="THINKING MEGANE" />
+  
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async>
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: {
+               Macros: {
+                        bm: ["\\boldsymbol{#1}", 1],
+                        argmax: ["\\mathop{\\rm arg\\,max}\\limits"],
+                        argmin: ["\\mathop{\\rm arg\\,min}\\limits"]},
+               extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                   displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+  </script>
+</head>
+
+  <body>
+    <div class="header">
+  <header>
+    <h1 class="logo"><a href="https://blog.monochromegane.com">THINKING MEGANE</a></h1>
+    <nav>
+      <ul class="menu">
+        <li><a href="/self-introduction/">Home</a></li>
+        <li><a href="/post/">Archives</a></li>
+        <li><a href="/diary/">Diary</a></li>
+        <li><a href="http://thinking-megane.blogspot.jp/">Old Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+</div>
+
+    <div class="container">
+      <article>
+  <div class="post">
+    <header>
+      <h1><a href="https://blog.monochromegane.com/blog/2019/02/23/remote-study-group/">拠点間勉強会を接続するリモート勉強会への誘い</a></h1>
+      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2019-02-23</div></time>
+    </header>
+    <div class="post-inner">
+      
+
+<p>主催する<a href="https://fukuokago.tech/">Fukuoka.go</a>は今月2回のリモート勉強会を実施しました。リモート勉強会に関心のある主催者の参考になればと思い、このエントリではリモート勉強会の開催に関するハウツーと利点、課題を整理します。タイトルは&rdquo;いざない&rdquo;と読んでください。雅ですね。</p>
+
+<h1 id="経緯">経緯</h1>
+
+<p>私は福岡在住です。前回の<a href="https://gocon.jp/">GoCon</a>で東京に<a href="https://speakerdeck.com/monochromegane/optimization-of-goroutine-numbers-by-feedback-control">発表</a>しに行った際に、岡山の<a href="https://twitter.com/qt_luigi">岩田プロ</a>とお話しする機会がありました。
+知り合えたのも何かの縁、福岡と岡山で何か面白いことやりましょうとふわっと約束したのを覚えています。
+福岡への帰路、イベントのアイディアを考えながら、やはり物理的な距離の制約が面倒だなと思い至りました。
+幸い、所属するGMOペパボでは東京オフィスと福岡オフィス間を繋いだ<a href="https://tech.pepabo.com/2018/09/11/pepabo-tech-friday/">勉強会（PTF）</a>を定期的に開催しており、この方式を社外の勉強会に転用するという着想を得ました。</p>
+
+<p><a href="https://fukuokago.connpass.com/event/112073/">Fukuoka.go#13+Okayama.go</a>と銘打ったイベントの準備は順調に進み、当日は、<a href="https://togetter.com/li/1318568">両会場からの発表を行い</a>会場を挟んだ質疑応答のコールアンドレスポンスも楽しめました。
+気を良くして数日後に東京で行われた<a href="https://fukuokago.connpass.com/event/118377/">Go1.12 Release Party</a>にも接続させてもらい、東京会場の発表を聞いたり、福岡からも<a href="https://speakerdeck.com/monochromegane/understanding-go-language-server">発表</a>を行いました。当日は大阪会場も接続していたようです。
+各回、各会場とも満足度が高く成功だったと言えるでしょう。</p>
+
+<p><blockquote class="twitter-tweet" data-lang="ja"><p lang="ja" dir="ltr">いやあ，大成功じゃないですか〜楽しかった〜また繋いでやりましょう〜〜！！ <a href="https://twitter.com/hashtag/fukuokago?src=hash&amp;ref_src=twsrc%5Etfw">#fukuokago</a> <a href="https://twitter.com/hashtag/okayamago?src=hash&amp;ref_src=twsrc%5Etfw">#okayamago</a></p>&mdash; モノクロメガネ研究員 (@monochromegane) <a href="https://twitter.com/monochromegane/status/1095307409428340736?ref_src=twsrc%5Etfw">2019年2月12日</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+
+<p>以下では、これらのリモート勉強会を通して得たハウツーや考察を紹介します。リモート勉強会の開催に興味を持った方は良ければ参考にしてください。</p>
+
+<h1 id="1-リモート勉強会とは">1. リモート勉強会とは</h1>
+
+<p>このエントリでは、勉強会を、一定人数が会場に集まり発表者の登壇を参加者が聴講し、必要に応じて質疑応答がなされる形式のものとします。
+そして、リモート勉強会とは、そのような複数の勉強会会場がインターネット越しに音声と映像を双方向に中継され、同期したタイムテーブルの下で進行される形式のものとします。</p>
+
+<h1 id="2-接続方式と構成">2. 接続方式と構成</h1>
+
+<h2 id="接続">接続</h2>
+
+<p>拠点間接続にはビデオ会議サービスを利用します。音声、映像、そして画面共有ができるものが必要です。
+さらに参加時の敷居を下げるため特定のアプリケーションに依存せずブラウザ単体で動作するものが望ましいと考えます。
+今回はこれらの要件を満たす、<a href="https://gsuite.google.co.jp/intl/ja/products/meet/">Google Hangouts Meet</a>を利用しました。</p>
+
+<p>Hangouts MeetはG Suite利用者のみミーティングを作成することができますが、Googleアカウントを持っていれば（許可制ではありますが）G Suite利用者以外のアカウントも参加することが可能です。</p>
+
+<h2 id="構成">構成</h2>
+
+<p>会場ごとに少なくとも1台のPCから会議に参加している状態とします。会場参加者の映像や音声を伝えるのはこのPC（と外部接続のカメラやマイク）が担当します。
+また発表資料のあるPC上（一般には発表者の個人PC）からも同様に会議に参加しておきます。会場の音声が重複することを避けるため、発表者PCではマイクをオフにしておきます。
+映像は自由ですが、だいたい他の人の発表を聞いている時の間抜け面が全会場に配信されるため、特に理由がない限りカメラもオフにしておくと良いでしょう。
+発表時は、発表者のPCから画面共有を行い、資料を全会場で閲覧できるようにします。</p>
+
+<p>小さい会場の場合は会場のPCと発表者のPCが兼業することになり、より直感的に準備が進むと思います。
+大きな会場の場合は、会場のPCとカメラやマイクの外部接続が必要になります。ここについては共同主催者の<a href="https://twitter.com/linyows">@linyows</a>が別途、「リモート勉強会を支えるオーディオ技術」としてエントリを書いてくれるはずです。読みたい！</p>
+
+<p>なお、これまでの開催を通して、各会場のカメラは、登壇者を写すもの、会場の様子を写すものの2つがあると一体感が増すように感じました。
+そのため各会場からはこれを担う2つのPCが会議に参加していると良さそうです（マイクは一台のみオンとする）。</p>
+
+<h1 id="3-リモート勉強会におけるリモート会議サービスの実用性">3. リモート勉強会におけるリモート会議サービスの実用性</h1>
+
+<p>現在のリモート会議サービスであれば十分リモート勉強会で利用することは可能だと考えます。</p>
+
+<p>特に、このエントリで定める勉強会方式、つまり情報の向きが単方向でシーケンシャルに制御されている、登壇と質疑応答のような方式にはビデオ会議サービスは非常に適していると思えました。
+個人的には現実の会議ではリモート会議越しだと視線や挙動をうまくつかめずに同時に話してしまったり逆に沈黙があったりとまだ少しだけ違和感を感じますが、登壇形式であればそのような状況はあまり発生しません。</p>
+
+<p>また、別会場の音声が聞き取りにくいとストレスを感じますが、少なくともGoogle Hangouts Meetを使用している限りでは接続は非常に安定しており、ここを課題と感じることはありませんでした。
+ただ、音声機器に関してはPC内蔵マイク/スピーカーと外付け機器を比較した場合、品質向上はもちろんのことボリューム調整なども容易になるため、予算に応じて良いものを手配した方が良いと思います。
+関連して、Google Hangouts Meetの設定で外付け機器が適切に選択されていることも確認する操作も準備の際に忘れないようしたいところです（今まで二回ともこれでハマっている）</p>
+
+<p>準備についても初回こそ念のため別日に接続リハーサルを行いましたが、2回目からは初めての会場同士であっても開始1時間前に接続して音量チェックを行う程度で十分間に合いました。</p>
+
+<h1 id="4-リモート勉強会-実施時の課題">4. リモート勉強会、実施時の課題</h1>
+
+<h2 id="別会場からの質問が届かない場合がある">別会場からの質問が届かない場合がある</h2>
+
+<p>これは発表者のいる会場側でも同時に質問が上がった場合に発生します。おそらく音声が被って聞こえなかったのだと思われます。
+会場間で情報をシーケンシャルに制御できないことに起因するものであり、例えば各会場の司会が明示的に会場を指定した質問の募集をする等、質疑応答の進め方を事前に相談しておくと良さそうです。</p>
+
+<h2 id="発表者は-別会場のリアクションを知ることができない">発表者は、別会場のリアクションを知ることができない</h2>
+
+<p>発表者のPCはスライドモードで全画面が占められていることから、他の会場の映像を見ることができません。そのため渾身のネタがスベったのか笑いが発生したのか、今の説明が聴衆を置いてけぼりにしていないかなどの反応を知るためには自分の会場の聴衆をサンプルとする必要があります。
+実際の発表中は、前の方の十数名ぐらいしか見ていないので問題はないのですが、例えば別会場の笑い声などをうまく伝えられるようにしたり、発表者が見ることができる別のディスプレイに他の会場の様子が映されていたりするのも良いかもしれません（嗚呼、どんどん設備が豪華になっていく&hellip;）</p>
+
+<p>反対に、会場間の聴衆側の雰囲気の共有については他のツールに移譲してしまって良いと思っています。
+具体的にはTwitterのハッシュタグを共有するなどして実況ツイートが流れれば十分、会場間の一体感が感じられました。</p>
+
+<h2 id="google-hangouts-meetとkeynoteの画面共有で発表者ディスプレイモードが利用できない">Google Hangouts MeetとKeynoteの画面共有で発表者ディスプレイモードが利用できない</h2>
+
+<p>これはリモート勉強会というよりはGoogle Hangouts MeetとKeynoteの使い方の問題ですが、発表者ディスプレイモード（発表者の手元の表示が次のスライドや経過時間がわかるようになる）が利用できなかったため発表が若干やりにくかったです。
+ウィンドウの共有からKeynoteを選択し、スライドを開始すると手元のディスプレイが真っ黒になるため、画面全体を共有してスライドを開始していますが、手元のディスプレイが発表者ディスプレイモード（次のスライドや経過時間がわかる表示）ではなく参加者が見ているのと同じ状態になってしまいます。</p>
+
+<p>ただ、ここに関しては、<code>外部モニターを接続し、外部モニターを画面共有先にすることで回避が可能</code>と検証していただいていたので次回試してみようと思います。</p>
+
+<h1 id="5-なぜ勉強会会場を接合点としたか">5. なぜ勉強会会場を接合点としたか</h1>
+
+<p>リモート会議サービスへ参加すればよい環境となっていることから、勉強会会場に行かずとも家やオフィスから見たいという声も聞くようになりました。
+これについては、極端な場合、接合点を参加者とするような、会場という概念がない勉強会は開催はできても継続はできないのではないかなと考えます。
+ただ、最終的には勉強会ごとのポリシーに沿うでしょうし、絶対的な正解はないことから、ここでは個人としての考えを述べます。</p>
+
+<h2 id="サービスの制限">サービスの制限</h2>
+
+<p>単純にサービスの制限として同時接続数が定められている（Google Hangouts Meetだと50ぐらい）ために接続を会場と発表者に限定したい。
+ですので制限が緩和されたり制限未満の参加者であれば勉強会開催はもちろん可能です。</p>
+
+<h2 id="発表者のモチベーション">発表者のモチベーション</h2>
+
+<p>本エントリで述べる形式の勉強会で発表する方のモチベーションはプレゼンス向上や議論による提案のレベルアップ、便利情報の共有によるコミュニティへの還元など様々ですが、一定の人数を相手に一定の時間、注目をしてもらうために少なからず時間を投資してクオリティを確保した資料と発表準備を行なっています。</p>
+
+<p>これに応じるようなある種の熱量は、たとえ数が揃っていたとしても個人の集まりでは発生させるのは難しいと思っていて、やはり目的や時間を共有しているような集団とこれをオーガナイズする人がいてこそだと思います。
+この熱量を相互に期待することで会が成り立ち、活発な議論やスパイク的な反応が生まれる、これを満たす集団が各会場の勉強会にあたると考えています。
+また、家やオフィスだとどうしても&rdquo;ながら見&rdquo;になりますし、発表者にとっても自分の前に実際に誰もいない状態での発表というのは（発表に慣れた人であるほど）逆にやりにくいものです。
+これらの理由から、どうしても最寄りの会場への移動が困難である等の個人接続は許容した上で、勉強会会場単位での接続が良いのではないかと考えます。</p>
+
+<h2 id="そもそも集うことが目的でもある">そもそも集うことが目的でもある</h2>
+
+<p>特にFukuoka.goは、単純に集まって<a href="https://press.forkwell.com/entry/2018/10/01/community_lovers">興味関心を同じくする人と知的好奇心をくすぐる話題を肴に同じ時間を過ごしたい</a>というのが源流としてあり、普段はバラバラに活動している人たちが集まってワイワイするのが目的だったりします。</p>
+
+<p>コミュニティは実在するものではなく活動が継続していることでのみ存在を維持できると思っており、主催側自体も楽しめること、新しい参加者や知識、提案が吹き込まれることを常時望んでいます。
+そのため、志を同じくする熱量のある集団として別地域の勉強会と知り合えることはお互いに利がありますし、単純に嬉しいものです。</p>
+
+<hr />
+
+<p>いくつかの理由を述べましたが、上述の通り何が正解というわけではなく、今後、色々試してみてより楽しんで楽にできるやり方を探したいところです。</p>
+
+<h1 id="まとめ">まとめ</h1>
+
+<p>福岡在住の技術者として、リモート勉強会を通して、距離の制約から解放され、興味ある分野の勉強会に参加して発表をリアルタイムに聞けること、さらに自分のノウハウや提案をより多くの人に聞いてもらえる機会が広がったことを嬉しく思います。
+また、勉強会の主催者としても、知らないうちに出来上がるコミュニティの枠に対して新規の参加者同士が交流しやすくなることによって、停滞感が払拭され結果的に各勉強会自身の活発化が促されるであろう利点にも注目しています。
+今後もリモート勉強会を通して、地域の勉強会が等価に柔軟に接続し合うことで一層のコミュニティ発展に繋がることを願っています。</p>
+
+    </div>
+    <footer class="tag">
+      <i class="fa fa-tags tag-icon"></i>
+      <ul>
+      
+        <li><a class="tag-link" href="/tags/gocon">gocon</a></li>
+      
+      </ul>
+      <div class="clear"></div>
+    </footer>
+  </div>
+</article>
+
+      <div class="social-btn">
+  <div>
+    <a href="http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2019/02/23/remote-study-group/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="en" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+  <div>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-via="monochromegane">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  </div>
+</div>
+
+    </div>
+    <footer class="footer">
+  <div class="author"></div>
+  <p class="author-name"><a href="https://twitter.com/monochromegane" target="_blank">@monochromegane</a></p>
+  
+    <p>monochromegane (モノクロめがね) と申します。</p>
+  
+    <p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+  
+  <ul class="social">
+    <li><a href="https://twitter.com/monochromegane" target="_blank"><i class="fa fa-twitter"></i></a></li>
+    <li><a href="https://github.com/monochromegane" target="_blank"><i class="fa fa-github"></i></a></li>
+    <li><a href="/index.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
+  </ul>
+  <p class="copyright">
+    <small>&copy;  <span class="">Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>, Designed by <a href="https://twitter.com/keita_kawamoto" target="_blank">&copy;keita_kawamoto</a></span></small>
+  </p>
+</footer>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+    
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-38374674-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+  </body>
+</html>

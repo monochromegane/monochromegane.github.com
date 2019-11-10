@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Settingslogic on THINKING MEGANE</title>
+    <link>https://blog.monochromegane.com/tags/settingslogic/</link>
+    <description>Recent content in Settingslogic on THINKING MEGANE</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Sun, 10 Nov 2013 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/tags/settingslogic/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>[Rails] Unite.vimでSettingsLogicの長いキー名を入力する(unite-yaml)</title>
+      <link>https://blog.monochromegane.com/blog/2013/11/10/unite-yaml/</link>
+      <pubDate>Sun, 10 Nov 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2013/11/10/unite-yaml/</guid>
+      <description>
+
+&lt;p&gt;Railsで定数を管理する場合、&lt;a href=&#34;https://github.com/binarylogic/settingslogic&#34;&gt;SettingsLogic&lt;/a&gt;を使っていますが、プロジェクトが大きくなるとYAMLのキーが多くなったり、階層が深くなったりして入力が手間になってきます。
+先週、Typoして時間をムダにしたのでUnite.vimでSettingsLogicのキー名を入力するUniteSource、&lt;a href=&#34;https://github.com/monochromegane/unite-yaml&#34;&gt;unite-yaml&lt;/a&gt;を作ってみました。&lt;/p&gt;
+
+&lt;h1 id=&#34;unite-yaml&#34;&gt;unite-yaml&lt;/h1&gt;
+
+&lt;p&gt;unite-yamlを使うと、SettingsLogicで &lt;code&gt;Settings.somekey.subkey.subsubkey.subsubsubkey&lt;/code&gt; のような長いキーをUniteの候補として選択、入力を行えます。&lt;/p&gt;
+
+&lt;h2 id=&#34;インストール&#34;&gt;インストール&lt;/h2&gt;
+
+&lt;p&gt;インストールはBundle、またはNeoBundleで&lt;code&gt;monochromegane/unite-yaml&lt;/code&gt;を指定してください。&lt;/p&gt;
+
+&lt;p&gt;Bundleの場合は、&lt;code&gt;.vimrc&lt;/code&gt;に&lt;code&gt;Bundle &amp;quot;monochromegane/unite-yaml”&lt;/code&gt;を定義して、&lt;code&gt;:BundleInstall&lt;/code&gt;です。&lt;/p&gt;
+
+&lt;h2 id=&#34;使い方&#34;&gt;使い方&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-yamlファイルを選択する&#34;&gt;1. YAMLファイルを選択する&lt;/h3&gt;
+
+&lt;p&gt;以下のコマンドでカレントディレクトリ以下の&lt;code&gt;*.yml&lt;/code&gt;ファイルが検索され、Uniteのウィンドウに表示されます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;:Unite yaml-list
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2013/11/unite-yaml-list.png&#34; alt=&#34;unite yaml-list&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;対象のYAMLファイルを選択し、&lt;code&gt;Enter&lt;/code&gt;を押してください。&lt;br /&gt;
+unite-yamlは&lt;code&gt;ERB enabled YAML&lt;/code&gt;もサポートしています。&lt;/p&gt;
+
+&lt;h3 id=&#34;2-入力したいyamlのキーを選択する&#34;&gt;2. 入力したいYAMLのキーを選択する&lt;/h3&gt;
+
+&lt;p&gt;選択したYAMLファイルに定義されているキーの一覧がSettingsLogicのフォーマット(アクセサのキーチェーン)で表示されます。
+また、キー名のあとには該当する値も表示されます。&lt;/p&gt;
+
+&lt;p&gt;以下のYAMLファイルを選択した場合&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;# config/application.yml
+defaults: &amp;amp;defaults
+  cool:
+    saweet: nested settings
+  neat_setting: 24
+  awesome_setting: &amp;lt;%= &amp;quot;Did you know 5 + 5 = #{5 + 5}?&amp;quot; %&amp;gt;
+
+development:
+  &amp;lt;&amp;lt;: *defaults
+  neat_setting: 800
+
+test:
+  &amp;lt;&amp;lt;: *defaults
+
+production:
+  &amp;lt;&amp;lt;: *defaults
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;このように展開されます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2013/11/unite-yaml.png&#34; alt=&#34;unite yaml&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;入力したいキー名を選択して、&lt;code&gt;Enter&lt;/code&gt;を押すと、カーソル位置にキー名が入力されます（値は含まれません）&lt;/p&gt;
+
+&lt;h2 id=&#34;キーバインド&#34;&gt;キーバインド&lt;/h2&gt;
+
+&lt;p&gt;以下のようなキーバインドをvimrcに定義しておくといいでしょう。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-vim&#34;&gt;&amp;quot; yaml
+let g:unite_yaml_prefix = &amp;quot;Settings.&amp;quot;
+nnoremap &amp;lt;silent&amp;gt; ,y  :&amp;lt;C-u&amp;gt;Unite yaml-list&amp;lt;CR&amp;gt;
+nnoremap &amp;lt;silent&amp;gt; ,Y  :&amp;lt;C-u&amp;gt;UniteResume yaml-buffer&amp;lt;CR&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;yaml-listから開いたYAMLのキー一覧は&lt;code&gt;yaml-buffer&lt;/code&gt;という名前のbufferで開かれているので上記のように&lt;code&gt;UniteResume&lt;/code&gt;を使ってYAMLの再パースなしに再度呼び出すことができます。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;g:unite_yaml_prefix&lt;/code&gt;を定義すると、入力時のキー名の前に指定した語が追加されます。&lt;code&gt;Settings.&lt;/code&gt;を指定することで入力の手間を省くことができます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;SettingsLogicは便利ですが、キーの打ち間違いや定義されているキーを見比べるためにファイル間を行ったり来たりして時間をムダにしがちです。
+Unite.vimを使っている人は、unite-yamlを導入してみてはどうでしょうか。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

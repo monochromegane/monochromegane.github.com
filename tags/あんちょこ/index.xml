@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>あんちょこ on THINKING MEGANE</title>
+    <link>https://blog.monochromegane.com/tags/%E3%81%82%E3%82%93%E3%81%A1%E3%82%87%E3%81%93/</link>
+    <description>Recent content in あんちょこ on THINKING MEGANE</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Mon, 14 Oct 2013 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/tags/%E3%81%82%E3%82%93%E3%81%A1%E3%82%87%E3%81%93/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>ふりかえりファシリテーターあんちょこを作ってみた</title>
+      <link>https://blog.monochromegane.com/blog/2013/10/14/retrospective-anchoco/</link>
+      <pubDate>Mon, 14 Oct 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2013/10/14/retrospective-anchoco/</guid>
+      <description>
+
+&lt;h1 id=&#34;ふりかえり-やっていますか&#34;&gt;ふりかえり、やっていますか？&lt;/h1&gt;
+
+&lt;p&gt;最近、プロジェクトやチームのふりかえりのファシリテーターをやる機会があるのですが、いざやると時間配分だったり、会のコントロールだったり結構難しいです。&lt;/p&gt;
+
+&lt;p&gt;特に、ファシリテーター役を回すとなると、みんなが初めてのファシリテーターだったりして、ふりかえりのレベルが向上するまでちょっと時間がかかってしまうというのも悩みだったりします。&lt;/p&gt;
+
+&lt;p&gt;なので、今回、ファシリテーター役が各工程で行うこと、気をつけることを箇条書きでまとめた、「ふりかえりファシリテーターあんちょこ」を作ってみました。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/retrospective-anchoco/retrospective-anchoco.html&#34;&gt;ふりかえりファシリテーターあんちょこ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/retrospective-anchoco&#34;&gt;GitHub: monochromegane/retrospective-anchoco&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;ふりかえりファシリテーターあんちょこ&#34;&gt;ふりかえりファシリテーターあんちょこ&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://blog.monochromegane.com/retrospective-anchoco/retrospective-anchoco.html&#34;&gt;ふりかえりファシリテーターあんちょこ&lt;/a&gt;は、ふりかえりのファシリテーターを行うときに使える&amp;rdquo;あんちょこ&amp;rdquo;です。&lt;/p&gt;
+
+&lt;p&gt;各工程のタイムテーブルと工程ごとに行うこと、気をつけることを箇条書きでまとめてみました。&lt;/p&gt;
+
+&lt;p&gt;また、ファシリテーターとしてのナレッジの共有も目的としているので、MarkdownをGithubで管理するような構成をとっています。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;スライドショー形式の見やすい箇条書き。ファシリテーターしながらさっと目が通せる&lt;/li&gt;
+&lt;li&gt;Markdownでだれでも編集。あんちょこ自体を改善し、ナレッジを共有&lt;/li&gt;
+&lt;li&gt;GitHubで管理。Forkしてチーム向けにカスタマイズ&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;あんちょこ-でできること-できないこと&#34;&gt;&amp;ldquo;あんちょこ&amp;rdquo;でできること、できないこと&lt;/h2&gt;
+
+&lt;p&gt;この&amp;rdquo;あんちょこ&amp;rdquo;は、ふりかえりの開始から終了までに行うことを、各工程が1ページになるようにまとめています。&lt;/p&gt;
+
+&lt;p&gt;ファシリテーターはこの資料を印刷もしくはスライドショーを表示するなどして、次の工程に移る前に最低限行わなければならないことを確認することができます。&lt;/p&gt;
+
+&lt;p&gt;反対に、ふりかえりを導入するための資料ではありません。ふりかえりの意義や効果を知りたい人、もっと突っ込んだふりかえりの手法が知りたい人は、各種参考文献を読むことをお勧めします。&lt;/p&gt;
+
+&lt;h2 id=&#34;あんちょこ-の更新&#34;&gt;&amp;ldquo;あんちょこ&amp;rdquo;の更新&lt;/h2&gt;
+
+&lt;p&gt;ふりかえりファシリテーターあんちょこは、Markdown記法で書かれたファイルを&lt;a href=&#34;http://jdan.github.io/cleaver/&#34;&gt;cleaver&lt;/a&gt;を使って印刷用のスライドショー形式に変換しています。&lt;/p&gt;
+
+&lt;p&gt;cleaverが入っていない場合は、NPMでインストールしてください。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ npm install -g cleaver
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;あんちょこのMarkdownファイルは&lt;code&gt;retrospective-anchoco.md&lt;/code&gt;です。修正後、以下のコマンドにより&lt;code&gt;retrospective-anchoco.html&lt;/code&gt;が作成されます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ cleaver retrospective-anchoco.md
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;できあがったhtmlファイルをブラウザで開き、必要に応じて印刷して利用してください。&lt;/p&gt;
+
+&lt;h2 id=&#34;テンプレートの変更&#34;&gt;テンプレートの変更&lt;/h2&gt;
+
+&lt;p&gt;この&amp;rdquo;あんちょこ&amp;rdquo;は、印刷用のテンプレートを使っています。&lt;/p&gt;
+
+&lt;p&gt;PCでスライドショー形式で表示しておきたいひとは、&lt;code&gt;retrospective-anchoco.md&lt;/code&gt;の&lt;code&gt;template&lt;/code&gt;行を削除してcleaverを実行してください。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;参考&#34;&gt;参考&lt;/h1&gt;
+
+&lt;p&gt;ふりかえりの意義や効果を知りたい人、もっと突っ込んだふりかえりの手法が知りたい人向け。&lt;br /&gt;
+ふりかえりも回を重ねるごとに、課題が出てきますが、そのあたりの指針や分析方法などが詳しく書かれています。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.objectclub.jp/download/files/pf/RetrospectiveMeetingGuide.pdf&#34;&gt;プロジェクトファシリテーション 実践編 ふりかえりガイド&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.amazon.co.jp/%E3%81%93%E3%82%8C%E3%81%A0%E3%81%91-KPT-%E5%A4%A9%E9%87%8E-%E5%8B%9D/dp/4799102753&#34;&gt;これだけ! KPT&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

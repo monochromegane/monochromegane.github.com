@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Minne on THINKING MEGANE</title>
+    <link>https://blog.monochromegane.com/tags/minne/</link>
+    <description>Recent content in Minne on THINKING MEGANE</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Sat, 24 Oct 2015 13:36:14 +0900</lastBuildDate>
+    <atom:link href="/tags/minne/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>「minne」技術戦略カンファレンスで発表してきた</title>
+      <link>https://blog.monochromegane.com/blog/2015/10/24/minne-tech-conference/</link>
+      <pubDate>Sat, 24 Oct 2015 13:36:14 +0900</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2015/10/24/minne-tech-conference/</guid>
+      <description>
+
+&lt;p&gt;10/21に開催された「minne技術戦略カンファレンス」で「15万人の作家を支えるサービス開発の裏側」を発表してきました。
+今回は、所属するminneプラットフォームチームの紹介としてチーム、基盤、そして開発の観点から &lt;em&gt;アタリマエをアタリマエに&lt;/em&gt; するため、工夫している点について話しています。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://peatix.com/event/121467&#34;&gt;「minne」技術戦略カンファレンス&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;発表の資料と動画はこちら&lt;/p&gt;
+
+&lt;div style=&#34;speakerdeck&#34;&gt;
+&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;ae6a096447944303a65456f6ef7af717&#34; data-ratio=&#34;1.33333333333333&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
+&lt;/div&gt;
+
+&lt;iframe width=&#34;560&#34; height=&#34;315&#34; src=&#34;https://www.youtube.com/embed/uYti3xbCVBQ&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;p&gt;※ 52分あたりから話してます&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;カンファレンス全体で、UI/UXからアプリ、Web開発、基盤、そしてそれぞれのチームづくりまで含めてminneの裏側を見れることができたんじゃないかなあと思います。
+今回、プラットフォームチームでは全体を通した工夫の紹介ができたので、今後は開発部分に特化した話など詳しく話していけたらうれしいですね。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;minneに興味ある方、ペパランチョンでお話しましょう。福岡でももちろんやってます。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://pepabo.com/recruit/pepaluncheon/&#34;&gt;ペパランチョン&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;所感&#34;&gt;所感&lt;/h2&gt;
+
+&lt;p&gt;普段の技術カンファレンスでの発表と違って、チーム全体のことを紹介するというので資料作成に難儀したけど、資料作成を通して結構な頻度でチームメンバーと話し合うことで、自分たちの現状を踏まえた前向きな方針というのが明文化されていったのがとてもよかったと思う。&lt;/p&gt;
+
+&lt;p&gt;どうしても、チームの現状について話すときは今のつらいところとか苦労しているところが先に出てくるんだけど、全体としてどこを目指しているのかが統一されていないと誤った優先順位付けで目前の課題を対応することになってしまって、進んでいる実感が得られない。逆に方針があることで、そこに対してどれだけ進んだか、足りないものは何かという観点で考えることができるようになった。今後も方針、定期的に話し合いながらアップデートしていきたい。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

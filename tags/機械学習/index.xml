@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>機械学習 on THINKING MEGANE</title>
+    <link>https://blog.monochromegane.com/tags/%E6%A9%9F%E6%A2%B0%E5%AD%A6%E7%BF%92/</link>
+    <description>Recent content in 機械学習 on THINKING MEGANE</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Tue, 03 Oct 2017 21:31:44 +0900</lastBuildDate>
+    <atom:link href="/tags/%E6%A9%9F%E6%A2%B0%E5%AD%A6%E7%BF%92/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>『やさしく学ぶ機械学習を理解するための数学のきほん』をいただきました</title>
+      <link>https://blog.monochromegane.com/blog/2017/10/03/basic-of-math/</link>
+      <pubDate>Tue, 03 Oct 2017 21:31:44 +0900</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2017/10/03/basic-of-math/</guid>
+      <description>
+
+&lt;p&gt;著者の&lt;a href=&#34;https://twitter.com/tkengo&#34;&gt;@tkengo&lt;/a&gt;より『やさしく学ぶ機械学習を理解するための数学のきほん』をいただきました。ありがとうございます。&lt;/p&gt;
+
+&lt;p&gt;&lt;a target=&#34;_blank&#34;  href=&#34;https://www.amazon.co.jp/gp/product/4839963525/ref=as_li_tl?ie=UTF8&amp;camp=247&amp;creative=1211&amp;creativeASIN=4839963525&amp;linkCode=undefined&amp;tag=monochromeg03-22&amp;linkId=05a32399505d129431b89510fca9b267&#34;&gt;&lt;img border=&#34;0&#34; src=&#34;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;MarketPlace=JP&amp;ASIN=4839963525&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL250_&amp;tag=monochromeg03-22&#34; &gt;&lt;/a&gt;&lt;img src=&#34;//ir-jp.amazon-adsystem.com/e/ir?t=monochromeg03-22&amp;l=am2&amp;o=9&amp;a=4839963525&#34; width=&#34;1&#34; height=&#34;1&#34; border=&#34;0&#34; alt=&#34;&#34; style=&#34;border:none !important; margin:0px !important;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;本書は、機械学習の基本を会話形式で学びながら、都度必要となる数学の知識を得ていく構成となっています。丁寧に噛み砕いて説明されており、機械学習に興味があるけれども数式に苦手意識がある人や、ニューラルネットワークのライブラリを使いこなすために、その技術背景を基礎の基礎から学び始めたい人などにオススメではないかと思います。&lt;/p&gt;
+
+&lt;h1 id=&#34;いわゆる文系の人が数学の補助輪を外すために読む本&#34;&gt;いわゆる文系の人が数学の補助輪を外すために読む本&lt;/h1&gt;
+
+&lt;p&gt;僕はこの本を機械学習の勉強に特化したものだとは思っていなくて、公式を覚えただけだった高校の数学を、目的のために使いこなす数学という道具であると認識しなおすための本だと思っています。&lt;/p&gt;
+
+&lt;p&gt;僕はちょうど1年半ほど前に機械学習を学ぶために高校の参考書を使って数学を勉強しなおしました。ところがいざ論文どころか機械学習系の技術書を読んでも数式がやっぱりわからない。そんなときに元同僚である著者の@tkengoに数式の不明な箇所を相談していました。&lt;/p&gt;
+
+&lt;p&gt;彼は僕の初歩的な質問に嫌な顔ひとつせず（いや、ひとつぐらいしてたかもしれない）丁寧に数式をひとつひとつ展開し、変形し、具体的な値を入れながら数式の表さんとしていることを一緒に考えてくれました。数式は圧縮記述したプログラムであってprint debugしながら根気よく解きほぐしていけば理解できると思えるようになったのは彼のおかげです。&lt;/p&gt;
+
+&lt;p&gt;彼の教え方のエッセンスがつまった本書は、高校数学の参考書の次の段階として、機械学習という目的に向けて、数学を使っていく力がつく本だと思います。そしてその力は機械学習だけでなくこれから数学を必要とする技術習得に必ず役に立つと思います。&lt;/p&gt;
+
+&lt;h1 id=&#34;あわせて読みたい本&#34;&gt;あわせて読みたい本&lt;/h1&gt;
+
+&lt;p&gt;本書は基本的な機械学習として回帰や分類、評価の方法を解説しており、付録にも微分、偏微分、合成関数などの解説もありますが、本書で数学の必要性、そしておもしろさに目覚めて基本からやり直したいと考えている人には、マセマ出版社の初めから始める数学シリーズ（通称はじはじ）の&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4866150246/ref=as_li_tl?ie=UTF8&amp;amp;tag=monochromeg03-22&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;linkCode=as2&amp;amp;creativeASIN=4866150246&amp;amp;linkId=2519209844d5c6479a1f2d44312db456&#34;&gt;数学Ⅰ&lt;/a&gt;, &lt;a href=&#34;https://www.amazon.co.jp/gp/product/4866150262/ref=as_li_tl?ie=UTF8&amp;amp;tag=monochromeg03-22&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;linkCode=as2&amp;amp;creativeASIN=4866150262&amp;amp;linkId=902d81467672143bf4a6fdd94fcc7a55&#34;&gt;数学A&lt;/a&gt;, &lt;a href=&#34;https://www.amazon.co.jp/gp/product/4866150009/ref=as_li_tl?ie=UTF8&amp;amp;tag=monochromeg03-22&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;linkCode=as2&amp;amp;creativeASIN=4866150009&amp;amp;linkId=b3813489619f124beed9be7ab7394e22&#34;&gt;数学Ⅱ&lt;/a&gt;, &lt;a href=&#34;https://www.amazon.co.jp/gp/product/4866150238/ref=as_li_tl?ie=UTF8&amp;amp;tag=monochromeg03-22&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;linkCode=as2&amp;amp;creativeASIN=4866150238&amp;amp;linkId=cc2d08d461dde17df7e819f5e0760045&#34;&gt;数学B&lt;/a&gt;ぐらいをやると適度に練習問題もあって良い復習になると思います。時間がなければⅠ-1章 数と式、同3章 2次関数、A-1章 場合の数と確率、Ⅱ-1章 方程式・式と証明、同3章の三角関数、同4章 指数関数・対数関数、同5章 微分法と積分法、Bの1-4章（ベクトル、数列、確率分布）はやっておくとよいと思います。（注: 改訂2時点の章構成です）&lt;/p&gt;
+
+&lt;p&gt;深層学習の理解を進めたい場合は、&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4873117585/ref=as_li_tl?ie=UTF8&amp;amp;tag=monochromeg03-22&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;linkCode=as2&amp;amp;creativeASIN=4873117585&amp;amp;linkId=cb25e639d959cd26030cf9ee53810e78&#34;&gt;ゼロから作るDeep Learning ―Pythonで学ぶディープラーニングの理論と実装&lt;/a&gt;が良いと思います。本書とセットで読めば偏微分や合成関数の理解がより深まり、誤差逆伝播法の理解の助けとなるでしょう。&lt;/p&gt;
+
+&lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
+
+&lt;p&gt;本書にはレビュアーとして参加させてもらいました。レビューにあたっては数学苦手意識ある側の視点を心がけて、説明を端折りすぎていないかなどを細かく指摘させていただきました。是非、本書を手にとって数学の苦手意識を取り除いてみてください。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>SSD: Single Shot MultiBox DetectorをGoogle Cloud ML Engine上で物体検出APIとして利用する</title>
+      <link>https://blog.monochromegane.com/blog/2017/08/18/ssd_mlengine/</link>
+      <pubDate>Fri, 18 Aug 2017 18:13:52 +0900</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2017/08/18/ssd_mlengine/</guid>
+      <description>
+
+&lt;p&gt;画像内の物体検出と識別を行う予測APIが必要になったので、物体検出ニューラルネットワークである&lt;a href=&#34;http://arxiv.org/abs/1512.02325&#34;&gt;SSD: Single Shot MultiBox Detector&lt;/a&gt;を&lt;a href=&#34;https://cloud.google.com/products/machine-learning/&#34;&gt;Google Cloud ML Engine&lt;/a&gt;上で訓練して予測APIとして使えるようにしました。&lt;/p&gt;
+
+&lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fssd_mlengine&#34; title=&#34;monochromegane/ssd_mlengine&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/ssd_mlengine&#34;&amp;gt;monochromegane/ssd_mlengine&amp;lt;/a&amp;gt;&lt;/iframe&gt;
+
+&lt;h2 id=&#34;使い方&#34;&gt;使い方&lt;/h2&gt;
+
+&lt;p&gt;Google Cloud ML Engineでモデル、学習時のパラメタ、予測APIのバージョンなどをコード管理するため、&lt;a href=&#34;https://github.com/monochromegane/starchart&#34;&gt;StarChart&lt;/a&gt;を使います。
+コード管理が不要であれば、リポジトリのコードをCloud Storageにアップロードして&lt;code&gt;gcloud&lt;/code&gt;コマンドなどで訓練を行ってください。
+訓練データセットなどをCloud Storageに配置した上で、以下のようにして訓練用のジョブを投入します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ pip install git+https://github.com/monochromegane/starchart.git
+$ git clone https://github.com/monochromegane/ssd_mlengine.git
+$ starchart train -m ssd_mlengine \
+                  -M trainer.task \
+                  -s BASIC_GPU \
+                  -- \
+                  --annotation_path=gs://PATH_TO_ANNOTATION_FILE \
+                  --prior_path=gs://PATH_TO_PRIOR_FILE \
+                  --weight_path=gs://PATH_TO_WEIGHT_FILE \
+                  --images_path=gs://PATH_TO_IMAGES_FILE \
+                  --model_dir=TRAIN_PATH/model
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;訓練が終わったら、以下のようにしてモデルを予測APIとして公開します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ starchart expose -m ssd_mlengine
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;公開された予測APIを叩くと結果が返ります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ python predict.py -k 1 -c 0.45 -i image.jpg
+# {&#39;predictions&#39;: [{&#39;key&#39;: &#39;1&#39;,
+#    &#39;objects&#39;: [[8.0,        # 検出した物体の分類区分
+#      0.45196059346199036,   # 確率
+#      104.90727233886719,    # 検出した位置(xmin)
+#      97.99836730957031,     # 検出した位置(ymin)
+#      212.12222290039062,    # 検出した位置(xmax)
+#      315.3045349121094]]}]} # 検出した位置(ymax)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;予測APIを叩くコードはREADMEを参考にしてください。パラメタは以下の通りです。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;keep_top_k(-k): 確率の降順でソートされたうち、上位何件を取得するか&lt;/li&gt;
+&lt;li&gt;confidence_threshold(-c): 確率の閾値&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;実装&#34;&gt;実装&lt;/h2&gt;
+
+&lt;p&gt;SSDのKeras実装である&lt;a href=&#34;https://github.com/rykov8/ssd_keras&#34;&gt;rykov8/ssd_keras&lt;/a&gt;を参考にGoogle Cloud ML Engineで訓練、予測APIとして利用できるようにしています。&lt;/p&gt;
+
+&lt;p&gt;SSDはモデルの出力をそのまま画像内の検出した位置として利用できないため、元画像で利用できるよう結果を変換する必要がありますが、ちと面倒なのでこの部分もAPI側で行うようにします。
+このような予測APIだけ必要となる変換層はKerasとML Engineを利用する場合、以下のようにして追加できます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-py&#34;&gt;# keras.layers.Lambdaで学習モデルの出力を入力として変換する層を定義
+detection_out = Lambda(bbox_util.detection_out, arguments={
+    &#39;keep_top_k&#39;: keep_top_k_placeholder,
+    &#39;confidence_threshold&#39;: confidence_threshold_placeholder,
+    &#39;original_size&#39;: original_size_placeholder
+    })(net[&#39;predictions&#39;])
+
+# 上で定義したLambdaを予測APIの出力として定義
+inputs  = {&#39;key&#39;: keys_placeholder,
+           &#39;data&#39;: model.input,
+           &#39;keep_top_k&#39;: keep_top_k_placeholder,
+           &#39;confidence_threshold&#39;: confidence_threshold_placeholder,
+           &#39;original_size&#39;: original_size_placeholder}
+outputs = {&#39;key&#39;: tf.identity(keys_placeholder), &#39;objects&#39;: detection_out}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;これらの定義をSavedModel形式で保存することでML Engineが予測APIとして扱えるようにします&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-py&#34;&gt;def build_signature(inputs, outputs):
+    signature_inputs = {key: saved_model_utils.build_tensor_info(tensor)
+                        for key, tensor in inputs.items()}
+    signature_outputs = {key: saved_model_utils.build_tensor_info(tensor)
+                         for key, tensor in outputs.items()}
+
+    signature_def = signature_def_utils.build_signature_def(
+        signature_inputs, signature_outputs,
+        signature_constants.PREDICT_METHOD_NAME)
+
+    return signature_def
+
+def export(sess, inputs, outputs, output_dir):
+    if file_io.file_exists(output_dir):
+        file_io.delete_recursively(output_dir)
+
+    signature_def = build_signature(inputs, outputs)
+
+    signature_def_map = {
+        signature_constants.DEFAULT_SERVING_SIGNATURE_DEF_KEY: signature_def
+    }
+    builder = saved_model_builder.SavedModelBuilder(output_dir)
+    builder.add_meta_graph_and_variables(
+        sess,
+        tags=[tag_constants.SERVING],
+        signature_def_map=signature_def_map)
+
+    builder.save()
+
+# SavedModel形式で保存する
+export(get_session(), inputs, outputs, FLAGS.model_dir)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;なお、今回は、ML Engineの保存ファイルが256MB以内とする制限を回避するため、ベースネットワークのconv4~pool4層も固定し、その出力を元に38x38分割したサイズの物体を検出するレイヤも除去することで学習パラメタを削減しています。論文では出力レイヤを減らすと精度が低下するとあるので、このあたりは対象のドメインや要求する精度によって調整が必要かもしれません。&lt;/p&gt;
+
+&lt;h2 id=&#34;学習に必要となるデータなど&#34;&gt;学習に必要となるデータなど&lt;/h2&gt;
+
+&lt;p&gt;学習済みの重みやバイアスを保存した &lt;code&gt;weights_SSD300.hdf5&lt;/code&gt; と、計算済みのデフォルトボックスの位置を保存した &lt;code&gt;prior_boxes_ssd300.pkl&lt;/code&gt; を &lt;a href=&#34;https://github.com/rykov8/ssd_keras&#34;&gt;rykov8/ssd_keras&lt;/a&gt;から入手しておきます。&lt;/p&gt;
+
+&lt;p&gt;前述の通り、デフォルトボックスを除去しているので、&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-py&#34;&gt;import pickle
+pickle.load(open(&#39;prior_boxes_ssd300.pkl&#39;, &#39;rb&#39;))[4332:].dump(&#39;prior_boxes_ssd300_min.pkl&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;のようにして、必要なものだけを取り出しておく必要があります。&lt;/p&gt;
+
+&lt;p&gt;また、教師データとして、画像ならびにその画像に対する物体の位置と分類クラスを定義したデータセットが必要です。今回はrykov8/ssd_kerasと同じくVOCのデータセット形式を採用しています。
+独自にデータセットを準備できたら、&lt;a href=&#34;https://github.com/rykov8/ssd_keras/blob/master/PASCAL_VOC/get_data_from_XML.py&#34;&gt;rykov8/ssd_kerasの提供しているツール&lt;/a&gt;を使ってpickle形式で保存したものをannotation_pathとして、もととなった画像データをtar.gzで固めたものをimages_pathとして指定します。&lt;/p&gt;
+
+&lt;h2 id=&#34;まとめ&#34;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;物体検出ニューラルネットワークであるSSDのKeras実装をGoogle Cloud ML Engine上で訓練し、予測APIとして提供できるようにしました。実際にAPIとして運用するにあたってはモデル、学習時のパラメタ、予測APIのバージョンなどをコード管理が求められることになるため、&lt;a href=&#34;https://github.com/monochromegane/starchart&#34;&gt;StarChart&lt;/a&gt;のようなツールを検討も大切だと思います。StarChartについては&lt;a href=&#34;https://rand.pepabo.com/article/2017/01/18/pepabo-ml-platform-and-workflow/&#34;&gt;こちら&lt;/a&gt;や&lt;a href=&#34;https://speakerdeck.com/monochromegane/pepabo-ml-infrastructure-starchart&#34;&gt;こちら&lt;/a&gt;でも紹介しています。よければ参考にしてください。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>プログラマのための数学勉強会@福岡#5 で「Goによる勾配降下法 -理論と実践-」を発表してきた</title>
+      <link>https://blog.monochromegane.com/blog/2016/08/06/gradient-descent-in-golang/</link>
+      <pubDate>Sat, 06 Aug 2016 12:07:22 +0900</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2016/08/06/gradient-descent-in-golang/</guid>
+      <description>
+
+&lt;p&gt;8/6に開催された&lt;a href=&#34;http://maths4pg-fuk.connpass.com/event/34164/&#34;&gt;プログラマのための数学勉強会@福岡#5&lt;/a&gt;で「Goによる勾配降下法 -理論と実践-」を発表してきました。&lt;/p&gt;
+
+&lt;div style=&#34;speakerdeck&#34;&gt;
+&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;7b6257ea0e4942bcb3d982246f8236a0&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
+&lt;/div&gt;
+
+&lt;p&gt;今回は勾配降下法にフォーカスした内容となっています。機械学習というブラックボックスが実は誤差を最小化するものであり、そのために勾配降下法というアプローチがある、という基本でもあり、数式に抵抗があると最初につまづく箇所でもあります。&lt;/p&gt;
+
+&lt;p&gt;今回は数式と図解に加え、Go言語によるサンプル実装も添えることでプログラマへも理解しやすくなるように資料を作ってみました。&lt;/p&gt;
+
+&lt;p&gt;また、勾配降下法の手法だけではなく収束速度の改善や学習率の自動調整といった最適化の手法も紹介しているので、基本を理解している人もよければ御覧ください。&lt;/p&gt;
+
+&lt;h2 id=&#34;サンプル実装&#34;&gt;サンプル実装&lt;/h2&gt;
+
+&lt;p&gt;発表で使ったサンプル実装はこちらで公開しています。&lt;/p&gt;
+
+&lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fgradient_descent&#34; title=&#34;monochromegane/gradient_descent&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/gradient_descent&#34;&amp;gt;monochromegane/gradient_descent&amp;lt;/a&amp;gt;&lt;/iframe&gt;
+
+&lt;p&gt;正弦関数を元にしたトレーニングセットに対して多項式回帰を行うことができます。&lt;/p&gt;
+
+&lt;p&gt;このような感じで各種勾配降下法や最適化手法、ハイパーパラメーターの調整によってどのように学習が収束していくか、遊んでみてください。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ go run cmd/gradient_descent/main.go -eta 0.075 -m 3 -epoch 40000 -algorithm sgd -momentum 0.9
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;こういうグラフが出力されます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2016/08/gradient_descent.png&#34; alt=&#34;gradient_descent&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;プログラマのための数学勉強会-福岡&#34;&gt;プログラマのための数学勉強会@福岡&lt;/h2&gt;
+
+&lt;p&gt;今回は発表に向けて自分で最適化手法について調べて実装して、検証してを繰り返すことで自分自身も理解が深まってよかったです。&lt;/p&gt;
+
+&lt;p&gt;発表内容も多様で、個人的には@hokutsさんの、意識の有無を統合情報量として数式に落としこむ統合情報理論の紹介が面白かったです。高度に複雑化した機械学習のモデルが意識を持つのか。色々妄想が進みそうです。&lt;/p&gt;
+
+&lt;p&gt;福岡で数学に興味ある方、お気軽に。発表者募集中とのことです。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

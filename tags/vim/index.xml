@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Vim on THINKING MEGANE</title>
+    <link>https://blog.monochromegane.com/tags/vim/</link>
+    <description>Recent content in Vim on THINKING MEGANE</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Wed, 13 Feb 2013 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/tags/vim/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Unite.vimでChromeのブックマークを表示するスクリプトを作った</title>
+      <link>https://blog.monochromegane.com/blog/2013/02/13/chrome-bookmarks/</link>
+      <pubDate>Wed, 13 Feb 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2013/02/13/chrome-bookmarks/</guid>
+      <description>
+
+&lt;p&gt;Unite.vimでChromeのブックマークを表示するスクリプトを作りました。(Mac限定)&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/monochromegane/unite-script&#34;&gt;monochromegane/unite-script&lt;/a&gt; /examples/chrome_bookmarks.scpt&lt;/p&gt;
+
+&lt;h2 id=&#34;unite-vimとunite-script&#34;&gt;Unite.vimとUnite-script&lt;/h2&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&#34;unite-vim&#34;&gt;Unite.vim&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;「候補群を絞り込んでアクションを実行する」インターフェースを実現するVimプラグイン&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/Shougo/unite.vim&#34;&gt;Shougo/unite.vim&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;unite-script&#34;&gt;Unite-script&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;通常VimScriptで書かなくてはいけないUnite.vimの候補群（source）を好きなスクリプト言語で書くためのsource&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/hakobe/unite-script&#34;&gt;hakobe/unite-script&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;chromeのブックマークをunite-vimで表示する&#34;&gt;ChromeのブックマークをUnite.vimで表示する&lt;/h2&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Unite.vimのsourceとしてchrome_bookmarksスクリプトを作成しました。
+Unite-scriptから呼び出して使うことでUnite.vim上で以下のことができるようになります。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2013/02/unite_script_chrome_bookmarks.png&#34; alt=&#34;chrome_bookmarks.scpt&#34; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Unite.vimにChromeのブックマークを表示&lt;/li&gt;
+&lt;li&gt;ブックマークを検索&lt;/li&gt;
+&lt;li&gt;選択したブックマークをブラウザで開く&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Mac Only!&lt;/strong&gt;
+&amp;gt; chrome_bookmarksスクリプトはAppleScriptで書かれており、Macでのみ動作します。&lt;/p&gt;
+
+&lt;h2 id=&#34;chrome-bookmarksスクリプトのインストール&#34;&gt;chrome_bookmarksスクリプトのインストール&lt;/h2&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&#34;事前準備&#34;&gt;事前準備&lt;/h3&gt;
+
+&lt;p&gt;chrome_bookmarksの動作にはUnite.vimとUnite-scriptが必要です。
+上述のURLから入手、設定をしておいてください。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Unite-scriptのエラーについて&lt;/strong&gt;
+&amp;gt;2013/02/13時点でUnite.vimのAPI変更にUnite-scriptが追随していないため実行時にs:bufferが未定義である旨のエラーが発生します。
+&amp;gt;プルリクエスト等も取り込まれていないようなので、Forkして修正しました。
+修正にあわせ、chrome_bookmarksスクリプトをexamplesフォルダに格納したので、以下の手順でインストールしてください。&lt;/p&gt;
+
+&lt;h3 id=&#34;インストール&#34;&gt;インストール&lt;/h3&gt;
+
+&lt;p&gt;vimrcに&lt;code&gt;Bundle &amp;quot;monochromegane/unite-script&amp;quot;&lt;/code&gt;を記載し、&lt;code&gt;:BundleInstall&lt;/code&gt;でインストールしてください。&lt;/p&gt;
+
+&lt;h2 id=&#34;chrome-bookmarksスクリプトの使い方&#34;&gt;chrome_bookmarksスクリプトの使い方&lt;/h2&gt;
+
+&lt;hr /&gt;
+
+&lt;h4 id=&#34;chromeのブックマーク一覧を表示&#34;&gt;Chromeのブックマーク一覧を表示&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;:Unite script:osascript:~/.vim/bundle/unite-script/examples/chrome_bookmarks.scpt&lt;/code&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;ブックマークの検索&#34;&gt;ブックマークの検索&lt;/h4&gt;
+
+&lt;p&gt;通常のUnite.vimによる検索が行えます。フォルダ、ブックマーク名に含まれる文字列が対象となります。&lt;/p&gt;
+
+&lt;h4 id=&#34;ブラウザで開く&#34;&gt;ブラウザで開く&lt;/h4&gt;
+
+&lt;p&gt;ブックマークを選択し、Enterにより、ブラウザで開くことができます。&lt;/p&gt;
+
+&lt;h4 id=&#34;キーバインドを設定&#34;&gt;キーバインドを設定&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;nnoremap &amp;lt;slient&amp;gt; your_keybind :&amp;lt;C-u&amp;gt;Unite script:osascript:~/.vim/bundle/unite-script/examples/chrome_bookmarks.scpt&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;まとめ&#34;&gt;まとめ&lt;/h2&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;2013年はVimの年にするぞ！とvimrcを整備し始めました。
+Unite.vimとVimfilerプラグインを使うようになって、コーディング作業の大部分がVimのなかで完結するようになり、もはや手放せないプラグインになってます。&lt;/p&gt;
+
+&lt;p&gt;ブラウザ操作もUnite.vimでできればうれしいと思い、手始めにブックマークを操作するスクリプトを作ってみました。&lt;/p&gt;
+
+&lt;p&gt;今後は、Google検索などもVimからできるようにスクリプトを増やしていこうと思います。&lt;/p&gt;
+
+&lt;p&gt;ではでは！&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

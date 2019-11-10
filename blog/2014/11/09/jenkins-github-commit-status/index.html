@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width">
+  <meta name="author" content="">
+  
+    <title>すべてが╭( ･ㅂ･)و ̑̑ ｸﾞｯ ! になる - Jenkinsビルドパイプライン結果をプルリクエストに表示する &middot; THINKING MEGANE</title>
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@monochromegane">
+  <meta property="og:description" content="Jenkinsのジョブ結果をプルリクエストに表示するときはGitHub pull request builder pluginを使ってますが、単体のジョブでしか利用できなかったので、複数ジョブ（ビルドパイプライン構成）のときに結果を表示する方法をまとめておきます。
+ビルドパイプラインの構成 今回のビルドパイプラインはこんな感じを想定しています。
+プルリクエストへの更新やコメントをトリガーにジョブが起動し、単体テスト、回帰テストを実行します。 あわせて、実行中、失敗、成功の状態がプルリクエストに表示されます。
+成功したらプルリクエストに ╭( ･ㅂ･)و ̑̑ ｸﾞｯ ! って出ます。ｸﾞｯ ! って。
+これを満たす以下のジョブをつくっていきます。
+ ジョブの結果をプルリクエストに表示する 複数のジョブをビルドパイプラインとして実行する GitHub pull request builder plugin をトリガーとして利用する  1. ジョブの結果をプルリクエストに表示する ジョブの結果をプルリクエストに表示するにはコミットのステータスを操作するAPIを使います。
+このAPIは、コミットの状態や表示するメッセージ、URLをパラメータとして渡すことができるので、これをラップするようなJenkinsのジョブをつくって他のジョブから呼べるようにしておきます。
+設定 ここのポイントはビルドのパラメータ化を使って、ジョブがパラメタを受け取れるようにしておくことです。 これによりジョブの汎用性が高まります。
+プロジェクト名 change-github-commit-status
+ビルドのパラメータ化 revision テキストとして追加。対象となるコミット番号を指定します。
+target_url テキストとして追加。ジョブの結果を確認するためのJenkinsのジョブステータスURLを指定します。
+state 選択として追加。ジョブの結果を指定します。
+選択値は以下のとおり
+ pending success failure  ビルド 以下の内容をシェルの実行として追加
+case &quot;${state}&quot; in &quot;pending&quot; ) description=&quot;|ω・)ﾐﾃﾏｽﾖ&quot; ;; &quot;failure&quot; ) description=&quot;_(┐「ε:)_ｽﾞｺｰ&quot; ;; &quot;success&quot; ) description=&quot;╭( ･ㅂ･)و ̑̑ ｸﾞｯ !">
+  <meta property="og:title" content="すべてが╭( ･ㅂ･)و ̑̑ ｸﾞｯ ! になる - Jenkinsビルドパイプライン結果をプルリクエストに表示する">
+  <meta property="og:url" content="https://blog.monochromegane.com/blog/2014/11/09/jenkins-github-commit-status/">
+  <meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+  
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Source+Code+Pro' type='text/css'>
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Montserrat' type='text/css'>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css">
+  <link rel="stylesheet" href="/css/text.css">
+  <link rel="stylesheet" href="/css/color.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="/images/apple-touch-icon-57-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="/images/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
+  <link rel="canonical" href="https://blog.monochromegane.com/blog/2014/11/09/jenkins-github-commit-status/">
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="THINKING MEGANE" />
+  
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async>
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: {
+               Macros: {
+                        bm: ["\\boldsymbol{#1}", 1],
+                        argmax: ["\\mathop{\\rm arg\\,max}\\limits"],
+                        argmin: ["\\mathop{\\rm arg\\,min}\\limits"]},
+               extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                   displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+  </script>
+</head>
+
+  <body>
+    <div class="header">
+  <header>
+    <h1 class="logo"><a href="https://blog.monochromegane.com">THINKING MEGANE</a></h1>
+    <nav>
+      <ul class="menu">
+        <li><a href="/self-introduction/">Home</a></li>
+        <li><a href="/post/">Archives</a></li>
+        <li><a href="/diary/">Diary</a></li>
+        <li><a href="http://thinking-megane.blogspot.jp/">Old Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+</div>
+
+    <div class="container">
+      <article>
+  <div class="post">
+    <header>
+      <h1><a href="https://blog.monochromegane.com/blog/2014/11/09/jenkins-github-commit-status/">すべてが╭( ･ㅂ･)و ̑̑ ｸﾞｯ ! になる - Jenkinsビルドパイプライン結果をプルリクエストに表示する</a></h1>
+      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2014-11-09</div></time>
+    </header>
+    <div class="post-inner">
+      
+
+<p>Jenkinsのジョブ結果をプルリクエストに表示するときは<a href="https://wiki.jenkins-ci.org/display/JENKINS/GitHub+pull+request+builder+plugin">GitHub pull request builder plugin</a>を使ってますが、単体のジョブでしか利用できなかったので、複数ジョブ（ビルドパイプライン構成）のときに結果を表示する方法をまとめておきます。</p>
+
+<hr />
+
+<h1 id="ビルドパイプラインの構成">ビルドパイプラインの構成</h1>
+
+<p>今回のビルドパイプラインはこんな感じを想定しています。</p>
+
+<p><img src="/images/2014/11/jenkins-build-pipeline.png" alt="jenkins-build-pipeline" /></p>
+
+<p>プルリクエストへの更新やコメントをトリガーにジョブが起動し、単体テスト、回帰テストを実行します。
+あわせて、実行中、失敗、成功の状態がプルリクエストに表示されます。</p>
+
+<p><strong>成功したらプルリクエストに ╭( ･ㅂ･)و ̑̑ ｸﾞｯ ! って出ます。ｸﾞｯ ! って。</strong></p>
+
+<p>これを満たす以下のジョブをつくっていきます。</p>
+
+<ol>
+<li>ジョブの結果をプルリクエストに表示する</li>
+<li>複数のジョブをビルドパイプラインとして実行する</li>
+<li>GitHub pull request builder plugin をトリガーとして利用する</li>
+</ol>
+
+<hr />
+
+<h1 id="1-ジョブの結果をプルリクエストに表示する">1. ジョブの結果をプルリクエストに表示する</h1>
+
+<p>ジョブの結果をプルリクエストに表示するには<a href="https://developer.github.com/v3/repos/statuses/#create-a-status">コミットのステータスを操作するAPI</a>を使います。</p>
+
+<p>このAPIは、コミットの状態や表示するメッセージ、URLをパラメータとして渡すことができるので、これをラップするようなJenkinsのジョブをつくって他のジョブから呼べるようにしておきます。</p>
+
+<h2 id="設定">設定</h2>
+
+<p>ここのポイントは<code>ビルドのパラメータ化</code>を使って、ジョブがパラメタを受け取れるようにしておくことです。
+これによりジョブの汎用性が高まります。</p>
+
+<h3 id="プロジェクト名">プロジェクト名</h3>
+
+<p>change-github-commit-status</p>
+
+<h3 id="ビルドのパラメータ化">ビルドのパラメータ化</h3>
+
+<h4 id="revision">revision</h4>
+
+<p><code>テキスト</code>として追加。対象となるコミット番号を指定します。</p>
+
+<h4 id="target-url">target_url</h4>
+
+<p><code>テキスト</code>として追加。ジョブの結果を確認するためのJenkinsのジョブステータスURLを指定します。</p>
+
+<h4 id="state">state</h4>
+
+<p><code>選択</code>として追加。ジョブの結果を指定します。</p>
+
+<p>選択値は以下のとおり</p>
+
+<ul>
+<li>pending</li>
+<li>success</li>
+<li>failure</li>
+</ul>
+
+<h3 id="ビルド">ビルド</h3>
+
+<p>以下の内容を<code>シェルの実行</code>として追加</p>
+
+<pre><code class="language-sh">case &quot;${state}&quot; in
+  &quot;pending&quot; ) description=&quot;|ω・)ﾐﾃﾏｽﾖ&quot; ;;
+  &quot;failure&quot; ) description=&quot;_(┐「ε:)_ｽﾞｺｰ&quot; ;;
+  &quot;success&quot; ) description=&quot;╭( ･ㅂ･)و ̑̑ ｸﾞｯ !&quot; ;;
+  *) description=&quot;&quot;;;
+esac
+
+curl -X POST -H &quot;Authorization: token ACCESS_TOKEN&quot; \
+  https://api.github.com/repos/:owner/:repo/statuses/${revision} -d &quot;{ \
+  \&quot;state\&quot;: \&quot;${state}\&quot;, \
+  \&quot;target_url\&quot;: \&quot;${target_url}\&quot;, \
+  \&quot;description\&quot;: \&quot;${description}\&quot; \
+}&quot;
+</code></pre>
+
+<hr />
+
+<p>このジョブは他のジョブから呼ばれることを想定していますが、<code>パラメータ付きビルド</code>でパラメタを指定することで
+単体で実行可能です。</p>
+
+<p>GitHubのプルリクエストに以下のように表示されれば実行成功です。</p>
+
+<p><img src="/images/2014/11/commit-statuses.png" alt="github-commit-statuses" /></p>
+
+<hr />
+
+<h1 id="2-複数のジョブをビルドパイプラインとして実行する">2. 複数のジョブをビルドパイプラインとして実行する</h1>
+
+<p>Jenkinsにはジョブを続けて実行するためのビルドパイプラインという機能があります。</p>
+
+<p>ひとつの大きなジョブにするよりも小さなジョブを組み合わせるほうが柔軟にジョブ構成を組み立てることができます。</p>
+
+<p>今回は以下の構成をつくります。</p>
+
+<ol>
+<li>単体テストを実行する<code>unit-test</code>
+
+<ol>
+<li>開始時に、コミットの状態を<code>実行中(Pending)</code>にする</li>
+<li>単体テストが失敗したら、コミットの状態を<code>失敗(Failure)</code>にする</li>
+<li>単体テストが成功したら、下流のジョブ(回帰テスト)を開始する</li>
+</ol></li>
+<li>回帰テストを実行する<code>regression-test</code>
+
+<ol>
+<li>回帰テストが失敗したら、コミットの状態を<code>失敗(Failure)</code>にする</li>
+<li>回帰テストが成功したら、コミットの状態を<code>成功(Success)</code>にする</li>
+</ol></li>
+</ol>
+
+<h2 id="パラメタを下流プロジェクトに渡す">パラメタを下流プロジェクトに渡す</h2>
+
+<p>ビルドパイプラインでは対象とするGitのコミット番号やジョブの状態をパラメタとして下流のジョブに渡すことでジョブを連動させることができます。</p>
+
+<p>今回は、こういった用途に便利な<a href="https://wiki.jenkins-ci.org/display/JENKINS/Parameterized+Trigger+Plugin">Parameterized Trigger Plugin</a>をJenkinsのプラグインとして追加しておきます。</p>
+
+<h2 id="単体テストジョブの設定">単体テストジョブの設定</h2>
+
+<h3 id="プロジェクト名-1">プロジェクト名</h3>
+
+<p>unit-test</p>
+
+<h3 id="ソースコード管理">ソースコード管理</h3>
+
+<p><code>Git</code>を選択</p>
+
+<p><code>Repository URL</code>は対象とするリポジトリのURLを指定、<code>Branches to build</code>は対象とするブランチ名（空白だと全てのブランチが対象）を指定。</p>
+
+<h3 id="ビルド-トリガ">ビルド・トリガ</h3>
+
+<p><code>SCMをポーリング</code>を選択</p>
+
+<p><code>スケジュール</code>には以下のようにポーリングしたい間隔をCRON形式で指定</p>
+
+<pre><code>H/15 * * * *
+</code></pre>
+
+<h3 id="ビルド-1">ビルド</h3>
+
+<p>ここでは、単体テストを実行するためのジョブ（シェルの実行）などに加え、
+開始時に、コミットの状態を<code>実行中(Pending)</code>にするためのジョブを追加します。</p>
+
+<p>ビルド手順の追加から<code>Trigger/call builds on other projects</code>を選択します。</p>
+
+<p>追加したビルドに以下の設定を行います。</p>
+
+<h4 id="projects-to-builds">Projects to builds</h4>
+
+<p>change-github-commit-status</p>
+
+<h4 id="block-until-the-triggered-projects-finish-their-builds">Block until the triggered projects finish their builds</h4>
+
+<p>チェック不要。Pendingに更新するのを待たずに単体テストを開始します。</p>
+
+<h4 id="add-parameters">Add Parameters</h4>
+
+<p><code>Predefined parameters</code>を選択します。</p>
+
+<p>Parametersには以下を定義してください。</p>
+
+<pre><code class="language-sh">revision=${GIT_COMMIT}
+target_url=${BUILD_URL}
+state=pending
+</code></pre>
+
+<p>これで、現在のコミット番号とJenkinsのジョブURL、実行中ステータスを<code>github-change-commit-status</code>ジョブに渡して起動することができます。</p>
+
+<h3 id="ビルド後の処理-失敗時のコミット状態の更新">ビルド後の処理（失敗時のコミット状態の更新）</h3>
+
+<p>まず、失敗時にコミットの状態を<code>失敗(Failure)</code>にするビルドを追加します。</p>
+
+<p>ビルド後の処理の追加から<code>Trigger/call builds on other projects</code>を選択します。</p>
+
+<h4 id="projects-to-builds-1">Projects to builds</h4>
+
+<p>change-github-commit-status</p>
+
+<h4 id="trigger-when-build-is">Trigger when build is</h4>
+
+<p><code>Unstable or Failed but not stable</code>を選択します。</p>
+
+<p>これでジョブ失敗時にのみこの処理が実行されるようになります。</p>
+
+<h4 id="add-parameters-1">Add Parameters</h4>
+
+<p><code>Predefined parameters</code>を選択します。</p>
+
+<p>Parametersには以下を定義してください。</p>
+
+<pre><code class="language-sh">revision=${GIT_COMMIT}
+target_url=${BUILD_URL}
+state=failure
+</code></pre>
+
+<h3 id="ビルド後の処理-成功時の下流プロジェクトの実行">ビルド後の処理（成功時の下流プロジェクトの実行）</h3>
+
+<p>次に、成功時に下流プロジェクトを実行するビルドを追加します。</p>
+
+<p>先ほど追加した<code>Trigger/call builds on other projects</code>の下部にある<code>Add Trigger...</code>でトリガーを追加します。</p>
+
+<h4 id="projects-to-builds-2">Projects to builds</h4>
+
+<p>regression-test</p>
+
+<h4 id="trigger-when-build-is-1">Trigger when build is</h4>
+
+<p><code>Stable</code>を選択します。</p>
+
+<p>これでジョブ成功時にのみこの処理が実行されるようになります。</p>
+
+<h4 id="add-parameters-2">Add Parameters</h4>
+
+<p><code>Pass-through Git Commit that was built</code>を選択します。</p>
+
+<p>これで、下流プロジェクトに対象のコミット番号が引き継がれます。</p>
+
+<h2 id="回帰テストジョブの設定">回帰テストジョブの設定</h2>
+
+<h3 id="プロジェクト名-2">プロジェクト名</h3>
+
+<p>regression-test</p>
+
+<h3 id="ソースコード管理-1">ソースコード管理</h3>
+
+<p><code>Git</code>を選択</p>
+
+<p><code>Repository URL</code>は対象とするリポジトリのURLを指定、<code>Branches to build</code>は対象とするブランチ名（空白だと全てのブランチが対象）を指定。</p>
+
+<h3 id="ビルド-トリガ-1">ビルド・トリガ</h3>
+
+<p>上流から起動されるジョブなので特に指定は不要。</p>
+
+<h3 id="ビルド-2">ビルド</h3>
+
+<p>回帰テストを実行するためのジョブ（シェルの実行）を追加します。</p>
+
+<h3 id="ビルド後の処理-実行結果に基づくコミット状態の更新">ビルド後の処理（実行結果に基づくコミット状態の更新）</h3>
+
+<p>実行結果に基づくコミット状態の更新を行うため、<code>Trigger/call builds on other projects</code>を選択します。</p>
+
+<p>設定内容は、単体テストのビルド後の処理でコミット状態を更新するトリガーを追加したときと同じです。</p>
+
+<p><code>Stable</code>の場合に、stateを<code>success</code>で、
+<code>Unstable or Failed but not stable</code>の場合に、stateを<code>failure</code>で指定すればOKです。</p>
+
+<hr />
+
+<h1 id="3-github-pull-request-builder-plugin-をトリガーとして利用する">3. GitHub pull request builder plugin をトリガーとして利用する</h1>
+
+<p>上で述べた構成でビルドパイプラインの結果をプルリクエストに表示することができるようになりました。</p>
+
+<p>しかし、現在のトリガーとしているSCMのポーリングでは、GitHub pull request builder pluginの
+ようなプルリクエストへのコメント(test this please)によるジョブ実行やアクセス制御は行えません。</p>
+
+<p>GitHub pull request builder plugin はビルドパイプラインには適用できませんが、
+その機能をトリガーとしてだけ利用するジョブにすることで先程のビルドパイプラインに組み込めます。</p>
+
+<h2 id="システムの設定">システムの設定</h2>
+
+<p>GitHub Pull Request Builder をプラグインとしてインストールします。</p>
+
+<p>このプラグインは <code>Jenkinsの管理</code> &gt; <code>システムの設定</code> &gt; <code>GitHub Pull Request Builder</code>から
+設定が必要です。</p>
+
+<h3 id="github-server-api-url">GitHub server api URL</h3>
+
+<p><code>https://api.github.com</code></p>
+
+<h3 id="access-token">Access Token</h3>
+
+<p>GitHubのアクセストークンを指定。</p>
+
+<h2 id="トリガーとなるジョブの作成">トリガーとなるジョブの作成</h2>
+
+<h3 id="プロジェクト名-3">プロジェクト名</h3>
+
+<p>pull-request-trigger</p>
+
+<h3 id="github-project">GitHub project</h3>
+
+<p>対象となるGitHubリポジトリのURL(<code>http://github.com/:owner/:repo</code>)</p>
+
+<h3 id="ソースコード管理-2">ソースコード管理</h3>
+
+<p><code>Git</code>を選択</p>
+
+<p><code>Repository URL</code>は対象とするリポジトリのURLを指定。</p>
+
+<p><code>Branches to build</code>は<code>${sha1}</code>を指定。</p>
+
+<p><code>高度な設定</code> &gt; <code>Refspec</code> に以下を入力。</p>
+
+<pre><code>+refs/pull/*:refs/remotes/origin/pr/*
+</code></pre>
+
+<h3 id="ビルド-トリガ-2">ビルド・トリガ</h3>
+
+<p><code>GitHub Pull Request Builder</code>にチェック</p>
+
+<h3 id="ビルド後の処理">ビルド後の処理</h3>
+
+<p>下流のビルドを追加します。</p>
+
+<p>ビルド後の処理の追加から<code>Trigger/call builds on other projects</code>を選択します。</p>
+
+<h4 id="projects-to-builds-3">Projects to builds</h4>
+
+<p>unit-test</p>
+
+<h4 id="trigger-when-build-is-2">Trigger when build is</h4>
+
+<p><code>Complete(always trigger)</code>を選択します。</p>
+
+<p>これで常にこの処理が実行されるようになります。</p>
+
+<h4 id="add-parameters-3">Add Parameters</h4>
+
+<p><code>Predefined parameters</code>を選択します。</p>
+
+<p>Parametersには以下を定義してください。</p>
+
+<pre><code class="language-sh">revision=${ghprbActualCommit}
+</code></pre>
+
+<p>通常、下流プロジェクトにコミット番号を引き継ぐには、<code>Pass-through Git Commit that was built</code>を選択しますが、GitHub pull request builderではうまくいきません。</p>
+
+<p>これはmergeのコンフリクトを検証するため、内部でmerge commitを生成するためです。
+下流プロジェクトにはこのmerge commitされた番号が引き継がれ、そんなコミット番号知らないぞ、となるわけです。</p>
+
+<p>そこで、元のコミット番号が保持されている<code>$ghprbActualCommit</code>をビルドパラメタとして渡すようにします。</p>
+
+<h2 id="下流プロジェクトの設定変更">下流プロジェクトの設定変更</h2>
+
+<p>下流プロジェクトとなる<code>unit-test</code>からトリガーを除外し、パラメタを受け付けるようにします。</p>
+
+<h3 id="ビルドのパラメータ化-1">ビルドのパラメータ化</h3>
+
+<h4 id="revision-1">revision</h4>
+
+<p><code>テキスト</code>として追加。対象となるコミット番号を指定します。</p>
+
+<h3 id="ソースコード管理-3">ソースコード管理</h3>
+
+<p><code>Branches to build</code>でパラメタで受け取った<code>${revision}</code>を使うようにします。</p>
+
+<h3 id="ビルド-トリガ-3">ビルド・トリガ</h3>
+
+<p>上流から起動されるため、<code>SCMのポーリング</code>のチェックを外します。</p>
+
+<ul>
+<li>実際はトリガとなるGitHub Pull Request Builder がコミット状態を一度成功にしますが、下流プロジェクトで状態を上書きするという動作をします。</li>
+</ul>
+
+<hr />
+
+<p>設定は以上です。Jenkinsの設定を書き出していったら想定以上に長くなってしまいました&hellip;</p>
+
+<p>Jenkinsは単体ジョブで使うことが多かったのですが、Parameterized Trigger Plugin があれば汎用的なジョブをつくってビルドパイプラインを構成することで可能性が広がりそうです。</p>
+
+<p>すべてのプルリクエストを ╭( ･ㅂ･)و ̑̑ ｸﾞｯ ! にしよう。</p>
+
+    </div>
+    <footer class="tag">
+      <i class="fa fa-tags tag-icon"></i>
+      <ul>
+      
+        <li><a class="tag-link" href="/tags/jenkins">jenkins</a></li>
+      
+        <li><a class="tag-link" href="/tags/github">github</a></li>
+      
+      </ul>
+      <div class="clear"></div>
+    </footer>
+  </div>
+</article>
+
+      <div class="social-btn">
+  <div>
+    <a href="http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2014/11/09/jenkins-github-commit-status/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="en" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+  <div>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-via="monochromegane">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  </div>
+</div>
+
+    </div>
+    <footer class="footer">
+  <div class="author"></div>
+  <p class="author-name"><a href="https://twitter.com/monochromegane" target="_blank">@monochromegane</a></p>
+  
+    <p>monochromegane (モノクロめがね) と申します。</p>
+  
+    <p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+  
+  <ul class="social">
+    <li><a href="https://twitter.com/monochromegane" target="_blank"><i class="fa fa-twitter"></i></a></li>
+    <li><a href="https://github.com/monochromegane" target="_blank"><i class="fa fa-github"></i></a></li>
+    <li><a href="/index.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
+  </ul>
+  <p class="copyright">
+    <small>&copy;  <span class="">Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>, Designed by <a href="https://twitter.com/keita_kawamoto" target="_blank">&copy;keita_kawamoto</a></span></small>
+  </p>
+</footer>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+    
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-38374674-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+  </body>
+</html>

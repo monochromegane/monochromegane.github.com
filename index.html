@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<meta name="generator" content="Hugo 0.39" />
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width">
+  <meta name="author" content="">
+  
+    <title>THINKING MEGANE</title>
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@monochromegane">
+  <meta property="og:description" content="THINKING MEGANE">
+  <meta property="og:title" content="THINKING MEGANE">
+  <meta property="og:url" content="https://blog.monochromegane.com/">
+  <meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+  
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Source+Code+Pro' type='text/css'>
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Montserrat' type='text/css'>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css">
+  <link rel="stylesheet" href="/css/text.css">
+  <link rel="stylesheet" href="/css/color.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="/images/apple-touch-icon-57-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="/images/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
+  <link rel="canonical" href="https://blog.monochromegane.com/">
+  
+  <link href="https://blog.monochromegane.com/index.xml" rel="alternate" type="application/rss+xml" title="THINKING MEGANE" />
+  
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async>
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: {
+               Macros: {
+                        bm: ["\\boldsymbol{#1}", 1],
+                        argmax: ["\\mathop{\\rm arg\\,max}\\limits"],
+                        argmin: ["\\mathop{\\rm arg\\,min}\\limits"]},
+               extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                   displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+  </script>
+</head>
+
+  <body>
+    <div class="header">
+  <header>
+    <h1 class="logo"><a href="https://blog.monochromegane.com">THINKING MEGANE</a></h1>
+    <nav>
+      <ul class="menu">
+        <li><a href="/self-introduction/">Home</a></li>
+        <li><a href="/post/">Archives</a></li>
+        <li><a href="/diary/">Diary</a></li>
+        <li><a href="http://thinking-megane.blogspot.jp/">Old Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+</div>
+
+    
+    
+    <div class="container">
+      <div class="posts">
+        
+        <article>
+  <div class="post">
+    <header>
+      <h1><a href="https://blog.monochromegane.com/blog/2019/10/25/fukuokago14_flagen/">コマンドラインオプションをパースするコードをコマンドラインオプションから生成するツールをつくった</a></h1>
+      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2019-10-25</div></time>
+    </header>
+    <div class="post-inner">
+      
+
+<p>コマンドラインオプションの形式は決まったけれども、パース処理を実装するために各言語やライブラリのドキュメントを読むことを繰り返していたので、この手間を省くためのツールをつくりました。</p>
+
+<iframe src="//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fflagen" title="monochromegane/flagen" class="embed-card embed-webcard" scrolling="no" frame border="0" style="width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;">&lt;a href="https://github.com/monochromegane/flagen"&gt;monochromegane/flagen&lt;/a&gt;</iframe> 
+
+<p>flagenは、先に決めたコマンドラインオプションから、これを解析するための各言語用のコードを出力するツールです。
+オプション名から変数名や変数の型、デフォルト値が決定されるため、汎用的なボイラーテンプレートと比較して編集の手間が少なくなります。
+また、テンプレートによって任意の出力を行えるため、エディタや自前のボイラーテンプレート出力ツールとの連携が容易です。
+使いやすくするため、プリセットのテンプレートとしてGo、Ruby、Python、Shellのものを提供しています。</p>
+
+<h1 id="使い方">使い方</h1>
+
+<p>使い方は、テンプレートと実際に使う時のコマンドラインオプションを渡すだけです。</p>
+
+<pre><code class="language-sh">$ flagen YOUR_TEMPLATE YOUR_COMMAND_LINE_OPTIONS...
+</code></pre>
+
+<p>例えば、</p>
+
+<pre><code class="language-sh">$ flagen go --dist erlang -e k/l --lambda 1.5 -k 1 -v
+</code></pre>
+
+<p>と指定すると、Go用のコマンドラインオプションの解析処理を出力します。</p>
+
+<pre><code class="language-go">var (
+	dist	string
+	e	string
+	lambda	float64
+	k	int
+	v	bool
+)
+
+func init() {
+	flag.StringVar(&amp;dist, &quot;dist&quot;, &quot;erlang&quot;, &quot;usage of dist&quot;)
+	flag.StringVar(&amp;e, &quot;e&quot;, &quot;k/l&quot;, &quot;usage of e&quot;)
+	flag.Float64Var(&amp;lambda, &quot;lambda&quot;, 1.5, &quot;usage of lambda&quot;)
+	flag.IntVar(&amp;k, &quot;k&quot;, 1, &quot;usage of k&quot;)
+	flag.BoolVar(&amp;v, &quot;v&quot;, false, &quot;usage of v&quot;)
+}
+</code></pre>
+
+<p>指定されたコマンドラインオプションから変数名、オプション名、型、デフォルト値が設定されることで編集の手間が極力ない状態になっています。</p>
+
+<p>Python、Ruby、Shellの例は<a href="https://godoc.org/github.com/monochromegane/flagen#pkg-examples">GodocのExamples</a>を参考にしてください。</p>
+
+<h1 id="テンプレート">テンプレート</h1>
+
+<p>テンプレートはGoの<a href="https://golang.org/pkg/text/template/">text/template</a>を利用して解析されます。
+テンプレート内では、<code>.Flags</code>（解析したオプションの情報）と<code>.Args</code>（残りのコマンドライン引数）が利用可能です。
+<code>.Flags</code>は<code>Name</code>と<code>Value</code>をもち、<code>Value</code>は更に<code>Type</code>と<code>Get</code>をもちます。</p>
+
+<p>以下は、解析したオプションの情報を列挙するシンプルなテンプレート(my.tmpl)です。</p>
+
+<pre><code>{{ range $flag := .Flags -}}
+  {{ $flag.Name }}={{ $flag.Value.Get}}({{ $flag.Value.Type }})
+{{ end }}
+</code></pre>
+
+<pre><code class="language-sh">$ flagen my.tmpl --dist erlang -e k/l --lambda 1.5 -k 1 -v
+</code></pre>
+
+<p>このテンプレートから以下の出力を得ることができます</p>
+
+<pre><code>dist=erlang(string)
+e=k/l(string)
+lambda=1.5(float)
+k=1(int)
+v=false(bool)
+</code></pre>
+
+<p>また、テンプレート内では文字列のケース変換のための関数を利用することができます。
+主に変数を言語の命名規約に合わせるのに使えます。
+使える関数は、<a href="https://godoc.org/github.com/monochromegane/flagen#pkg-variables">こちら</a> で確認ください。</p>
+
+<h1 id="連携">連携</h1>
+
+<h2 id="vim">Vim</h2>
+
+<p>flagenの結果は標準出力を使っているため、エディタとの連携も容易です。
+例えば、Vimでは以下により、カーソル位置に結果を挿入することができます。</p>
+
+<pre><code>:r!flagen YOUR_TEMPLATE YOUR_COMMAND_LINE_OPTIONS...
+</code></pre>
+
+<h2 id="ボイラーテンプレート出力ツール">ボイラーテンプレート出力ツール</h2>
+
+<p>flagenはライブラリとして利用することができるため、自前のボイラーテンプレート出力ツールがGo製であれば以下のように呼び出すことができます。</p>
+
+<pre><code class="language-go">	tmpl, err := flagen.NewTemplate(args[0])
+	if err != nil {
+		return err
+	}
+	return tmpl.Execute(outStream, args[1:])
+</code></pre>
+
+<p>また、独自の関数が必要な場合は <code>flagen.TemplateFuncMap</code>に設定することでテンプレート内で利用することができます。</p>
+
+<h1 id="ワークアラウンド">ワークアラウンド</h1>
+
+<h2 id="曖昧なフラグ">曖昧なフラグ</h2>
+
+<p>flagenはオプションに値が指定されていないときにboolだと見なすため、以下のようにboolフラグで終わって引数がある場合に判断がつきません。</p>
+
+<pre><code class="language-sh">$ flagen TEMPLATE --bool-flag arg1
+</code></pre>
+
+<p>想定どおりにするためには値としてtrue or falseを受け取ることを明示する必要があります。</p>
+
+<pre><code class="language-sh">$ flagen TEMPLATE --bool-flag=false arg1
+</code></pre>
+
+<h1 id="まとめ">まとめ</h1>
+
+<p>様々な実装が提供されているコマンドラインオプションの解析処理を利用形式から動的に生成するジェネレーターとしてflagenをつくりました。実際にいくつかの言語のテンプレートを用意してエディタと連携させることでCLI開発の効率が改善しています。</p>
+
+<p>今後はflagen自体のオプションとしてprefixなどを提供すれば構造体の変数に設定する用途などのテンプレートとの相性もよくなりそうだと考えています。
+便利なテンプレート追加のプルリクエストやイシュー、ボイラーテンプレートのツールへ組み込んだ報告などお待ちしています。</p>
+
+<h1 id="fukuoka-go">Fukuoka.go</h1>
+
+<p>このツールは<a href="https://fukuokago.connpass.com/event/146447/">Fukuoka.go#14+Umeda.go</a>で発表しました。
+発表資料はこちらです。</p>
+
+<script async class="speakerdeck-embed" data-id="ece61cadb91e46febd8b692e32a8679f" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
+
+    </div>
+    <footer class="tag">
+      <i class="fa fa-tags tag-icon"></i>
+      <ul>
+      
+        <li><a class="tag-link" href="/tags/golang">golang</a></li>
+      
+      </ul>
+      <div class="clear"></div>
+    </footer>
+  </div>
+</article>
+
+        
+        <article>
+  <div class="post">
+    <header>
+      <h1><a href="https://blog.monochromegane.com/blog/2019/10/11/random_number_gen_using_go/">待ち行列理論に使われる分布に従う乱数をGo言語で生成する</a></h1>
+      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2019-10-11</div></time>
+    </header>
+    <div class="post-inner">
+      
+
+<p>待ち行列理論をシミュレーションする際にいくつかの分布に従う乱数を生成する必要があったのでメモ．
+また，確率まわりの用語と分布についても理解が曖昧な点があったのでこの機会にまとめておく．</p>
+
+<h1 id="用語の整理">用語の整理</h1>
+
+<h2 id="確率">確率</h2>
+
+<p>確率は，</p>
+
+<p>\[
+  \frac{ある事象の起こる場合の数}{全ての事象の起こる場合の数}
+\]</p>
+
+<p>で求められる．</p>
+
+<h2 id="確率変数">確率変数</h2>
+
+<p>確率変数は，事象に対応した実数のこと．
+確率変数には，離散型と連続型の二種類がある．
+サイコロの出目のようなものは離散型で，身長や体重のような（原理的には）連続の値になるものは連続型．</p>
+
+<h2 id="確率分布">確率分布</h2>
+
+<p>確率分布は確率と確率変数との対応付け．
+そもそも辞書的な意味での「分布」は「粗密の程度を含めた，空間的な広がり具合」を表す．
+度数分布では階級と度数（階級に含まれる変量の数）の対応付けであった．
+また，これらの分布は，度数分布と同様に確率分布表や確率分布グラフとして表すことができる．</p>
+
+<h2 id="確率を返す関数">確率を返す関数</h2>
+
+<p>ここで，ある確率変数を入力に，対応する確率を出力する関数を考える．</p>
+
+<h3 id="確率質量関数">確率質量関数</h3>
+
+<p>離散型の確率変数であれば，確率分布表を照会し，対応する確率を得ることができる．
+確率変数を入力に，対応する確率を出力する関数を確率質量関数（または確率関数）[1]と言い，サイコロの出目を確率変数$X$とした時に1が出る確率を$P(X=1)=\frac{1}{6}$のように書ける．
+もちろん確率の総和は1である．</p>
+
+<h3 id="確率密度関数">確率密度関数</h3>
+
+<p>連続型の確率変数の場合は，ある一点の値を入力とすると対応する確率は常に0となる．
+これは，ある範囲においても実数は無限個あるため，全事象が無限になることから，確率の定義より$\frac{1}{\infty}=0$となるためである．
+このように連続型の確率変数からは直接的に確率を求めることができないので，この連続型の確率変数を対応する「何か」に変換する必要がある．
+また，その「何か」は確率に変換できる必要がある．
+確率の定義から，総和は1である．
+また，連続型の確率変数であることから，和は積分で求めることになる．</p>
+
+<p>連続型の確率変数をx軸に，この連続型の確率変数を対応する「何か」をy軸にプロットした時に，ある範囲の割合は該当範囲の定積分によって導くことができる．
+そして，全体の積分が1で，その中のある範囲の定積分が，事象がその範囲に含まれる確率に従うような「何か」があれば，それを連続型の確率変数の確率に用いることができる．
+そのような「何か」が存在するとき，「何か」は「確率密度」と呼ばれ，連続型の確率変数を入力とし，確率密度を出力する関数を「確率密度関数」と呼ばれる[2]．</p>
+
+<p>このとき，確率密度関数$f(x)$に従う確率変数$X$が$(a \leqq X \leqq b)$となる確率は\[\int_a^b f(x) dx\]のように書ける．</p>
+
+<p>確率密度は，その確率変数の相対的な発生のしやすさを表すに過ぎないので，部分的にy軸(確率密度関数の返す値)が1を超えても構わない（全体の面積として1になれば良い．例えば，確率密度関数が$f(x)=2x (0 \leqq X \leqq 1)$のときなど）．</p>
+
+<h1 id="待ち行列理論で使う分布">待ち行列理論で使う分布</h1>
+
+<p>待ち行列理論では待ち行列のモデルの構造を以下のようなケンドール記号を用いて記述する．</p>
+
+<ul>
+<li><code>X/Y/S(N)</code></li>
+</ul>
+
+<p>ここでXは到着過程の種類，Yはサービス過程の種類，Sは窓口数，Nは待ち行列の長さの制限数が入る．
+過程の種類は以下の通り．</p>
+
+<table>
+<thead>
+<tr>
+<th>種類</th>
+<th>説明</th>
+<th>備考</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>M</td>
+<td>マルコフ過程</td>
+<td>到着過程ならポアソン分布，サービス過程なら指数分布</td>
+</tr>
+
+<tr>
+<td>D</td>
+<td>確定分布</td>
+<td>到着間隔やサービス時間が一定</td>
+</tr>
+
+<tr>
+<td>G</td>
+<td>一般の分布</td>
+<td>平均値と分散が既知の任意の分布</td>
+</tr>
+
+<tr>
+<td>$E_k$</td>
+<td>アーラン分布</td>
+<td>k個の指数分布の和の分布</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="ポアソン分布">ポアソン分布</h2>
+
+<p>単位時間に平均$\lambda$回起きる事象が単位時間に$k$回発生する分布[3]．</p>
+
+<p>平均が$\lambda$のポアソン分布を表す確率質量関数は\[P(X=k)=\frac{\lambda^{k}}{k!}\cdot e^{-\lambda}\]であり平均$E[X]$は$\lambda$となる．</p>
+
+<h2 id="指数分布">指数分布</h2>
+
+<p>平均$\theta$時間に一回発生する事象の発生間隔を表す分布[4]．</p>
+
+<p>平均が$\theta$の指数分布を表す確率密度関数は\[f(x)=\frac{1}{\theta}e^{-\frac{x}{\theta}} (x \geqq 0)\]であり平均$E[X]$は$\theta$となる．</p>
+
+<h3 id="待ち行列とマルコフ過程">待ち行列とマルコフ過程</h3>
+
+<p>あるランダムに起きる事象を発生回数から見たのがポアソン分布，発生間隔(または時間)から見たのが指数関数とみなすことができる．
+マルコフ過程は未来の挙動は過去の挙動とは無関係であるとする性質を持つ確率過程であり，これらの分布が適合するため利用されている．</p>
+
+<p>単位時間に$\lambda$回到着するとした到着過程はポアソン分布が利用されるが，シミュレーションにおいては平均到着間隔を知りたい．
+この場合は，$\frac{1}{\lambda}$を到着間隔とした指数分布で求めることができる（1時間に平均5人くる場合，平均1/5時間(12分)の間隔で到着する）．
+つまり，$\theta=\frac{1}{\lambda}$として，確率密度関数は\[f(x)=\lambda e^{-\lambda x} (x \geqq 0)\]であり平均$E[X]$は$\frac{1}{\lambda}$となる．</p>
+
+<p>なお，ポアソン分布と指数分布の関係の理解には[5]が参考になる．このサイトでは時刻$t$を導入したポアソン分布の累積分布関数から指数分布の確率密度関数を導いている．</p>
+
+<h2 id="アーラン分布">アーラン分布</h2>
+
+<p>まず，ガンマ分布は平均$\theta$時間に一回発生する事象（指数分布）が$k$回発生するまでの時間の分布[6]である．
+ガンマ分布の$k=1$のとき，指数分布と等しく，$k$が整数の場合にアーラン分布と呼ばれる．</p>
+
+<p>ガンマ分布を表す確率密度関数は\[\frac{1}{\Gamma(k)\theta^{k}}x^{k-1}e^{-x/\theta}\]であり平均$E[x]$は$k\theta$となる．</p>
+
+<p>また，前述のポアソン分布のパラメタから指数分布の確率密度関数を求めたのと同様に，$\theta=\frac{1}{\lambda}$として，確率密度関数は\[\frac{\lambda^k}{\Gamma(k)}x^{k-1}e^{-\lambda x}\]であり平均$E[x]$は$\frac{k}{\lambda}$とも書ける．</p>
+
+<p>ここまで，$k$回の$\theta=1/\lambda$の指数分布を場合を見てきたが，待ち行列理論の書籍においては，$k$回の$\frac{\theta}{k}=\frac{1}{k\lambda}$の指数分布としている場合がある．
+すなわち，一つのサービス時間$\theta$が$k$個の工程（1工程あたり$\frac{\theta}{k}$）からなるとみなしている．
+この場合，確率密度関数は\[\frac{(k\lambda)^k}{\Gamma(k)}x^{k-1}e^{-k\lambda x}\]であり平均$E[X]$は$\theta=1/\lambda$となる．</p>
+
+<h1 id="待ち行列理論で使う分布に従う乱数">待ち行列理論で使う分布に従う乱数</h1>
+
+<p>ここでは，ある分布に従う乱数をGoでの生成する．</p>
+
+<h2 id="指数分布-1">指数分布</h2>
+
+<p>指数分布に従う乱数はGoの標準パッケージ<a href="https://golang.org/pkg/math/rand/#Rand.ExpFloat64">math/randで提供</a>されている．</p>
+
+<pre><code class="language-go">func Exponential(rnd *rand.Rand, lambda float64) float64 {
+        return rnd.ExpFloat64() / lambda
+}
+</code></pre>
+
+<p>パラメタ$\theta=1/\lambda$に合わせるためには結果を$\lambda$で割る（平均到着率が増えるほど平均到着間隔は狭くなる）．</p>
+
+<p>動作確認のため，生成した乱数のヒストグラムと指数分布の確率密度関数を重ねてプロットした．</p>
+
+<p><img src="/images/2019/10/hist_and_pdf_exponential.png" alt="hist_and_pdf_exponential" /></p>
+
+<h2 id="ポアソン分布-1">ポアソン分布</h2>
+
+<p>ポアソン分布に従う乱数はGoの標準パッケージで提供されていない．
+そこで指数分布とポアソン分布の関係性を利用して，指数分布で得られた乱数の和が1を超えるまでの最小のカウント数を用いる方法がある[7][8]．
+例えば平均到着率($\lambda$)が5人であれば，平均到着間隔($1/\lambda=0.2$)である．
+ここでカウントは$0.2*5$が平均して得られると考えられる．</p>
+
+<pre><code class="language-go">func Poisson(rnd *rand.Rand, lambda float64) float64 {
+        p := 0.0
+        for i := 0; ; i++ {
+                p += Exponential(rnd, lambda)
+                if p &gt;= 1.0 {
+                        return float64(i)
+                }
+        }
+        return 0.0
+}
+</code></pre>
+
+<p>生成した乱数のヒストグラムとポアソン分布の確率質量関数のプロット．</p>
+
+<p><img src="/images/2019/10/hist_and_pmf_poisson.png" alt="hist_and_pmf_poisson" /></p>
+
+<h2 id="アーラン分布-1">アーラン分布</h2>
+
+<p>アーラン分布もしくはガンマ分布に従う乱数はGoの標準パッケージで提供されていない．
+しかし，ガンマ分布の定義（k個の指数分布の和の分布）[6]から以下の実装が可能である．</p>
+
+<pre><code class="language-go">func ErlangKL(rnd *rand.Rand, lambda float64, k int) float64 {
+        g := 0.0
+        for i := 0; i &lt; k; i++ {
+                g += Exponential(rnd, lambda)
+        }
+        return g
+}
+</code></pre>
+
+<p>ここで，<code>KL</code>は平均が$\frac{k}{\lambda}$であることを表している．</p>
+
+<p>生成した乱数のヒストグラムとアーラン分布の確率密度関数のプロット．</p>
+
+<p><img src="/images/2019/10/hist_and_pdf_erlangkl.png" alt="hist_and_pdf_erlangkl" /></p>
+
+<p>待ち行列理論の参考書にあるようなサービス工程を$k$個に分割するアーラン分布では$k$回の$\frac{\theta}{k}=\frac{1}{k\lambda}$の指数分布となることから以下の実装となる．</p>
+
+<pre><code class="language-go">func Erlang1L(rnd *rand.Rand, lambda float64, k int) float64 {
+        g := 0.0
+        for i := 0; i &lt; k; i++ {
+                g += Exponential(rnd, float64(k)*lambda)
+        }
+        return g
+}
+</code></pre>
+
+<p>ここで<code>1L</code>は平均が$\frac{1}{\lambda}$であることを表している．</p>
+
+<p>生成した乱数のヒストグラムとアーラン分布の確率密度関数のプロット．</p>
+
+<p><img src="/images/2019/10/hist_and_pdf_erlang1l.png" alt="hist_and_pdf_erlang1l" /></p>
+
+<h1 id="動作確認用のコード">動作確認用のコード</h1>
+
+<p>動作確認用のコードは以下にある．</p>
+
+<ul>
+<li><a href="https://gist.github.com/monochromegane/be5b872b3aa71d1a314a8b8bb74be60b">main.go</a></li>
+<li><a href="https://gist.github.com/monochromegane/13123f681db5cf376e79b854cfdec5ba">plot.py</a></li>
+</ul>
+
+<p>このような感じで利用できる．</p>
+
+<pre><code class="language-sh">go run main.go -size 100000 -dist erlang -e k/l -lambda 0.5 -k 2 &gt; data.txt &amp;&amp; python plot.py --dist erlang -e k/l --lambda 0.5 -k 2
+</code></pre>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li>[1] <a href="https://ja.wikipedia.org/wiki/%E7%A2%BA%E7%8E%87%E8%B3%AA%E9%87%8F%E9%96%A2%E6%95%B0">確率質量関数 - Wikipedia</a></li>
+<li>[2] <a href="https://ja.wikipedia.org/wiki/%E7%A2%BA%E7%8E%87%E5%AF%86%E5%BA%A6%E9%96%A2%E6%95%B0">確率密度関数 - Wikipedia</a></li>
+<li>[3] <a href="https://ja.wikipedia.org/wiki/%E3%83%9D%E3%82%A2%E3%82%BD%E3%83%B3%E5%88%86%E5%B8%83">ポアソン分布 - Wikipedia</a></li>
+<li>[4] <a href="https://ja.wikipedia.org/wiki/%E6%8C%87%E6%95%B0%E5%88%86%E5%B8%83">指数分布 - Wikipedia</a></li>
+<li>[5] <a href="http://www.f-denshi.com/000TokiwaJPN/17kakto/100prob.html">ときわ台学/統計学/ポアソン分布と指数分布</a></li>
+<li>[6] <a href="https://ja.wikipedia.org/wiki/%E3%82%AC%E3%83%B3%E3%83%9E%E5%88%86%E5%B8%83">ガンマ分布 - Wikipedia</a></li>
+<li>[7] <a href="https://www.ishikawa-lab.com/montecarlo/4shou.html">どんな分布の乱数でも作り出せる</a></li>
+<li>[8] <a href="https://nineties.github.io/math-seminar/14.html">擬似乱数の生成法・推定 - プログラマの為の数学勉強会</a></li>
+</ul>
+
+    </div>
+    <footer class="tag">
+      <i class="fa fa-tags tag-icon"></i>
+      <ul>
+      
+        <li><a class="tag-link" href="/tags/golang">golang</a></li>
+      
+      </ul>
+      <div class="clear"></div>
+    </footer>
+  </div>
+</article>
+
+        
+        <article>
+  <div class="post">
+    <header>
+      <h1><a href="https://blog.monochromegane.com/blog/2019/10/04/wsa5_kaburaya_autoscaler/">Kaburaya AutoScaler: 多環境での運用性を考慮した自律適応型オートスケーリング制御系</a></h1>
+      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2019-10-04</div></time>
+    </header>
+    <div class="post-inner">
+      
+
+<p>このエントリは、<a href="https://websystemarchitecture.hatenablog.jp/entry/2019/07/30/172650">第五回 Web System Architecture 研究会 (WSA研)</a>の予稿です。</p>
+
+<h1 id="はじめに">はじめに</h1>
+
+<p>Webサービスの運用において，急激なアクセス頻度の上昇に対する安定性を保つため，Webアプリケーションにスケーラビリティの仕組みが一般的に求められるようになった．
+これを支援するためにWebアプリケーションを稼働させるクラウドサービスやオーケストレーションツールから，オートスケーリング機能が提供されている．
+これらのオートスケーリング機能では，開発運用者が予め定めた条件を元にWebアプリケーションの状況が監視される．
+そうして，条件を満たせば，開発運用者が予め定めたスケール方法とその実施量に従いWebアプリケーションをスケールさせる．</p>
+
+<p>このようにオートスケーリングによって，ユーザからのリクエスト数の増減に応じて最適なサーバ台数を調整されることで利用者の快適さと情報システムの運用コストを両立できるようになった．
+一方で，オートスケーリングを導入し，継続的に安定した運用するためには開発運用者の運用努力が必要であるが，これらは管理する環境の増加に従い困難になる．
+そのため，多環境での運用性を考慮した自動化可能なオートスケーリング戦略が求められる．</p>
+
+<p>オートスケーリングの継続的に安定した運用に向けた課題は大きく二つある．
+一つ目は，アプリケーション特性の把握，二つ目は，“遅れ”の考慮である．</p>
+
+<h2 id="課題1-アプリケーション特性の把握">課題1: アプリケーション特性の把握</h2>
+
+<p>スケールにはWebアプリケーションを稼働する仮想サーバへリソースを追加する垂直スケール（スケールアップ），稼働する仮想サーバを追加する水平スケール（スケールアウト）の2種類の方法がある．
+しかしながら，どちらの方法を用いるにせよ，開発運用者はWebアプリケーションの特性に応じたオートスケーリングの条件やその実施量を予め定める必要がある．
+例えば，時刻ベースであればアクセス頻度の時系列的傾向や，リソース変動ベースであればボトルネックとなるメトリクスである．
+また，これらの条件に対する必要台数の算出も必要となる．
+Webアプリケーションは常に変更が加わることから，手動での継続的な特性の把握と決定は運用負荷の面で現実的ではない．</p>
+
+<p>そこで，特性把握の自動化が行われている．
+三宅らは，過去のアクセス頻度のデータからLSTMを用いて24時間先までの1時間単位のアクセス頻度を予測するモデルを構築し，予測アクセス頻度を元に経験から得られたサーバ単位のスループットにより必要なサーバ台数を求めた[1]．
+スループットの把握では，パラメタを連続的に変化させながら最良の結果を得る値を探索的に求める方法も提案されている[2]．
+これらの予測的，探索的なアプローチによる特性把握の自動化により，変化する環境に対する追従性は向上する．
+一方で，事前的なアプローチであるため，予測の誤差，探索を行った環境と本番環境の誤差に対処できないという課題が残る．</p>
+
+<p>そのため，三宅らはフィードバック制御による個別の特性把握を必要としないアプローチ[3][4]を提案した．
+この手法では，直近のレスポンスタイムが均衡する点に収束するような台数調整によって特性把握が不要で実行時に誤差を修正することができる．
+ただし，フィードバック制御を用いるため，制御量であるサーバ台数の決定は探索的である．
+待ち行列理論によれば窓口利用率が1を超えると待ち行列は収束しないとされていることから，サーバ台数は即時かつ決定的に求められることが望ましい．</p>
+
+<h2 id="課題2-遅れ-の考慮">課題2: “遅れ”の考慮</h2>
+
+<p>オートスケーリングでは，本番環境の誤差に対応するための即応的なアプローチを採用すると&rdquo;遅れ&rdquo;の課題が発生する．
+一つ目の遅れは，負荷上昇からサーバ台数を見積もるまでの時間差である．
+本稿ではこれを「入力の遅れ」と呼ぶ．
+次はサーバ台数の変更指示から起動までの時間差である．
+本稿ではこれを「出力の遅れ」と呼ぶ．
+待ち行列理論によれば窓口利用率が1を超えると待ち行列は収束しないとされていることから，これらの遅れに対して発生した待ちリクエストが系の安定性を崩す．
+安定性の低下は開発運用者による不定期な対応を要請し，運用負荷につながることからこれを回避する必要がある．</p>
+
+<p>そのために，遅れを最小化する手法が適用される．
+入力の遅れでは，変化点検出などにより負荷上昇を即時に察知する方式がある．
+また，出力の遅れではCRIUを利用することで起動までの時間を短縮する方式[5]がある．
+しかしながら，精度の観点やシステム制約によって遅れを0にはできないため，遅れそのものに対する対策は必要となる．</p>
+
+<p>遅れを踏まえた準備では，前述の予測的なアプローチが考えられる．
+三宅らの手法[1]では，予測と事前起動によりこれらの遅れを考慮するが，本番環境の誤差への課題が残る．
+そこで，スミスの予測法[6]のようにフィードバック制御において遅れによる影響を踏まえた制御量を算出する手法がある．
+一方で，予測のためには精度の高い予測モデルの構築が必要であり，追従にはここの自動化が必須となる．</p>
+
+<h1 id="提案手法">提案手法</h1>
+
+<p>多環境での運用性を考慮したアプリケーション特性の把握の自動化と安定性の両立のためには，以下の要件が必要となる．</p>
+
+<ol>
+<li>Webアプリケーション特性として負荷に対する実施量の関係が把握できる</li>
+<li>これを不必要な負荷をかけることなく実行時に自動で把握できる</li>
+<li>把握したWebアプリケーション特性と実環境に誤差が生じた場合に修正できる</li>
+<li>これを実現するリアクティブなアプローチで発生する”遅れ”へ対処できる</li>
+</ol>
+
+<p>そこで，フィードフォワード制御を中心とし，実環境の特性把握・追従のためにフィードバック制御を組み込んだ2自由度のオートスケーリング制御系を提案する．
+提案手法により，特性把握・追従の自動化ならびに待ち行列理論を用いた決定的な台数算出・遅れ補償による安定化が見込める．
+なお，本提案手法の実装はKaburaya AutoScalerとして，OSSでの公開・開発を続けている．</p>
+
+<ul>
+<li><a href="https://github.com/monochromegane/kaburaya-autoscaler">monochromegane/kaburaya-autoscaler</a></li>
+</ul>
+
+<p>提案手法では，Webアプリケーション特性を求めるにあたって低負荷時では理想的なレスポンスタイム，高負荷時ではスループット限界を用いることで対象のWebアプリケーションに不必要な負荷をかけることなく現状に即したWebアプリケーション特性を把握することができる．
+また，仮想サーバ起動までの遅れに伴う負荷状況を予測し，これを見越した実施量を見積もる遅れ補償機構を設けた．</p>
+
+<p>提案手法のアーキテクチャを以下に示す．</p>
+
+<p><img src="https://user-images.githubusercontent.com/1845486/65784527-35289080-e18d-11e9-98eb-a155ed8967cc.png" alt="Kaburaya AutoScaler Architecture" /></p>
+
+<p>ここで$F$はフィードフォワード制御部である． 現状の負荷状況に応じて実施量であるサーバ台数を算出する．
+算出には待ち行列理論の窓口利用率を求める式を変形した$\lambda/\rho\mu$を用いる．
+なお，$\lambda$は平均到着率（req/単位時間），$\mu$は平均サービス率（req/単位時間），$\rho$は窓口利用率を表す．
+提案手法では$\rho$には0より大きく1未満の任意の値を設定することができる．</p>
+
+<p>$P$はプラントであり，$F$で求めたサーバ台数を用いて実際にWebサービスを運用する実環境である．
+提案手法では実環境の計測誤差をフィードバックすることで自動かつ継続的な安定性を保つ． $P$は計測結果として単位時間での平均レスポンスタイムである$T_s$と単位時間での1台あたりの処理数である$\mu$を返却する．
+これらの値は，$F$における新しい$\mu$に用いられる．</p>
+
+<p>提案手法では仮想サーバ起動までの遅れに伴う負荷状況を予測し，これを見越した実施量を見積もる遅れ補償機構を設けた．
+待ち行列理論では無限時間の平均した待ち時間を求めるため，窓口利用率が1以上の場合に発散し，理論を適用することができない．
+一方で，遅れ時間は有限であることから，窓口利用率が1以上の場合であっても待ち行列の長さを求めることができると考えた．
+そこで$(\lambda^{t-1}-s^{t-1}\mu^{t-1})\gamma$のように不足処理能力による待ち行列の長さとて加えて，これを捌くことができるサーバ台数を求めている．</p>
+
+<h1 id="評価">評価</h1>
+
+<p>プラントのシミュレータを使って提案手法によるオートスケーリングの自律・適応の性能を評価した．</p>
+
+<p><img src="https://user-images.githubusercontent.com/1845486/65784472-16c29500-e18d-11e9-9fee-718bac3bbdbd.png" alt="Evaluation" /></p>
+
+<p>右下のグラフにより$\mu$の推定・追従が行えていること，左上のグラフにより遅れ補償が働きアクセス増加時に一時的に多いサーバを投入することで収束できていることが確認できる．
+個別の評価についてはスライドを参照されたい．</p>
+
+<h1 id="発表スライド">発表スライド</h1>
+
+<script async class="speakerdeck-embed" data-id="f71a76ce6cbf454ab583d968916df2b8" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
+
+<h1 id="まとめ">まとめ</h1>
+
+<p>本研究会ではオートスケーリングと開発運用者間の関係をなめらかにするための多環境での運用を考慮した自律適応型オートスケーリング制御系を提案した．
+評価ではM/M/Sモデルを前提としたプラントシミュレータによってこれらが達成可能なことを示した．
+実用化に向けて今後はプラントに実際のWebサーバ/アプリケーションサーバを適用した評価や実際の到着，サービス時間間隔に近い分布での評価が必要である．
+また，提案手法では入力の遅れに伴い単位時間内に待ちリクエストが必ず発生するため変化点検出などで遅れ時間自体を短縮する方式も検討したい．</p>
+
+<h1 id="発表を終えて">発表を終えて</h1>
+
+<p>今回のWSA研究会もとても面白かった．
+Webシステムアーキテクチャという題材で色々な分野の人が集まって議論することで持ち寄ったアイディアが前進して行くのを何度も見ている．
+自分自身の取り組みも研究としてWSA#3からWSA#4を通してGopherConで登壇できるぐらいに育った．
+加えて，今回は，オートスケーリングの課題に着目して新しいアプローチを試してみる中で，制御工学や待ち行列理論などを学び楽しめた．
+このような普段の研究から少し離れた取り組みであっても，定期的に発表を促されることで形にすることができるのはとても大切で，やりっぱなし学びっぱなしではなく一つの区切りまで考え実装することで次回以降の研究への糧となる．
+Webシステムアーキテクチャに関する運用知見を研究的アプローチで前進させること興味がある方は次回開催の参加を検討してみてはいかがでしょうか．</p>
+
+<ul>
+<li><a href="https://websystemarchitecture.hatenablog.jp/entry/2017/11/16/182041">Web System Architecture研究会の発足と挨拶</a></li>
+<li><a href="https://websystemarchitecture.hatenablog.jp/purpose">研究会の目的</a></li>
+</ul>
+
+<h1 id="リファレンス">リファレンス</h1>
+
+<ul>
+<li>[1]: 三宅 悠介, 松本 亮介, 力武 健次, 栗林 健太郎, アクセス頻度予測に基づく仮想サーバの計画的オートスケーリング, FIT 2018 第17回情報科学技術フォーラム, CL-002, Sep 2018.</li>
+<li>[2]: 全自動パラメータチューニングさん <a href="https://blog.mirakui.com/entry/2013/02/20/003401">https://blog.mirakui.com/entry/2013/02/20/003401</a></li>
+<li>[3]: Yusuke Miyake, Optimization for Number of goroutines Using Feedback Control, GopherCon Marriott Marquis San Diego Marina, California, July 2019.</li>
+<li>[4]: 三宅 悠介, Ebira: アクセス負荷に応じて継続的にスケーリング基準を最適化する汎用オートスケーリング機構, 第四回 Webシステムアーキテクチャ研究会, 2019年4月.</li>
+<li>[5]: 松本 亮介, 近藤 宇智朗, CRIUを利用したHTTPリクエスト単位でコンテナを再配置できる低コストで高速なスケジューリング手法, 研究報告インターネットと運用技術（IOT）, Vol.2019-IOT-44, pp.1-8, Feb 2019.</li>
+<li>[6]: O. Smith, &ldquo;Closer control of loops with dead time&rdquo;, Chemical engineering progress, Vol. 53, No. 5, pp. 217-219, 1957.</li>
+</ul>
+
+    </div>
+    <footer class="tag">
+      <i class="fa fa-tags tag-icon"></i>
+      <ul>
+      
+        <li><a class="tag-link" href="/tags/wsa%E7%A0%94">WSA研</a></li>
+      
+      </ul>
+      <div class="clear"></div>
+    </footer>
+  </div>
+</article>
+
+        
+        <article>
+  <div class="post">
+    <header>
+      <h1><a href="https://blog.monochromegane.com/blog/2019/08/11/toward_the_oversea_conference/">初めて海外カンファレンス登壇するためにやったこと</a></h1>
+      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2019-08-11</div></time>
+    </header>
+    <div class="post-inner">
+      
+
+<p>7/24から27にかけてアメリカ、サンディエゴで開催されたGopherCon 2019で人生初となる海外カンファレンスに登壇してきました（発表の様子は<a href="https://blog.monochromegane.com/blog/2019/08/10/gophercon_2019/">こちら</a>にまとめました）。
+GopherConはGo関連で最大級の国際カンファレンスです。
+6年目となる今年は世界中から1,800名のGopherが参加し、200名以上の応募の中から選ばれた36名がスピーカーとして登壇しました。
+その中で、僕は「Optimization for Number of goroutines Using Feedback Control」というタイトルで45分の<a href="https://www.gophercon.com/agenda/speakers/442434">チュートリアルセッション</a>を務めました。</p>
+
+<p>これまで海外カンファレンス登壇経験はなく、英語にも不慣れであるものの、現在の自分にとって非常に重要な位置付けのイベントであり、1月のCfPから7月の発表に至るまでの長丁場を非常に高い優先度で取り組んできました。
+これらの取り組みについて、自分自身の次の登壇への振り返りとして、何より今後、僕と同じように海外カンファレンス登壇を目指す方にとって何かしら参考になればと思いまとめておきます。</p>
+
+<h1 id="採択に向けて">採択に向けて</h1>
+
+<h2 id="投稿のネタを育てておく">投稿のネタを育てておく</h2>
+
+<p>まずは話すネタがなければ投稿できません。
+普段の業務やOSS活動で得た生の経験や実績は、頭の中にあるだけではやがて自分にとって当たり前になり輝きを失っていきます。
+そのため、普段から忘れないように登壇ネタとしてメモしておくだけでも有効です。
+ただ、実際には、ブログや国内の勉強会での登壇などを通して、カタチを与えて上げておくと良いと思います。
+このアウトプット作業に暗黙的に含まれる他人に伝えるという制約によって、ただの経験が洗練されてよそゆきの顔になっていくからです。
+つまり、曖昧だったり複雑な部分を解きほぐし自分の理解が深まることで提案や動機付けに対する説得力が生まれます。</p>
+
+<p>今回の僕のネタは、幸いにもこの機会に恵まれました。
+関連研究も含めるとWSA研究会とGoCon東京の計3回の発表とフィードバックを通して（現在進行形で）育てています。</p>
+
+<h2 id="投稿のネタを選ぶ">投稿のネタを選ぶ</h2>
+
+<p>どのようなネタであってもぜひ挑戦させてあげてください。
+採択される可能性が限りなく高いネタはあっても絶対に通るネタはないのではないかなと思います。
+なぜならカンファレンスの特徴や査読者のバックグラウンド、他の発表とのバランスなど採択には色々なパラメタも影響するからです。
+なので、僕は<a href="https://twitter.com/tenntenn">@tenntenn</a>さんのこのスタンスで良いと思います。</p>
+
+<p><blockquote class="twitter-tweet"><p lang="ja" dir="ltr">CfPに応募する時の1番の秘訣は自分で諦めないこと。自分って案外自分に厳しいので、このレベルじゃ駄目でしょと決めつけがち。選ぶのは自分じゃないし、落ちてもデメリットないので応募するのが一番得。</p>&mdash; tenntennʕ ◔ϖ◔ʔ ==Go (@tenntenn) <a href="https://twitter.com/tenntenn/status/1113254427488509954?ref_src=twsrc%5Etfw">April 3, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+
+<p>提出することで査読者からのフィードバックがもらえることもありますし、カンファレンス登壇に興味があればまずは応募してみましょう&hellip;!</p>
+
+<p>ただし、発表実現性が著しく低いものは避けましょう。
+発表までに実装や評価は間に合いますか？（採択されたら当日までにやることは他にもたくさんあります）
+プロポーザルを書くコスト、査読するコストは発表実現性が高いものへ。</p>
+
+<h2 id="プロポーザルの書き方を学ぶ">プロポーザルの書き方を学ぶ</h2>
+
+<p>いかにして提案を査読者にアピールするかは重要であり難しい取り組みです。
+ただし、査読者が求める事項は一般に共通しており、それゆえにベストプラクティスはあります。
+今回、僕は@tenntennさんから教えてもらった以下のサイトに目を通してプロポーザル執筆に臨みました。</p>
+
+<ul>
+<li><a href="https://carolynvanslyck.com/blog/2018/12/talk-at-gophercon/">Submit a Talk to GopherCon!</a></li>
+<li><a href="https://medium.com/@fox/how-to-write-a-successful-conference-proposal-4461509d3e32">How to write a successful conference proposal</a></li>
+<li><a href="https://dave.cheney.net/2017/02/12/how-to-write-a-successful-conference-proposal">How to write a successful conference proposal (by Dave Cheney)</a></li>
+<li><a href="http://russolsen.com/articles/2012/06/21/acing-the-technical-talk-getting-your-proposal-through-the-door.html">Talking Tech: Getting Your Proposal Through the Door</a></li>
+<li><a href="https://blog.builderscon.io/entry/2017/05/09/090000">おすすめなカンファレンス用プロポーザルの書き方</a></li>
+</ul>
+
+<p>もちろん対象のカンファレンスの選考基準も目を通します。</p>
+
+<blockquote>
+<p>The selection criteria:</p>
+
+<ol>
+<li>Relevance. The talk is relevant to the Go community. GopherCon is not a general software conference, our audience wants to hear about topics that relate to the Go programming language.</li>
+<li>Clarity. You’ve clearly explained what you are going to talk about.</li>
+<li>Correctness. You’ve demonstrated knowledge of your topic. You don’t have to be an expert, but you are expected to be speaking from experience.</li>
+<li>Achievability. You’ve thought about how to present your material in the time available.</li>
+<li>Impact. The goal of the talk. What new idea, technique, tool, or information will the audience leave your presentation with?</li>
+</ol>
+</blockquote>
+
+<p>僕はこの辺の書き方は論文執筆と同じだなあという感想を持ちました。
+つまり、提案の新規性、有用性、信頼性などをわかりやすい構成で伝える技術です。
+一方で、上で引用したGopherConの選考基準では、「専門家である必要はないが経験から語ることが期待される」と言う文言がありました。
+これは一般論で終わらないことを伝えていると捉えられますが、やったことをそのまま出せばいいというわけでもないはずです。
+つまり、経験から得られたものを一般化したり、潜在的な課題へと結びつけて、より多くの人に何かを持ち帰ってもらえるように思考することが求められます。
+そういう意味ではやはり論文執筆に通じるものを感じます。</p>
+
+<p>ただ、先の選考基準は「自分で」敷居を上げすぎるなという側面もあるとは思っていて、まずやったことを書く、それから上記を意識しながら少しづつ改善していくことが大切なのだろうと思います。</p>
+
+<h2 id="プロポーザルを書く">プロポーザルを書く</h2>
+
+<p>プロポーザルの書き方に従い、選んだネタを使ってプロポーザルを書きます。
+英語に慣れていない場合はまず日本語で書くと良いと思います。
+問題をわかりやすく整理して、可読性の高い構成にするのは難しい仕事なので、日本語で作って英語にする方が結果的に時間的・品質的に満足できるからです。</p>
+
+<p>提案型の場合、汎用的には以下のような流れで文字数制限に応じて分量を調整していけると思います。</p>
+
+<ul>
+<li>1. 現状（現状における問題の定義。つまり理想状態との差）</li>
+<li>2. 背景（定義した問題に対する従来のアプローチの整理。それらのアプローチの持つ課題を&rdquo;自分なりに&rdquo;整理）</li>
+<li>3. 提案（その課題を解決する方法を提案）</li>
+<li>4. 評価（提案手法の有効性を評価する方法、あれば結果を含める）</li>
+</ul>
+
+<p>従来ツールによる解決であれば、3はそのツールの紹介に、4は導入事例になります。
+いずれにせよ、このようにしておくと各ステップの検討事項が分離できるので順番に議論すれば後戻りが発生しません。
+つまり査読者の思考の流れを妨げません。
+理想状態を念頭に、解決したい本当の問題と、従来アプローチの制約事項をうまく分離してあげるように考えるのがコツでしょうか。
+これは難しいので投稿ネタを育てる工程で意識しながら繰り返しやっておくと良いと思います。
+なお、論文だと理想状態がなぜ理想なのかの説明も求められるので大変ですが、エンジニア系のカンファレンスだとコンテキストが共有できているのでそこに文字数を割かなくても大丈夫です。
+また、エレベータピッチなどの極端に文字数が少ない場合は、1の理想と2の整理した課題だけを述べて3に繋げています（4は含めない）</p>
+
+<p>参考までに、僕が今回提出したプロポーザルを下記に置いておきます。
+タイムテーブルのセクションは@tenntennさんの以前のプロポーザルを参考にさせてもらいました。
+査読者目線からも、提案の整合性や発表内容に対する時間配分の妥当性などが分かるのでとても良いセクションだと思います。</p>
+
+<ul>
+<li><a href="https://github.com/monochromegane/conference-proposals/blob/master/2019-07-24-gophercon-2019.md">Proposal for GopherCon 2019</a></li>
+</ul>
+
+<h2 id="プロポーザルを英語化する">プロポーザルを英語化する</h2>
+
+<p>まず、Google翻訳に放り込みたくなる気持ちをぐっと我慢します。
+Google翻訳の進歩は目覚ましいですが、元となる日本語の文章に曖昧な点があるとどうしても翻訳の精度は下がります。
+また、係り受けの複雑な日本語の文章も、いたずらに長い文章へ翻訳され、文字数あたりの情報量が減ることもあるでしょう。
+査読者の思考を妨げないためには、簡潔で明解な英語文章が必要です。
+そのためには、元の日本語の文章を以下の点でチェックすると良さそうです。</p>
+
+<ul>
+<li>主語・述語があるか</li>
+<li>主語・述語がねじれていないか</li>
+<li>事実か意見かが判断できるか</li>
+<li>係り受けが適切か（不要な修飾を減らす、修飾順番を整理）</li>
+<li>文章が複数の主張を含んでいないか（文の分割を検討）</li>
+<li>接続助詞（〜が、〜て、〜ので）は従属節との関係を曖昧にしていないか（厳密な接続助詞への変更か文を分割）</li>
+</ul>
+
+<p>校正後の日本語文章に対しては、比較的短く基本的な構文だけで英作文ができるはずです。
+なお、専門用語や言い回しについては、普段から興味のある分野で論文や技術書を英語のものを読んで、レパートリーを増やしておくと良いです（自戒を込めて）。</p>
+
+<h2 id="ギリギリの提出を避ける">ギリギリの提出を避ける</h2>
+
+<p>提出時期は早ければ早いほど良いでしょう。
+今回、締め切りの5日前に提出しましたが、アーリーフィードバックとして、セッション枠の変更（25分ではなく45分へ）をはじめとする幾つかの提案をもらいました。
+これが締め切り寸前だと、もらえなかったかもしれず、そうすると時間に対するコンテンツ過剰によって発表の実現性が低く採点され、採択されなかった可能性もあります。</p>
+
+<p>実際、投稿数の遷移について、締め切り3日前が87、前日で130、当日の中間発表で192のように駆け込みで投稿数が一気に増える様が伝えられています。
+査読者数も限界があるため、締め切り前の全員分にアーリーフィードバックを返せないとすると、提出は早いほうがオススメです。</p>
+
+<p>僕がもらったフィードバックはこのようなものでした。</p>
+
+<pre><code class="language-txt">I have some early feedback from the reviewers. The general feeling is this is too much content to cover in a 25 minute keynote slot and may not be generally applicable to the full audience. The recommendation from the reviewers is to revise this proposal as a 45 minute tutorial session
+
+You can edit your proposal at any time before the end of the month. Best of luck!
+</code></pre>
+
+<h1 id="英語学習">英語学習</h1>
+
+<p>英語によるコミュニケーションは普段からの積み重ねが全てです（はい&hellip;）。
+この章に関しては誇れるものではないので参考までにお読みください。</p>
+
+<p>僕の場合、発作的に英語をやって身につかずに終わるというのを長年繰り返していました。
+そこで、今回、<a href="https://www.progrit.co.jp/">PROGRIT</a>という英語コーチングサービスを使ってカリキュラムを組んでもらい継続的な学習をサポートしてもらうことにしました。
+結構なお値段（いやほんと）します。
+カリキュラムも画期的な手法というよりは地道にやることで効果が見込める王道のものを組み合わせていて、これを如何に継続してやり抜くかをサポートすることがサービスのコアかなと感じます。
+なので、自分にあった勉強法を見つけて継続してやれている方にとってはあまり意味のないサービスかもしれません。
+とはいえ、前述の英語に対する僕のニーズにはあっていたので今回利用しました。
+結果的に、Versantという英語コミュニケーション能力を図るテストは3ヶ月のカリキュラムを終えて5点上がり（TOEICだと75点UPぐらい？）、やはり継続は力だなと感じています。</p>
+
+<h2 id="カリキュラム">カリキュラム</h2>
+
+<p>最終的に日々のカリキュラムは以下のように落ち着きました。</p>
+
+<ul>
+<li>瞬間英作文(60min)</li>
+<li>単語(30min)</li>
+<li>シャドーイング(45min)</li>
+<li>多読(45min)</li>
+</ul>
+
+<p>登壇と質疑応答、そしてスピーカーディナーで自分の考えを述べられることを目標に進めました。
+英文法についてはなんとか理解しているものの、それらを「使う」ことの準備がほぼできていないことが分かったため、そこを補強するカリキュラムとなっています。
+つまり、英語を使ったコミュニケーションに必要な、文章や単語を通した概念と音声の変換に関する、知覚と瞬発力を鍛えます。</p>
+
+<p>まず単語は何をやるにも基礎となるのでひたすらボキャブラリを増やします。
+僕はキクタンを使って自分のレベルにあったものから進めました。
+一方で、発表に向けては普段から興味のある分野で論文や技術書を英語のものを読んで、ボキャブラリを増やしておくと良いのだろうなとも思いました。</p>
+
+<p>次に、概念と文章をつなぐ瞬発力向上のために、瞬間英作文をやりました。
+機械的に翻訳するような平易なものを瞬間で解くのはパズルのようで面白いですが、繰り返すと飽きてくるので覚えた英単語と組み合わせたりして応用するものいいかもしれません。</p>
+
+<p>逆に、文章を概念につなぐ瞬発力向上には、多読をやりました。
+戻り読みをしないという制約で、なるべく意味を理解しながらなるべく速く読みます（85%ぐらい理解しつつ1分あたり何word読めるかのスコアを伸ばす）。
+音が明確に聞こえたとしても（つまりテキストとして渡されたとしても）それを読んで理解できるスピード以上には意味理解が追いつかないよねという経験を経てこれも頑張るようになりました。
+自分にあったレベルのやつでやらないと途端につまらなくなるので教材選びが大事かも。</p>
+
+<p>音と文章（単語）をつなぐ知覚向上にはシャドーイングをやりました。
+英語音源をテキストを見ずに少し遅れて聞こえたまま繰り返すという学習法です。
+30秒から60秒ぐらいの音源を1日50回とか繰り返しました&hellip;
+最初は聞こえないし口がついていかないしで「こんなんできるかボケ」と面談で悪態をついてばかりいたのですが、最終的にはこれがヒアリング力の向上につながったと思っています。
+では素直にヒアリング練習で良いのではないかと思えますが、口が回るようになったところが聞こえるようになるという経験を経て、頑張って繰り返すようになりました。
+また、多読と並行することで、こちらでは意味理解よりも知覚に集中できるようになったのも良かったです。
+以前に比べれば耳の解像度が上がったんじゃないかなあとVersantを前後で受けて見て思えます。</p>
+
+<p>文章（単語）と音をつなぐ発話、発音は今回やっていません。
+最初の面談で、まあ全く通じないというわけではないでしょうということで、上記のものを優先して進めました。
+とはいえ、実際の発表ではやはりもう少しうまく発音できたらなあと思うこともあったので引き続きやっていこうと思います。</p>
+
+<p>また、オンライン英会話についても（少ししか）やっていません。
+本当は実践が一番なのでしょうが、あまりにも引き出しが少ないと英会話の時間が苦痛になるため、英語学習がだれてきた時のカンフル剤としてたまにやる感じにして基礎を頑張りました。</p>
+
+<hr />
+
+<p>毎日3時間を確実に取れたわけではなく、発表前は資料作成の方へ専念したりもしましたが、それなりの時間を投入しながらも全然使いこなせる感じがしないので、英語学習は奥が深いなあと思います。
+それでも続けることで成果は出るので地道にやっていきましょう。</p>
+
+<h1 id="発表資料">発表資料</h1>
+
+<p>資料は一ヶ月ぐらい前から作り始めました。
+日本語の元となる資料があることだし十分余裕を持って着手したつもりでしたが、もう少し早くに着手しても良かったなというのが終わって見ての感想です。
+理由は母国語に頼らず説明するためには、資料の刷新と英語スクリプトの準備が必要だったからです。
+更には、発表練習についても日本語で行う時よりも何倍も時間をかける必要がありました。
+ですので、国際カンファレンスに臨むにあたっては余裕を持った準備をお勧めします（実際には渡航のための準備ややるべき仕事もありますし）。</p>
+
+<h2 id="発表資料-1">発表資料</h2>
+
+<p>スライドの構成は、基本的にプロポーザルの内容に沿うことになります。
+先ほどの例であれば、イントロダクション（現状、背景）、提案、評価、まとめの流れが王道でしょうか。</p>
+
+<p>大きなカンファレンスでの発表資料はイントロダクションを少し工夫すると良いかもしれません。
+なぜなら同じカンファレンスであっても参加者が多い場合は個々のバックグラウンドや問題意識が多様であり、導入部分で揃えておかなければならないからです。
+具体的には、トークの対象となるキーワードや問いなどを簡潔な形で伝えます。
+GopherConでは、キーワードを端的に表す写真とともに、「〜のような経験はないか」のような共感を引く導入が多かったように思えました。
+僕の資料では、少し前提が複雑だったので、最初の立てた問いをいくつかの実験結果を通して変化させていくような導入にして、より詳しい問題意識を共有するような作りにしました。</p>
+
+<p>また、各所の構成はやや冗長であっても、大枠を示してから詳細に移るのを意識しました。
+これは聴衆が置いてけぼりになることを避けるためです。
+もちろん母国語の資料であっても気をつけるべきところではありますが、残念ながら、英語力が足りない場合、細かなフォローアップがその場その場でできないこともあり、資料の時点でその工夫はしておいた方が良いと思われます。
+簡単な例であれば、例えば解決したい課題が3つあるならば、先に列挙してそれらに番号を振っておくでもいいですし、解決編では先にゴールを述べておくでも良いと思います。
+僕の資料では、簡単なアプローチから出発して少しづつ課題を解決していくようにすることで、比較的複雑な箇所の説明の際に飛躍がないよう気をつけました。</p>
+
+<p>図で説明できるものは図を用意する方が良いと思います。
+ただし、図に頼って文章を考えなくていいわけではないので、あくまで聴衆の理解を助ける機会をできるだけ増やすという意識で用意します。</p>
+
+<p>細かい点ですが、ページ番号は必ずスライドテンプレートに組み込んでおきましょう。
+質疑の時のやりとりがスムーズになります。
+また、ページ番号もそうですが、グラフの凡例なども視認できる大きさのフォントにしておくのも大切です（僕のは凡例が小さかった）</p>
+
+<p>僕の発表資料はこちらです。</p>
+
+<ul>
+<li><a href="https://speakerdeck.com/monochromegane/optimization-for-number-of-goroutines-using-feedback-control">Optimization for Number of goroutines Using Feedback Control</a></li>
+</ul>
+
+<h2 id="発表者ノート-英語スクリプト">発表者ノート（英語スクリプト）</h2>
+
+<p>英語に不慣れな場合は、一度、発表者ノート（英語スクリプト）を書き出しておくのをお勧めします。
+発表者ノートを作成する利点は以下の通りです。</p>
+
+<ul>
+<li>曖昧な箇所や飛躍がある点を潰すことができる</li>
+<li>原稿段階で英語話者に並行してチェックしてもらえる</li>
+<li>発表の再現性が高まる（特に時間）</li>
+</ul>
+
+<p>いずれも伝えるべきことを全て伝えられるようにするために必要なことだと思います。
+そのため、暗記するにしても読み上げるにしても、英語スクリプトは作っておく方が良いでしょう。</p>
+
+<p>Keynoteであれば発表者ノート機能で手元に写しながら発表に臨むことができます。
+ただし、演台があるか手元にPCが置けるかなどは事前に問い合わせて確認しておきましょう。</p>
+
+<p>発表原稿では以下を気をつけました。</p>
+
+<ul>
+<li>章や節の始めに、ここでは何を説明するのかを一言で伝える。</li>
+<li>章や節の終わりに、ここで伝えたかったことのサマリ、次に何を説明するかを一言入れる。</li>
+<li>1ページあたりの文章が多いのであればページの分割を検討する（発表時に発表者ノートをスクロールするのは結構大変）</li>
+<li>平易な文で記述する</li>
+</ul>
+
+<p>最後の平易な文については、自分の理解できるレベルの文章でスクリプトを作っておくということです。
+発表時は発表者ノートに釘付けで話すわけにはいかないため、さっと見て、ある程度自分自身で意味がわかる文法や単語で構成していないと、強調する文章なのか判断つかずに読み上げる不自然な感じになってしまいます。
+不慣れな言語でも自分自身が納得して説明できるように書いておきましょう（残念ながらここの段階で急には英語力は伸びません）。</p>
+
+<p>また、できるだけ英語話者に原稿はチェックしてもらうと良いでしょう。
+結構な分量になるので、知り合いに頼むとかよりもできるだけお金を払って英文校正サービスなどでチェックをすると良いと思います。
+僕の場合は、先ほどのコーチが買って出てくれたのでお願いできました（コーチによるのでこれを期待してPROGRIT申し込まないように）</p>
+
+<p>僕の英語スクリプトはこちらです。</p>
+
+<ul>
+<li><a href="https://blog.monochromegane.com/blog/2019/08/10/gophercon_2019/">GopherCon 2019: Optimization for Number of goroutines Using Feedback Control</a></li>
+</ul>
+
+<h2 id="発表練習">発表練習</h2>
+
+<p>英語に不慣れな場合、暗記かスクリプトの読み上げになってしまいますが、一本調子だと聴衆はどこで共感するか反応するかの情報量が少なくなり混乱してしまいます。
+その余裕を持つために、英語スクリプトを自分自身で意味がわかる文法や単語で構成することを提案しました。
+それでもまだ目が滑ってしまう場合は、文に区切りを入れるのも良いでしょう。
+区切りは関係詞や節の間で適当な単語数のところで入れました（変なところで区切ると逆に不自然になるので気をつけます）</p>
+
+<p>僕の発表者ノートはこんな感じになっています。</p>
+
+<pre><code class="language-txt">I am developing a fast grep tool / named &quot;the platinum searcher&quot;.
+One day I conducted a measurement / of the optimal number of goroutines / to achieve good performance.
+</code></pre>
+
+<p>そして、定型の言い回し（I found that など）なるべく流暢にしたり、強調したいところは少しゆっくり大きく言うような工夫を入れました。</p>
+
+<p>ただし、これはあくまで、僕の場合のネイティブの発音じゃない状態で文全体を早口で言うよりはこの方が伝わる可能性が高いねとコーチと試行錯誤した結果です。
+つまり「今の」英語力でできるだけ伝えるための工夫であり、本来は継続的な英語の学習によって自然な状態に近づけていくようにすることが大切だと思います。</p>
+
+<p>あとは、英語話者もしくは読み上げ機能で録音した音源を繰り返し聞き、繰り返し練習します。
+また、良く出てきたり重要な単語は個別に練習しておくと良いでしょう（僕の場合はperformanceやdetermineなど）</p>
+
+<h2 id="資料のバックアップ">資料のバックアップ</h2>
+
+<p>現地の環境がわからないので、資料は複数の手段でアクセスできるようにしておくべきです。
+GopherConの場合は、持参したPCとプロジェクタとの接続がうまくいかない場合に備えて、USBメモリにファイルをバックアップしておくよう指示がありました。
+僕は発表者ノートが見れない状況を想定して念のため日本でスクリプトを印刷してカバンに忍ばせておきました。
+また現地の発表練習では、代替機がMacとは限らないのでPDFや画像ファイルといったポータブルな形式にしたり、クラウドストレージやSpeakerdeckにアップロードしておいたりスクリプトもクラウドストレージにアップロードしてiPhoneから見れるようにしておいてもいいかもねとコメントもらいました。</p>
+
+<h1 id="渡航">渡航</h1>
+
+<p>アメリカの場合、パスポートの他にESTAの申請が必要なので忘れないようにしましょう。
+何もなければパスポートは10日間、ESTAは2週間ほどで発行・承認されますが、ギリギリにやると不測の事態に対応できないため、採択されたらすぐ申請ぐらいでいいと思います。
+渡航前は発表練習であまり余裕ないので&hellip;</p>
+
+<p>また、海外渡航に不慣れな人は時差ボケを解消する時間も込みで日程を組むことを忘れないようにしましょう。
+僕は時差-16時間のサンディエゴで発表でしたが、現地時間の前日入り(日本の7/24 夕方発 現地7/24午前着)してしまい、翌日のお昼すぎ(<sup>7</sup>&frasl;<sub>25</sub> 日本時間 午前6時)という時差ボケが激しい時間帯に発表になってしまいました。
+@tenntennさんに「なんてやんちゃな日程だ」と言われてしまった&hellip;
+この場合は最低でももう一日前(日本の7/23 夕方発 現地7/23午前着)して、翌日(<sup>7</sup>&frasl;<sub>24</sub>)で日中眠らずに現地時間に合わせて当日(<sup>7</sup>&frasl;<sub>25</sub>)に合わせるぐらいがいいらしいです。
+時差ボケは自分の発表だけでなく、他の発表を聞くときの集中力にも影響してくるのでできるだけ万全の体制で臨めるようにしたいものです。</p>
+
+<p>現地の移動はタクシーではなくUberを使いました。
+Uberであれば、アプリから先に行き先を入力し、評価の高いドライバーを選択し、金額を確定しておくことができます。
+Comfort系を選ぶとちょっと高いですがゆったりした車になるので複数名の場合はそちらを選ぶと良いみたいです。
+サンディエゴだと大体10分ほどで来てくれます。
+ドライバの現在地、車種とナンバーが事前に分かっているので、それを探します。
+また、アプリは画面に色がつくので、その画面を振ってドライバに見つけてもらう感じです。
+移動はアプリで現在地が分かるため安心です（そもそも事前に金額確定なので遠回りして稼ぐような動機がない）。
+日本でアプリをインストールし、クレジットカードまで登録しておくと良いでしょう。
+それから、自分のアカウントにきちんと顔写真登録しておく方が良いみたいです（ドライバーさん側への安心感かな？）
+決済は到着後にプッシュ通知が来るのでチップの額を上乗せして終了です。便利便利。</p>
+
+<h1 id="発表">発表</h1>
+
+<p>あとはこれまでやって来たことを信じて発表するだけです。
+せっかく自分の提案を国際カンファレンスで聞いてもらえる機会なので楽しんでいきましょう。
+会場の雰囲気はとても良く、とても積極的に聞いてくれます。
+なぜならカンファレンスに来ている人は、上手い下手をジャッジしに来てるのではなくて、僕たちの提案を経験をできるだけ聞きたいと言う姿勢で来てくれているからです。
+どうしても緊張する人は、前方の10人だけをターゲットに最初の挨拶を元気に言うことだけ考えましょう。
+あとは練習した通りに体と口が動いてくれます。</p>
+
+<p>発表後は、おそらく色々なところで質問や感想のために声をかけてもらえます。
+これはスピーカーとしてカンファレンスに参加したときの特典なので是非とも活かしたいところです。
+ですので、余裕があれば想定問答や提案のサマリ、自己紹介などを事前にまとめておくと良いと思います。</p>
+
+    </div>
+    <footer class="tag">
+      <i class="fa fa-tags tag-icon"></i>
+      <ul>
+      
+        <li><a class="tag-link" href="/tags/gophercon">gophercon</a></li>
+      
+      </ul>
+      <div class="clear"></div>
+    </footer>
+  </div>
+</article>
+
+        
+        <article>
+  <div class="post">
+    <header>
+      <h1><a href="https://blog.monochromegane.com/blog/2019/08/10/gophercon_2019/">GopherCon 2019で初の海外カンファレンス登壇をしてきました</a></h1>
+      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2019-08-10</div></time>
+    </header>
+    <div class="post-inner">
+      
+
+<p>7/24から27にかけてアメリカ、サンディエゴで開催された<a href="https://www.gophercon.com/home">GopherCon 2019</a>で人生初となる海外カンファレンスに登壇してきました。</p>
+
+<p>GopherConはGo関連で最大級の国際カンファレンスです。
+6年目となる今年は世界中から1,800名のGopherが参加し、200名以上の応募の中から選ばれた36名がスピーカーとして登壇しました。
+今回のGopherConではPre-Conference Workshopと呼ばれるカンファレンス前日に終日行われるワークショップと、カンファレンス期間中に行われる25分のキーノートセッション、そして45分のチュートリアルセッションがありました。
+その中で、僕は「Optimization for Number of goroutines Using Feedback Control」というタイトルで45分の<a href="https://www.gophercon.com/agenda/speakers/442434">チュートリアルセッション</a>を務めました。</p>
+
+<h1 id="動画">動画</h1>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/O_R7Nwsix1c" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<h1 id="スライド">スライド</h1>
+
+<script async class="speakerdeck-embed" data-id="aa53e4353d9b4efc9064eefba40e13b7" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
+
+<h1 id="スピーカーノート">スピーカーノート</h1>
+
+<ul>
+<li><a href="https://blog.monochromegane.com/blog/2019/07/25/gophercon_2019_kaburaya/">GopherCon 2019: Optimization for Number of goroutines Using Feedback Control</a></li>
+</ul>
+
+<h1 id="発表内容">発表内容</h1>
+
+<p>今回の発表は以前東京で開催されたGo Conference 2018 Autumnで発表した<a href="https://speakerdeck.com/monochromegane/optimization-of-goroutine-numbers-by-feedback-control">フィードバック制御によるGoroutine起動数の最適化</a>を英語化したものです。
+また、今回向けに実際に<a href="https://github.com/monochromegane/the_platinum_searcher">The Platinum Searcher</a>に組み込んで有効性を評価する実験結果を追加しています。</p>
+
+<p>発表資料については、45分という時間で母国語を使わずにできるだけわかりやすく伝えるため、結果的にほぼ刷新する形となりましたが、母国語の慣れに頼らずとも説明可能なわかりやすい資料になったのではないかと自分では思っています。
+具体的には、まずイントロダクションとバックグラウンドの章を少し手厚くしました。
+今回の手法は、フィードバック制御を用いてgoroutine数を継続的に最適に保つことを目的としています。
+しかしながら、そもそもGo言語の並行処理においては、goroutineのコストの低さとランタイムがgoroutineを効果的に切り替えることから、その必要性はないのではないかと考えることができます。
+そこで、リソース競合や枯渇などの影響も受けてしまう可能性があること、それらを考慮した汎用的な並行設計に対する難しさを、実際にプラチナサーチャーによるパフォーマンスチューニングの例を踏まえながら前提を合わせるようにしました。
+また、手法の説明では、簡単なアプローチから出発して少しづつ課題を解決していくようにすることで、比較的複雑な箇所の説明の際に飛躍がないように気をつけました。</p>
+
+<p>発表について、普段は資料のみで臨んでもそれなりに話せると自負していますが、初の英語での登壇となるため今回は発表内容のスクリプトを用意して、伝えるべきことを全て伝えられるようにしました。
+また、不慣れな言語でも自分自身が納得して説明できるように、できるだけ平易な文で説明することで、発表資料と同様に曖昧な箇所や飛躍がある点を潰すことができたと思います。</p>
+
+<p>本番の発表は、4スクリーンある300-400人規模の会場ではありましたが、とても熱心に頷いてくれる方がいたり日本から来たメンバが前に座っていたりして、幸いにも落ち着いて自分のペースで登壇することができたと思います。
+発表では、あまり一本調子にならないように、文の中でも意味や文法上切れる箇所は間をおいたり、定型の言い回し（I found that など）なるべく流暢にしたり、強調したいところは少しゆっくり大きく言うなど、「今の」英語力でできる工夫をしていきました。
+一方で、個別の単語の発音などはまだまだ課題意識があるので、今後、そちらも重点的に取り組んでいきたいと感じました。</p>
+
+<p>質疑の時間は登壇時間には含まれなかったのですが、終了して台を降りると同時に7人ぐらいに囲まれて質問責めに会い、発表に興味を持ってくれたことをとても嬉しく思いました。
+質問としては、発表内容について理解があっているか確認するものと、実装上の質問などがあり、資料やKaburayaのコードを見ながら説明していきました。
+それでも、今の英語力では、発表内容以外の部分については拙い説明になることも多々あり、これも今後改めて英語をやるモチベーションが高まりました。
+また、発表後もカンファレンス期間中に何度も感想や質問をもらう機会があり、これがとても嬉しかったです。</p>
+
+<h3 id="会場と発表の様子">会場と発表の様子</h3>
+
+<div class="parent_iframe" style="position:relative;width:75%;height:0;padding-top:75%;">
+  <iframe class="embed_iframe" src="https://s.insta360.com/p/28b6fbdd988f775d97328c5179e8061a?e=true&locale=en-us" frameborder="0" width="666" height="413" style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+</div>
+
+<p><blockquote class="twitter-tweet"><p lang="en" dir="ltr">.<a href="https://twitter.com/monochromegane?ref_src=twsrc%5Etfw">@monochromegane</a> is giving talk about Go&#39;s concurrency mechanism and his proposal to optimize the number of goroutine. <a href="https://twitter.com/hashtag/gophercon?src=hash&amp;ref_src=twsrc%5Etfw">#gophercon</a> <a href="https://t.co/LXnnx5vQ6D">pic.twitter.com/LXnnx5vQ6D</a></p>&mdash; Yoshi Yamaguchi 🇯🇵 (@ymotongpoo) <a href="https://twitter.com/ymotongpoo/status/1154500168181379072?ref_src=twsrc%5Etfw">July 25, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+
+<h3 id="発表に関する反応">発表に関する反応</h3>
+
+<p><blockquote class="twitter-tweet"><p lang="en" dir="ltr">Thanks to Yusuke Miyake for speaking to us on the Optimization for Number of goroutines Using Feedback Control! The <a href="https://twitter.com/hashtag/gophercon?src=hash&amp;ref_src=twsrc%5Etfw">#gophercon</a> tutorial sessions are killin&#39; it! <a href="https://t.co/4I5ihE1wKG">pic.twitter.com/4I5ihE1wKG</a></p>&mdash; GopherCon (@GopherCon) <a href="https://twitter.com/GopherCon/status/1154502084634406917?ref_src=twsrc%5Etfw">July 25, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+
+<p><blockquote class="twitter-tweet"><p lang="en" dir="ltr">This was a really good talk, <a href="https://twitter.com/monochromegane?ref_src=twsrc%5Etfw">@monochromegane</a> is very smart! Also it was really interesting hearing about the fukuoka Golang community. I need to read slides again. <a href="https://t.co/bdGZK7p6DX">https://t.co/bdGZK7p6DX</a> <a href="https://t.co/82GKvlFseO">pic.twitter.com/82GKvlFseO</a></p>&mdash; Jamal Yusuf (@JamalYusuf_) <a href="https://twitter.com/JamalYusuf_/status/1154587450242502656?ref_src=twsrc%5Etfw">July 26, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+
+<p><blockquote class="twitter-tweet"><p lang="en" dir="ltr"><a href="https://twitter.com/monochromegane?ref_src=twsrc%5Etfw">@monochromegane</a> talking about dynamic concurrency scaling with a PID controller and dynamic semaphores. <a href="https://twitter.com/hashtag/golang?src=hash&amp;ref_src=twsrc%5Etfw">#golang</a> <a href="https://twitter.com/hashtag/gophercon?src=hash&amp;ref_src=twsrc%5Etfw">#gophercon</a> <a href="https://t.co/dufxZNhKEZ">https://t.co/dufxZNhKEZ</a> <a href="https://t.co/5eyRazxg2g">pic.twitter.com/5eyRazxg2g</a></p>&mdash; Andy Walker (@flowchartsman) <a href="https://twitter.com/flowchartsman/status/1154503310327439360?ref_src=twsrc%5Etfw">July 25, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+
+<p><blockquote class="twitter-tweet"><p lang="en" dir="ltr">Really interesting thoughts on controlling <a href="https://twitter.com/hashtag/golang?src=hash&amp;ref_src=twsrc%5Etfw">#golang</a> concurrency dynamically while a program is running. Thanks to Yusuke Miyake for traveling from Japan to present this at <a href="https://twitter.com/hashtag/gophercon?src=hash&amp;ref_src=twsrc%5Etfw">#gophercon</a>! <a href="https://t.co/WWfsJo5nNi">pic.twitter.com/WWfsJo5nNi</a></p>&mdash; Daniel Whitenack (@dwhitena) <a href="https://twitter.com/dwhitena/status/1154500909713383424?ref_src=twsrc%5Etfw">July 25, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+
+<h1 id="カンファレンス">カンファレンス</h1>
+
+<p>会場はカリフォルニア サンディエゴのホテル <a href="https://www.gophercon.com/page/1388212/hotel">Marriott Marquis San Diego Marina</a>でした。
+サンディエゴが比較的温暖な気候であること、ホテルもいわゆるリゾートホテルのような感じであったことも手伝って、期間中はとても快適に過ごせました。</p>
+
+<p>GopherConのタイムテーブルは朝が早いものの（最初のセッションがAM9:00から）、2-3セッションごとに30-40分の空き時間が設けられており、この時間に登壇者とディスカッションしたり、ポップアップミーティングスペースやスポンサーブースでコミュニティや企業への関係を作ったりすることができました。
+日本でも学術系のシンボジウムだとこういったタイムテーブルは見かけるものの、GopherConではより積極的に関係を作っていこう、そしてそのために運営がその接点を作る機会（場所、時間）やホスピタリティを提供していこうという気概が感じられました。
+また、Welcome Partyが本物の空母の上で開催されたのはめちゃくちゃ驚きました。こういう「楽しんでるぞ」というのが一貫して感じられるのも良かったです。
+実際に #gophercon ハッシュタグを追っていると、たくさんの知見や関係を得たという感想と合わせて一種のバケーションを楽しんだような満足感を持っている方が多かったようです。
+ちょうど、GoCon福岡を2週間前に開催したところであったため、「カンファレンス」をどういう設計で進めるのかという観点はとても勉強になりました。</p>
+
+<p>トークについては、どれも最新の情報だけでなく、スピーカーの方の実際の経験に基づく興味深く、かつ面白いセッションばかりでとてもためになりました。
+それでも、自分の発表前後の緊張や疲れ、時差ボケなどで万全の状態で全てを聞くことはできなかったのが悔やまれますが、幸い個別のトークについては今後動画も公開されるようです。
+<a href="https://www.gophercon.com/agenda">Agenda</a>を見て興味あるセッションを是非ご覧ください。</p>
+
+<h1 id="スピーカーディナー">スピーカーディナー</h1>
+
+<p>発表は7/25でしたが、実は7/26の夜にスピーカーディナーなるものが控えていました。
+登壇者ばかりが集う3時間の立食パーティーを英語で乗り切るという、ある意味では登壇よりもプレッシャーのかかるイベントでした。
+それでも、とてもよい機会であるし無駄にはしたくないと、できるだけ話に加わり自分の意見や要望を伝えることができたと思います。
+特に日本や福岡のコミュニティ活動やカンファレンスに何人か興味を持ってもらうことができたのは非常に有意義でした。
+また、ワークショップを担当したエンジニアの方とは日本に戻ってからも連絡を取り合っており、今後何か面白いことが一緒にできるといいなあと考えています。</p>
+
+<p>とにかくこの3時間は僕の英語に対する心理的な苦手意識を取り除いてくれる絶好の機会となりました。
+同時にやはり英語力の足りなさを痛感したことで、引き続き英語もやっていきたいと強く思えました。</p>
+
+<h1 id="おわりに">おわりに</h1>
+
+<p>2014年の東京のGoConference 2014 springで発表したのが僕にとって初めての全国区のカンファレンス登壇でした。
+そこから、自分のキャリアや興味範囲が広がっていく中でも、Go言語はずっと相棒として付き合ってくれる言語でしたし、Go言語を中心に色々な付き合いができていると感じています。
+また、ここ数年の研究職としての試行錯誤がなければ今回の発表内容はありませんでした。
+その意味で、今回のGopherCon 2019は現時点の僕の集大成で臨んだカンファレンスとなりました。
+幸いにも、発表に対して興味を持ってもらえたこと、一定の反響があったことを、非常に嬉しく思っています。
+同時に、このような大きな海外のカンファレンスで発表できたことは（2014にGoConで発表した時と同じように）素直に自信につながりました。
+（当日聞いたのですが、スピーカーのうち、ワークショップを行われた約10名の応募枠は別だったとのことで今回は改めて狭き門を抜けることができたんだなあと感じています）</p>
+
+<p>この登壇に向けてアドバイスや協力をいただいた皆様、本当に感謝いたします。
+このカンファレンスで得た様々な知見や関係、そして至らなかった点は次へ活かし、この契機となったGoコミュニティの活発化に繋がるよう引き続き”楽しみながら“やっていきたいと思います。</p>
+
+<h3 id="俺たちが日本代表だ">俺たちが日本代表だ！</h3>
+
+<p><img src="/images/2019/08/gophercon_japan.jpg" alt="gophercon_japan" /></p>
+
+<p>LTセッションで登壇した<a href="https://twitter.com/hajimehoshi">@hajimehoshi</a>さんと<a href="https://twitter.com/hgsgtk">@hgsgtk</a>さんと共に。</p>
+
+<hr />
+
+<p>そして最後に、Russ Coxと隣に扱われる機会ってそうそうないので記念に<a href="https://www.gophercon.com/page/1388210/speakers">スピーカー一覧</a>のスクショを置いておきます、えへへ。（ただのアルファベット順だけど）</p>
+
+<p><img src="/images/2019/08/gophercon_russ.jpg" alt="gophercon_russ" /></p>
+
+    </div>
+    <footer class="tag">
+      <i class="fa fa-tags tag-icon"></i>
+      <ul>
+      
+        <li><a class="tag-link" href="/tags/golang">golang</a></li>
+      
+        <li><a class="tag-link" href="/tags/gophercon">gophercon</a></li>
+      
+      </ul>
+      <div class="clear"></div>
+    </footer>
+  </div>
+</article>
+
+        
+        <article>
+  <div class="post">
+    <header>
+      <h1><a href="https://blog.monochromegane.com/blog/2019/08/02/gocon_fukuoka/">福岡でGoConを開催した</a></h1>
+      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2019-08-02</div></time>
+    </header>
+    <div class="post-inner">
+      
+
+<p>7/13に<a href="https://fukuoka.gocon.jp/">Go Conference&rsquo;19 Summer in Fukuoka</a>を開催した。
+諸々落ち着いたので、初めて200名規模の大きなカンファレンスを開催するまでに駆け抜けた日々を振り返っておく。</p>
+
+<h1 id="準備">準備</h1>
+
+<p>Fukuoka.goの主催の一人としてGoConの福岡開催は是非ともやりたい気持ちがあり、Go Conference 2018 Autumnで登壇した際の懇親会で盛り上がったのが去年の11/25。</p>
+
+<p><blockquote class="twitter-tweet" data-lang="ja"><p lang="ja" dir="ltr">ホテル到着。移動で朝早かったので懇親会途中までとさせていただきました。お誘いありがとうございます。色々な話が聞けて楽しかったです！ カンファレンスも濃い話から体系的な整理がなされたものまであり来れて良かったです。自分の登壇内容も反応いただけて嬉しい限り。次は福岡版どうですか <a href="https://twitter.com/hashtag/gocon?src=hash&amp;ref_src=twsrc%5Etfw">#gocon</a></p>&mdash; モノクロメガネ研究員 (@monochromegane) <a href="https://twitter.com/monochromegane/status/1066697776912691200?ref_src=twsrc%5Etfw">2018年11月25日</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+
+<ul>
+<li>11/30にFukuoka.go運営でやっていきのIssue起票。</li>
+<li>12/04に会場と時期のおおまかなあたりがついたので正式にGoCon地方開催を東京GoCon運営に打診。</li>
+<li>12/14に企画書を元に関係者に一通り話しが通った状態へ。</li>
+</ul>
+
+<p>と良い感じのスピード感で進み出し、後は運営スタッフ一同で</p>
+
+<ul>
+<li>1月はマスコットのデザインやらLPの準備やら</li>
+<li>2月はGo1.12のリリパでイベント開催を初めて告知。GoCon運営スタッフも増えた。</li>
+<li>3月はCfPをオープン。スポンサー内容や金額感について具体的な検討と募集を始めた</li>
+<li>4月はCfPへのアーリーフィードバック、CfP草の根宣伝活動、スポンサーとの個別やりとり</li>
+<li>5月はCfPの選考と結果通知、タイムテーブルと参加枠を決めてconnpassを公開。</li>
+<li>6月は集客草の根宣伝活動、Tシャツやバックパネル、会場の軽食や飲み物、スピーカーディナーなどについて検討・確認・発注</li>
+<li>7月は当日までの作業の整理をして確定していないものを一つづつ対応（受付方法、司会進行、会場レイアウトや設営日、名札作成、ノベルティ配布準備、アンケート、市長、段ボール、張り紙 etc）</li>
+</ul>
+
+<p>と、ひたすら準備を進めた。
+大規模カンファレンス開催のノウハウがない中でも、準備は共同主催の<a href="https://twitter.com/linyows">@linyows</a>が皆を引っ張った。
+作業分担は、@linyowsが打ち出したデザインやおもてなしの世界観に皆がイイねをしながら、できる人が具体化を進めていく形に落ち着いた。
+@linyows自身がガンガンとタスクをこなしていく（会社では傭兵と呼ばれている&hellip;）ので、僕自身は具体化を担当する他、方針の見直し案や進捗整理からの抜け漏れ対応といった補佐役に徹した。
+<a href="https://twitter.com/seike460">@seike460</a>をはじめとする運営スタッフとSlackでワイワイしながらだんだんと形になっていく過程も含めて（大変だったけど）楽しめたと思う。
+開催時期については会場都合で少し延ばして7月としたが、今思えばこれぐらいの準備期間がないと納得いく形にするのは無理だったかもしれない。</p>
+
+<hr />
+
+<p>個人的に大変だったのは、連絡まわりで、いくつかの連絡経路を使ってたくさんの関係者と個別または全体で効率よく相談、告知するのは骨が折れた。
+他のカンファレンス運営でどういう風にやっているのかを聞いてみたい。
+反対にCfPの選考は多様なプロポーザルを見る機会として有益であったと思う。
+また、より良いプロポーザルにするためのアドバイスをアーリーフィードバックという形で進めることができたのも非常に良かった。
+特に、このフィードバックを通してプロポーザルの説得力が格段に上がっていく例などを見るのは嬉しかった。</p>
+
+<p>準備は前日と当日の朝が一番大変であった。
+会場のリニューアル直後であったことも手伝い、搬入されるスポンサー物品を含む会場設営などはその場で詳細を決定して進めなければならなかったため、開場までの時間がない中で慌てて進めた。
+特に当日朝は雨がすごかったので準備頑張ってるぞ感がすごかった気がする。</p>
+
+<h1 id="当日">当日</h1>
+
+<p>当日は幸いなことに@linyowsと僕は専任のタスクを持たずに各種ジャッジや遊撃手的な動きをできたことで全体に柔軟に対応できたと思う。
+受付がひと段落して、高島市長のスペシャルセッション前後の応対が終わって、ビールや生ハムの提供が軌道にのるまでは、イベントがスムーズに進むように、心地よく過ごしてもらえるように裏側では様々な物品や情報が行き交っており、とにかく忙しかった（けど何をやったかは覚えていない）みたいな感じだった。
+これが16:00ぐらいで、ビールが入ったこともあって一瞬寝落ちしたのを写真に撮られてしまった。</p>
+
+<p><img src="/images/2019/08/gocon_00.jpg" alt="gocon_00" /></p>
+
+<p>この後、少しだけセッションを聞けたけども、楽しみにしていたセッションをほぼ聞けなかったのでここは次への課題だねと振り返りで話した。
+セッションは最後まで盛況で、懇親会まで盛り上がっていたので嬉しい気持ちで眺めていた。</p>
+
+<p><blockquote class="twitter-tweet"><p lang="ja" dir="ltr">経費精算用エビデンスはこちら <a href="https://twitter.com/hashtag/gocon?src=hash&amp;ref_src=twsrc%5Etfw">#gocon</a> <a href="https://t.co/zCsDLKBXJW">pic.twitter.com/zCsDLKBXJW</a></p>&mdash; L I N Y O W S 🤡 (@linyows) <a href="https://twitter.com/linyows/status/1150059130633068544?ref_src=twsrc%5Etfw">July 13, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+
+<p>僕たちのソフトウェアの仕事は作った後に動く期間が長いので、こういった半年以上の準備とわずか1日のイベントという形式の経験はなかなか貴重だったし、大変ながらも充実した時間を過ごせて楽しかった。</p>
+
+<h1 id="スピーカーディナー">スピーカーディナー</h1>
+
+<p>カンファレンス後のスピーカーディナーでは豪華なメンバと素敵な料理に囲まれてこれまた楽しいひと時であったものの、各種支払いや幹事的な動きをしていたらあっという間に終わってしまったので、ちょっと残念だった。
+ただ、テーブルの右も左もみんなが新しいつながりを作って飯食って酒飲んでGoの話して笑っているのを見て、「アーーーこれはやって良かったんではーーーーーー！！」と一人泣きそうになっていたのは秘密である。</p>
+
+<p><blockquote class="twitter-tweet"><p lang="ja" dir="ltr"><a href="https://twitter.com/hashtag/spekerdinner?src=hash&amp;ref_src=twsrc%5Etfw">#spekerdinner</a> <a href="https://twitter.com/hashtag/gocon?src=hash&amp;ref_src=twsrc%5Etfw">#gocon</a> <a href="https://twitter.com/hashtag/nulab?src=hash&amp;ref_src=twsrc%5Etfw">#nulab</a> マジすごい！圧倒的感謝！！！！ <a href="https://t.co/oZi3hfXHON">pic.twitter.com/oZi3hfXHON</a></p>&mdash; L I N Y O W S 🤡 (@linyows) <a href="https://twitter.com/linyows/status/1150008128953413632?ref_src=twsrc%5Etfw">July 13, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+
+<h1 id="カンファレンスを終えて">カンファレンスを終えて</h1>
+
+<p>まず、@linyowsにスタッフ一同からお礼を伝えたいです。ありがとう！
+今回のイベントは@linyowsなしでは考えられない。
+@linyowsの行動力、大人力に対して尊敬の念が更に高まりました。Fukuoka.goを共同で主催してくれることが非常に心強いです。これからもよろしくお願いします。</p>
+
+<p><blockquote class="twitter-tweet"><p lang="ja" dir="ltr"><a href="https://twitter.com/monochromegane?ref_src=twsrc%5Etfw">@monochromegane</a> さん、<a href="https://twitter.com/linyows?ref_src=twsrc%5Etfw">@linyows</a> さん、スタッフの皆様、スポンサーの皆様、発表者の皆様、参加者の皆様、お疲れ様でした＆ありがとうGoざいました！q@w@p <a href="https://twitter.com/hashtag/gocon?src=hash&amp;ref_src=twsrc%5Etfw">#gocon</a> <a href="https://twitter.com/hashtag/fukuokago?src=hash&amp;ref_src=twsrc%5Etfw">#fukuokago</a> <a href="https://t.co/hzSWpgZ4ij">pic.twitter.com/hzSWpgZ4ij</a></p>&mdash; Ryuji Iwata (@qt_luigi) <a href="https://twitter.com/qt_luigi/status/1150069073427886080?ref_src=twsrc%5Etfw">July 13, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+
+<p>そして、改めてスタッフの皆様、スポンサーの皆様、発表者の皆様、参加者の皆様に感謝を伝えたいです。ありがとうございます！</p>
+
+<h1 id="カンファレンスへの想い">カンファレンスへの想い</h1>
+
+<p>どうして集う形の勉強会やカンファレンスにするかというのは、何度か聞かれていて、<a href="https://pr.forkwell.com/2018-10-01-community_lovers/">この辺り</a>でも答えていたのだけど、まず単純に集まって楽しく話す仲間がいることの嬉しさがあって、その背景として「場やコミュニティは実在しないので。定期的にやることが大事」という考えがあった。
+コミュニティというネットワークを継続させていくためには、接合点である参加者の間の接続を活性化する必要がある。
+そのためにはネットワークが活性化するように情報を行き交いさせるんだけれども、均等な一方向の情報発信は刺激に乏しいこともある。
+人間も単純な部分は残っているので、実際に会ったとか、その場の熱量とかに影響されて発信側も受信側も一時的に接続が活性化する。
+こういう励起された状態は、例えばカンファレンスを地元でやろうとか、触発されてツールを作って見たとか、ネットワークへの新しい情報の元になってコミュニティに還元される。
+勉強会やカンファレンスは、そういうやり方での重みの活性化を担っていると思う。</p>
+
+<p>今回のカンファレンスがGo言語コミュニティや福岡にとって上のような影響を与えることができたのであればとても嬉しい。
+何より、カンファレンス運営を通して、スタッフみんながエキサイティングな経験を楽しんでいたことがとても嬉しい。
+なぜなら、僕たちが楽しみ続けることがまず大事だから〜〜。お疲れ様でした！！！</p>
+
+<p>そしてオフィシャルのイベントレポートが非常によくまとまっています。こちらも是非ご覧ください！</p>
+
+<ul>
+<li><a href="https://fukuoka.gocon.jp/report/">The Official event report of Go Conference &lsquo;19 Summer in Fukuoka</a></li>
+</ul>
+
+<h1 id="フォトギャラリー">フォトギャラリー</h1>
+
+<p>最後に、誰得 モノクロメガネ フォトギャラリーを置いておきます。いやぁ、楽しんでるなあ〜</p>
+
+<p><img src="/images/2019/08/gocon_01.jpg" alt="gocon_01" />
+<img src="/images/2019/08/gocon_02.jpg" alt="gocon_02" />
+<img src="/images/2019/08/gocon_03.jpg" alt="gocon_03" />
+<img src="/images/2019/08/gocon_04.jpg" alt="gocon_04" />
+<img src="/images/2019/08/gocon_05.jpg" alt="gocon_05" />
+<img src="/images/2019/08/gocon_06.jpg" alt="gocon_06" />
+<img src="/images/2019/08/gocon_07.jpg" alt="gocon_07" />
+<img src="/images/2019/08/gocon_08.jpg" alt="gocon_08" /></p>
+
+<p>Photo by <a href="https://twitter.com/atani">@atani</a></p>
+
+<hr />
+
+<p>𝝣Go</p>
+
+    </div>
+    <footer class="tag">
+      <i class="fa fa-tags tag-icon"></i>
+      <ul>
+      
+        <li><a class="tag-link" href="/tags/golang">golang</a></li>
+      
+        <li><a class="tag-link" href="/tags/gocon">gocon</a></li>
+      
+      </ul>
+      <div class="clear"></div>
+    </footer>
+  </div>
+</article>
+
+        
+        <article>
+  <div class="post">
+    <header>
+      <h1><a href="https://blog.monochromegane.com/blog/2019/07/25/gophercon_2019_kaburaya/">GopherCon 2019: Optimization for Number of goroutines Using Feedback Control</a></h1>
+      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2019-07-25</div></time>
+    </header>
+    <div class="post-inner">
+      
+
+<p><strong>The slides and speaker-notes about optimization for the number of goroutines I talked at <a href="https://www.gophercon.com/agenda/speakers/442434">GopherCon 2019</a>.</strong></p>
+
+<script async class="speakerdeck-embed" data-id="aa53e4353d9b4efc9064eefba40e13b7" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
+
+<blockquote>
+<p>The design for the number of concurrency is important to achieve both speed and stability. To give a good performance without depending on platform and load conditions, it’s desirable for the number to be dynamic and rapidly controlled. In this talk, I will propose an architecture to solve this by utilizing feedback control.</p>
+</blockquote>
+
+<h1 id="1-title">1. Title</h1>
+
+<p>Good afternoon, everyone.
+Thank you very much for coming today.</p>
+
+<h1 id="2-self-introduction">2. Self-introduction</h1>
+
+<p>My name is Yusuke MIYAKE.
+My social account is @monochromegane.
+I am a researcher of internet and operation technology, as well as a web developer.</p>
+
+<h1 id="3-go-and-i">3. Go and I</h1>
+
+<p>Let me introduce the relation between Go and me.
+I am a Japanese gopher who loves writing OSS using Go.
+My popular repositories are here (the_platinum_searcher is a fast grep tool).
+And I am an organizer of the local Go community in Fukuoka, Japan.
+So, we held Go Conference’19 summer in Fukuoka on <sup>7</sup>&frasl;<sub>13</sub> which was 2 weeks ago.
+200 gophers in Japan gathered and enjoyed 30 sessions.
+It was a lot of fun!
+This is our conference gopher.
+He has ramen which is a Japanese famous food on his head.
+Isn&rsquo;t he good?</p>
+
+<h1 id="4-agenda">4. Agenda</h1>
+
+<p>Today I am here to talk to you about optimization for the number of goroutines.
+My talk has 5 parts.
+I’ll start by talking about why there is a need for optimization for the number of goroutines through the introduction and background section.
+After that, I&rsquo;ll introduce my proposal that optimizes the number using feedback control.
+And I will evaluate the efficacy of the method.
+Finally, I will conclude about possible and some issues of the method.</p>
+
+<h1 id="5-introduction">5. Introduction</h1>
+
+<p>To begin with let’s speak to my experience of performance tuning of my OSS tool.</p>
+
+<h1 id="6-how-many-are-the-optimal-number-of-goroutines">6. How many are the optimal number of goroutines?</h1>
+
+<p>I am developing a fast grep tool named &ldquo;the platinum searcher&rdquo;.
+One day I conducted a measurement of the optimal number of goroutines to achieve good performance.</p>
+
+<h1 id="7-performance-tuning-in-case-of-pt">7. Performance tuning in case of pt</h1>
+
+<p>&ldquo;the platinum searcher&rdquo; uses many goroutines to search string matching to pattern from files.
+So, I measured performance while bounding concurrency using a semaphore.
+Here is a result.
+The X-axis represents the number of goroutines.
+It is a log scale.
+The Y-axis represents the speedup of processing time against sequential processing.
+The result shows 8 or 32 goroutines make performance good.
+This is 2 or 8 times more than the number of CPUs.</p>
+
+<h1 id="8-performance-tuning-in-case-of-pt">8. Performance tuning in case of pt</h1>
+
+<p>However, measurement in different environments showed a different result.
+The result shows 16 goroutines make performance good.
+This is 2 times more than the number of CPUs.
+But I found that more goroutines cause performance degradation.
+In this environment, the real-time virus scan process was running at the same time.
+The process turns system-call of opening file slow and consumes CPU resources.
+As a result, performance is degraded when searching for many files at the same time.</p>
+
+<h1 id="9-performance-tuning-in-case-of-pt">9. Performance tuning in case of pt</h1>
+
+<p>Besides, there were other results.
+When the real-time virus scan process stops, 4 goroutines made performance good.
+This is half times less than the number of CPUs.
+I don&rsquo;t know how many the optimal number of goroutines are?</p>
+
+<h1 id="10-performance-tuning-in-case-of-pt">10. Performance tuning in case of pt</h1>
+
+<p>Currently, &ldquo;the platinum searcher&rdquo; is bounding concurrency using the number of CPUs.
+Namely, I am choosing a safer way.
+But it isn&rsquo;t the fastest.</p>
+
+<h1 id="11-how-many-are-the-optimal-number-of-goroutines-in-each-case">11. How many are the optimal number of goroutines in each case?</h1>
+
+<p>So, that concludes this part of my talk on my experience of performance tuning.
+Achieving both speed and stability, we have to decide optimum number of goroutines through our experiences and continuous tuning.
+And, in most case, the environment on which the program is tuned and the environment on which it will be executed are different.
+Thus, I&rsquo;d like to consider optimization for number of goroutines without depending on environments.</p>
+
+<h1 id="12-background">12. Background</h1>
+
+<p>In this section, I will organize the issues about design for concurrency.</p>
+
+<h1 id="13">13.</h1>
+
+<p>I’m going to organize these issues in the following order;
+Let us start with the first, which is the complexity of concurrency.
+Then we come to the next, which is the contribution of Go to solve the complexity.
+We will find an approach to solve the remaining issues, finally.</p>
+
+<h1 id="14-concurrency-and-complexity">14. Concurrency and complexity</h1>
+
+<p>In this page, I will organize the relation of concurrency and complexity.</p>
+
+<p>We introduce concurrency to improve performance.
+Concurrency brings our application good performance and complexity.
+Because concurrent processing is often considered as compared to simple serial processing.
+This figure shows the common issues of concurrency.
+We have to consider efficient thread management from a parallelism of view.
+And we have to avoid race conditions and synchronize memory access.
+And we have to design to be scalable.
+Like this, we are dealing with many issues to improve performance.</p>
+
+<h1 id="15">15.</h1>
+
+<p>Then, I will organize the contribution of Go to solve the complexity.</p>
+
+<h1 id="16-concurrency-and-go">16. Concurrency and Go</h1>
+
+<p>This is one of the reasons why we are interested in Go.
+&ldquo;Go&rdquo; hides some complexities.
+Because Go has rich features that support concurrency.
+For example, we are freed from managing thread by runtime scheduler of Go.
+And we also can avoid race conditions by using a channel.
+In other words, Go decouples between your code and the complexity of parallelism.</p>
+
+<h1 id="17-runtime-scheduler-of-go">17. Runtime scheduler of Go</h1>
+
+<p>In this page, I&rsquo;ll explain how Go&rsquo;s runtime hide the complexity.
+This figure shows Go’s scheduler workflow.
+Go’s scheduler has three basic concepts.
+G is goroutine.
+M is an OS thread.
+P is a processor.
+P handles multiplexing some goroutines onto some OS threads.</p>
+
+<p>So, We can think of Goroutines as application-level threads. 
+OS thread behaves like a worker for goroutine using a run queue.
+What is important is P uses a smart scheduling strategy called a work-stealing algorithm.
+Therefore P efficiently schedules available goroutines onto OS threads.
+As Go&rsquo;s runtime automatically dose these, we don&rsquo;t need to consider the complexity of parallelism.</p>
+
+<h1 id="18-new-g">18. New “g”</h1>
+
+<p>Besides, lightweight goroutines make Go&rsquo;s scheduler more practical.
+Creating a goroutine is cheap.
+Because a newly created goroutine is allocated only 2kB stack.
+Switching a goroutine is also cheap.
+Because goroutine has only minimal context.
+These points show that many goroutines can run at the same time.
+As this practical runtime gives the illusion of parallelism more than the actual number of CPUs, we don&rsquo;t need to consider the complexity of parallelism.</p>
+
+<h1 id="19">19.</h1>
+
+<p>Finally, I will organize the remaining issues and find an approach to solve them.</p>
+
+<h1 id="20-concurrency-and-application">20. Concurrency and application</h1>
+
+<p>Due to Go hides the complexity of parallelism, we can focus on concurrency issues in our application.
+One of them is the design of the number of concurrency.
+The reason is that the number of concurrency affects the performance depending on the characteristics of the application.
+Certainly, the cost of generating and switching goroutines is very cheap.
+On the other hand, when tasks on goroutine use shared resources, the upper limit of shared resources become a bottleneck.
+Therefore, in this case, it is necessary to find the optimal number of concurrency to improve performance.</p>
+
+<h1 id="21-concurrency-and-application">21. Concurrency and application</h1>
+
+<p>But the design for the number of concurrency is difficult.
+Because the optimal number depends on app, environments and load condition.
+And, in most cases, the environment in which the program is tuned and the environment in which it will be executed is different.
+Thus, I&rsquo;d like to consider optimization for the number of goroutines without depending on environments.
+In order to achieve this, it&rsquo;s desirable for the number of concurrency to be determined dynamically and be controlled rapidly by detection the bottleneck on running program.</p>
+
+<h1 id="22-proposal">22. Proposal</h1>
+
+<p>In this section, I&rsquo;ll introduce my proposal that optimizes the number of concurrency.</p>
+
+<h1 id="23-goal">23. Goal</h1>
+
+<p>The proposed method&rsquo;s goal is here.
+The optimal number of concurrency to be determined dynamically and be controlled rapidly.</p>
+
+<h1 id="24-basic-idea">24. Basic idea</h1>
+
+<p>To begin with let’s speak to the basic idea of the method.
+At first, It increases the number of goroutines to performance target.</p>
+
+<h1 id="25-basic-idea">25. Basic idea</h1>
+
+<p>After that, it stops increasing the number of goroutines if it meets the performance target.</p>
+
+<h1 id="26-basic-idea">26. Basic idea</h1>
+
+<p>After a while, it attempts to decrease the number of goroutines.
+If it fails to meet the performance target, it backs to step 1.</p>
+
+<h1 id="27-issues-to-solve-for-the-realization">27. Issues to solve for the realization</h1>
+
+<p>We have two issues to solve for the realization of the idea.</p>
+
+<p>First, Selection of performance metrics
+Next, finding how to control rapidly and continuously</p>
+
+<p>In the following subsections, I try to realize the proposal while solving these problems.</p>
+
+<h1 id="28-performance-metrics">28. Performance metrics</h1>
+
+<p>In this subsection, I will consider performance metrics that are without depending on application characteristics.</p>
+
+<h1 id="29-performance-metrics">29. Performance metrics</h1>
+
+<p>In the basic idea subsection, I was assuming that there is a performance target.</p>
+
+<p>It&rsquo;s desirable for the performance target not to depend on resource type whom task use.
+Because different applications have different bottlenecks.
+For example, I/O, Capacity of memory and processing load due to the external process.
+If we find an ideal performance target, it will allow us to use the proposed method in as many applications as possible.</p>
+
+<p>I think that CPU usage or throughput suits for the purpose.
+Go&rsquo;s scheduler turns blocking tasks into as CPU bound as possible by switching tasks continuously.
+Thus, I adopt the CPU usage of the Go application as the performance target.</p>
+
+<h1 id="30-performance-metrics">30. Performance metrics</h1>
+
+<p>But the performance upper limit is different for each application.
+In other words, we don&rsquo;t know the actual value of the target.
+Thus, it is calculated on running.</p>
+
+<p>At first, it sets the target value high.
+It increases the number of goroutines to performance targets.</p>
+
+<h1 id="31-performance-metrics">31. Performance metrics</h1>
+
+<p>If it doesn&rsquo;t meet the performance target, it regards the point as metrics upper limit.
+After that, it gradually adjusts it to the new upper limit value.</p>
+
+<p>So, that concludes this part of my talk on performance metrics.
+The summary is the following:
+The proposed method uses CPU usage upper limit as the performance target.
+And the value is calculated on running.</p>
+
+<h1 id="32-determining">32. Determining</h1>
+
+<p>In this subsection, I will consider how to determine the number of concurrency rapidly, continuously and accurately.</p>
+
+<h1 id="33-determine-the-number-of-goroutines">33. Determine the number of goroutines</h1>
+
+<p>In the previous subsection, we defined performance metrics and dynamic value.
+Next, we have to consider how to determine the number of goroutines to meet the target value.
+In the basic idea subsection, we increased goroutine one by one
+But it has to determine rapidly, continuously, accurately to adjust the number of goroutines to rapid changes in the actual environment.
+I think that feedback control is a good way to meet these conditions.</p>
+
+<h1 id="34-feedback-control">34. Feedback control</h1>
+
+<p>In this page, I will explain the basis of feedback control.</p>
+
+<p>This figure shows the structure of a feedback loop.
+There is a system with input and output.
+The output is sent back and compared to the set-point to calculate a new input.
+The error is a deviation of the output from the set-point.
+The controller calculates how much to increase (or decrease) based on the error.</p>
+
+<p>Feedback control applies an automatic correction continuously.
+Determining set-point and Identifying suitable input/output is important.
+Instead, Feedback control does not need to know the detail of the system.
+I think that the robustness of feedback control is effective for rapid changes in the actual environment.</p>
+
+<h1 id="35-pid-controller-1-2">35. PID Controller (<sup>1</sup>&frasl;<sub>2</sub>)</h1>
+
+<p>In this page, I will explain a controller used frequently.</p>
+
+<p>As I mentioned before, the job of controllers is to calculate the value of new input based on the error.
+PID Controller applies a correction rapidly and accurately.
+The controller has three sub-controllers inside.
+The output is a combination of its proportional, integral and derivative subcontrol.</p>
+
+<p>Now I’d like to look at the strategy of each sub-controller.</p>
+
+<h1 id="36-pid-controller-2-2">36. PID Controller (<sup>2</sup>&frasl;<sub>2</sub>)</h1>
+
+<p>The proportional control output is proportional to the error.
+Namely, a large error will lead to a large adjustment.
+KP is the controller gain.</p>
+
+<p>The integral control output is proportional to the integral of the error over time.
+The output becomes a cumulative sum of the error if it is a computer implementation.
+KI is the controller gain.
+The I controller deal with the small error that the P controller loses its effectiveness.</p>
+
+<p>The derivative control output is proportional to the derivative of the error.
+The output becomes the amount that has changed since the previous time step if it is a computer implementation.
+KD is the controller gain.
+The D controller encourages converge using the output.</p>
+
+<p>So, that concludes this part of my talk on basic of PID controller.
+The controller is intended to take the system closer to a set-point.
+However, the set-point has to be determined beforehand.
+In the proposed method, the value of the set-point is calculated on running.</p>
+
+<p>Now I’d like to consider the structure of the controller to meet this condition.</p>
+
+<h1 id="37-dynamic-target-controller">37. Dynamic Target Controller</h1>
+
+<p>This figure shows the structure of the controller of the proposed method.
+This controller has two nested control loops.
+The inner loop is the PID controller which we have learned just before.
+The inner loop&rsquo;s input is current CPU usage and its output is the number of goroutines.
+The inner loop attempts to increase goroutine until CPU usage upper limit which is a set-point.
+However, the value of the set-point needs to be calculated on running.
+The job of the outer loop is to calculate this value.
+The outer loop&rsquo;s input is current CPU usage as same as the inner loop.
+Its output is a new set-point of the inner loop.
+Namely, the inner loop&rsquo;s set-point is changed by the outer loop&rsquo;s output.</p>
+
+<p>The outer loop behavior has been mentioned at the performance metrics subsection.
+When CPU usage reached the upper limit by many goroutines, the outer loop begins to use its value as a new set-point.
+In the current implementation, the outer loop sets a new set-point when CPU usage changes significantly.
+Because Go&rsquo;s scheduler attempts to consume CPU resources incessantly by switching goroutines.
+Namely, CPU usage stays on the upper limit in most cases.
+Therefore, I figured it would be easier to detect change points in short-term observations than to detect stability in long-term observations.</p>
+
+<p>(If time remains)
+Indeed the design for the controller is pretty hard.
+The current controller version is 11.
+I published past designs and their evaluation.
+if you have an interest in it, let&rsquo;s conversation about a better way during this conference.</p>
+
+<p>So, that concludes this talk of my talk on dynamic target controller.
+Now, we should be able to determine the optimal number of goroutines rapidly, continuously, accurately.
+Finally, I’d like to consider how to bound concurrency with the determined number.</p>
+
+<h1 id="38-bounding">38. Bounding</h1>
+
+<p>In this subsection, I will explain about bounding concurrency dynamically.</p>
+
+<h1 id="39-to-bound-concurrency">39. To bound concurrency</h1>
+
+<p>This is a Go code that appeared after a long time.
+We often write such code to bound concurrency in Go.
+We usually use the buffered channel as a semaphore.
+In this example, the buffer for the channel is 3.
+Therefore, only three goroutines run at the same time.</p>
+
+<p>On the other hand, in the proposed method the optimal number of goroutines will be different in every iteration of the feedback loop.
+However, we can&rsquo;t change the buffer size of the channel later.
+Therefore, we need a dynamic semaphore for the method.</p>
+
+<h1 id="40-elastic-semaphore">40. Elastic semaphore</h1>
+
+<p>This figure shows the elastic semaphore.
+This elastic semaphore provides &ldquo;wait&rdquo; and &ldquo;signal&rdquo; operations as same as a semaphore.
+&ldquo;wait&rdquo; operation decrements the value of the semaphore variable.
+If the new value of the semaphore variable is negative, it is blocked.
+&ldquo;signal&rdquo; operation increments the value of the semaphore variable.
+&ldquo;incrementLimit&rdquo; changes upper of the semaphore variable.
+The value of the limit is determined by the feedback controller in the proposed method.
+This elastic semaphore ensures the atomicity of these operations.</p>
+
+<p>(If time remains)</p>
+
+<p>This semaphore is not strict.
+Because it allows that goroutines more than the upper limit run temporarily.
+For example, 10 goroutines are running when the upper limit is 10.
+After that, if the upper limit turns 5, 10 goroutines are still running until they finish their every task.
+Of course, generating new goroutine is blocked.
+Therefore, a long term goroutine like a worker process is not suitable for the elastic semaphore.
+Fortunately, generating goroutine is cheap in Go.
+So, we can generate it each time.</p>
+
+<h1 id="41-kaburaya">41. Kaburaya</h1>
+
+<p>In this subsection, I will explain kaburaya as the implementation of the proposed method.</p>
+
+<h1 id="42-architecture-of-kaburaya">42. Architecture of kaburaya</h1>
+
+<p>As I mentioned before, the goal of the proposed method is here.</p>
+
+<p>I&rsquo;d like to determine the number of concurrency dynamically.
+I&rsquo;d like to control the number of concurrency rapidly.</p>
+
+<p>For the purpose,</p>
+
+<p>Firstly, we decided to use CPU usage upper limit as performance metrics.
+The value is calculated on running.
+Secondly, we decided to determine the optimal number of goroutine using the metrics.
+The value is determined rapidly, continuously, accurately using feedback control.
+Finally, we decided to bound concurrency using the number.
+The concurrency is bounded using elastic semaphore dynamically.</p>
+
+<p>I am developing this implementation as OSS named kaburaya.
+The URL is here.</p>
+
+<p>As a side note, Kaburaya is the name of a Japanese arrow with a whistle.</p>
+
+<h1 id="43-monochromegane-kaburaya">43. monochromegane/kaburaya</h1>
+
+<p>This code is the usage of kaburaya.
+It is very similar to the code of bounding concurrency with buffered channels.</p>
+
+<p>&ldquo;NewSem&rdquo; specifies the period for feedback control and creates a new semaphore.
+We can use &ldquo;Wait&rdquo; and &ldquo;Signal&rdquo; like a send or receive of a channel.
+Kaburaya changes the limit of semaphore variables automatically and continuously.
+So, we don&rsquo;t need the &ldquo;incrementLimit&rdquo; operation.
+Lastly, if the tasks finished, we have to stop kaburaya to stop the feedback loop.</p>
+
+<p>So, that concludes this part of my talk on the proposed method and its implementation.
+I’d like to speak about the evaluation of kaburaya.</p>
+
+<h1 id="44-evaluation">44. Evaluation</h1>
+
+<p>In this section, I will explain the evaluation of kaburaya.</p>
+
+<h1 id="45-evaluation">45. Evaluation</h1>
+
+<p>There are 6 patterns of environments.
+I evaluated the efficacy of kaburaya in each environment.
+There are 3 contents.
+They are speedup of processing, CPU usage based on time series, and limit of semaphore on time series.
+I found good and not so good points in each environment accordingly.</p>
+
+<h1 id="46-pt-mac-scan">46. pt_mac-scan</h1>
+
+<p>At first, I will explain this environment and task.</p>
+
+<p>In this environment, &ldquo;the platinum searcher&rdquo; runs on Mac with a real-time virus scan.
+The number of CPU is 8 and the memory size is 16GB.
+GOMAXPROCS is set 8.</p>
+
+<p>The graph represents performance against the number of goroutines.
+The X-axis represents the number of goroutines.
+It is a log scale.
+The Y-axis represents the speedup of processing time against sequential processing.
+The result shows 16 goroutines make performance itself good.
+This task is more degradation of performance due to increased goroutines</p>
+
+<p>Next, I’d like to take a look at the experiment result of kaburaya.</p>
+
+<h1 id="47-pt-mac-scan">47. pt_mac-scan</h1>
+
+<p>This is a good pattern.
+Because kaburaya achieved both speed and stability.</p>
+
+<p>These figures show the results of the evaluation in the environment.
+The number of the left graph which is 11 represents the median value of goroutine number determined by kaburaya.
+As a consequence, kaburaya let processing time 6 times faster than sequential processing.</p>
+
+<p>There are 3 plots based on time series in the right graph.
+The blue dash line represents the set-point of CPU usage.
+The blue line represents the actual value of CPU usage.
+And the green line represents the number of semaphores determined by kaburaya.</p>
+
+<p>In this environment and task, Kaburaya found good set points and adjust numbers within the ideal range.
+Kaburaya was able to avoid performance degradation by determining the minimum number of the semaphore to meet the performance metrics.
+As a result, not the best, but it achieved a good speedup.
+Namely, kaburaya achieved both speed and stability.</p>
+
+<h1 id="48-task-pt-mac-no-scan">48. Task: pt_mac-no-scan</h1>
+
+<p>This is also a good pattern.
+In this environment, I stopped the real-time virus scan process and ran &ldquo;the platinum searcher&rdquo;.</p>
+
+<p>The result shows 4 goroutines make performance good.
+This task is less degradation of performance due to increased goroutines.</p>
+
+<h1 id="49-task-pt-mac-no-scan-good">49. Task: pt_mac-no-scan (Good)</h1>
+
+<p>In this environment and task, Kaburaya found good set points and adjust numbers within the ideal range.</p>
+
+<p>Please pay attention to the blue dash line in the right graph.
+This shows that the feedback controller continued to set a new set-point when CPU usage changed significantly.
+As a result, kaburaya adjusted the number of semaphore within a good range.
+Not the best, but it achieved a good speedup as few concurrency as possible.</p>
+
+<h1 id="50-task-pt-mac-no-scan-bad">50. Task: pt_mac-no-scan (Bad)</h1>
+
+<p>Unfortunately, there is a bad pattern.
+This is the same as the previous environment.
+But the number of semaphores continued to increase.
+Because kaburaya failed to reset the set point.
+Therefore actual CPU usage was always lower than set-point.</p>
+
+<p>The cause is the range of change rate is too large.
+It is used as a condition of determining set-point.</p>
+
+<p>So, I have to adjust the value in order to improve the controller.</p>
+
+<p>#51. Task: pt_linux</p>
+
+<p>This is not so bad pattern.</p>
+
+<p>In this environment, &ldquo;the platinum searcher&rdquo; runs on Linux.
+The number of CPU is 4 and the memory size is 4GB.
+GOMAXPROCS is set 4.</p>
+
+<p>The result shows 8 or 32 goroutines make performance good.
+This task is less degradation of performance due to increased goroutines.</p>
+
+<h1 id="52-task-pt-linux-not-so-bad">52. Task: pt_linux (Not so bad)</h1>
+
+<p>The number of the left graph which is 15 represents the median value of goroutine number determined by kaburaya.
+As a consequence, kaburaya let processing time 3.5 times faster than sequential processing.</p>
+
+<p>In this environment and task, Kaburaya found good set points and adjust numbers within the ideal range.
+However, at the end of the period, the number of semaphores increased due to the failure to reset the set point.</p>
+
+<p>The cause is the same as before.
+So, I have to adjust the range of change rate.</p>
+
+<h1 id="53-task-mem-4096000-10000">53. Task: mem_4096000_10000</h1>
+
+<p>Here is another task.
+The task uses the memory of a shared resource.
+In this case, the size is 4MB.
+Many concurrencies will cause starvation of resources.</p>
+
+<p>The number of CPU is 4 and the memory size is 4GB.
+GOMAXPROCS is set 4.</p>
+
+<p>Better concurrent is 512.
+This task leads to more degradation of performance (swap out) due to increased goroutines.</p>
+
+<h1 id="54-task-mem-4096000-10000-good">54. Task: mem_4096000_10000 (Good)</h1>
+
+<p>The number of the left graph which is 63 represents the median value of goroutine number determined by kaburaya.
+As a consequence, kaburaya let processing time 3 times faster than sequential processing.
+So, Kaburaya found good set points and adjust numbers within the ideal range.</p>
+
+<p>What is important is that it avoided the starvation of resources.
+These results show the good set-point keep an ideal number of semaphore.</p>
+
+<h1 id="55-task-mem-40960-1000000">55. Task: mem_40960_1000000</h1>
+
+<p>This is also a good pattern.</p>
+
+<p>I changed memory size to 40kb from 4MB.
+The environment is the same as before.
+Better concurrent are from 4 to 64.</p>
+
+<h1 id="56-task-mem-40960-1000000-good">56. Task: mem_40960_1000000 (Good)</h1>
+
+<p>The number of the left graph which is 19 represents the median value of goroutine number determined by kaburaya.
+As a consequence, kaburaya let processing time 2.5 times faster than sequential processing.
+So, Kaburaya found good set points and adjust numbers within the ideal range.</p>
+
+<h1 id="57-task-mem-409600-100000">57. Task: mem_409600_100000</h1>
+
+<p>At last, I will show you an interesting pattern.</p>
+
+<p>I changed memory size to 400kB.
+The environment is the same as before.</p>
+
+<p>Although when the number of the semaphore is 16 it seemed performance reached the limit, more goroutines made performance good.
+Perhaps better concurrent will be over 1024.</p>
+
+<h1 id="58-task-mem-409600-100000-not-so-good">58. Task: mem_409600_100000 (Not so good)</h1>
+
+<p>The number of the left graph which is 29 represents the median value of goroutine number determined by kaburaya.
+As a consequence, kaburaya let processing time 2 times faster than sequential processing.</p>
+
+<p>The results show kaburaya solved this task with a local solution.
+Certainly, Kaburaya found set points and adjusted the numbers within a range.
+But it didn&rsquo;t reach the upper of performance metrics.</p>
+
+<p>So, I think that Kaburaya has to explore the set-point aggressively when the set-point is too low.</p>
+
+<h1 id="59-experimental-results">59. Experimental results</h1>
+
+<p>In this page, I conclude experimental results.</p>
+
+<p>Kaburaya finds a good set point and adjusts numbers within ideal range by feedback control and elastic semaphore continuously.</p>
+
+<p>On the other hand, we found some key factors to improve kaburaya.</p>
+
+<p>The most important is the prediction accuracy of the set point.
+The improvement will avoid that the number of the semaphore is too much or too less.</p>
+
+<p>And finding optimal parameters is also important.
+Based on my experience, I got good results in most cases when the gain of the feedback controller is from 0.1 to 0.3 and the range of change rate is 0.3.
+However, I think that we have to tune the parameters as necessary.</p>
+
+<p>I expect that there is a solution in the related researches on feedback control.</p>
+
+<h1 id="60-conclusion">60. Conclusion</h1>
+
+<p>OK, This is a conclusion.</p>
+
+<h1 id="61-conclusion">61. Conclusion</h1>
+
+<p>I proposed kaburaya to control the number of goroutines without depending on the platform, runtime, and current load.
+Experimental results show possible and some issues of kaburaya.
+In particular, improvement in detecting performance upper limit of the task is important.
+In the future, I will also consider the application to auto-scaling of cloud computing.</p>
+
+<h1 id="62-appendix">62. Appendix</h1>
+
+<p>This is the Appendix.</p>
+
+<h1 id="63-reference">63. Reference</h1>
+
+<p>Here is Reference.
+If you want to learn more about kaburaya, you can jump to the link.
+Sorry, some texts are in Japanese.</p>
+
+<h1 id="64-go-gopher">64. Go gopher</h1>
+
+<p>The Go gophers in this slide were drawn by Keita Kawamoto.</p>
+
+<h1 id="65-thank-you">65. Thank you!</h1>
+
+<p>Thank you for listening.
+It was a pleasure being here today.</p>
+
+    </div>
+    <footer class="tag">
+      <i class="fa fa-tags tag-icon"></i>
+      <ul>
+      
+        <li><a class="tag-link" href="/tags/golang">golang</a></li>
+      
+        <li><a class="tag-link" href="/tags/gophercon">gophercon</a></li>
+      
+      </ul>
+      <div class="clear"></div>
+    </footer>
+  </div>
+</article>
+
+        
+        <a href="/post/" class="archives">Archives</a>
+      </div>
+    </div>
+    <footer class="footer">
+  <div class="author"></div>
+  <p class="author-name"><a href="https://twitter.com/monochromegane" target="_blank">@monochromegane</a></p>
+  
+    <p>monochromegane (モノクロめがね) と申します。</p>
+  
+    <p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+  
+  <ul class="social">
+    <li><a href="https://twitter.com/monochromegane" target="_blank"><i class="fa fa-twitter"></i></a></li>
+    <li><a href="https://github.com/monochromegane" target="_blank"><i class="fa fa-github"></i></a></li>
+    <li><a href="/index.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
+  </ul>
+  <p class="copyright">
+    <small>&copy;  <span class="">Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>, Designed by <a href="https://twitter.com/keita_kawamoto" target="_blank">&copy;keita_kawamoto</a></span></small>
+  </p>
+</footer>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+    
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-38374674-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+  </body>
+</html>

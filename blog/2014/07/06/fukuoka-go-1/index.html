@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width">
+  <meta name="author" content="">
+  
+    <title>Fukuoka.go#1を開催しました。 &middot; THINKING MEGANE</title>
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@monochromegane">
+  <meta property="og:description" content="7月4日に Fukuoka.go#1 を開催しました。
+Fukuoka.goは福岡でGo言語に興味のあるひとが集まる場所を目指して開催する会です。
+今回が初開催でしたが、参加者18名（キャンセル含めると申込自体は28名）で、福岡にも着実にGo熱が来てるなと感じています。
+ということで、今回の開催した内容をまとめておこうと思います。
+タイムテーブル イベント概要
+ 19:35 - 19:45 自己紹介タイム(Go歴を教えてください) 19:45 - 20:20 LT: 速習Go (@monochromegane) 20:20 - 20:40 LT: GAE/Goの始め方 (@laco0416) 20:40 - 21:40 もくもく会  自己紹介タイム(Go歴を教えてください) 今回の参加者は18名で、Go歴は長くて半年、大半がGoのチュートリアルである、A Tour of Goをやり終えた（または途中までやった）ぐらいの経験の方が多かったです。
+LT 速習Go (@monochromegane) 自分のほうから、速習Goというタイトルで、Go環境の作り方から基本的な文法規則と注意したほうがよい点、ハマることが多い点などを説明させてもらいました。
+ LT資料: 速習Go  GoのPlaygroundもつけてGo環境がない人でも試せるようにした点はよかったですが、足りない分はもくもく会でカバーする、という方針だったのでかなり駆け足になってしまいました。
+もう少し、ライブコーディング的なものもやったほうが興味ひけたかなあと思いますが、次回に活かそうと思います。
+GAE/Goの始め方 (@laco0416) @laco0416さんによるLTは、「GAE/Goの始め方」でした。
+ LT資料: GAE/Goの始め方  統合開発環境での開発のノウハウや、GAE/Goで気をつける点などをLTしていただきました。 Go言語はシンプルなHTTPサーバを立てるのは非常に簡単なのでGAEと組み合わせることで簡易なAPIサーバであればさくっとつくってしまえるみたいです。
+もくもく会 各々で作業を持ちよって、もくもくする会をしました。今回はLTでわからなかったことを調べたり話しあったりする方々が多かったようです。
+こんな感じのことを話しました。
+メソッドのレシーバ変数に self を使わないほうがよい理由とは 速習GoのLTのときに話はしたけど、明確な根拠が出せなかったので調べなおしました。
+当初は、selfだとレシーバとして何を指しているのかわからないということだと考えていたのですが、まあ定義には型名もきちんとあるわけで&hellip;
+@monochromegane 以前Qiitaに記事書きましたのでよかったらどうぞ。元ネタは go-nuts MLの https://t.co/UGabHgGUSV です / &quot;Goのメソッドレシーバの命名慣習 - Qiita&quot; http://t.">
+  <meta property="og:title" content="Fukuoka.go#1を開催しました。">
+  <meta property="og:url" content="https://blog.monochromegane.com/blog/2014/07/06/fukuoka-go-1/">
+  <meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+  
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Source+Code+Pro' type='text/css'>
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Montserrat' type='text/css'>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css">
+  <link rel="stylesheet" href="/css/text.css">
+  <link rel="stylesheet" href="/css/color.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="/images/apple-touch-icon-57-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="/images/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
+  <link rel="canonical" href="https://blog.monochromegane.com/blog/2014/07/06/fukuoka-go-1/">
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="THINKING MEGANE" />
+  
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async>
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: {
+               Macros: {
+                        bm: ["\\boldsymbol{#1}", 1],
+                        argmax: ["\\mathop{\\rm arg\\,max}\\limits"],
+                        argmin: ["\\mathop{\\rm arg\\,min}\\limits"]},
+               extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                   displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+  </script>
+</head>
+
+  <body>
+    <div class="header">
+  <header>
+    <h1 class="logo"><a href="https://blog.monochromegane.com">THINKING MEGANE</a></h1>
+    <nav>
+      <ul class="menu">
+        <li><a href="/self-introduction/">Home</a></li>
+        <li><a href="/post/">Archives</a></li>
+        <li><a href="/diary/">Diary</a></li>
+        <li><a href="http://thinking-megane.blogspot.jp/">Old Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+</div>
+
+    <div class="container">
+      <article>
+  <div class="post">
+    <header>
+      <h1><a href="https://blog.monochromegane.com/blog/2014/07/06/fukuoka-go-1/">Fukuoka.go#1を開催しました。</a></h1>
+      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2014-07-06</div></time>
+    </header>
+    <div class="post-inner">
+      
+
+<p>7月4日に <strong>Fukuoka.go#1</strong> を開催しました。</p>
+
+<p>Fukuoka.goは福岡でGo言語に興味のあるひとが集まる場所を目指して開催する会です。</p>
+
+<p>今回が初開催でしたが、参加者18名（キャンセル含めると申込自体は28名）で、福岡にも着実にGo熱が来てるなと感じています。</p>
+
+<p>ということで、今回の開催した内容をまとめておこうと思います。</p>
+
+<h2 id="タイムテーブル">タイムテーブル</h2>
+
+<p><a href="http://connpass.com/event/6887/">イベント概要</a></p>
+
+<ul>
+<li>19:35 - 19:45 自己紹介タイム(Go歴を教えてください)</li>
+<li>19:45 - 20:20 LT: 速習Go (<a href="https://twitter.com/monochromegane">@monochromegane</a>)</li>
+<li>20:20 - 20:40 LT: GAE/Goの始め方 (<a href="https://twitter.com/laco0416">@laco0416</a>)</li>
+<li>20:40 - 21:40 もくもく会</li>
+</ul>
+
+<h2 id="自己紹介タイム-go歴を教えてください">自己紹介タイム(Go歴を教えてください)</h2>
+
+<p>今回の参加者は18名で、Go歴は長くて半年、大半がGoのチュートリアルである、<a href="http://go-tour-jp.appspot.com/#1">A Tour of Go</a>をやり終えた（または途中までやった）ぐらいの経験の方が多かったです。</p>
+
+<hr />
+
+<h1 id="lt">LT</h1>
+
+<h2 id="速習go-monochromegane-https-twitter-com-monochromegane">速習Go (<a href="https://twitter.com/monochromegane">@monochromegane</a>)</h2>
+
+<p>自分のほうから、速習Goというタイトルで、Go環境の作り方から基本的な文法規則と注意したほうがよい点、ハマることが多い点などを説明させてもらいました。</p>
+
+<ul>
+<li><a href="https://gist.github.com/monochromegane/8bb73390f2ebd9d325f4">LT資料: 速習Go</a></li>
+</ul>
+
+<p>GoのPlaygroundもつけてGo環境がない人でも試せるようにした点はよかったですが、足りない分はもくもく会でカバーする、という方針だったのでかなり駆け足になってしまいました。</p>
+
+<p>もう少し、ライブコーディング的なものもやったほうが興味ひけたかなあと思いますが、次回に活かそうと思います。</p>
+
+<h2 id="gae-goの始め方-laco0416-https-twitter-com-laco0416">GAE/Goの始め方 (<a href="https://twitter.com/laco0416">@laco0416</a>)</h2>
+
+<p><a href="https://twitter.com/laco0416">@laco0416</a>さんによるLTは、「GAE/Goの始め方」でした。</p>
+
+<ul>
+<li><a href="https://docs.google.com/presentation/d/1jz4h1-V4CCL0emQjxl-3BL12lGonol1A0dZrEc96oTw/pub?start=false&amp;loop=false&amp;delayms=3000#slide=id.p">LT資料: GAE/Goの始め方</a></li>
+</ul>
+
+<p>統合開発環境での開発のノウハウや、GAE/Goで気をつける点などをLTしていただきました。
+Go言語はシンプルなHTTPサーバを立てるのは非常に簡単なのでGAEと組み合わせることで簡易なAPIサーバであればさくっとつくってしまえるみたいです。</p>
+
+<hr />
+
+<h1 id="もくもく会">もくもく会</h1>
+
+<p>各々で作業を持ちよって、もくもくする会をしました。今回はLTでわからなかったことを調べたり話しあったりする方々が多かったようです。</p>
+
+<p>こんな感じのことを話しました。</p>
+
+<h2 id="メソッドのレシーバ変数に-self-を使わないほうがよい理由とは">メソッドのレシーバ変数に self を使わないほうがよい理由とは</h2>
+
+<p>速習GoのLTのときに話はしたけど、明確な根拠が出せなかったので調べなおしました。</p>
+
+<p>当初は、selfだとレシーバとして何を指しているのかわからないということだと考えていたのですが、まあ定義には型名もきちんとあるわけで&hellip;</p>
+
+<p><blockquote class="twitter-tweet" data-cards="hidden" lang="ja"><p><a href="https://twitter.com/monochromegane">@monochromegane</a> 以前Qiitaに記事書きましたのでよかったらどうぞ。元ネタは go-nuts MLの <a href="https://t.co/UGabHgGUSV">https://t.co/UGabHgGUSV</a> です / &quot;Goのメソッドレシーバの命名慣習 - Qiita&quot; <a href="http://t.co/xMncnSKmXv">http://t.co/xMncnSKmXv</a></p>&mdash; Hiroaki Nakamura (@hnakamur2) <a href="https://twitter.com/hnakamur2/statuses/485056364033499138">2014, 7月 4</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+
+<p>いつもありがとうございます！</p>
+
+<p>自分なりに整理してみました。</p>
+
+<h3 id="1-レシーバ変数はメソッド内で不変ではない">1. レシーバ変数はメソッド内で不変ではない</h3>
+
+<p>レシーバ変数に同じ型の別の値を設定することができてしまうので、意味的に整合性がとれるのは<code>self</code>ではなくて 型名をもとにした名前になります。<br />
+自分の中ではこれが一番納得できる理由でした。</p>
+
+<h3 id="2-goの標準ライブラリではレシーバ変数には-self-ではなく型名の先頭または二文字程度を使っている">2. Goの標準ライブラリではレシーバ変数には self ではなく型名の先頭または二文字程度を使っている</h3>
+
+<p>理由といか命名慣習がなぜそうなっているのかですが、上述のとおり型名をもとにした名前なので、Client型であれば<code>c</code>とか<code>cl</code>とかにするようです。<br />
+型名をそのまま小文字(<code>client</code>)にしないのはエクスポートしない小文字で始まる型を使う場合に同じになってしまうから、かなと思ってます。</p>
+
+<h3 id="3-メソッドは関数として呼ぶことができる">3. メソッドは関数として呼ぶことができる</h3>
+
+<p>これも知らなかったのですが、型のメソッドは型を引数に渡して関数として実行することができるようです。</p>
+
+<pre><code class="language-go">type Foo int
+
+func (f Foo) Bar() {
+	fmt.Printf(&quot;My receiver is %v\n&quot;, f)
+}
+
+func main() {
+	a := Foo(46)
+	a.Bar()
+	b := Foo(51)
+	Foo.Bar(b)
+}
+</code></pre>
+
+<p>であれば、レシーバ変数は引数ともみなすことができるわけで、selfとつけるのは少し違うのかなとも思えます。</p>
+
+<h2 id="構造体定義の型名のあとの文字列にはどうやってアクセスするんだろう">構造体定義の型名のあとの文字列にはどうやってアクセスするんだろう</h2>
+
+<p><a href="https://twitter.com/laco0416">@laco0416</a>さんのLTで JSON文字列を構造体に変換する際に、JSONのキーと構造体のフィールド名をマッピングするため、このような定義をしていました。</p>
+
+<pre><code class="language-go">type Person struct {
+	Name string `json:&quot;name&quot;`
+}
+</code></pre>
+
+<p>型名のあとに<code>json:&quot;name&quot;</code>という文字列があります。プログラムからこの値にアクセスするやり方がわからなかったので調べました。</p>
+
+<ul>
+<li>この定義は<code>タグ</code>というようです。</li>
+<li>reflectパッケージを使って型情報からアクセスします。</li>
+</ul>
+
+<p>先ほどの構造体定義であれば以下のようにアクセスできるようです。</p>
+
+<pre><code class="language-go">person := Person{&quot;hoge&quot;}
+
+// リフレクションを使って型情報を取得する
+t := reflect.TypeOf(person)
+
+// フィールド情報を取得する
+f, _ := t.FieldByName(&quot;Name&quot;)
+
+// フィールドからタグ情報を取得する
+tag := f.Tag
+
+// タグ文字列全体
+fmt.Println(tag) // json:&quot;name&quot;
+
+// key:&quot;value&quot;形式で定義した場合、key名を指定して取得できる
+fmt.Println(tag.Get(&quot;json&quot;)) // name
+</code></pre>
+
+<p><code>key1:&quot;value1&quot; key2:&quot;value2&quot;</code>のように複数の情報を持たせることもできるのでうまく使えば面白いかもしれません。</p>
+
+<p>ただし、定義自体は文字列であり、リフレクションを使ってアクセスされるため静的型チェックが効かず、実行時エラーになるため乱用は避けたほうがよさそうです。</p>
+
+<h2 id="go言語の日付フォーマットが独特">Go言語の日付フォーマットが独特</h2>
+
+<p>Go言語の日付や時刻のフォーマットに使う書式はよくある%Y%m%dとかではなく、2006とか01とかを使います。</p>
+
+<pre><code class="language-go">fmt.Println(time.Now().Format(&quot;2006/01/02 15:04:05 MST&quot;))
+</code></pre>
+
+<p>最初は戸惑いますが、以下の様な順番になっているというのがわかれば、意外とわかりやすいかもしれません。</p>
+
+<ol>
+<li>月 01 or Jan</li>
+<li>日 02</li>
+<li>時 3 or 15</li>
+<li>分 04</li>
+<li>秒 05</li>
+<li>年 2006</li>
+<li>標準時 -0700 or MST</li>
+</ol>
+
+<p>timeパッケージに定数も用意されているようです。</p>
+
+<pre><code class="language-go">const (
+        ANSIC       = &quot;Mon Jan _2 15:04:05 2006&quot;
+        UnixDate    = &quot;Mon Jan _2 15:04:05 MST 2006&quot;
+        RubyDate    = &quot;Mon Jan 02 15:04:05 -0700 2006&quot;
+        RFC822      = &quot;02 Jan 06 15:04 MST&quot;
+        RFC822Z     = &quot;02 Jan 06 15:04 -0700&quot; // RFC822 with numeric zone
+        RFC850      = &quot;Monday, 02-Jan-06 15:04:05 MST&quot;
+        RFC1123     = &quot;Mon, 02 Jan 2006 15:04:05 MST&quot;
+        RFC1123Z    = &quot;Mon, 02 Jan 2006 15:04:05 -0700&quot; // RFC1123 with numeric zone
+        RFC3339     = &quot;2006-01-02T15:04:05Z07:00&quot;
+        RFC3339Nano = &quot;2006-01-02T15:04:05.999999999Z07:00&quot;
+        Kitchen     = &quot;3:04PM&quot;
+        // Handy time stamps.
+        Stamp      = &quot;Jan _2 15:04:05&quot;
+        StampMilli = &quot;Jan _2 15:04:05.000&quot;
+        StampMicro = &quot;Jan _2 15:04:05.000000&quot;
+        StampNano  = &quot;Jan _2 15:04:05.000000000&quot;
+)
+</code></pre>
+
+<p>KitchenとかRubyDateとかあっておもしろいですね。</p>
+
+<hr />
+
+<h1 id="所感など">所感など</h1>
+
+<p>LTでGo言語の情報を教え合ったり、もくもく会で気軽に質問とかできたので、Go言語についてわいわいするという今回の目的は達成できたんじゃなかろうかと勝手に思っています。</p>
+
+<p>わいわいする中でも、ちゃんと学びがあるのもよかったですね。</p>
+
+<p>そんな、<strong>楽しくも学びのある Fukuoka.go</strong> は月一回を目安に定期的に開催していきます。<br />
+Goに興味がある方も、Go談義がしたい方も、どなたでもお気軽にご参加ください</p>
+
+<p>LTも絶賛募集しています！<br />
+Go言語でこんなのやってみたというのがあればぜひぜひ教えてください。</p>
+
+    </div>
+    <footer class="tag">
+      <i class="fa fa-tags tag-icon"></i>
+      <ul>
+      
+        <li><a class="tag-link" href="/tags/golang">golang</a></li>
+      
+        <li><a class="tag-link" href="/tags/fukuoka.go">fukuoka.go</a></li>
+      
+      </ul>
+      <div class="clear"></div>
+    </footer>
+  </div>
+</article>
+
+      <div class="social-btn">
+  <div>
+    <a href="http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2014/07/06/fukuoka-go-1/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="en" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+  <div>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-via="monochromegane">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  </div>
+</div>
+
+    </div>
+    <footer class="footer">
+  <div class="author"></div>
+  <p class="author-name"><a href="https://twitter.com/monochromegane" target="_blank">@monochromegane</a></p>
+  
+    <p>monochromegane (モノクロめがね) と申します。</p>
+  
+    <p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+  
+  <ul class="social">
+    <li><a href="https://twitter.com/monochromegane" target="_blank"><i class="fa fa-twitter"></i></a></li>
+    <li><a href="https://github.com/monochromegane" target="_blank"><i class="fa fa-github"></i></a></li>
+    <li><a href="/index.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
+  </ul>
+  <p class="copyright">
+    <small>&copy;  <span class="">Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>, Designed by <a href="https://twitter.com/keita_kawamoto" target="_blank">&copy;keita_kawamoto</a></span></small>
+  </p>
+</footer>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+    
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-38374674-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+  </body>
+</html>

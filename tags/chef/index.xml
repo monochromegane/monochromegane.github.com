@@ -1,0 +1,640 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Chef on THINKING MEGANE</title>
+    <link>https://blog.monochromegane.com/tags/chef/</link>
+    <description>Recent content in Chef on THINKING MEGANE</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Tue, 20 Aug 2013 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/tags/chef/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Chef-Solo &#43; Knife-Solo &#43; Berkshelf  環境のつくりかた</title>
+      <link>https://blog.monochromegane.com/blog/2013/08/20/chef-solo-knife-solo-berkshelf/</link>
+      <pubDate>Tue, 20 Aug 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2013/08/20/chef-solo-knife-solo-berkshelf/</guid>
+      <description>
+
+&lt;p&gt;Chef-Solo + Knife-Solo + Berkshelf 環境を構築するときに少しはまったので、まとめておきます。&lt;/p&gt;
+
+&lt;p&gt;ブログ投稿時点（2013/08/20）では knife-solo のバージョンだけ気をつけておけば大丈夫です。
+knife-solo のバージョンが古いと2回目以降の実行時にうまくいかないためです。
+その他の構築自体は難しくありません。&lt;/p&gt;
+
+&lt;p&gt;以下、構築手順です。&lt;/p&gt;
+
+&lt;h1 id=&#34;1-前提&#34;&gt;1. 前提&lt;/h1&gt;
+
+&lt;p&gt;構築対象となるリモート側のサーバへはすでにSSHによるログインが可能であるものとします。&lt;/p&gt;
+
+&lt;h1 id=&#34;2-chef-knife-solo-berkshelf-のインストール&#34;&gt;2. chef, knife-solo, berkshelf のインストール&lt;/h1&gt;
+
+&lt;p&gt;以下のGemfileを用意して&lt;code&gt;bundle install&lt;/code&gt;を行います。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;Gemfile&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;source &amp;quot;https://rubygems.org&amp;quot;
+
+gem &#39;chef&#39;
+gem &#39;knife-solo&#39;, &#39;&amp;gt;= 0.3.0.pre5&#39;
+gem &#39;berkshelf&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;** knife-solo のバージョンについて **&lt;/p&gt;
+
+&lt;p&gt;指定しない場合、0.2.0系がインストールされますが、2回目以降の実行時にエラーとなります。
+原因などはこちらが詳しいです。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://tk0miya.hatenablog.com/entry/2013/04/18/011339&#34;&gt;Hack like a rolling stone - knife-solo 0.2.0 で rsync エラーによって苦しまないためのたったひとつの方法&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;3-cookbookの準備&#34;&gt;3. cookbookの準備&lt;/h1&gt;
+
+&lt;h2 id=&#34;chefのリポジトリをつくる&#34;&gt;Chefのリポジトリをつくる&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ knife solo init chef-repo
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;chef-repo内に以下の構成が生成されます。必要に応じてGit管理を行ってください。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt; $ tree chef-repo/
+ chef-repo/
+ ├── cookbooks
+ ├── data_bags
+ ├── nodes
+ ├── roles
+ └── site-cookbooks
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;** Cookbookを置く場所について **&lt;/p&gt;
+
+&lt;p&gt;自分でつくるCookbookは&lt;code&gt;site-cookbooks&lt;/code&gt;以下に、公開Cookbookは&lt;code&gt;cookbooks&lt;/code&gt;以下に置きます。&lt;/p&gt;
+
+&lt;p&gt;knife-soloでは&lt;code&gt;cookbooks&lt;/code&gt;配下は&lt;code&gt;.gitignore&lt;/code&gt;で除外対象となっており、後述のBerkshelfなどの利用を前提としているようです。&lt;/p&gt;
+
+&lt;p&gt;** knife-solo はsshコマンドのオプションが使えます。証明書の指定などがある場合に便利です。 **&lt;/p&gt;
+
+&lt;h1 id=&#34;4-cookbookの作成&#34;&gt;4. Cookbookの作成&lt;/h1&gt;
+
+&lt;h2 id=&#34;自分でcookbookをつくる場合&#34;&gt;自分でCookbookをつくる場合&lt;/h2&gt;
+
+&lt;p&gt;今回は環境構築をメインにするので、雛形作成の手順のみ。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ knife cookbook create xxx -o site-cookbooks/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;公開cookbookを利用する場合&#34;&gt;公開Cookbookを利用する場合&lt;/h2&gt;
+
+&lt;p&gt;リポジトリ直下に&lt;code&gt;Berksfile&lt;/code&gt;を作成する&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;site :opscode
+cookbook &amp;quot;public_cookbook_name&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;5-リモート側でchef-soloを実行する&#34;&gt;5. リモート側でChef-Soloを実行する&lt;/h1&gt;
+
+&lt;h2 id=&#34;実行するレシピの指定&#34;&gt;実行するレシピの指定&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;nodes&lt;/code&gt;以下に&lt;code&gt;severname.json&lt;/code&gt;が作成されているので、run_list に実行したいレシピを指定する。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
+  &amp;quot;run_list&amp;quot;: [
+    &amp;quot;public_cookbook_name::recipe_name&amp;quot;, &amp;quot;cookbook_name::recipe_name&amp;quot;
+  ]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;** 公開Cookbookも忘れずに追加しておきます **&lt;/p&gt;
+
+&lt;h2 id=&#34;リモート側でのchef-solo実行準備&#34;&gt;リモート側でのChef-Solo実行準備&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ knife solo prepare username@servername
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;これにより、リモート側にChefがインストールされます。&lt;/p&gt;
+
+&lt;h2 id=&#34;リモート側でのchef-solo実行&#34;&gt;リモート側でのChef-Solo実行&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ knife cook username@servername
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;これによりリモート側にCookbookが送信され、run_listで指定したレシピが実行されます。&lt;/p&gt;
+
+&lt;h1 id=&#34;6-tipsなど&#34;&gt;6. Tipsなど&lt;/h1&gt;
+
+&lt;h2 id=&#34;knife-soloでattributesを使う&#34;&gt;knife-soloでattributesを使う&lt;/h2&gt;
+
+&lt;p&gt;nodes/servername.jsonに追加&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
+  &amp;quot;run_list&amp;quot;: [
+    &amp;quot;cookbook_name::recipe_name&amp;quot;
+  ],
+  &amp;quot;hoge&amp;quot;: {
+    &amp;quot;fuga&amp;quot;: &amp;quot;piyo&amp;quot;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;この例ではrecipe内で&lt;code&gt;node.hoge.fuga&lt;/code&gt;として値を利用できます。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Vagrant + Chef-Solo の環境構築は手軽にできますが、いざVagrant以外に適用しようとすると意外と面倒です。&lt;/p&gt;
+
+&lt;p&gt;今回のようにknife-soloをかませておくことで、対象のサーバを選ばずにChef-Soloを実行でき、とても便利です。&lt;/p&gt;
+
+&lt;p&gt;環境構築を行うときは、Berkshelfによる公開Cookbookの管理とあわせた今回の構成をおすすめします。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>ちょっと便利なvagrant sshのコマンドオプション</title>
+      <link>https://blog.monochromegane.com/blog/2013/05/13/vagrant-ssh-command/</link>
+      <pubDate>Mon, 13 May 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2013/05/13/vagrant-ssh-command/</guid>
+      <description>
+
+&lt;p&gt;&lt;code&gt;vagrant ssh&lt;/code&gt;にはコマンドオプションがあり、sshで仮想マシンにログインしなくても実行結果を取得することができます。&lt;/p&gt;
+
+&lt;h3 id=&#34;コマンドオプション&#34;&gt;コマンドオプション&lt;/h3&gt;
+
+&lt;p&gt;vagrant ssh のコマンドオプションは&lt;code&gt;-c command&lt;/code&gt;です。
+&lt;code&gt;-c&lt;/code&gt;オプションを使うことで、SSHコマンドを直接実行することができます。&lt;/p&gt;
+
+&lt;p&gt;例えば、こんな使い方。
+&lt;hr/&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;dhcpな仮想マシンのipアドレスを知る&#34;&gt;DHCPな仮想マシンのIPアドレスを知る&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ vagrant ssh -c ifconfig
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;grepなりで取得結果を整形すれば、仮想マシンのWebサーバへのブラウザアクセスなどに利用できます。&lt;/p&gt;
+
+&lt;hr/&gt;
+
+&lt;h3 id=&#34;chef-soloのレシピを個別に実行する&#34;&gt;Chef-Soloのレシピを個別に実行する&lt;/h3&gt;
+
+&lt;p&gt;Vagrant + Chef-Solo環境であれば、以下のコマンドで個別にレシピを実行することができます&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;# Vagrantfileで定義したレシピを全て実行
+$ vagrant ssh -c &amp;quot;cd /tmp/vagrant-chef-1 &amp;amp;&amp;amp; sudo chef-solo -c solo.rb -j dna.json&amp;quot;
+
+# レシピを指定して実行
+$ vagrant ssh -c &amp;quot;cd /tmp/vagrant-chef-1 &amp;amp;&amp;amp; sudo chef-solo -c solo.rb -o cookbookName::recipeName&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr/&gt;
+
+&lt;p&gt;ログインの手間を省けるので、ちょっとした確認などに便利ではないでしょうか。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Vagrant起動時にChef-Soloの実行を省く</title>
+      <link>https://blog.monochromegane.com/blog/2013/05/11/vagrant-no-provision/</link>
+      <pubDate>Sat, 11 May 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2013/05/11/vagrant-no-provision/</guid>
+      <description>
+
+&lt;p&gt;Vagrantの起動時にはChef-Soloが実行されますが、きちんと冪等性をもたせたレシピでもChef-Soloの実行には多少の待ちが発生してしまいます。&lt;/p&gt;
+
+&lt;p&gt;そこで今回は起動時間を短縮させるためのオプションを紹介します。&lt;/p&gt;
+
+&lt;hr/&gt;
+
+&lt;h2 id=&#34;no-provision-オプションを使う&#34;&gt;&amp;ndash;no-provision オプションを使う&lt;/h2&gt;
+
+&lt;p&gt;Vagrant起動時にChef-Soloの実行を省くには &lt;code&gt;vagrant up&lt;/code&gt;時に&lt;code&gt;--no-provision&lt;/code&gt;オプションをつけます&lt;/p&gt;
+
+&lt;p&gt;もちろん&lt;code&gt;vagrant reload&lt;/code&gt;時にも使えます&lt;/p&gt;
+
+&lt;hr/&gt;
+
+&lt;h2 id=&#34;provision-with-オプションを使う&#34;&gt;&amp;ndash;provision-with オプションを使う&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;--no-provision&lt;/code&gt;はすべてのprovisionの実行を省いてしまうため、&lt;code&gt;config.vm.provision :shell&lt;/code&gt;など別のprovisionも実行されなくなってしまいます。&lt;/p&gt;
+
+&lt;p&gt;特定のprovisionを実行させたい場合は、&lt;code&gt;vagrant up&lt;/code&gt;時に&lt;code&gt;--provision-with x,y,z&lt;/code&gt;として実行したいprovisionを指定するとよいです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ vagrant up --no-provision # すべてのprovisionが実行されない
+$ vagrant up --provision-with shell # :shell provisionだけが実行される
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr/&gt;
+
+&lt;p&gt;頻繁にChef-Soloを実行する必要がない開発用VMでは、上記のオプションをデフォルトにしてもいいかも。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>半歩進むChef-Solo - definitionでtemplateを使うとき気をつけること</title>
+      <link>https://blog.monochromegane.com/blog/2013/05/08/next-step-chef-solo-template/</link>
+      <pubDate>Wed, 08 May 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2013/05/08/next-step-chef-solo-template/</guid>
+      <description>
+
+&lt;h1 id=&#34;definitionでtemplateを使うとき気をつけること&#34;&gt;definitionでtemplateを使うとき気をつけること&lt;/h1&gt;
+
+&lt;p&gt;Chefのdefinitionは、独自リソースを定義して、外部のCookbookからも呼び出せるため共通化に役立つ便利な仕組みです。
+しかし、definition内でtemplateリソースを利用すると&lt;code&gt;Chef::Exceptions::FileNotFound&lt;/code&gt;エラーが出る場合があります。&lt;/p&gt;
+
+&lt;h2 id=&#34;現象&#34;&gt;現象&lt;/h2&gt;
+
+&lt;p&gt;templateリソースを利用したdefinitionを外部のCookbookから呼び出した場合に&lt;code&gt;Chef::Exceptions::FileNotFound&lt;/code&gt;が発生します。&lt;/p&gt;
+
+&lt;h2 id=&#34;原因&#34;&gt;原因&lt;/h2&gt;
+
+&lt;p&gt;templateリソースは、現在のCookbookのtemplatesディレクトリからテンプレートファイルを探すためです。&lt;/p&gt;
+
+&lt;p&gt;下記の場合だと呼び出し元となるmainクックブックのtemplatesディレクトリから探す挙動となってしまいます。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;cookbooks/apache/definitions/apache_setup.rb&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;define :apache_setup do
+  template &amp;quot;/etc/httpd/conf/httpd.conf&amp;quot; do
+    source &amp;quot;httpd.conf.erb&amp;quot;
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;cookbooks/main/recipes/default.rb&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;# この場合、mainクックブックのtemplatesディレクトリからhttpd.conf.erbを探してしまう
+apache_setup
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;対策&#34;&gt;対策&lt;/h2&gt;
+
+&lt;p&gt;外部から呼ばれる可能性があるdefinition内のtemplateリソースには、検索対象となるCookbookを明示しておきます。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;cookbooks/apache/definitions/apache_setup.rb&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;define :apache_setup do
+  template &amp;quot;/etc/httpd/conf/httpd.conf&amp;quot; do
+    cookbook &amp;quot;apache&amp;quot; # apache/templatesディレクトリから検索する
+    source &amp;quot;httpd.conf.erb&amp;quot;
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;以上です&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>半歩進むChef-Solo - Cookbookの共通化（library）</title>
+      <link>https://blog.monochromegane.com/blog/2013/05/06/next-step-chef-solo-library/</link>
+      <pubDate>Mon, 06 May 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2013/05/06/next-step-chef-solo-library/</guid>
+      <description>
+
+&lt;h1 id=&#34;cookbookの共通化-library&#34;&gt;Cookbookの共通化（library）&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2013/05/05/next-step-chef-solo-recipe-and-definition/&#34;&gt;前回エントリ&lt;/a&gt;ではrecipeとdefinitionを用いたCookbookの共通化の手順を紹介しました。
+今回はChefのもうひとつの共通化の仕組みである&lt;strong&gt;library&lt;/strong&gt;を紹介します。&lt;/p&gt;
+
+&lt;hr/&gt;
+
+&lt;h1 id=&#34;libraryって&#34;&gt;libraryって&lt;/h1&gt;
+
+&lt;p&gt;libraryはRubyコードを用いて、Chefに新しいクラスやメソッドを追加することができる仕組みです。&lt;/p&gt;
+
+&lt;p&gt;libraryはクックブック内のlibraries/library_name.rbに定義することで自動で読み込まれ、recipes, attributes, file, definitions, providers, definitionsで利用することができます。&lt;/p&gt;
+
+&lt;p&gt;libraryの用途は以下の様なものがあります。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ファイルに格納されている属性値へのアクセス&lt;/li&gt;
+&lt;li&gt;ループのようなプログラムテクニックの利用&lt;/li&gt;
+&lt;li&gt;Chefのレシピから直接呼び出せるような独自名前空間の作成（Chef::Recipeの名前空間をきれいな状態に保つ）&lt;/li&gt;
+&lt;li&gt;データベースへの接続&lt;/li&gt;
+&lt;li&gt;LDAPプロバイダとの接続&lt;/li&gt;
+&lt;li&gt;その他、Rubyでできることはなんでも&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr/&gt;
+
+&lt;h1 id=&#34;libraryを使う&#34;&gt;libraryを使う&lt;/h1&gt;
+
+&lt;h2 id=&#34;基本&#34;&gt;基本&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-libraryを定義する&#34;&gt;1. libraryを定義する&lt;/h3&gt;
+
+&lt;p&gt;一番かんたんな利用法は、Chef::Recipeクラスにメソッドを追加する方法です。
+例としてChefのキャッシュディレクトリを取得するメソッドを定義してみます。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;libraries/cache.rb&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;def cache_path
+  Chef::Config[:file_cache_path]
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;マニュアルではChef::Recipeクラスに明示的に定義するようになっていますが、上記の記法でもChef::Recipeクラスに定義されるようです。&lt;/p&gt;
+
+&lt;h3 id=&#34;2-libraryを使う&#34;&gt;2. libraryを使う&lt;/h3&gt;
+
+&lt;p&gt;レシピ内などで呼び出すことができます。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;recipes/default.rb&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;remote_file &amp;quot;#{cache_path}/sample.tar.gz&amp;quot; do
+  # 省略
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;名前空間&#34;&gt;名前空間&lt;/h2&gt;
+
+&lt;p&gt;libraryが大きくなるようであれば、名前空間の分割を考える必要があります。
+以下のようにChef::Recipe::XXXのように名前空間を分けて定義するか、後述のmodule化を検討してください。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;libraries/cache.rb&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;class Chef::Recipe::Cache
+  def self.path
+    Chef::Config[:file_cache_path]
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;recipes/default.rb&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;remote_file &amp;quot;#{Cache.path}/sample.tar.gz&amp;quot; do
+  # 省略
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;module構成&#34;&gt;module構成&lt;/h2&gt;
+
+&lt;p&gt;名前空間の分割にはmoduleを利用することもできます。
+opscodeでの利用例はmodule構成にして、helperとして定義する例が多いようです。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;libraries/helper.rb&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;module Helper
+  def cache_path
+    Chef::Config[:file_cache_path]
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;recipes/default.rb&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;# moduleのinclude
+::Chef::Recipe.send(:include, Helpers) 
+# メソッドを利用する
+remote_file &amp;quot;#{cache_path}/sample.tar.gz&amp;quot; do
+  # 省略
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;attirubuteへのアクセス&#34;&gt;attirubuteへのアクセス&lt;/h2&gt;
+
+&lt;p&gt;マニュアルにはChef::Recipeクラスの@node変数経由で取得する記述になっていますが、通常通り&lt;code&gt;node.attr&lt;/code&gt;もしくは&lt;code&gt;node[attr]&lt;/code&gt;の取得方法で取得することができます。&lt;/p&gt;
+
+&lt;h2 id=&#34;resourceの利用&#34;&gt;resourceの利用&lt;/h2&gt;
+
+&lt;p&gt;library内でもresource類を使うことができます。&lt;/p&gt;
+
+&lt;hr/&gt;
+
+&lt;p&gt;前回のrecipe, definitionに続き、共通化という観点でlibraryを紹介しました。&lt;/p&gt;
+
+&lt;p&gt;次回はdefinition利用時のtipsを紹介する予定です。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>半歩進むChef-Solo - Cookbookの共通化（recipeとdefinition）</title>
+      <link>https://blog.monochromegane.com/blog/2013/05/05/next-step-chef-solo-recipe-and-definition/</link>
+      <pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2013/05/05/next-step-chef-solo-recipe-and-definition/</guid>
+      <description>
+
+&lt;h1 id=&#34;半歩進むchef-solo&#34;&gt;半歩進むChef-Solo&lt;/h1&gt;
+
+&lt;p&gt;最近、Vagrant + Chef-Soloによるローカル開発環境Boxイメージ構築自動化に取り組んでいます。
+Cookbookをつくるうえでのノウハウがたまってきたので、まとめの意味も込めて「半歩進むChef-Solo」シリーズでエントリ書いていこうと思います。&lt;/p&gt;
+
+&lt;p&gt;今日はChefで行う「共通化」についてです。&lt;/p&gt;
+
+&lt;hr/&gt;
+
+&lt;h1 id=&#34;cookbookの共通化-recipeとdefinition&#34;&gt;Cookbookの共通化（recipeとdefinition）&lt;/h1&gt;
+
+&lt;p&gt;Vagrant環境でChef-Soloによる構築自動化を行なっていると、複数の環境で似たような処理を行なっている箇所が出てくると思います。
+例えば、同じResouceの組み合わせた処理が何箇所も出てきたり、特定のサーバソフトウェアに関連するセットアップをいろんなRecipeの中でやっていたり。&lt;/p&gt;
+
+&lt;p&gt;Chefにはこれらの処理をまとめるために、definitionとrecipeという仕組みがあります。&lt;/p&gt;
+
+&lt;h2 id=&#34;definitionとrecipe&#34;&gt;definitionとrecipe&lt;/h2&gt;
+
+&lt;p&gt;definitionはリソースを組み合わせた独自のリソースを定義できる仕組みです。
+同じ処理を何箇所も定義している場合、definitionによる共通化が役立ちます。&lt;/p&gt;
+
+&lt;p&gt;recipeはChefに実行させる内容を定義する本体です。
+レシピは、外部のレシピからその単位で呼び出すことができるため、大きな範囲で処理を共通化するのに役立ちます。&lt;/p&gt;
+
+&lt;hr/&gt;
+
+&lt;h1 id=&#34;definitionによる共通化&#34;&gt;definitionによる共通化&lt;/h1&gt;
+
+&lt;h2 id=&#34;definitionを使う&#34;&gt;definitionを使う&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-definitionを定義する&#34;&gt;1. definitionを定義する&lt;/h3&gt;
+
+&lt;p&gt;apacheのインストール、初期セットアップを行うdefinitionを定義します。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;cookbooks/apache/definitions/apache_setup.rb&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;define :apache_setup do
+  # インストール
+  yum_package &amp;quot;httpd&amp;quot; do
+    action :install
+  end
+  # 初期セットアップ
+  template &amp;quot;/etc/httpd/conf/httpd.conf&amp;quot; do
+    source &amp;quot;httpd.conf.erb&amp;quot;
+  end
+  # 自動起動
+  service &amp;quot;httpd&amp;quot; do
+    action [:enable]
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;2-definitionを呼び出す-クックブック内&#34;&gt;2. definitionを呼び出す（クックブック内）&lt;/h3&gt;
+
+&lt;p&gt;定義したdefinitionをレシピから呼び出します。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;cookbooks/apache/recipes/default.rb&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;apache_setup # definitionで定義した独自リソースを呼び出す
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;3-definitionを呼び出す-クックブック外&#34;&gt;3. definitionを呼び出す（クックブック外）&lt;/h3&gt;
+
+&lt;p&gt;definitionはクックブック外からも呼び出すことができます。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;cookbooks/main/recipes/default.rb&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;apache_setup # apacheクックブックでで定義した独自リソースを呼び出す
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;パラメタによる汎用的なdefinition&#34;&gt;パラメタによる汎用的なdefinition&lt;/h2&gt;
+
+&lt;p&gt;definitionは以下のようにパラメタを渡すことができます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;sample_definition &amp;quot;arg1&amp;quot; do
+  arg2 &amp;quot;arg2&amp;quot;
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;definition内ではparamsという名前のハッシュで扱うことができます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;define :sample_definition, :arg2 =&amp;gt; &amp;quot;default&amp;quot;, :arg3 =&amp;gt; &amp;quot;default&amp;quot; do
+  params[:name] #=&amp;gt; &amp;quot;arg1&amp;quot;
+  params[:arg2]   #=&amp;gt; &amp;quot;arg2&amp;quot;
+  params[:arg3]   #=&amp;gt; &amp;quot;default&amp;quot;  
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;環境によって変化する箇所をパラメタ化しておくことで汎用的なdefinitionとすることができます。&lt;/p&gt;
+
+&lt;p&gt;Apacheの設定を行うdefinitionの場合、サーバ名、ドキュメントルートなどがパラメタ化の対象となるでしょう。&lt;/p&gt;
+
+&lt;hr/&gt;
+
+&lt;h1 id=&#34;recipeによる共通化&#34;&gt;recipeによる共通化&lt;/h1&gt;
+
+&lt;h2 id=&#34;recipeを使う&#34;&gt;recipeを使う&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-recipeを定義する&#34;&gt;1. recipeを定義する&lt;/h3&gt;
+
+&lt;p&gt;apacheのインストール、初期セットアップを行うrecipeを定義します。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;cookbooks/apache/recipes/setup.rb&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;# インストール
+yum_package &amp;quot;httpd&amp;quot; do
+  action :install
+end
+# 初期セットアップ
+template &amp;quot;/etc/httpd/conf/httpd.conf&amp;quot; do
+  source &amp;quot;httpd.conf.erb&amp;quot;
+end
+# 自動起動
+service &amp;quot;httpd&amp;quot; do
+  action [:enable]
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;2-recipeを呼び出す-レシピ単位での呼び出し&#34;&gt;2. recipeを呼び出す（レシピ単位での呼び出し）&lt;/h3&gt;
+
+&lt;p&gt;Vagrantfileなどのレシピ呼び出し機構からレシピ単位で呼び出す&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;Vagrantfile&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;Vagrant::Config.run do |config|
+  config.vm.provision :chef_solo do |chef|
+    chef.cookbooks_path = &amp;quot;cookbooks&amp;quot;
+    chef.add_recipe &amp;quot;apache::setup&amp;quot; # apacheクックブックのsetupレシピを呼ぶ
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;この場合は、レシピの呼び出しをmainクックブックではなく、Vagrantが行うことになります。
+単純なレシピの組み合わせでよい場合などはこの形式でもよいでしょう。&lt;/p&gt;
+
+&lt;h3 id=&#34;3-recipeを呼び出す-他のレシピからの呼び出し&#34;&gt;3. recipeを呼び出す（他のレシピからの呼び出し）&lt;/h3&gt;
+
+&lt;p&gt;他のレシピ（ここではmainクックブックのレシピ）から&lt;code&gt;include_recipe&lt;/code&gt;リソースを使って呼び出す&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;cookbooks/main/recipes/default.rb&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;# apacheクックブックのsetupレシピを呼ぶ 
+include_recipe &amp;quot;apache::setup&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;パラメタによる汎用的なrecipe&#34;&gt;パラメタによる汎用的なrecipe&lt;/h2&gt;
+
+&lt;p&gt;レシピに対して直接パラメタを渡すことはできません。
+しかし、attributeという仕組みを用いることでレシピ内で環境ごとの変数を定義することができます。&lt;/p&gt;
+
+&lt;h3 id=&#34;attributeを利用する&#34;&gt;attributeを利用する&lt;/h3&gt;
+
+&lt;p&gt;attributeに定義した変数はレシピ内で&lt;code&gt;node[:key]&lt;/code&gt;の形式で呼ぶことができます。
+Chef-Soloでは呼び出し時のjsonパラメタを渡すことができます。
+Vagrantの場合、Vagrantfileで上記jsonパラメタを定義します。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;cookbooks/apache/attributes/default.rb&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;# apacheクックブックで定義するデフォルトの属性
+default[:apache][:attr1] = &amp;quot;default&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;Vagrantfile&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;Vagrant::Config.run do |config|
+  config.vm.provision :chef_solo do |chef|
+    chef.cookbooks_path = &amp;quot;cookbooks&amp;quot;
+    chef.add_recipe &amp;quot;apache::sample_attribute&amp;quot;
+    chef.json = {:apache =&amp;gt; {:attr1 =&amp;gt; &amp;quot;attr1&amp;quot;}} # この環境での属性値を指定
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;cookbooks/apache/recipes/sample_attribute.rb&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;node.apache.attr1 #=&amp;gt; &amp;quot;attr1&amp;quot; jsonパラメタを指定しない場合は&amp;quot;default&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;参考&#34;&gt;参考&lt;/h3&gt;
+
+&lt;p&gt;ちなみにVagrant + Chef-SoloではVagrantfileに定義された内容はChef-Solo用のjson形式に変換されます。
+変換後のファイルは仮想マシン上に配置されます。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;/tmp/vagrant-chef-1/dna.json&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
+  &amp;quot;instance_role&amp;quot;: &amp;quot;vagrant&amp;quot;,
+  &amp;quot;run_list&amp;quot;: [
+    &amp;quot;recipe[apache::sample_attribute]&amp;quot;
+  ],
+  &amp;quot;apache&amp;quot;: {
+    &amp;quot;attr1&amp;quot;: &amp;quot;attr1&amp;quot;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr/&gt;
+
+&lt;h1 id=&#34;definitionとrecipeの使い分け&#34;&gt;definitionとrecipeの使い分け&lt;/h1&gt;
+
+&lt;p&gt;クックブック内での共通化はもちろんdefinitionを使います。
+クックブックを超えた共通化ではdefinitionとrecipeの両方を用いることができます。&lt;/p&gt;
+
+&lt;p&gt;その場合の使い分けは、&lt;strong&gt;パラメタの有無&lt;/strong&gt;によると考えています。&lt;/p&gt;
+
+&lt;p&gt;前述のようにrecipeではパラメタを渡すためにattributeの仕組みを用いる必要がありますが、これは変数名や、その変数が内部で何に使われているかという内部構造を意識した使い方をする必要があります。
+逆にdefinitionは独自リソースとして、呼び出しパラメタを定義することができるため、公開インターフェースとして適しています。&lt;/p&gt;
+
+&lt;p&gt;自分でクックブックを作成するときは、&lt;strong&gt;パラメタが必要ない処理はrecipeとして定義し、パラメタが必要となる処理はdefinitionを用いる&lt;/strong&gt;ことにしています。&lt;/p&gt;
+
+&lt;hr/&gt;
+
+&lt;p&gt;長くなってきたので今回はこの辺で。
+次回はdefinitionを使う際のtipsなどを書いていこうと思います。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tmux on THINKING MEGANE</title>
+    <link>https://blog.monochromegane.com/tags/tmux/</link>
+    <description>Recent content in Tmux on THINKING MEGANE</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Thu, 12 Dec 2013 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/tags/tmux/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>tmuxのプレフィックスに疲れたらbind -nオプションを使おう</title>
+      <link>https://blog.monochromegane.com/blog/2013/12/12/tmux-no-prefix/</link>
+      <pubDate>Thu, 12 Dec 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2013/12/12/tmux-no-prefix/</guid>
+      <description>
+
+&lt;p&gt;ターミナルマルチプレクサ&lt;a href=&#34;http://tmux.sourceforge.net/&#34;&gt;tmux&lt;/a&gt;はとても便利ですが、操作の際にプレフィックスが必要で、ペインの切り替えなど頻繁に行うのはちょっと面倒です。&lt;/p&gt;
+
+&lt;p&gt;実はtmuxには、プレフィックスなしで操作できるステキすぎるオプションがあるので紹介しておきます。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;プレフィックス不要ってすばらしい&#34;&gt;プレフィックス不要ってすばらしい&lt;/h1&gt;
+
+&lt;h2 id=&#34;bind-key-の-n-オプション&#34;&gt;bind-key の -n オプション&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;bind-key&lt;/code&gt;には&lt;code&gt;-n&lt;/code&gt;オプションがあり、これをつけることでプレフィックスを使わなくてもよくなります。&lt;/p&gt;
+
+&lt;p&gt;これで単独のキーにコマンドを割り当てることができます。&lt;/p&gt;
+
+&lt;h2 id=&#34;設定&#34;&gt;設定&lt;/h2&gt;
+
+&lt;p&gt;通常のキーバインド設定に&lt;code&gt;-n&lt;/code&gt;をつけるだけです。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;tmux.conf&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bind -n キー コマンド
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;プレフィックス不要なペイン移動&#34;&gt;プレフィックス不要なペイン移動&lt;/h2&gt;
+
+&lt;p&gt;自分はペインの移動を最もよく使うので以下のような設定をしています&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;# Shift + 上下左右でペインを移動できるようにする。
+bind -n S-left select-pane -L
+bind -n S-down select-pane -D
+bind -n S-up select-pane -U
+bind -n S-right select-pane -R
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;これでもプレフィックスが不要になるので充分便利だったのですが、矢印キーはホームポジションから遠いので最近はこんな設定を追加して、&lt;code&gt;Ctrl+o&lt;/code&gt;でペインを順番に移動するようにしています。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;# ペインの移動(ローテート)
+bind -n C-o select-pane -t :.+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ペインの数が少ない場合はこちらのほうが結果的に速く移動できる気がします。&lt;/p&gt;
+
+&lt;h1 id=&#34;tipsなど&#34;&gt;Tipsなど&lt;/h1&gt;
+
+&lt;h2 id=&#34;マニュアル&#34;&gt;マニュアル&lt;/h2&gt;
+
+&lt;p&gt;このあたりを参考にまだまだ応用できそう。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://bytebucket.org/ns9tks/tmux-ja/wiki/tmux-ja.html#id5&#34;&gt;コマンド&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://bytebucket.org/ns9tks/tmux-ja/wiki/tmux-ja.html#id11&#34;&gt;キーバインド&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;設定の確認&#34;&gt;設定の確認&lt;/h2&gt;
+
+&lt;p&gt;以下の設定を入れておけば、プレフィックス + r で設定が即時反映されます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;# 設定リロード
+bind r source-file ~/.tmux.conf
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;キーバインドはコンソールから&lt;code&gt;list-keys&lt;/code&gt;で確認できます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ tmux list-keys
+
+bind-key -n     C-o select-pane -t :.+
+中略
+bind-key -n    S-Up select-pane -U
+bind-key -n  S-Down select-pane -D
+bind-key -n  S-Left select-pane -L
+bind-key -n S-Right select-pane -R
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;参考&#34;&gt;参考&lt;/h2&gt;
+
+&lt;p&gt;自分のtmux.confも公開してます。コメントもなるべく入れているので分かりやすいと思うので参考にどうぞ。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/monochromegane/dotfiles/blob/master/tmux.conf&#34;&gt;monochromegane/dotfiles - tmux.conf&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;プレフィックス一回の違いですが、エンジニアであれば日に何十、何百と打っていることになるキーが省略できるというのは、かなり気持ち良いものです。&lt;/p&gt;
+
+&lt;p&gt;プレフィックスがないので想定しないところでキーバインドが被ったりしますが、よく使う操作だけでも&lt;code&gt;-n&lt;/code&gt;オプションをつけてみる価値はあると思います。どうぞお試しあれ。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

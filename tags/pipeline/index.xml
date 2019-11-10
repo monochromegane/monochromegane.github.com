@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Pipeline on THINKING MEGANE</title>
+    <link>https://blog.monochromegane.com/tags/pipeline/</link>
+    <description>Recent content in Pipeline on THINKING MEGANE</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Sat, 07 Sep 2013 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/tags/pipeline/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Rails4でGemの資産がAssets Precomplieに含まれないときは</title>
+      <link>https://blog.monochromegane.com/blog/2013/09/07/rails4-only-compile-under-app-assets/</link>
+      <pubDate>Sat, 07 Sep 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2013/09/07/rails4-only-compile-under-app-assets/</guid>
+      <description>
+
+&lt;p&gt;Rails4プロジェクトでGem内の画像ファイルやフォントファイルといった資産がprecompile対象に含まれない原因と対策をまとめておきます。&lt;/p&gt;
+
+&lt;p&gt;原因は、assets precompileのデフォルトの対象変更です。対策としては以下の方法をとる必要があります。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;assets precompile に含まれるよう資産を移動する&lt;/li&gt;
+&lt;li&gt;assets precompile に含めたい資産を明示する&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;原因&#34;&gt;原因&lt;/h1&gt;
+
+&lt;h2 id=&#34;precompile対象ディレクトリの変更&#34;&gt;precompile対象ディレクトリの変更&lt;/h2&gt;
+
+&lt;p&gt;Rails4では、パスにapp/assetsを含む資産のみをデフォルトのprecompile対象とするように変更されました。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/rails/rails/pull/7968&#34;&gt;rails/rails - Only compile non-js/css under app/assets by default&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;precompileのパスに置かれているREADME.mdのような&amp;rdquo;loose&amp;rdquo;なファイルを対象から外すこと、&lt;code&gt;app/&lt;/code&gt;以下をオートロードするRailsの方針と合わせることなどが理由として挙げられています。(※1)&lt;/p&gt;
+
+&lt;h2 id=&#34;対象ディレクトリはどうなったか&#34;&gt;対象ディレクトリはどうなったか&lt;/h2&gt;
+
+&lt;p&gt;このプルリクでは以下のような修正が取り込まれています。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;railties/lib/rails/application/configuration.rb&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;@assets.precompile = [ Proc.new { |path, fn| fn =~ /app\/assets/ &amp;amp;&amp;amp; !%w(.js .css).include?(File.extname(path)) },
+                     /(?:\/|\\|\A)application\.(css|js)$/ ]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;これにより、&lt;code&gt;Rails.application.config.assets.paths&lt;/code&gt;に定義されているディレクトリのうち、&lt;code&gt;app/assets&lt;/code&gt;というパスを含む、js, css 以外の資産とapplication.(js|css)が対象となり、&lt;code&gt;lib/assets&lt;/code&gt;や&lt;code&gt;vendor/assets&lt;/code&gt;にある画像やフォントといった資産はprecompileの対象外となりました。&lt;/p&gt;
+
+&lt;p&gt;もし、プロジェクトで利用しているGemが上記のディレクトリに js, css 以外のファイル（imageなど）をおいていた場合、本番配布時に頭を抱えることになります(※2)。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;対策&#34;&gt;対策&lt;/h1&gt;
+
+&lt;h2 id=&#34;assets-precompile-に含まれるよう資産を移動する&#34;&gt;assets precompile に含まれるよう資産を移動する&lt;/h2&gt;
+
+&lt;p&gt;これがベストな解決案だと思います。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;lib/assets&lt;/code&gt;や&lt;code&gt;vendor/assets&lt;/code&gt;を&lt;code&gt;app/assets&lt;/code&gt;に移動することで、Railsは配下の資産をprecompile対象として認識してくれます。&lt;/p&gt;
+
+&lt;p&gt;手元で試したところ、Rails3でも問題なく動作しました。&lt;/p&gt;
+
+&lt;p&gt;** 使っているGemが対応していなかったので こんな感じでPullRequest を出しました **&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/pkurek/flatui-rails/pull/27&#34;&gt;pkurek/flatui-rails - Move assets to app/assets for Rails 4&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;assets-precompile-に含めたい資産を明示する&#34;&gt;assets precompile に含めたい資産を明示する&lt;/h2&gt;
+
+&lt;p&gt;Gemを触りたくない場合の対策です。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;config/application.rb&lt;/code&gt;に以下のような記述を追加します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;読み込ませたい資産にあわせて配列内の拡張子を変更してください。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;code&gt;Rails.application.config.assets.paths&lt;/code&gt;に含まれているのにPrecomplieされない点で大いにハマりましたが、GithubのPullRequestやIssueで経緯や理由を把握できました。&lt;/p&gt;
+
+&lt;p&gt;Githubほんと便利。&lt;/p&gt;
+
+&lt;p&gt;日本語の情報がまだ少ないのでまとめてみました。お役に立てばうれしいです。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;※1&lt;/code&gt;. Issue内容を見るとこの変更に困惑している意見も一部ありますが、DHHは、&lt;code&gt;This makes sense to me :+1:&lt;/code&gt;な感じ&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;※2&lt;/code&gt;. 抱えました。&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

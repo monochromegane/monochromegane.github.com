@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width">
+  <meta name="author" content="">
+  
+    <title>ComposerとPackagistでPHPライブラリを開発、テスト、公開する(2/2) &middot; THINKING MEGANE</title>
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@monochromegane">
+  <meta property="og:description" content="今回は、前回ComposerとPackagistでPHPライブラリを開発、テスト、公開する(1&frasl;2)で作成したライブラリをPackagistに公開します。
+Packagistって PackagistはComposerのメインリポジトリとなるサイトです。
+ここで公開しておくことでcompser.jsonにリポジトリの指定をしなくてもライブラリを取得できるようになります。
+ライブラリのGit管理 Packagistでの公開する場合は、ライブラリをGit管理しましょう。
+.gitignoreの準備 以下の内容で.gitignoreを作成しておきます。
+.gitignore
+vendor/ composer.lock composer.phar  資産のコミットとタグ付け ライブラリが公開できるようになったら、資産をコミットします。 このとき、タグも一緒につけてください。このタグがバージョン番号としてPackagistで使われます。
+$ git tag 1.0.0  タグ名(バージョン番号)はx.y.zの形式を使うようです。
+Githubへの公開 タグ付けまで終わったら、Githubにリポジトリを作成して、プッシュします。 このとき、通常のプッシュに加えてタグのプッシュも行います。
+ちなみに後述のServiceHookの仕組みを使う場合、タグがプッシュされたタイミングでPackagist側が更新されます。
+$ git push origin master $ git push origin タグ名  Packagistへの公開 いよいよ、Packagistに公開です。
+composer.jsonをチェック 公開情報に問題がないか以下のコマンドで検証します。
+$ php composer.phar validate ./composer.json is valid  上記のような結果が出ればOK。
+アカウント取得 まずはPackagistにアクセスしてアカウント取得を行なってください。 特に難しいことはないはずです。
+ライブラリの登録 ログイン後、画面上部にSubmit Packageボタンがあるので押下します。
+画面下部のRepository URL欄に先ほどGithubで公開したリポジトリのURLを入力します。 ライブラリ名が重複してなければSubmitボタンが出るので押下します。
+パッケージの公開が完了です！
+自動更新を設定する 上記の手順までで公開はできていますが、Github側に下記手順を行なっておくことで、ライブラリの更新が自動的にPackagistに反映されるようになります。
+ServiceHookの設定 公開したリポジトリでSettingsを押下します。
+再度メニューからServiceHookを選択、一覧からPackagistを選びます。
+必要な情報を入力します
+ User: Packagistのユーザ名 Token: PackagistのYour API Tokenで取得 Domain: http://packagist.">
+  <meta property="og:title" content="ComposerとPackagistでPHPライブラリを開発、テスト、公開する(2/2)">
+  <meta property="og:url" content="https://blog.monochromegane.com/blog/2013/06/02/development-php-composer-library-at-packagist-2/">
+  <meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+  
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Source+Code+Pro' type='text/css'>
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Montserrat' type='text/css'>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css">
+  <link rel="stylesheet" href="/css/text.css">
+  <link rel="stylesheet" href="/css/color.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="/images/apple-touch-icon-57-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="/images/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
+  <link rel="canonical" href="https://blog.monochromegane.com/blog/2013/06/02/development-php-composer-library-at-packagist-2/">
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="THINKING MEGANE" />
+  
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async>
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: {
+               Macros: {
+                        bm: ["\\boldsymbol{#1}", 1],
+                        argmax: ["\\mathop{\\rm arg\\,max}\\limits"],
+                        argmin: ["\\mathop{\\rm arg\\,min}\\limits"]},
+               extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                   displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+  </script>
+</head>
+
+  <body>
+    <div class="header">
+  <header>
+    <h1 class="logo"><a href="https://blog.monochromegane.com">THINKING MEGANE</a></h1>
+    <nav>
+      <ul class="menu">
+        <li><a href="/self-introduction/">Home</a></li>
+        <li><a href="/post/">Archives</a></li>
+        <li><a href="/diary/">Diary</a></li>
+        <li><a href="http://thinking-megane.blogspot.jp/">Old Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+</div>
+
+    <div class="container">
+      <article>
+  <div class="post">
+    <header>
+      <h1><a href="https://blog.monochromegane.com/blog/2013/06/02/development-php-composer-library-at-packagist-2/">ComposerとPackagistでPHPライブラリを開発、テスト、公開する(2/2)</a></h1>
+      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2013-06-02</div></time>
+    </header>
+    <div class="post-inner">
+      
+
+<p>今回は、前回<a href="/blog/2013/06/02/development-php-composer-library-at-packagist-1/">ComposerとPackagistでPHPライブラリを開発、テスト、公開する(<sup>1</sup>&frasl;<sub>2</sub>)</a>で作成したライブラリをPackagistに公開します。</p>
+
+<h1 id="packagistって">Packagistって</h1>
+
+<p><a href="https://packagist.org/">Packagist</a>はComposerのメインリポジトリとなるサイトです。</p>
+
+<p><img src="/images/2013/06/01_packagist_submit_package.png" alt="Packagist" /></p>
+
+<p>ここで公開しておくことでcompser.jsonにリポジトリの指定をしなくてもライブラリを取得できるようになります。</p>
+
+<hr />
+
+<h1 id="ライブラリのgit管理">ライブラリのGit管理</h1>
+
+<p>Packagistでの公開する場合は、ライブラリをGit管理しましょう。</p>
+
+<h2 id="gitignoreの準備">.gitignoreの準備</h2>
+
+<p>以下の内容で<code>.gitignore</code>を作成しておきます。</p>
+
+<p><code>.gitignore</code></p>
+
+<pre><code>vendor/
+composer.lock
+composer.phar
+</code></pre>
+
+<h2 id="資産のコミットとタグ付け">資産のコミットとタグ付け</h2>
+
+<p>ライブラリが公開できるようになったら、資産をコミットします。
+このとき、タグも一緒につけてください。このタグがバージョン番号としてPackagistで使われます。</p>
+
+<pre><code class="language-sh">$ git tag 1.0.0
+</code></pre>
+
+<p>タグ名(バージョン番号)はx.y.zの形式を使うようです。</p>
+
+<h2 id="githubへの公開">Githubへの公開</h2>
+
+<p>タグ付けまで終わったら、Githubにリポジトリを作成して、プッシュします。
+このとき、通常のプッシュに加えてタグのプッシュも行います。</p>
+
+<p>ちなみに後述のServiceHookの仕組みを使う場合、タグがプッシュされたタイミングでPackagist側が更新されます。</p>
+
+<pre><code class="language-sh">$ git push origin master
+$ git push origin タグ名
+</code></pre>
+
+<hr />
+
+<h1 id="packagistへの公開">Packagistへの公開</h1>
+
+<p>いよいよ、Packagistに公開です。</p>
+
+<h2 id="composer-jsonをチェック">composer.jsonをチェック</h2>
+
+<p>公開情報に問題がないか以下のコマンドで検証します。</p>
+
+<pre><code class="language-sh">$ php composer.phar validate
+./composer.json is valid
+</code></pre>
+
+<p>上記のような結果が出ればOK。</p>
+
+<h2 id="アカウント取得">アカウント取得</h2>
+
+<p>まずは<a href="https://packagist.org/">Packagist</a>にアクセスしてアカウント取得を行なってください。
+特に難しいことはないはずです。</p>
+
+<h2 id="ライブラリの登録">ライブラリの登録</h2>
+
+<p>ログイン後、画面上部に<code>Submit Package</code>ボタンがあるので押下します。</p>
+
+<p><img src="/images/2013/06/01_packagist_submit_package.png" alt="Submit Package" /></p>
+
+<p>画面下部の<code>Repository URL</code>欄に先ほどGithubで公開したリポジトリのURLを入力します。
+ライブラリ名が重複してなければSubmitボタンが出るので押下します。</p>
+
+<p><img src="/images/2013/06/02_packagist_submit_package.png" alt="Check Package" /></p>
+
+<p>パッケージの公開が完了です！</p>
+
+<p><img src="/images/2013/06/03_packagist_not_autoupdate.png" alt="Package Not Auto-update" /></p>
+
+<hr />
+
+<h1 id="自動更新を設定する">自動更新を設定する</h1>
+
+<p>上記の手順までで公開はできていますが、Github側に下記手順を行なっておくことで、ライブラリの更新が自動的にPackagistに反映されるようになります。</p>
+
+<h2 id="servicehookの設定">ServiceHookの設定</h2>
+
+<p>公開したリポジトリで<code>Settings</code>を押下します。</p>
+
+<p><img src="/images/2013/06/04_github_repository_settings.png" alt="Settings" /></p>
+
+<p>再度メニューから<code>ServiceHook</code>を選択、一覧から<code>Packagist</code>を選びます。</p>
+
+<p><img src="/images/2013/06/05_github_service_hook.png" alt="ServiceHook" /></p>
+
+<p>必要な情報を入力します</p>
+
+<ul>
+<li>User: Packagistのユーザ名</li>
+<li>Token: Packagistの<a href="https://packagist.org/profile/">Your API Token</a>で取得</li>
+<li>Domain: <code>http://packagist.org</code>で問題無さそう</li>
+<li>Active: チェックをいれる</li>
+</ul>
+
+<p><img src="/images/2013/06/06_github_service_hook.png" alt="Update Settings" /></p>
+
+<h2 id="接続テスト">接続テスト</h2>
+
+<p>設定が完了したら、もう一度PackagistのServiceHook設定ページを表示します。</p>
+
+<p><code>Test Hook</code>ボタンが表示されているので押下します。</p>
+
+<p><img src="/images/2013/06/07_github_test_hook.png" alt="Test Hook" /></p>
+
+<p>Packagist側で<code>Not Auto-update</code>表記が消えていれば接続テスト成功です。</p>
+
+<hr />
+
+<h1 id="公開したライブラリを使う">公開したライブラリを使う</h1>
+
+<p>公開したライブラリを使うには、通常、プロジェクトのcomposer.jsonに以下の記述後、<code>php compser.phar install</code>を行いますが、</p>
+
+<pre><code class="language-json">{
+  &quot;require&quot;: {
+    &quot;monochromegane/query-builder&quot;: &quot;dev-master&quot;
+  }
+}
+</code></pre>
+
+<p><code>php composer.phar require monochromegane/query-builder:dev-master</code>コマンドを使うことで設定ファイルへの追記、インストールを一度にやってくれます。</p>
+
+<hr />
+
+<p>ちょっと長かったですが、慣れてしまえば気にならない手順だと思います。</p>
+
+<p>ComposerとPackagistを使うことでPHPのライブラリ管理がとてもやりやすくなるので、どんどん使っていきましょうー。</p>
+
+<p>PHP: The Right Way！</p>
+
+    </div>
+    <footer class="tag">
+      <i class="fa fa-tags tag-icon"></i>
+      <ul>
+      
+        <li><a class="tag-link" href="/tags/php">php</a></li>
+      
+        <li><a class="tag-link" href="/tags/composer">composer</a></li>
+      
+        <li><a class="tag-link" href="/tags/packagist">packagist</a></li>
+      
+      </ul>
+      <div class="clear"></div>
+    </footer>
+  </div>
+</article>
+
+      <div class="social-btn">
+  <div>
+    <a href="http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/06/02/development-php-composer-library-at-packagist-2/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="en" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+  <div>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-via="monochromegane">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  </div>
+</div>
+
+    </div>
+    <footer class="footer">
+  <div class="author"></div>
+  <p class="author-name"><a href="https://twitter.com/monochromegane" target="_blank">@monochromegane</a></p>
+  
+    <p>monochromegane (モノクロめがね) と申します。</p>
+  
+    <p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+  
+  <ul class="social">
+    <li><a href="https://twitter.com/monochromegane" target="_blank"><i class="fa fa-twitter"></i></a></li>
+    <li><a href="https://github.com/monochromegane" target="_blank"><i class="fa fa-github"></i></a></li>
+    <li><a href="/index.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
+  </ul>
+  <p class="copyright">
+    <small>&copy;  <span class="">Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>, Designed by <a href="https://twitter.com/keita_kawamoto" target="_blank">&copy;keita_kawamoto</a></span></small>
+  </p>
+</footer>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+    
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-38374674-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+  </body>
+</html>

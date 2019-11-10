@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width">
+  <meta name="author" content="">
+  
+    <title>GopherCon 2019で初の海外カンファレンス登壇をしてきました &middot; THINKING MEGANE</title>
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@monochromegane">
+  <meta property="og:description" content="7/24から27にかけてアメリカ、サンディエゴで開催されたGopherCon 2019で人生初となる海外カンファレンスに登壇してきました。
+GopherConはGo関連で最大級の国際カンファレンスです。 6年目となる今年は世界中から1,800名のGopherが参加し、200名以上の応募の中から選ばれた36名がスピーカーとして登壇しました。 今回のGopherConではPre-Conference Workshopと呼ばれるカンファレンス前日に終日行われるワークショップと、カンファレンス期間中に行われる25分のキーノートセッション、そして45分のチュートリアルセッションがありました。 その中で、僕は「Optimization for Number of goroutines Using Feedback Control」というタイトルで45分のチュートリアルセッションを務めました。
+動画  スライド  スピーカーノート  GopherCon 2019: Optimization for Number of goroutines Using Feedback Control  発表内容 今回の発表は以前東京で開催されたGo Conference 2018 Autumnで発表したフィードバック制御によるGoroutine起動数の最適化を英語化したものです。 また、今回向けに実際にThe Platinum Searcherに組み込んで有効性を評価する実験結果を追加しています。
+発表資料については、45分という時間で母国語を使わずにできるだけわかりやすく伝えるため、結果的にほぼ刷新する形となりましたが、母国語の慣れに頼らずとも説明可能なわかりやすい資料になったのではないかと自分では思っています。 具体的には、まずイントロダクションとバックグラウンドの章を少し手厚くしました。 今回の手法は、フィードバック制御を用いてgoroutine数を継続的に最適に保つことを目的としています。 しかしながら、そもそもGo言語の並行処理においては、goroutineのコストの低さとランタイムがgoroutineを効果的に切り替えることから、その必要性はないのではないかと考えることができます。 そこで、リソース競合や枯渇などの影響も受けてしまう可能性があること、それらを考慮した汎用的な並行設計に対する難しさを、実際にプラチナサーチャーによるパフォーマンスチューニングの例を踏まえながら前提を合わせるようにしました。 また、手法の説明では、簡単なアプローチから出発して少しづつ課題を解決していくようにすることで、比較的複雑な箇所の説明の際に飛躍がないように気をつけました。
+発表について、普段は資料のみで臨んでもそれなりに話せると自負していますが、初の英語での登壇となるため今回は発表内容のスクリプトを用意して、伝えるべきことを全て伝えられるようにしました。 また、不慣れな言語でも自分自身が納得して説明できるように、できるだけ平易な文で説明することで、発表資料と同様に曖昧な箇所や飛躍がある点を潰すことができたと思います。
+本番の発表は、4スクリーンある300-400人規模の会場ではありましたが、とても熱心に頷いてくれる方がいたり日本から来たメンバが前に座っていたりして、幸いにも落ち着いて自分のペースで登壇することができたと思います。 発表では、あまり一本調子にならないように、文の中でも意味や文法上切れる箇所は間をおいたり、定型の言い回し（I found that など）なるべく流暢にしたり、強調したいところは少しゆっくり大きく言うなど、「今の」英語力でできる工夫をしていきました。 一方で、個別の単語の発音などはまだまだ課題意識があるので、今後、そちらも重点的に取り組んでいきたいと感じました。
+質疑の時間は登壇時間には含まれなかったのですが、終了して台を降りると同時に7人ぐらいに囲まれて質問責めに会い、発表に興味を持ってくれたことをとても嬉しく思いました。 質問としては、発表内容について理解があっているか確認するものと、実装上の質問などがあり、資料やKaburayaのコードを見ながら説明していきました。 それでも、今の英語力では、発表内容以外の部分については拙い説明になることも多々あり、これも今後改めて英語をやるモチベーションが高まりました。 また、発表後もカンファレンス期間中に何度も感想や質問をもらう機会があり、これがとても嬉しかったです。
+会場と発表の様子   .@monochromegane is giving talk about Go&#39;s concurrency mechanism and his proposal to optimize the number of goroutine.">
+  <meta property="og:title" content="GopherCon 2019で初の海外カンファレンス登壇をしてきました">
+  <meta property="og:url" content="https://blog.monochromegane.com/blog/2019/08/10/gophercon_2019/">
+  <meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+  
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Source+Code+Pro' type='text/css'>
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Montserrat' type='text/css'>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css">
+  <link rel="stylesheet" href="/css/text.css">
+  <link rel="stylesheet" href="/css/color.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="/images/apple-touch-icon-57-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="/images/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
+  <link rel="canonical" href="https://blog.monochromegane.com/blog/2019/08/10/gophercon_2019/">
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="THINKING MEGANE" />
+  
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async>
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: {
+               Macros: {
+                        bm: ["\\boldsymbol{#1}", 1],
+                        argmax: ["\\mathop{\\rm arg\\,max}\\limits"],
+                        argmin: ["\\mathop{\\rm arg\\,min}\\limits"]},
+               extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                   displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+  </script>
+</head>
+
+  <body>
+    <div class="header">
+  <header>
+    <h1 class="logo"><a href="https://blog.monochromegane.com">THINKING MEGANE</a></h1>
+    <nav>
+      <ul class="menu">
+        <li><a href="/self-introduction/">Home</a></li>
+        <li><a href="/post/">Archives</a></li>
+        <li><a href="/diary/">Diary</a></li>
+        <li><a href="http://thinking-megane.blogspot.jp/">Old Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+</div>
+
+    <div class="container">
+      <article>
+  <div class="post">
+    <header>
+      <h1><a href="https://blog.monochromegane.com/blog/2019/08/10/gophercon_2019/">GopherCon 2019で初の海外カンファレンス登壇をしてきました</a></h1>
+      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2019-08-10</div></time>
+    </header>
+    <div class="post-inner">
+      
+
+<p>7/24から27にかけてアメリカ、サンディエゴで開催された<a href="https://www.gophercon.com/home">GopherCon 2019</a>で人生初となる海外カンファレンスに登壇してきました。</p>
+
+<p>GopherConはGo関連で最大級の国際カンファレンスです。
+6年目となる今年は世界中から1,800名のGopherが参加し、200名以上の応募の中から選ばれた36名がスピーカーとして登壇しました。
+今回のGopherConではPre-Conference Workshopと呼ばれるカンファレンス前日に終日行われるワークショップと、カンファレンス期間中に行われる25分のキーノートセッション、そして45分のチュートリアルセッションがありました。
+その中で、僕は「Optimization for Number of goroutines Using Feedback Control」というタイトルで45分の<a href="https://www.gophercon.com/agenda/speakers/442434">チュートリアルセッション</a>を務めました。</p>
+
+<h1 id="動画">動画</h1>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/O_R7Nwsix1c" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<h1 id="スライド">スライド</h1>
+
+<script async class="speakerdeck-embed" data-id="aa53e4353d9b4efc9064eefba40e13b7" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
+
+<h1 id="スピーカーノート">スピーカーノート</h1>
+
+<ul>
+<li><a href="https://blog.monochromegane.com/blog/2019/07/25/gophercon_2019_kaburaya/">GopherCon 2019: Optimization for Number of goroutines Using Feedback Control</a></li>
+</ul>
+
+<h1 id="発表内容">発表内容</h1>
+
+<p>今回の発表は以前東京で開催されたGo Conference 2018 Autumnで発表した<a href="https://speakerdeck.com/monochromegane/optimization-of-goroutine-numbers-by-feedback-control">フィードバック制御によるGoroutine起動数の最適化</a>を英語化したものです。
+また、今回向けに実際に<a href="https://github.com/monochromegane/the_platinum_searcher">The Platinum Searcher</a>に組み込んで有効性を評価する実験結果を追加しています。</p>
+
+<p>発表資料については、45分という時間で母国語を使わずにできるだけわかりやすく伝えるため、結果的にほぼ刷新する形となりましたが、母国語の慣れに頼らずとも説明可能なわかりやすい資料になったのではないかと自分では思っています。
+具体的には、まずイントロダクションとバックグラウンドの章を少し手厚くしました。
+今回の手法は、フィードバック制御を用いてgoroutine数を継続的に最適に保つことを目的としています。
+しかしながら、そもそもGo言語の並行処理においては、goroutineのコストの低さとランタイムがgoroutineを効果的に切り替えることから、その必要性はないのではないかと考えることができます。
+そこで、リソース競合や枯渇などの影響も受けてしまう可能性があること、それらを考慮した汎用的な並行設計に対する難しさを、実際にプラチナサーチャーによるパフォーマンスチューニングの例を踏まえながら前提を合わせるようにしました。
+また、手法の説明では、簡単なアプローチから出発して少しづつ課題を解決していくようにすることで、比較的複雑な箇所の説明の際に飛躍がないように気をつけました。</p>
+
+<p>発表について、普段は資料のみで臨んでもそれなりに話せると自負していますが、初の英語での登壇となるため今回は発表内容のスクリプトを用意して、伝えるべきことを全て伝えられるようにしました。
+また、不慣れな言語でも自分自身が納得して説明できるように、できるだけ平易な文で説明することで、発表資料と同様に曖昧な箇所や飛躍がある点を潰すことができたと思います。</p>
+
+<p>本番の発表は、4スクリーンある300-400人規模の会場ではありましたが、とても熱心に頷いてくれる方がいたり日本から来たメンバが前に座っていたりして、幸いにも落ち着いて自分のペースで登壇することができたと思います。
+発表では、あまり一本調子にならないように、文の中でも意味や文法上切れる箇所は間をおいたり、定型の言い回し（I found that など）なるべく流暢にしたり、強調したいところは少しゆっくり大きく言うなど、「今の」英語力でできる工夫をしていきました。
+一方で、個別の単語の発音などはまだまだ課題意識があるので、今後、そちらも重点的に取り組んでいきたいと感じました。</p>
+
+<p>質疑の時間は登壇時間には含まれなかったのですが、終了して台を降りると同時に7人ぐらいに囲まれて質問責めに会い、発表に興味を持ってくれたことをとても嬉しく思いました。
+質問としては、発表内容について理解があっているか確認するものと、実装上の質問などがあり、資料やKaburayaのコードを見ながら説明していきました。
+それでも、今の英語力では、発表内容以外の部分については拙い説明になることも多々あり、これも今後改めて英語をやるモチベーションが高まりました。
+また、発表後もカンファレンス期間中に何度も感想や質問をもらう機会があり、これがとても嬉しかったです。</p>
+
+<h3 id="会場と発表の様子">会場と発表の様子</h3>
+
+<div class="parent_iframe" style="position:relative;width:75%;height:0;padding-top:75%;">
+  <iframe class="embed_iframe" src="https://s.insta360.com/p/28b6fbdd988f775d97328c5179e8061a?e=true&locale=en-us" frameborder="0" width="666" height="413" style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+</div>
+
+<p><blockquote class="twitter-tweet"><p lang="en" dir="ltr">.<a href="https://twitter.com/monochromegane?ref_src=twsrc%5Etfw">@monochromegane</a> is giving talk about Go&#39;s concurrency mechanism and his proposal to optimize the number of goroutine. <a href="https://twitter.com/hashtag/gophercon?src=hash&amp;ref_src=twsrc%5Etfw">#gophercon</a> <a href="https://t.co/LXnnx5vQ6D">pic.twitter.com/LXnnx5vQ6D</a></p>&mdash; Yoshi Yamaguchi 🇯🇵 (@ymotongpoo) <a href="https://twitter.com/ymotongpoo/status/1154500168181379072?ref_src=twsrc%5Etfw">July 25, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+
+<h3 id="発表に関する反応">発表に関する反応</h3>
+
+<p><blockquote class="twitter-tweet"><p lang="en" dir="ltr">Thanks to Yusuke Miyake for speaking to us on the Optimization for Number of goroutines Using Feedback Control! The <a href="https://twitter.com/hashtag/gophercon?src=hash&amp;ref_src=twsrc%5Etfw">#gophercon</a> tutorial sessions are killin&#39; it! <a href="https://t.co/4I5ihE1wKG">pic.twitter.com/4I5ihE1wKG</a></p>&mdash; GopherCon (@GopherCon) <a href="https://twitter.com/GopherCon/status/1154502084634406917?ref_src=twsrc%5Etfw">July 25, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+
+<p><blockquote class="twitter-tweet"><p lang="en" dir="ltr">This was a really good talk, <a href="https://twitter.com/monochromegane?ref_src=twsrc%5Etfw">@monochromegane</a> is very smart! Also it was really interesting hearing about the fukuoka Golang community. I need to read slides again. <a href="https://t.co/bdGZK7p6DX">https://t.co/bdGZK7p6DX</a> <a href="https://t.co/82GKvlFseO">pic.twitter.com/82GKvlFseO</a></p>&mdash; Jamal Yusuf (@JamalYusuf_) <a href="https://twitter.com/JamalYusuf_/status/1154587450242502656?ref_src=twsrc%5Etfw">July 26, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+
+<p><blockquote class="twitter-tweet"><p lang="en" dir="ltr"><a href="https://twitter.com/monochromegane?ref_src=twsrc%5Etfw">@monochromegane</a> talking about dynamic concurrency scaling with a PID controller and dynamic semaphores. <a href="https://twitter.com/hashtag/golang?src=hash&amp;ref_src=twsrc%5Etfw">#golang</a> <a href="https://twitter.com/hashtag/gophercon?src=hash&amp;ref_src=twsrc%5Etfw">#gophercon</a> <a href="https://t.co/dufxZNhKEZ">https://t.co/dufxZNhKEZ</a> <a href="https://t.co/5eyRazxg2g">pic.twitter.com/5eyRazxg2g</a></p>&mdash; Andy Walker (@flowchartsman) <a href="https://twitter.com/flowchartsman/status/1154503310327439360?ref_src=twsrc%5Etfw">July 25, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+
+<p><blockquote class="twitter-tweet"><p lang="en" dir="ltr">Really interesting thoughts on controlling <a href="https://twitter.com/hashtag/golang?src=hash&amp;ref_src=twsrc%5Etfw">#golang</a> concurrency dynamically while a program is running. Thanks to Yusuke Miyake for traveling from Japan to present this at <a href="https://twitter.com/hashtag/gophercon?src=hash&amp;ref_src=twsrc%5Etfw">#gophercon</a>! <a href="https://t.co/WWfsJo5nNi">pic.twitter.com/WWfsJo5nNi</a></p>&mdash; Daniel Whitenack (@dwhitena) <a href="https://twitter.com/dwhitena/status/1154500909713383424?ref_src=twsrc%5Etfw">July 25, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+
+<h1 id="カンファレンス">カンファレンス</h1>
+
+<p>会場はカリフォルニア サンディエゴのホテル <a href="https://www.gophercon.com/page/1388212/hotel">Marriott Marquis San Diego Marina</a>でした。
+サンディエゴが比較的温暖な気候であること、ホテルもいわゆるリゾートホテルのような感じであったことも手伝って、期間中はとても快適に過ごせました。</p>
+
+<p>GopherConのタイムテーブルは朝が早いものの（最初のセッションがAM9:00から）、2-3セッションごとに30-40分の空き時間が設けられており、この時間に登壇者とディスカッションしたり、ポップアップミーティングスペースやスポンサーブースでコミュニティや企業への関係を作ったりすることができました。
+日本でも学術系のシンボジウムだとこういったタイムテーブルは見かけるものの、GopherConではより積極的に関係を作っていこう、そしてそのために運営がその接点を作る機会（場所、時間）やホスピタリティを提供していこうという気概が感じられました。
+また、Welcome Partyが本物の空母の上で開催されたのはめちゃくちゃ驚きました。こういう「楽しんでるぞ」というのが一貫して感じられるのも良かったです。
+実際に #gophercon ハッシュタグを追っていると、たくさんの知見や関係を得たという感想と合わせて一種のバケーションを楽しんだような満足感を持っている方が多かったようです。
+ちょうど、GoCon福岡を2週間前に開催したところであったため、「カンファレンス」をどういう設計で進めるのかという観点はとても勉強になりました。</p>
+
+<p>トークについては、どれも最新の情報だけでなく、スピーカーの方の実際の経験に基づく興味深く、かつ面白いセッションばかりでとてもためになりました。
+それでも、自分の発表前後の緊張や疲れ、時差ボケなどで万全の状態で全てを聞くことはできなかったのが悔やまれますが、幸い個別のトークについては今後動画も公開されるようです。
+<a href="https://www.gophercon.com/agenda">Agenda</a>を見て興味あるセッションを是非ご覧ください。</p>
+
+<h1 id="スピーカーディナー">スピーカーディナー</h1>
+
+<p>発表は7/25でしたが、実は7/26の夜にスピーカーディナーなるものが控えていました。
+登壇者ばかりが集う3時間の立食パーティーを英語で乗り切るという、ある意味では登壇よりもプレッシャーのかかるイベントでした。
+それでも、とてもよい機会であるし無駄にはしたくないと、できるだけ話に加わり自分の意見や要望を伝えることができたと思います。
+特に日本や福岡のコミュニティ活動やカンファレンスに何人か興味を持ってもらうことができたのは非常に有意義でした。
+また、ワークショップを担当したエンジニアの方とは日本に戻ってからも連絡を取り合っており、今後何か面白いことが一緒にできるといいなあと考えています。</p>
+
+<p>とにかくこの3時間は僕の英語に対する心理的な苦手意識を取り除いてくれる絶好の機会となりました。
+同時にやはり英語力の足りなさを痛感したことで、引き続き英語もやっていきたいと強く思えました。</p>
+
+<h1 id="おわりに">おわりに</h1>
+
+<p>2014年の東京のGoConference 2014 springで発表したのが僕にとって初めての全国区のカンファレンス登壇でした。
+そこから、自分のキャリアや興味範囲が広がっていく中でも、Go言語はずっと相棒として付き合ってくれる言語でしたし、Go言語を中心に色々な付き合いができていると感じています。
+また、ここ数年の研究職としての試行錯誤がなければ今回の発表内容はありませんでした。
+その意味で、今回のGopherCon 2019は現時点の僕の集大成で臨んだカンファレンスとなりました。
+幸いにも、発表に対して興味を持ってもらえたこと、一定の反響があったことを、非常に嬉しく思っています。
+同時に、このような大きな海外のカンファレンスで発表できたことは（2014にGoConで発表した時と同じように）素直に自信につながりました。
+（当日聞いたのですが、スピーカーのうち、ワークショップを行われた約10名の応募枠は別だったとのことで今回は改めて狭き門を抜けることができたんだなあと感じています）</p>
+
+<p>この登壇に向けてアドバイスや協力をいただいた皆様、本当に感謝いたします。
+このカンファレンスで得た様々な知見や関係、そして至らなかった点は次へ活かし、この契機となったGoコミュニティの活発化に繋がるよう引き続き”楽しみながら“やっていきたいと思います。</p>
+
+<h3 id="俺たちが日本代表だ">俺たちが日本代表だ！</h3>
+
+<p><img src="/images/2019/08/gophercon_japan.jpg" alt="gophercon_japan" /></p>
+
+<p>LTセッションで登壇した<a href="https://twitter.com/hajimehoshi">@hajimehoshi</a>さんと<a href="https://twitter.com/hgsgtk">@hgsgtk</a>さんと共に。</p>
+
+<hr />
+
+<p>そして最後に、Russ Coxと隣に扱われる機会ってそうそうないので記念に<a href="https://www.gophercon.com/page/1388210/speakers">スピーカー一覧</a>のスクショを置いておきます、えへへ。（ただのアルファベット順だけど）</p>
+
+<p><img src="/images/2019/08/gophercon_russ.jpg" alt="gophercon_russ" /></p>
+
+    </div>
+    <footer class="tag">
+      <i class="fa fa-tags tag-icon"></i>
+      <ul>
+      
+        <li><a class="tag-link" href="/tags/golang">golang</a></li>
+      
+        <li><a class="tag-link" href="/tags/gophercon">gophercon</a></li>
+      
+      </ul>
+      <div class="clear"></div>
+    </footer>
+  </div>
+</article>
+
+      <div class="social-btn">
+  <div>
+    <a href="http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2019/08/10/gophercon_2019/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="en" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+  <div>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-via="monochromegane">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  </div>
+</div>
+
+    </div>
+    <footer class="footer">
+  <div class="author"></div>
+  <p class="author-name"><a href="https://twitter.com/monochromegane" target="_blank">@monochromegane</a></p>
+  
+    <p>monochromegane (モノクロめがね) と申します。</p>
+  
+    <p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+  
+  <ul class="social">
+    <li><a href="https://twitter.com/monochromegane" target="_blank"><i class="fa fa-twitter"></i></a></li>
+    <li><a href="https://github.com/monochromegane" target="_blank"><i class="fa fa-github"></i></a></li>
+    <li><a href="/index.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
+  </ul>
+  <p class="copyright">
+    <small>&copy;  <span class="">Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>, Designed by <a href="https://twitter.com/keita_kawamoto" target="_blank">&copy;keita_kawamoto</a></span></small>
+  </p>
+</footer>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+    
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-38374674-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+  </body>
+</html>

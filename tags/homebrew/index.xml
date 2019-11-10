@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Homebrew on THINKING MEGANE</title>
+    <link>https://blog.monochromegane.com/tags/homebrew/</link>
+    <description>Recent content in Homebrew on THINKING MEGANE</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Mon, 19 May 2014 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/tags/homebrew/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Go言語でつくったツールをHomebrewで配布する</title>
+      <link>https://blog.monochromegane.com/blog/2014/05/19/homebrew-formula-for-golang/</link>
+      <pubDate>Mon, 19 May 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2014/05/19/homebrew-formula-for-golang/</guid>
+      <description>
+
+&lt;p&gt;先日、Go言語でつくった高速検索ツール(&lt;a href=&#34;https://blog.monochromegane.com/blog/2014/01/16/the-platinum-searcher/&#34;&gt;the_platinum_searcher&lt;/a&gt;)をHomebrewで配布できるようにしました。&lt;br /&gt;
+意外とGo言語製ツールをHomebrew対応させる情報がなかったので、配布までの手順をまとめておきます。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;homebrewに対応させる&#34;&gt;Homebrewに対応させる&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://brew.sh/&#34;&gt;Homebrew&lt;/a&gt;はMacで利用できるパッケージマネージャーです。&lt;/p&gt;
+
+&lt;p&gt;Homebrewでツールやパッケージを配布するにはそれらに関する情報やインストール方法を定義した&lt;code&gt;Formula&lt;/code&gt;(製法)ファイルが必要です。&lt;br /&gt;
+また、Formulaを登録するリポジトリも必要です。Homebrewには公式リポジトリがありますが、&lt;code&gt;tap&lt;/code&gt;コマンドを使うことで独自リポジトリをFormula取得先として追加することができます。&lt;/p&gt;
+
+&lt;p&gt;今回は、独自リポジトリでFormulaを公開します。&lt;/p&gt;
+
+&lt;h2 id=&#34;formulaファイルの作成&#34;&gt;Formulaファイルの作成&lt;/h2&gt;
+
+&lt;p&gt;Formulaファイルを格納するディレクトリは独自リポジトリの命名規則に沿って&lt;code&gt;homebrew-&lt;/code&gt;を先頭につけておきます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ mkdir homebrew-リポジトリ名
+$ cd !$
+$ vi パッケージ名.rb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;以下、the_platinum_searcher(pt)のFormulaを参考に解説を行います。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;monochromegane/homebrew-pt/pt.rb&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;require &#39;formula&#39;
+
+HOMEBREW_PT_VERSION=&#39;1.6.2&#39;
+class Pt &amp;lt; Formula
+  homepage &#39;https://github.com/monochromegane/the_platinum_searcher&#39;
+  url &#39;https://github.com/monochromegane/the_platinum_searcher.git&#39;, :tag =&amp;gt; &amp;quot;v#{HOMEBREW_PT_VERSION}&amp;quot;
+  version HOMEBREW_PT_VERSION
+  head &#39;https://github.com/monochromegane/the_platinum_searcher.git&#39;, :branch =&amp;gt; &#39;master&#39;
+
+  depends_on &#39;go&#39; =&amp;gt; :build
+  depends_on &#39;hg&#39; =&amp;gt; :build
+
+  def install
+    ENV[&#39;GOPATH&#39;] = buildpath
+    system &#39;go&#39;, &#39;get&#39;, &#39;github.com/shiena/ansicolor&#39;
+    system &#39;go&#39;, &#39;get&#39;, &#39;github.com/monochromegane/terminal&#39;
+    system &#39;go&#39;, &#39;get&#39;, &#39;github.com/jessevdk/go-flags&#39;
+    system &#39;go&#39;, &#39;get&#39;, &#39;code.google.com/p/go.text/transform&#39;
+    mkdir_p buildpath/&#39;src/github.com/monochromegane/the_platinum_searcher&#39;
+    ln_s buildpath/&#39;search&#39;, buildpath/&#39;src/github.com/monochromegane/the_platinum_searcher/.&#39;
+    system &#39;go&#39;, &#39;build&#39;, &#39;-o&#39;, &#39;pt&#39;
+    bin.install &#39;pt&#39;
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;url&#34;&gt;url&lt;/h4&gt;
+
+&lt;p&gt;urlにはツールのリポジトリを指定します。&lt;code&gt;:tag&lt;/code&gt;オプションをつけることで指定のリリースタグ時点のものを取得させることができます。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h4 id=&#34;version&#34;&gt;version&lt;/h4&gt;
+
+&lt;p&gt;Formulaのバージョンを指定します。上記のようにツールのバージョンとあわせておくとよいです。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h4 id=&#34;head&#34;&gt;head&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;brew install --HEAD&lt;/code&gt;したときに取得するリポジトリとブランチ。この場合、最新のmasterを取得します。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h4 id=&#34;depends-on&#34;&gt;depends_on&lt;/h4&gt;
+
+&lt;p&gt;ビルドに必要なパッケージを指定します。&lt;br /&gt;
+&lt;code&gt;go&lt;/code&gt;は必須。&lt;code&gt;hg&lt;/code&gt;は自分のツールが利用するパッケージが&lt;code&gt;code.google.com&lt;/code&gt;にあれば必要になります。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h4 id=&#34;env-gopath&#34;&gt;ENV[&amp;lsquo;GOPATH&amp;rsquo;]&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;ENV[&#39;GOPATH&#39;]&lt;/code&gt;を&lt;code&gt;buildpath&lt;/code&gt;にするのがお作法のようです。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h4 id=&#34;go-get&#34;&gt;go get&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;system&lt;/code&gt;をつかってツールで必要なGoのパッケージを取得しておきます。&lt;br /&gt;
+ここで取得したパッケージは&lt;code&gt;$GOPATH&lt;/code&gt;(=&lt;code&gt;buildpath&lt;/code&gt;)に配置されます。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h4 id=&#34;mkdir-p-ln-s&#34;&gt;mkdir_p, ln_s&lt;/h4&gt;
+
+&lt;p&gt;ツール内でGoのパッケージを分ける構成にしている場合、&lt;code&gt;GOPATH/src&lt;/code&gt;を探してしまい、パッケージが見つからないエラーになってしまいます。&lt;br /&gt;
+分けたパッケージを&lt;code&gt;go get&lt;/code&gt;で取得してしまうとmasterを取得してしまうので、チェックアウトしたリポジトリの資産を使ってもらうにはGOPATH/src配下にシンボリックリンクをはる必要がありました。&lt;/p&gt;
+
+&lt;p&gt;もっとよいやり方があれば、教えてください&amp;hellip;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h4 id=&#34;go-build&#34;&gt;go build&lt;/h4&gt;
+
+&lt;p&gt;ビルドします。ここでは&lt;code&gt;-o&lt;/code&gt;でビルド成果物のファイル名を指定しています。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h4 id=&#34;bin-install&#34;&gt;bin.install&lt;/h4&gt;
+
+&lt;p&gt;ビルド成果物をパスの通ったところに配置します。&lt;br /&gt;
+具体的には&lt;code&gt;/usr/local/Cellar/パッケージ名/バージョン/bin&lt;/code&gt;配下にビルド成果物を配置して&lt;code&gt;/usr/local/bin/ビルド成果物名&lt;/code&gt;にシンボリックリンクをはってくれます。&lt;/p&gt;
+
+&lt;h2 id=&#34;formulaの公開&#34;&gt;Formulaの公開&lt;/h2&gt;
+
+&lt;p&gt;Formulaができたら、上記資産をGithubに同名のリポジトリをつくってpushしておきます。&lt;/p&gt;
+
+&lt;h2 id=&#34;インストール&#34;&gt;インストール&lt;/h2&gt;
+
+&lt;h3 id=&#34;独自リポジトリをhomebrewに追加する&#34;&gt;独自リポジトリをHomebrewに追加する&lt;/h3&gt;
+
+&lt;p&gt;以下のコマンドでHomebrewに独自リポジトリを追加します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ brew tap ユーザ/リポジトリ
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;ユーザ&lt;/code&gt;は自分のGithubのアカウント名、&lt;code&gt;リポジトリ&lt;/code&gt;はGithubのリポジトリ名から&lt;code&gt;homebrew-&lt;/code&gt;を外したものを指定します。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;/usr/local/Library/Taps/&lt;/code&gt;配下に&lt;code&gt;ユーザ/リポジトリ&lt;/code&gt;のディレクトリができていれば追加成功です。&lt;/p&gt;
+
+&lt;h3 id=&#34;インストール-1&#34;&gt;インストール&lt;/h3&gt;
+
+&lt;p&gt;独自リポジトリ内のFormulaに定義された内容でインストールします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ brew install パッケージ名
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;つまり、the_platinum_searcherの場合、ユーザがインストールのために行う作業は以下だけです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ brew tap monochromegane/pt # 独自リポジトリを追加
+$ brew install pt            # インストール
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;アップデート&#34;&gt;アップデート&lt;/h2&gt;
+
+&lt;p&gt;ツールのバージョンが上がったら、リリースタグをつけて、Formulaのバージョンも同じように上げておきます。&lt;/p&gt;
+
+&lt;p&gt;その後は&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ brew update               # 最新のFormulaを取得
+$ brew upgrade パッケージ名 # アップグレード
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;で、ツールの更新が行えます。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;homebrewで配布する利点など&#34;&gt;Homebrewで配布する利点など&lt;/h1&gt;
+
+&lt;p&gt;the_platinum_searcherでは、&lt;code&gt;go get&lt;/code&gt;や&lt;code&gt;go install&lt;/code&gt;を使ったインストールだとGo開発者ではないひとに敷居が高いため、drone.ioのartifacts機能を使ってビルド成果物をダウンロードしてもらうようにしていました。&lt;/p&gt;
+
+&lt;p&gt;ただ、これでもダウンロードしてパス通したり、バージョンアップなどでいくつか不便もあったので、そのあたりをHomebrewに乗っかることで解決できました。&lt;/p&gt;
+
+&lt;p&gt;また、ローカルビルドによりCGOが有効にできるので（drone.ioだとCGOが使えない）、CGO有無による予想しない挙動に悩まされないのももうれしい点です。&lt;/p&gt;
+
+&lt;p&gt;Go言語でつくったツールを配布する手段としてHomebrew、検討してみてはどうでしょうか。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

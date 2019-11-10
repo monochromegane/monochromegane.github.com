@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hugo on THINKING MEGANE</title>
+    <link>https://blog.monochromegane.com/tags/hugo/</link>
+    <description>Recent content in Hugo on THINKING MEGANE</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Sat, 18 Jul 2015 11:07:01 +0900</lastBuildDate>
+    <atom:link href="/tags/hugo/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>werckerのtriggerBuild APIを使ってビルドパイプラインをつくる</title>
+      <link>https://blog.monochromegane.com/blog/2015/07/18/wercker-build-api/</link>
+      <pubDate>Sat, 18 Jul 2015 11:07:01 +0900</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2015/07/18/wercker-build-api/</guid>
+      <description>
+
+&lt;p&gt;先日、Hugoに移行した際、ブログ本体のリポジトリとテーマのリポジトリを分けるようにしました。ブログ本体のほうはweckerと連携しておりpushすることでGitHubPagesに公開されるようにしましたが、テーマ側を更新したときも同様のことができるようにAPIを使ってビルドパイプラインっぽいのをつくってみました。&lt;/p&gt;
+
+&lt;h1 id=&#34;triggerbuild-api&#34;&gt;triggerBuild API&lt;/h1&gt;
+
+&lt;p&gt;werckerが提供するビルドをキックするためのAPIです。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.wercker.com/2015/06/23/Trigger-builds-with-the-api.html&#34;&gt;Triggering builds with the wercker API&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://devcenter.wercker.com/api/endpoints/builds.html#trigger-a-build&#34;&gt;API Doc&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://devcenter.wercker.com/api/getting-started/authentication.html&#34;&gt;ここの手順&lt;/a&gt;に従い、トークンを取得して利用します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;curl -H &#39;Content-Type: application/json&#39; \
+     -H &amp;quot;Authorization: Bearer &amp;lt;token&amp;gt;&amp;quot;  \
+     -X POST -d &#39;{&amp;quot;applicationId&amp;quot;: &amp;quot;&amp;lt;applicationId&amp;gt;&amp;quot;, &amp;quot;branch&amp;quot;:&amp;quot;master&amp;quot;, &amp;quot;message&amp;quot;:&amp;quot;&amp;lt;your custom message&amp;gt;&amp;quot;}&#39; \
+     https://app.wercker.com/api/v3/builds
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;のようにして使います。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;applicationId&lt;/code&gt;は、ビルドを実行したいアプリケーションのIDです。
+自分の登録しているアプリケーションのURLにIDがついているのでそこで確認できます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;https://app.wercker.com/#applications/&amp;lt;applicationId&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;ビルドパイプライン&#34;&gt;ビルドパイプライン&lt;/h1&gt;
+
+&lt;p&gt;あとは特定のアプリケーションのビルドから、他のアプリケーションのビルドを呼ぶように設定するだけです。&lt;/p&gt;
+
+&lt;h2 id=&#34;wercker-yml&#34;&gt;wercker.yml&lt;/h2&gt;
+
+&lt;p&gt;自分の場合、テーマのリポジトリのほうに以下のようなwercker.ymlをおいています。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;box: debian
+build:
+  steps:
+    - script:
+        name: echo
+        code: |
+          echo &#39;Update theme&#39;
+deploy:
+  steps:
+    - script:
+      name: install curl
+      code: |
+        apt-get update
+        apt-get -y install curl
+    - script:
+      name: trigger THINKING MEGANE build
+      code: |
+        curl -H &#39;Content-Type: application/json&#39; -H &amp;quot;Authorization: Bearer $WERCKER_TOKEN&amp;quot; -X POST -d &amp;quot;{\&amp;quot;applicationId\&amp;quot;: \&amp;quot;$WERCKER_APP_ID\&amp;quot;, \&amp;quot;branch\&amp;quot;:\&amp;quot;master\&amp;quot;, \&amp;quot;message\&amp;quot;:\&amp;quot;Update theme\&amp;quot;}&amp;quot; https://app.wercker.com/api/v3/builds
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;buildのstepはwerckerで必須のようなのでダミーを入れています。&lt;/p&gt;
+
+&lt;p&gt;（指定しないと &lt;code&gt;Failed step: setup environment - No &#39;build&#39; pipeline definition in wercker.yml&lt;/code&gt; エラーが出ます）&lt;/p&gt;
+
+&lt;h2 id=&#34;wercker&#34;&gt;wercker&lt;/h2&gt;
+
+&lt;p&gt;wercker側では &lt;code&gt;Deploy targets&lt;/code&gt; &amp;gt; &lt;code&gt;Custom Deploy&lt;/code&gt; を選択し、&lt;code&gt;Auto deploy&lt;/code&gt;にチェックを入れておきます。&lt;/p&gt;
+
+&lt;p&gt;wercker.ymlで指定した、WERCKER_TOKENとWERCKER_APP_IDもここの &lt;code&gt;Deploy pipeline&lt;/code&gt; &amp;gt; &lt;code&gt;Add new variable&lt;/code&gt; で追加します。&lt;/p&gt;
+
+&lt;p&gt;少なくともWERCKER_TOKENは&lt;code&gt;protected&lt;/code&gt;にチェックを入れるのを忘れないようにしましょう。&lt;/p&gt;
+
+&lt;h2 id=&#34;ビルド&#34;&gt;ビルド&lt;/h2&gt;
+
+&lt;p&gt;あとは、テーマのリポジトリにpushするとブログのほうで設定したGitHub Pagesへの公開するビルドが実行されます。
+ブログコンテンツ側のビルド設定は、&lt;a href=&#34;https://blog.monochromegane.com/blog/2015/07/12/octopress-to-hugo/&#34;&gt;前回のエントリ&lt;/a&gt;を参考にしてください。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;ビルド起動がAPIでできるとビルドパイプラインだけでなく、いろいろ応用できそう。
+werckerのAPIは最近充実してきているようなのでいいですね。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>OctopressからHugoに移行した</title>
+      <link>https://blog.monochromegane.com/blog/2015/07/12/octopress-to-hugo/</link>
+      <pubDate>Sun, 12 Jul 2015 16:13:11 +0900</pubDate>
+      
+      <guid>https://blog.monochromegane.com/blog/2015/07/12/octopress-to-hugo/</guid>
+      <description>
+
+&lt;p&gt;前々からOctopressのpreview反映の遅さに厳しさを感じていたのでHugoに移行しました。手順などを簡単にまとめておきます。&lt;/p&gt;
+
+&lt;h1 id=&#34;hugo&#34;&gt;Hugo&lt;/h1&gt;
+
+&lt;p&gt;Go製の静的サイトジェネレーターです。Octopressに比べて機能やテンプレートは少ないですが、起動やpreviewの反映の速さがそれを補って余りある感じです。&lt;/p&gt;
+
+&lt;p&gt;以下、移行の手順です。&lt;/p&gt;
+
+&lt;h2 id=&#34;インストール&#34;&gt;インストール&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;# Hugoをインストール
+$ go get github.com/spf13/hugo
+# テーマを全てダウンロード
+$ git clone --recursive https://github.com/spf13/hugoThemes themes
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;サイトの雛形を生成&#34;&gt;サイトの雛形を生成&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ hugo new site my_blog
+$ cd my_blog
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;画像の移動&#34;&gt;画像の移動&lt;/h2&gt;
+
+&lt;p&gt;Octopressで管理していた&lt;code&gt;source/images&lt;/code&gt;を&lt;code&gt;static/images&lt;/code&gt;に移動します。&lt;/p&gt;
+
+&lt;h2 id=&#34;コンテンツの移動-変換&#34;&gt;コンテンツの移動/変換&lt;/h2&gt;
+
+&lt;p&gt;Octopressで管理していた&lt;code&gt;source/_posts&lt;/code&gt;を移動させます。URLを維持しつつ、エントリの日時を保持したかったのでディレクトリ構成を少し工夫しています。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;source/_posts/2015-07-05-dsn.markdown&lt;/code&gt;を&lt;code&gt;content/post/2015/07/05/dsn.md&lt;/code&gt;のようにします。（元の拡張子がmarkdownなのは気にしないでください）&lt;/p&gt;
+
+&lt;p&gt;とりあえず雑なスクリプト&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;#!/bin/sh
+
+for f in $(ls $1/source/_posts/*.markdown)
+do
+  name=$(basename $f)
+  y=$(echo $name | cut -d&amp;quot;-&amp;quot; -f 1)
+  m=$(echo $name | cut -d&amp;quot;-&amp;quot; -f 2)
+  d=$(echo $name | cut -d&amp;quot;-&amp;quot; -f 3)
+  t=$(echo $name | cut -d&amp;quot;-&amp;quot; -f 4- | sed s/\.markdown$/\.md/)
+  dest=content/post/$y/$m/$d
+  echo copy $f to $dest/$t...
+  mkdir -p $dest &amp;amp;&amp;amp; cp $f $dest/$t
+done
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ sh copy.sh YOUR_OCTOPRESS_ROOT
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;ファイル内容の置換&#34;&gt;ファイル内容の置換&lt;/h2&gt;
+
+&lt;h3 id=&#34;記事ヘッダの日付フォーマット&#34;&gt;記事ヘッダの日付フォーマット&lt;/h3&gt;
+
+&lt;p&gt;Octopressの記事形式だと日付フォーマットが異なってうまく解釈されないので、置換します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ cd content/post
+$ find . -type f -exec sed -i &amp;quot;&amp;quot; -e &#39;s/date: \([0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}\).*$/date: \1/g&#39; {} \;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;その他、自分の環境固有のやつで何個か置換したけど割愛。&lt;/p&gt;
+
+&lt;h2 id=&#34;octopress形式のurlを引き継ぐ&#34;&gt;Octopress形式のURLを引き継ぐ&lt;/h2&gt;
+
+&lt;p&gt;config.tomlに以下を追記します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ini&#34;&gt;[permalinks]
+  post = &amp;quot;/blog/:year/:month/:day/:filename/&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;以上で、移行は完了。簡単。&lt;/p&gt;
+
+&lt;h1 id=&#34;起動と動作確認&#34;&gt;起動と動作確認&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ hugo server --theme=THEME_NAME --watch
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;テーマは&lt;code&gt;themes&lt;/code&gt;ディレクトリ配下のテーマを指定します。テーマごとにconfig.tomlで個別の設定が必要でした。&lt;/p&gt;
+
+&lt;h1 id=&#34;ブログを書く&#34;&gt;ブログを書く&lt;/h1&gt;
+
+&lt;p&gt;&lt;code&gt;hugo new&lt;/code&gt;でエントリの雛形を作ります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ hugo new post/`date &#39;+%Y&#39;`/`date &#39;+%m&#39;`/`date &#39;+%d&#39;`/NEW_POST_NAME.md
+$ vi content/!$
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;記事の公開&#34;&gt;記事の公開&lt;/h1&gt;
+
+&lt;p&gt;GitHub Pagesで公開しています。Octopress時代は公開用のコマンドがありましたが、Hugoにはないので、Werckerを経由して記事を公開します。（public配下の資産を自分でpushしてもOKです）&lt;/p&gt;
+
+&lt;p&gt;基本は&lt;a href=&#34;http://gohugo.io/tutorials/automated-deployments/&#34;&gt;本家のドキュメント&lt;/a&gt;通りに進めてOKですが、wercker.yamlを少し追加修正しています。&lt;/p&gt;
+
+&lt;h2 id=&#34;wercker-yml&#34;&gt;wercker.yml&lt;/h2&gt;
+
+&lt;p&gt;本家のドキュメントだと&lt;code&gt;box&lt;/code&gt;に&lt;code&gt;wercker/default&lt;/code&gt;を指定するようになってますが、新しいDocker環境だと以下のようにエラーになるので &lt;code&gt;debian&lt;/code&gt;を指定しています。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Failed step: setup environment - GET https://registry.hub.docker.com/v1/repositories/wercker/default/images returned 404
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;それにあわせて、gitのインストールステップを追加しました。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;box: debian
+build:
+  steps:
+    - script:
+        name: install git
+        code: |
+          apt-get update
+          apt-get -y install git
+    - script:
+        name: download theme
+        code: |
+          git clone YOUR_THEME_REPO themes/THEME_NAME
+          rm -rf themes/THEME_NAME/.git
+    - arjen/hugo-build:
+        version: &amp;quot;0.14&amp;quot;
+        theme: THEME_NAME
+    - script:
+        name: create old RSS file
+        code: |
+          cp public/index.xml public/atom.xml
+deploy:
+  steps:
+    - script:
+        name: install git
+        code: |
+          apt-get update
+          apt-get -y install git
+    - lukevivier/gh-pages@0.2.1:
+        token: $GIT_TOKEN
+        repo: YOUR_GITHUB_ACCOUNT/YOUR_GITHUB_PAGES_REPO
+        domain: YOUR_BLOG_DOMAIN
+        basedir: public
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;deployの&lt;code&gt;repo&lt;/code&gt;オプションはブログの管理と、GitHub Pagesのリポジトリを分けるときに指定します。
+同じリポジトリでやる場合は、gh-pagesブランチがGitHub Pagesとして使われるようです。&lt;/p&gt;
+
+&lt;p&gt;あとは、先ほどの本家マニュアルに沿ってやればOK。&lt;/p&gt;
+
+&lt;p&gt;記事を書き終わったらcommitしてpushすれば、werckerにより公開されます。&lt;/p&gt;
+
+&lt;h1 id=&#34;デザイン&#34;&gt;デザイン&lt;/h1&gt;
+
+&lt;p&gt;同僚の&lt;a href=&#34;https://twitter.com/keita_kawamoto&#34;&gt;@keita_kawamoto&lt;/a&gt; に頼んだところ、Hugoテーマの作り方をシュッとものにして、かっこいいデザインをあててくれました！！ありがとうございます！！&lt;/p&gt;
+
+&lt;h1 id=&#34;その他-メモ&#34;&gt;その他、メモ&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;テーマによっては古い&lt;code&gt;{{ .Site.BaseUrl }}&lt;/code&gt;を使っているので警告が気になるなら&lt;code&gt;{{ .Site.BaseURL }}&lt;/code&gt;に変更する&lt;/li&gt;
+&lt;li&gt;Octopressだとシンタックスハイライトがついた状態で生成されるが、Hugoだと設定が必要だったので今回は highlight.js を使うようにした
+
+&lt;ul&gt;
+&lt;li&gt;go、vim script は追加でjsの読み込みが必要だった&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;初回のOctopressからHugoで生成したコンテンツへの置き換えた時だけ、サイトで以下の500エラーが表示されるが30分ぐらいでなおる。
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;GitHub Pages is temporarily down for maintenance.&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;上記表示されてももう一度アクセスすれば、そのページは表示されるようになるのでGitHub Pages側の反映待ちっぽい&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;OctopressだとRSSはatom.xmlだったけど、index.xmlになるので、コピーして既存のパスを残してみた（RSS2.0とAtomなのでダメかも）
+
+&lt;ul&gt;
+&lt;li&gt;RSSを出力するにはlayoutのしたにrss.xmlを置く（テンプレートの内容は&lt;a href=&#34;http://gohugo.io/templates/rss/&#34;&gt;本家ドキュメント&lt;/a&gt;を参考に）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;{{ .RSSlink }}&lt;/code&gt; は複数回呼び出すと空になる様子。（あまり追ってない）&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
+
+&lt;p&gt;即座にpreviewが反映されるようになってストレスがなくなりました。Hugo移行オススメです。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

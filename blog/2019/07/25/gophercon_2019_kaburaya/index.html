@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width">
+  <meta name="author" content="">
+  
+    <title>GopherCon 2019: Optimization for Number of goroutines Using Feedback Control &middot; THINKING MEGANE</title>
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@monochromegane">
+  <meta property="og:description" content="The slides and speaker-notes about optimization for the number of goroutines I talked at GopherCon 2019.
+  The design for the number of concurrency is important to achieve both speed and stability. To give a good performance without depending on platform and load conditions, it’s desirable for the number to be dynamic and rapidly controlled. In this talk, I will propose an architecture to solve this by utilizing feedback control.">
+  <meta property="og:title" content="GopherCon 2019: Optimization for Number of goroutines Using Feedback Control">
+  <meta property="og:url" content="https://blog.monochromegane.com/blog/2019/07/25/gophercon_2019_kaburaya/">
+  <meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+  
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Source+Code+Pro' type='text/css'>
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Montserrat' type='text/css'>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css">
+  <link rel="stylesheet" href="/css/text.css">
+  <link rel="stylesheet" href="/css/color.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="/images/apple-touch-icon-57-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="/images/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
+  <link rel="canonical" href="https://blog.monochromegane.com/blog/2019/07/25/gophercon_2019_kaburaya/">
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="THINKING MEGANE" />
+  
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async>
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: {
+               Macros: {
+                        bm: ["\\boldsymbol{#1}", 1],
+                        argmax: ["\\mathop{\\rm arg\\,max}\\limits"],
+                        argmin: ["\\mathop{\\rm arg\\,min}\\limits"]},
+               extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                   displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+  </script>
+</head>
+
+  <body>
+    <div class="header">
+  <header>
+    <h1 class="logo"><a href="https://blog.monochromegane.com">THINKING MEGANE</a></h1>
+    <nav>
+      <ul class="menu">
+        <li><a href="/self-introduction/">Home</a></li>
+        <li><a href="/post/">Archives</a></li>
+        <li><a href="/diary/">Diary</a></li>
+        <li><a href="http://thinking-megane.blogspot.jp/">Old Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+</div>
+
+    <div class="container">
+      <article>
+  <div class="post">
+    <header>
+      <h1><a href="https://blog.monochromegane.com/blog/2019/07/25/gophercon_2019_kaburaya/">GopherCon 2019: Optimization for Number of goroutines Using Feedback Control</a></h1>
+      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2019-07-25</div></time>
+    </header>
+    <div class="post-inner">
+      
+
+<p><strong>The slides and speaker-notes about optimization for the number of goroutines I talked at <a href="https://www.gophercon.com/agenda/speakers/442434">GopherCon 2019</a>.</strong></p>
+
+<script async class="speakerdeck-embed" data-id="aa53e4353d9b4efc9064eefba40e13b7" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
+
+<blockquote>
+<p>The design for the number of concurrency is important to achieve both speed and stability. To give a good performance without depending on platform and load conditions, it’s desirable for the number to be dynamic and rapidly controlled. In this talk, I will propose an architecture to solve this by utilizing feedback control.</p>
+</blockquote>
+
+<h1 id="1-title">1. Title</h1>
+
+<p>Good afternoon, everyone.
+Thank you very much for coming today.</p>
+
+<h1 id="2-self-introduction">2. Self-introduction</h1>
+
+<p>My name is Yusuke MIYAKE.
+My social account is @monochromegane.
+I am a researcher of internet and operation technology, as well as a web developer.</p>
+
+<h1 id="3-go-and-i">3. Go and I</h1>
+
+<p>Let me introduce the relation between Go and me.
+I am a Japanese gopher who loves writing OSS using Go.
+My popular repositories are here (the_platinum_searcher is a fast grep tool).
+And I am an organizer of the local Go community in Fukuoka, Japan.
+So, we held Go Conference’19 summer in Fukuoka on <sup>7</sup>&frasl;<sub>13</sub> which was 2 weeks ago.
+200 gophers in Japan gathered and enjoyed 30 sessions.
+It was a lot of fun!
+This is our conference gopher.
+He has ramen which is a Japanese famous food on his head.
+Isn&rsquo;t he good?</p>
+
+<h1 id="4-agenda">4. Agenda</h1>
+
+<p>Today I am here to talk to you about optimization for the number of goroutines.
+My talk has 5 parts.
+I’ll start by talking about why there is a need for optimization for the number of goroutines through the introduction and background section.
+After that, I&rsquo;ll introduce my proposal that optimizes the number using feedback control.
+And I will evaluate the efficacy of the method.
+Finally, I will conclude about possible and some issues of the method.</p>
+
+<h1 id="5-introduction">5. Introduction</h1>
+
+<p>To begin with let’s speak to my experience of performance tuning of my OSS tool.</p>
+
+<h1 id="6-how-many-are-the-optimal-number-of-goroutines">6. How many are the optimal number of goroutines?</h1>
+
+<p>I am developing a fast grep tool named &ldquo;the platinum searcher&rdquo;.
+One day I conducted a measurement of the optimal number of goroutines to achieve good performance.</p>
+
+<h1 id="7-performance-tuning-in-case-of-pt">7. Performance tuning in case of pt</h1>
+
+<p>&ldquo;the platinum searcher&rdquo; uses many goroutines to search string matching to pattern from files.
+So, I measured performance while bounding concurrency using a semaphore.
+Here is a result.
+The X-axis represents the number of goroutines.
+It is a log scale.
+The Y-axis represents the speedup of processing time against sequential processing.
+The result shows 8 or 32 goroutines make performance good.
+This is 2 or 8 times more than the number of CPUs.</p>
+
+<h1 id="8-performance-tuning-in-case-of-pt">8. Performance tuning in case of pt</h1>
+
+<p>However, measurement in different environments showed a different result.
+The result shows 16 goroutines make performance good.
+This is 2 times more than the number of CPUs.
+But I found that more goroutines cause performance degradation.
+In this environment, the real-time virus scan process was running at the same time.
+The process turns system-call of opening file slow and consumes CPU resources.
+As a result, performance is degraded when searching for many files at the same time.</p>
+
+<h1 id="9-performance-tuning-in-case-of-pt">9. Performance tuning in case of pt</h1>
+
+<p>Besides, there were other results.
+When the real-time virus scan process stops, 4 goroutines made performance good.
+This is half times less than the number of CPUs.
+I don&rsquo;t know how many the optimal number of goroutines are?</p>
+
+<h1 id="10-performance-tuning-in-case-of-pt">10. Performance tuning in case of pt</h1>
+
+<p>Currently, &ldquo;the platinum searcher&rdquo; is bounding concurrency using the number of CPUs.
+Namely, I am choosing a safer way.
+But it isn&rsquo;t the fastest.</p>
+
+<h1 id="11-how-many-are-the-optimal-number-of-goroutines-in-each-case">11. How many are the optimal number of goroutines in each case?</h1>
+
+<p>So, that concludes this part of my talk on my experience of performance tuning.
+Achieving both speed and stability, we have to decide optimum number of goroutines through our experiences and continuous tuning.
+And, in most case, the environment on which the program is tuned and the environment on which it will be executed are different.
+Thus, I&rsquo;d like to consider optimization for number of goroutines without depending on environments.</p>
+
+<h1 id="12-background">12. Background</h1>
+
+<p>In this section, I will organize the issues about design for concurrency.</p>
+
+<h1 id="13">13.</h1>
+
+<p>I’m going to organize these issues in the following order;
+Let us start with the first, which is the complexity of concurrency.
+Then we come to the next, which is the contribution of Go to solve the complexity.
+We will find an approach to solve the remaining issues, finally.</p>
+
+<h1 id="14-concurrency-and-complexity">14. Concurrency and complexity</h1>
+
+<p>In this page, I will organize the relation of concurrency and complexity.</p>
+
+<p>We introduce concurrency to improve performance.
+Concurrency brings our application good performance and complexity.
+Because concurrent processing is often considered as compared to simple serial processing.
+This figure shows the common issues of concurrency.
+We have to consider efficient thread management from a parallelism of view.
+And we have to avoid race conditions and synchronize memory access.
+And we have to design to be scalable.
+Like this, we are dealing with many issues to improve performance.</p>
+
+<h1 id="15">15.</h1>
+
+<p>Then, I will organize the contribution of Go to solve the complexity.</p>
+
+<h1 id="16-concurrency-and-go">16. Concurrency and Go</h1>
+
+<p>This is one of the reasons why we are interested in Go.
+&ldquo;Go&rdquo; hides some complexities.
+Because Go has rich features that support concurrency.
+For example, we are freed from managing thread by runtime scheduler of Go.
+And we also can avoid race conditions by using a channel.
+In other words, Go decouples between your code and the complexity of parallelism.</p>
+
+<h1 id="17-runtime-scheduler-of-go">17. Runtime scheduler of Go</h1>
+
+<p>In this page, I&rsquo;ll explain how Go&rsquo;s runtime hide the complexity.
+This figure shows Go’s scheduler workflow.
+Go’s scheduler has three basic concepts.
+G is goroutine.
+M is an OS thread.
+P is a processor.
+P handles multiplexing some goroutines onto some OS threads.</p>
+
+<p>So, We can think of Goroutines as application-level threads. 
+OS thread behaves like a worker for goroutine using a run queue.
+What is important is P uses a smart scheduling strategy called a work-stealing algorithm.
+Therefore P efficiently schedules available goroutines onto OS threads.
+As Go&rsquo;s runtime automatically dose these, we don&rsquo;t need to consider the complexity of parallelism.</p>
+
+<h1 id="18-new-g">18. New “g”</h1>
+
+<p>Besides, lightweight goroutines make Go&rsquo;s scheduler more practical.
+Creating a goroutine is cheap.
+Because a newly created goroutine is allocated only 2kB stack.
+Switching a goroutine is also cheap.
+Because goroutine has only minimal context.
+These points show that many goroutines can run at the same time.
+As this practical runtime gives the illusion of parallelism more than the actual number of CPUs, we don&rsquo;t need to consider the complexity of parallelism.</p>
+
+<h1 id="19">19.</h1>
+
+<p>Finally, I will organize the remaining issues and find an approach to solve them.</p>
+
+<h1 id="20-concurrency-and-application">20. Concurrency and application</h1>
+
+<p>Due to Go hides the complexity of parallelism, we can focus on concurrency issues in our application.
+One of them is the design of the number of concurrency.
+The reason is that the number of concurrency affects the performance depending on the characteristics of the application.
+Certainly, the cost of generating and switching goroutines is very cheap.
+On the other hand, when tasks on goroutine use shared resources, the upper limit of shared resources become a bottleneck.
+Therefore, in this case, it is necessary to find the optimal number of concurrency to improve performance.</p>
+
+<h1 id="21-concurrency-and-application">21. Concurrency and application</h1>
+
+<p>But the design for the number of concurrency is difficult.
+Because the optimal number depends on app, environments and load condition.
+And, in most cases, the environment in which the program is tuned and the environment in which it will be executed is different.
+Thus, I&rsquo;d like to consider optimization for the number of goroutines without depending on environments.
+In order to achieve this, it&rsquo;s desirable for the number of concurrency to be determined dynamically and be controlled rapidly by detection the bottleneck on running program.</p>
+
+<h1 id="22-proposal">22. Proposal</h1>
+
+<p>In this section, I&rsquo;ll introduce my proposal that optimizes the number of concurrency.</p>
+
+<h1 id="23-goal">23. Goal</h1>
+
+<p>The proposed method&rsquo;s goal is here.
+The optimal number of concurrency to be determined dynamically and be controlled rapidly.</p>
+
+<h1 id="24-basic-idea">24. Basic idea</h1>
+
+<p>To begin with let’s speak to the basic idea of the method.
+At first, It increases the number of goroutines to performance target.</p>
+
+<h1 id="25-basic-idea">25. Basic idea</h1>
+
+<p>After that, it stops increasing the number of goroutines if it meets the performance target.</p>
+
+<h1 id="26-basic-idea">26. Basic idea</h1>
+
+<p>After a while, it attempts to decrease the number of goroutines.
+If it fails to meet the performance target, it backs to step 1.</p>
+
+<h1 id="27-issues-to-solve-for-the-realization">27. Issues to solve for the realization</h1>
+
+<p>We have two issues to solve for the realization of the idea.</p>
+
+<p>First, Selection of performance metrics
+Next, finding how to control rapidly and continuously</p>
+
+<p>In the following subsections, I try to realize the proposal while solving these problems.</p>
+
+<h1 id="28-performance-metrics">28. Performance metrics</h1>
+
+<p>In this subsection, I will consider performance metrics that are without depending on application characteristics.</p>
+
+<h1 id="29-performance-metrics">29. Performance metrics</h1>
+
+<p>In the basic idea subsection, I was assuming that there is a performance target.</p>
+
+<p>It&rsquo;s desirable for the performance target not to depend on resource type whom task use.
+Because different applications have different bottlenecks.
+For example, I/O, Capacity of memory and processing load due to the external process.
+If we find an ideal performance target, it will allow us to use the proposed method in as many applications as possible.</p>
+
+<p>I think that CPU usage or throughput suits for the purpose.
+Go&rsquo;s scheduler turns blocking tasks into as CPU bound as possible by switching tasks continuously.
+Thus, I adopt the CPU usage of the Go application as the performance target.</p>
+
+<h1 id="30-performance-metrics">30. Performance metrics</h1>
+
+<p>But the performance upper limit is different for each application.
+In other words, we don&rsquo;t know the actual value of the target.
+Thus, it is calculated on running.</p>
+
+<p>At first, it sets the target value high.
+It increases the number of goroutines to performance targets.</p>
+
+<h1 id="31-performance-metrics">31. Performance metrics</h1>
+
+<p>If it doesn&rsquo;t meet the performance target, it regards the point as metrics upper limit.
+After that, it gradually adjusts it to the new upper limit value.</p>
+
+<p>So, that concludes this part of my talk on performance metrics.
+The summary is the following:
+The proposed method uses CPU usage upper limit as the performance target.
+And the value is calculated on running.</p>
+
+<h1 id="32-determining">32. Determining</h1>
+
+<p>In this subsection, I will consider how to determine the number of concurrency rapidly, continuously and accurately.</p>
+
+<h1 id="33-determine-the-number-of-goroutines">33. Determine the number of goroutines</h1>
+
+<p>In the previous subsection, we defined performance metrics and dynamic value.
+Next, we have to consider how to determine the number of goroutines to meet the target value.
+In the basic idea subsection, we increased goroutine one by one
+But it has to determine rapidly, continuously, accurately to adjust the number of goroutines to rapid changes in the actual environment.
+I think that feedback control is a good way to meet these conditions.</p>
+
+<h1 id="34-feedback-control">34. Feedback control</h1>
+
+<p>In this page, I will explain the basis of feedback control.</p>
+
+<p>This figure shows the structure of a feedback loop.
+There is a system with input and output.
+The output is sent back and compared to the set-point to calculate a new input.
+The error is a deviation of the output from the set-point.
+The controller calculates how much to increase (or decrease) based on the error.</p>
+
+<p>Feedback control applies an automatic correction continuously.
+Determining set-point and Identifying suitable input/output is important.
+Instead, Feedback control does not need to know the detail of the system.
+I think that the robustness of feedback control is effective for rapid changes in the actual environment.</p>
+
+<h1 id="35-pid-controller-1-2">35. PID Controller (<sup>1</sup>&frasl;<sub>2</sub>)</h1>
+
+<p>In this page, I will explain a controller used frequently.</p>
+
+<p>As I mentioned before, the job of controllers is to calculate the value of new input based on the error.
+PID Controller applies a correction rapidly and accurately.
+The controller has three sub-controllers inside.
+The output is a combination of its proportional, integral and derivative subcontrol.</p>
+
+<p>Now I’d like to look at the strategy of each sub-controller.</p>
+
+<h1 id="36-pid-controller-2-2">36. PID Controller (<sup>2</sup>&frasl;<sub>2</sub>)</h1>
+
+<p>The proportional control output is proportional to the error.
+Namely, a large error will lead to a large adjustment.
+KP is the controller gain.</p>
+
+<p>The integral control output is proportional to the integral of the error over time.
+The output becomes a cumulative sum of the error if it is a computer implementation.
+KI is the controller gain.
+The I controller deal with the small error that the P controller loses its effectiveness.</p>
+
+<p>The derivative control output is proportional to the derivative of the error.
+The output becomes the amount that has changed since the previous time step if it is a computer implementation.
+KD is the controller gain.
+The D controller encourages converge using the output.</p>
+
+<p>So, that concludes this part of my talk on basic of PID controller.
+The controller is intended to take the system closer to a set-point.
+However, the set-point has to be determined beforehand.
+In the proposed method, the value of the set-point is calculated on running.</p>
+
+<p>Now I’d like to consider the structure of the controller to meet this condition.</p>
+
+<h1 id="37-dynamic-target-controller">37. Dynamic Target Controller</h1>
+
+<p>This figure shows the structure of the controller of the proposed method.
+This controller has two nested control loops.
+The inner loop is the PID controller which we have learned just before.
+The inner loop&rsquo;s input is current CPU usage and its output is the number of goroutines.
+The inner loop attempts to increase goroutine until CPU usage upper limit which is a set-point.
+However, the value of the set-point needs to be calculated on running.
+The job of the outer loop is to calculate this value.
+The outer loop&rsquo;s input is current CPU usage as same as the inner loop.
+Its output is a new set-point of the inner loop.
+Namely, the inner loop&rsquo;s set-point is changed by the outer loop&rsquo;s output.</p>
+
+<p>The outer loop behavior has been mentioned at the performance metrics subsection.
+When CPU usage reached the upper limit by many goroutines, the outer loop begins to use its value as a new set-point.
+In the current implementation, the outer loop sets a new set-point when CPU usage changes significantly.
+Because Go&rsquo;s scheduler attempts to consume CPU resources incessantly by switching goroutines.
+Namely, CPU usage stays on the upper limit in most cases.
+Therefore, I figured it would be easier to detect change points in short-term observations than to detect stability in long-term observations.</p>
+
+<p>(If time remains)
+Indeed the design for the controller is pretty hard.
+The current controller version is 11.
+I published past designs and their evaluation.
+if you have an interest in it, let&rsquo;s conversation about a better way during this conference.</p>
+
+<p>So, that concludes this talk of my talk on dynamic target controller.
+Now, we should be able to determine the optimal number of goroutines rapidly, continuously, accurately.
+Finally, I’d like to consider how to bound concurrency with the determined number.</p>
+
+<h1 id="38-bounding">38. Bounding</h1>
+
+<p>In this subsection, I will explain about bounding concurrency dynamically.</p>
+
+<h1 id="39-to-bound-concurrency">39. To bound concurrency</h1>
+
+<p>This is a Go code that appeared after a long time.
+We often write such code to bound concurrency in Go.
+We usually use the buffered channel as a semaphore.
+In this example, the buffer for the channel is 3.
+Therefore, only three goroutines run at the same time.</p>
+
+<p>On the other hand, in the proposed method the optimal number of goroutines will be different in every iteration of the feedback loop.
+However, we can&rsquo;t change the buffer size of the channel later.
+Therefore, we need a dynamic semaphore for the method.</p>
+
+<h1 id="40-elastic-semaphore">40. Elastic semaphore</h1>
+
+<p>This figure shows the elastic semaphore.
+This elastic semaphore provides &ldquo;wait&rdquo; and &ldquo;signal&rdquo; operations as same as a semaphore.
+&ldquo;wait&rdquo; operation decrements the value of the semaphore variable.
+If the new value of the semaphore variable is negative, it is blocked.
+&ldquo;signal&rdquo; operation increments the value of the semaphore variable.
+&ldquo;incrementLimit&rdquo; changes upper of the semaphore variable.
+The value of the limit is determined by the feedback controller in the proposed method.
+This elastic semaphore ensures the atomicity of these operations.</p>
+
+<p>(If time remains)</p>
+
+<p>This semaphore is not strict.
+Because it allows that goroutines more than the upper limit run temporarily.
+For example, 10 goroutines are running when the upper limit is 10.
+After that, if the upper limit turns 5, 10 goroutines are still running until they finish their every task.
+Of course, generating new goroutine is blocked.
+Therefore, a long term goroutine like a worker process is not suitable for the elastic semaphore.
+Fortunately, generating goroutine is cheap in Go.
+So, we can generate it each time.</p>
+
+<h1 id="41-kaburaya">41. Kaburaya</h1>
+
+<p>In this subsection, I will explain kaburaya as the implementation of the proposed method.</p>
+
+<h1 id="42-architecture-of-kaburaya">42. Architecture of kaburaya</h1>
+
+<p>As I mentioned before, the goal of the proposed method is here.</p>
+
+<p>I&rsquo;d like to determine the number of concurrency dynamically.
+I&rsquo;d like to control the number of concurrency rapidly.</p>
+
+<p>For the purpose,</p>
+
+<p>Firstly, we decided to use CPU usage upper limit as performance metrics.
+The value is calculated on running.
+Secondly, we decided to determine the optimal number of goroutine using the metrics.
+The value is determined rapidly, continuously, accurately using feedback control.
+Finally, we decided to bound concurrency using the number.
+The concurrency is bounded using elastic semaphore dynamically.</p>
+
+<p>I am developing this implementation as OSS named kaburaya.
+The URL is here.</p>
+
+<p>As a side note, Kaburaya is the name of a Japanese arrow with a whistle.</p>
+
+<h1 id="43-monochromegane-kaburaya">43. monochromegane/kaburaya</h1>
+
+<p>This code is the usage of kaburaya.
+It is very similar to the code of bounding concurrency with buffered channels.</p>
+
+<p>&ldquo;NewSem&rdquo; specifies the period for feedback control and creates a new semaphore.
+We can use &ldquo;Wait&rdquo; and &ldquo;Signal&rdquo; like a send or receive of a channel.
+Kaburaya changes the limit of semaphore variables automatically and continuously.
+So, we don&rsquo;t need the &ldquo;incrementLimit&rdquo; operation.
+Lastly, if the tasks finished, we have to stop kaburaya to stop the feedback loop.</p>
+
+<p>So, that concludes this part of my talk on the proposed method and its implementation.
+I’d like to speak about the evaluation of kaburaya.</p>
+
+<h1 id="44-evaluation">44. Evaluation</h1>
+
+<p>In this section, I will explain the evaluation of kaburaya.</p>
+
+<h1 id="45-evaluation">45. Evaluation</h1>
+
+<p>There are 6 patterns of environments.
+I evaluated the efficacy of kaburaya in each environment.
+There are 3 contents.
+They are speedup of processing, CPU usage based on time series, and limit of semaphore on time series.
+I found good and not so good points in each environment accordingly.</p>
+
+<h1 id="46-pt-mac-scan">46. pt_mac-scan</h1>
+
+<p>At first, I will explain this environment and task.</p>
+
+<p>In this environment, &ldquo;the platinum searcher&rdquo; runs on Mac with a real-time virus scan.
+The number of CPU is 8 and the memory size is 16GB.
+GOMAXPROCS is set 8.</p>
+
+<p>The graph represents performance against the number of goroutines.
+The X-axis represents the number of goroutines.
+It is a log scale.
+The Y-axis represents the speedup of processing time against sequential processing.
+The result shows 16 goroutines make performance itself good.
+This task is more degradation of performance due to increased goroutines</p>
+
+<p>Next, I’d like to take a look at the experiment result of kaburaya.</p>
+
+<h1 id="47-pt-mac-scan">47. pt_mac-scan</h1>
+
+<p>This is a good pattern.
+Because kaburaya achieved both speed and stability.</p>
+
+<p>These figures show the results of the evaluation in the environment.
+The number of the left graph which is 11 represents the median value of goroutine number determined by kaburaya.
+As a consequence, kaburaya let processing time 6 times faster than sequential processing.</p>
+
+<p>There are 3 plots based on time series in the right graph.
+The blue dash line represents the set-point of CPU usage.
+The blue line represents the actual value of CPU usage.
+And the green line represents the number of semaphores determined by kaburaya.</p>
+
+<p>In this environment and task, Kaburaya found good set points and adjust numbers within the ideal range.
+Kaburaya was able to avoid performance degradation by determining the minimum number of the semaphore to meet the performance metrics.
+As a result, not the best, but it achieved a good speedup.
+Namely, kaburaya achieved both speed and stability.</p>
+
+<h1 id="48-task-pt-mac-no-scan">48. Task: pt_mac-no-scan</h1>
+
+<p>This is also a good pattern.
+In this environment, I stopped the real-time virus scan process and ran &ldquo;the platinum searcher&rdquo;.</p>
+
+<p>The result shows 4 goroutines make performance good.
+This task is less degradation of performance due to increased goroutines.</p>
+
+<h1 id="49-task-pt-mac-no-scan-good">49. Task: pt_mac-no-scan (Good)</h1>
+
+<p>In this environment and task, Kaburaya found good set points and adjust numbers within the ideal range.</p>
+
+<p>Please pay attention to the blue dash line in the right graph.
+This shows that the feedback controller continued to set a new set-point when CPU usage changed significantly.
+As a result, kaburaya adjusted the number of semaphore within a good range.
+Not the best, but it achieved a good speedup as few concurrency as possible.</p>
+
+<h1 id="50-task-pt-mac-no-scan-bad">50. Task: pt_mac-no-scan (Bad)</h1>
+
+<p>Unfortunately, there is a bad pattern.
+This is the same as the previous environment.
+But the number of semaphores continued to increase.
+Because kaburaya failed to reset the set point.
+Therefore actual CPU usage was always lower than set-point.</p>
+
+<p>The cause is the range of change rate is too large.
+It is used as a condition of determining set-point.</p>
+
+<p>So, I have to adjust the value in order to improve the controller.</p>
+
+<p>#51. Task: pt_linux</p>
+
+<p>This is not so bad pattern.</p>
+
+<p>In this environment, &ldquo;the platinum searcher&rdquo; runs on Linux.
+The number of CPU is 4 and the memory size is 4GB.
+GOMAXPROCS is set 4.</p>
+
+<p>The result shows 8 or 32 goroutines make performance good.
+This task is less degradation of performance due to increased goroutines.</p>
+
+<h1 id="52-task-pt-linux-not-so-bad">52. Task: pt_linux (Not so bad)</h1>
+
+<p>The number of the left graph which is 15 represents the median value of goroutine number determined by kaburaya.
+As a consequence, kaburaya let processing time 3.5 times faster than sequential processing.</p>
+
+<p>In this environment and task, Kaburaya found good set points and adjust numbers within the ideal range.
+However, at the end of the period, the number of semaphores increased due to the failure to reset the set point.</p>
+
+<p>The cause is the same as before.
+So, I have to adjust the range of change rate.</p>
+
+<h1 id="53-task-mem-4096000-10000">53. Task: mem_4096000_10000</h1>
+
+<p>Here is another task.
+The task uses the memory of a shared resource.
+In this case, the size is 4MB.
+Many concurrencies will cause starvation of resources.</p>
+
+<p>The number of CPU is 4 and the memory size is 4GB.
+GOMAXPROCS is set 4.</p>
+
+<p>Better concurrent is 512.
+This task leads to more degradation of performance (swap out) due to increased goroutines.</p>
+
+<h1 id="54-task-mem-4096000-10000-good">54. Task: mem_4096000_10000 (Good)</h1>
+
+<p>The number of the left graph which is 63 represents the median value of goroutine number determined by kaburaya.
+As a consequence, kaburaya let processing time 3 times faster than sequential processing.
+So, Kaburaya found good set points and adjust numbers within the ideal range.</p>
+
+<p>What is important is that it avoided the starvation of resources.
+These results show the good set-point keep an ideal number of semaphore.</p>
+
+<h1 id="55-task-mem-40960-1000000">55. Task: mem_40960_1000000</h1>
+
+<p>This is also a good pattern.</p>
+
+<p>I changed memory size to 40kb from 4MB.
+The environment is the same as before.
+Better concurrent are from 4 to 64.</p>
+
+<h1 id="56-task-mem-40960-1000000-good">56. Task: mem_40960_1000000 (Good)</h1>
+
+<p>The number of the left graph which is 19 represents the median value of goroutine number determined by kaburaya.
+As a consequence, kaburaya let processing time 2.5 times faster than sequential processing.
+So, Kaburaya found good set points and adjust numbers within the ideal range.</p>
+
+<h1 id="57-task-mem-409600-100000">57. Task: mem_409600_100000</h1>
+
+<p>At last, I will show you an interesting pattern.</p>
+
+<p>I changed memory size to 400kB.
+The environment is the same as before.</p>
+
+<p>Although when the number of the semaphore is 16 it seemed performance reached the limit, more goroutines made performance good.
+Perhaps better concurrent will be over 1024.</p>
+
+<h1 id="58-task-mem-409600-100000-not-so-good">58. Task: mem_409600_100000 (Not so good)</h1>
+
+<p>The number of the left graph which is 29 represents the median value of goroutine number determined by kaburaya.
+As a consequence, kaburaya let processing time 2 times faster than sequential processing.</p>
+
+<p>The results show kaburaya solved this task with a local solution.
+Certainly, Kaburaya found set points and adjusted the numbers within a range.
+But it didn&rsquo;t reach the upper of performance metrics.</p>
+
+<p>So, I think that Kaburaya has to explore the set-point aggressively when the set-point is too low.</p>
+
+<h1 id="59-experimental-results">59. Experimental results</h1>
+
+<p>In this page, I conclude experimental results.</p>
+
+<p>Kaburaya finds a good set point and adjusts numbers within ideal range by feedback control and elastic semaphore continuously.</p>
+
+<p>On the other hand, we found some key factors to improve kaburaya.</p>
+
+<p>The most important is the prediction accuracy of the set point.
+The improvement will avoid that the number of the semaphore is too much or too less.</p>
+
+<p>And finding optimal parameters is also important.
+Based on my experience, I got good results in most cases when the gain of the feedback controller is from 0.1 to 0.3 and the range of change rate is 0.3.
+However, I think that we have to tune the parameters as necessary.</p>
+
+<p>I expect that there is a solution in the related researches on feedback control.</p>
+
+<h1 id="60-conclusion">60. Conclusion</h1>
+
+<p>OK, This is a conclusion.</p>
+
+<h1 id="61-conclusion">61. Conclusion</h1>
+
+<p>I proposed kaburaya to control the number of goroutines without depending on the platform, runtime, and current load.
+Experimental results show possible and some issues of kaburaya.
+In particular, improvement in detecting performance upper limit of the task is important.
+In the future, I will also consider the application to auto-scaling of cloud computing.</p>
+
+<h1 id="62-appendix">62. Appendix</h1>
+
+<p>This is the Appendix.</p>
+
+<h1 id="63-reference">63. Reference</h1>
+
+<p>Here is Reference.
+If you want to learn more about kaburaya, you can jump to the link.
+Sorry, some texts are in Japanese.</p>
+
+<h1 id="64-go-gopher">64. Go gopher</h1>
+
+<p>The Go gophers in this slide were drawn by Keita Kawamoto.</p>
+
+<h1 id="65-thank-you">65. Thank you!</h1>
+
+<p>Thank you for listening.
+It was a pleasure being here today.</p>
+
+    </div>
+    <footer class="tag">
+      <i class="fa fa-tags tag-icon"></i>
+      <ul>
+      
+        <li><a class="tag-link" href="/tags/golang">golang</a></li>
+      
+        <li><a class="tag-link" href="/tags/gophercon">gophercon</a></li>
+      
+      </ul>
+      <div class="clear"></div>
+    </footer>
+  </div>
+</article>
+
+      <div class="social-btn">
+  <div>
+    <a href="http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2019/07/25/gophercon_2019_kaburaya/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="en" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+  <div>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-via="monochromegane">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  </div>
+</div>
+
+    </div>
+    <footer class="footer">
+  <div class="author"></div>
+  <p class="author-name"><a href="https://twitter.com/monochromegane" target="_blank">@monochromegane</a></p>
+  
+    <p>monochromegane (モノクロめがね) と申します。</p>
+  
+    <p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+  
+  <ul class="social">
+    <li><a href="https://twitter.com/monochromegane" target="_blank"><i class="fa fa-twitter"></i></a></li>
+    <li><a href="https://github.com/monochromegane" target="_blank"><i class="fa fa-github"></i></a></li>
+    <li><a href="/index.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
+  </ul>
+  <p class="copyright">
+    <small>&copy;  <span class="">Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>, Designed by <a href="https://twitter.com/keita_kawamoto" target="_blank">&copy;keita_kawamoto</a></span></small>
+  </p>
+</footer>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+    
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-38374674-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+  </body>
+</html>

@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width">
+  <meta name="author" content="">
+  
+    <title>分散アプリケーションにおける複数端末利用を考慮したプライベートデータの管理 &middot; THINKING MEGANE</title>
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@monochromegane">
+  <meta property="og:description" content="このエントリは、第一回 Web System Architecture 研究会 (WSA研)の予稿です。
+ 1. はじめに ブロックチェーン技術の登場により、インターネットを経由した個人間での直接の価値交換が容易となりつつある。
+これまで、インターネット上での個人間での価値交換の場を提供してきた、マーケットプレイス型のECサイトや、シェアリングエコノミーの代表である、AirbnbやUberは、一旦情報を集約し提供する仲介者としてのビジネスを行ってきた。これらのビジネスはニーズのマッチングと取引の信頼性の提供の二つの側面で価値を提供している。一方、ブロックチェーンは、非中央集権的な台帳管理をトランザクションの順序性を明確にするデータ構造とブロック生成と検証に系が正しく回るような仕組みを組み込むことで、信頼性の提供を実現する。このように中央集権的な存在を介さないブロックチェーン上で動作するBitCoinやEthereumが通貨や契約機構としての役割を備えることでボーダレスかつ多様性を持った直接の価値交換が可能な仕組みが整ってきた。
+実際に、StorjやFilecoinといったストレージの空き容量を価値へと交換する分散型ファイルストレージサービスや、P2P上でマーケットプレイスを開設しBitCoinで支払いを行うOpenBazzarなどが登場している。
+これらの価値交換プラットフォームは自律しており、中央集権的な運用やサーバーが存在しない。言い換えれば参加者全員がサーバーでありクライアントである。このような非中央集権的な価値交換プラットフォームの登場は従来型のWebサービス提供者に対してパラダイムシフトを迫るものである。
+本研究報告では、非中央集権的な価値交換プラットフォームにおけるアプリケーション実装の考察を行い、用途別データ管理、特にプライベートデータの取り扱いの方式について検討する。
+2. 分散アプリケーションにおけるプライベートデータ管理の課題 非中央集権的な価値交換プラットフォームにおけるアプリケーション実装は、中央集権的なサーバーが存在しないため、従来のアプリケーション実装方式は適用できない。そこで、本章でははじめに、非中央集権的なアプリケーション実装の方式とそれらの課題について述べる。
+なお、本章以降、非中央集権的な価値交換プラットフォームにおけるアプリケーション、すなわち中央の管理を受けない自律分散型のアプリケーションのことを分散アプリケーションと呼ぶこととする。DAppsとして提唱されている分散アプリケーションとは異なることに留意されたい。
+2.1 分散アプリケーションの実装と用途別データ管理 従来の中央集権的なサービスは、サーバー、クライアント方式をとるが、分散アプリケーションではアプリケーションやデータはその分散ネットワークに参加する個々の端末に分散される。
+例えば、P2PファイルシステムとBitCoinを用いたマーケットプレイスを提供する分散アプリケーションであるOpenBazzarの構成は以下のようになる。
+ 商取引の履歴はブロックチェーン上に保存 商品の情報はP2Pファイルシステム上に保存 利用者の情報は端末に保存 アプリケーションはローカルで起動し、上記のデータをつなぐ  ブロックチェーンはその信頼性から、分散アプリケーションが重要とみなす取引の履歴を保存する。しかしながら、台帳記載に手数料がかかること、ブロックの確定にタイムラグがあることなどから重要度の低いデータや更新の多い情報はブロックチェーンの外側で管理される。また、取引自体が発生しないマスタデータなども台帳管理としては不適切である。つまり、分散アプリケーションでは用途に応じて管理されるデータを組み合わせて利用する必要がある。
+2.2 分散アプリケーションにおけるプライベートデータ共有の課題 分散アプリケーションに必要なデータの多くは非中央集権な仕組みで分散されるため、その分散ネットワークに参加できる環境において、どの端末からも比較的容易にアクセス可能である。一方、利用者の情報は各端末に保存されるため、複数端末で環境を揃えるためには端末間でデータを共有する必要がある。本研究では、従来のデータ共有モデルの検討を通して、分散アプリケーションにおけるプライベートなデータ共有の課題を示す。
+2.2.1 分散ファイルシステムとデータベース マウント処理を通してサーバー上のデータ操作を透過的に行うことができるNFSや、端末上で操作したファイルがサーバー上に自動的に同期されるDropboxのようなアプリケーション、そしてデータを一元管理するデータベースサーバーなどは典型的な中央集権的なデータ共有であると言える。また、URLによって相互にドキュメントを参照する広大なドキュメントベースシステムとして捉えるとWWWもデータ共有の仕組みとみなすことができるが、各ドキュメントはサーバー単位で管理されており、これもまた、中央集権的なデータ共有となっている。
+これらの手法は中央集権的なアプリケーション実装において利用されているが、非中央集権的な構成をとる分散アプリケーションの実装においては、これらの中央集権的な仕組みに依存しないことが望ましい。
+2.2.2 P2P型データベース Amazon DynamoDBやApache CassandraはP2P型の分散データベースであり、クラスタリングされた各ノードがデータを分散して保存する。これらのデータベースへのノード追加やデータアクセスは中央集権的にコントロールされており、基本的には閉じた専用のネットワークとして構築、運用される。
+分散アプリケーションの実装においては、中央集権的な仕組みに依存しない開けたP2P型のネットワークであることが望ましい。また、そのネットワークは耐障害性や利便性の観点から参加ノードの多い、普及したネットワークであるとより良い。
+2.2.3 P2P型分散ファイルシステム 非中央集権的なデータ共有としてP2Pネットワークを用いた分散ファイルシステムがある。データはP2Pネットワーク上のノードに分散して保存され、利用者は何らかのポインタによりそれらにアクセスする。IPFS(InterPlanetary File System)は、P2Pネットワークを用いたドキュメントベースのデータ共有モデルである。データの分散保存とデータ内容に基づくアドレッシングにより、従来のWWWのサーバー依存を取り除き、非中央集権的なデータ共有を可能にしている。また、IPFSはディレクトリ構造も扱うことができるため、端末のデータ構造との親和性が高いことも特徴である。
+データ内容に基づくアドレッシングの場合、内容の変更がアドレスの変更につながるため、利用者は最新のアドレスを保持しておくことが求められる。なお、IPFSではIPNSと呼ばれる、固定アドレスと任意のアドレスを紐づけることができる名前解決の仕組みも提供することでこの問題の解決を図っている。
+また、IPFSを始めとするP2P型分散ファイルシステムは、ネットワーク参加者にデータの内容が参照されてしまう。プライベートデータの共有のためには、データ参照を制限する仕組みが求められる。
+2.2.4 P2P分散ファイルシステム上のデータストア 汎用的なP2P型分散ファイルシステム上でデータベースファイルを管理することでデータ共有を行う手法がある。IPFSを始めとするP2P型分散ファイルシステムはデータ内容に基づくアドレッシングを行うため、ファイル内容の一部変更であっても別データと見なされる。そのため、Sqliteなどの従来のデータベースファイルを直接配置すると変更の度に全データがP2P上に保存し直されることになる。これはデータ容量が大きくなるにつれて深刻なオーバーヘッドとなる。
+そのため、P2P型分散ファイルシステムの特性を考慮したデータベースが必要となる。つまり変更の局所化であり、修正内容に対するP2P上への保存量が少ないほど良い。OrbitDBはIPFS上で動作するデータストアであり、データストアへのデータ追加更新削除などの操作内容履歴の一つづつをIPFS上にファイルとして保存することで変更を局所化する。
+また、複数端末での利用を考えると、データの競合への対処が必要となる。分散データ管理におけるCAP定理では、CAPの全てを満たすことは難しいとされているが、このうち、APを満たすデータ構造であるCRDTが知られている。CRDTはデータが順不同であることを前提とし、データ操作を可換なものに限定することで参照整合性を提供する。先ほど紹介したOrbitDBも複数のデータストア種別においてこれをサポートしている。
+なお、参照時はこれらの可換な操作の履歴を統合したものが利用されるが、履歴の増加に伴い参照時のオーバーヘッドが発生する。実運用ではメモリ上に展開しておくなどの工夫が必要となる。
+3. 分散アプリケーションにおけるプライベートデータ管理手法の提案 ここまで、従来のデータ共有モデルを比較しながら、分散アプリケーションにおけるプライベートデータ管理に求められる要件を抽出した。要件は以下の通りである。
+ 1. 非中央集権的な構成であること 2. 分散保存されるデータに対して参照制限をかけれること 3. 開かれた普及しているP2P型ネットワークを用いること 4. 最新のアドレスを保持または解決できること 5. 変更が局所化されていること 6.">
+  <meta property="og:title" content="分散アプリケーションにおける複数端末利用を考慮したプライベートデータの管理">
+  <meta property="og:url" content="https://blog.monochromegane.com/blog/2017/12/25/wsa_1_kaleidoscope/">
+  <meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+  
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Source+Code+Pro' type='text/css'>
+  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Montserrat' type='text/css'>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css">
+  <link rel="stylesheet" href="/css/text.css">
+  <link rel="stylesheet" href="/css/color.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="/images/apple-touch-icon-57-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="/images/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
+  <link rel="canonical" href="https://blog.monochromegane.com/blog/2017/12/25/wsa_1_kaleidoscope/">
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="THINKING MEGANE" />
+  
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async>
+    MathJax.Hub.Config({
+        HTML: ["input/TeX","output/HTML-CSS"],
+        TeX: {
+               Macros: {
+                        bm: ["\\boldsymbol{#1}", 1],
+                        argmax: ["\\mathop{\\rm arg\\,max}\\limits"],
+                        argmin: ["\\mathop{\\rm arg\\,min}\\limits"]},
+               extensions: ["AMSmath.js","AMSsymbols.js"],
+               equationNumbers: { autoNumber: "AMS" } },
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX","output/HTML-CSS"],
+        tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                   displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                   processEscapes: true },
+        "HTML-CSS": { availableFonts: ["TeX"],
+                      linebreaks: { automatic: true } }
+    });
+  </script>
+</head>
+
+  <body>
+    <div class="header">
+  <header>
+    <h1 class="logo"><a href="https://blog.monochromegane.com">THINKING MEGANE</a></h1>
+    <nav>
+      <ul class="menu">
+        <li><a href="/self-introduction/">Home</a></li>
+        <li><a href="/post/">Archives</a></li>
+        <li><a href="/diary/">Diary</a></li>
+        <li><a href="http://thinking-megane.blogspot.jp/">Old Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+</div>
+
+    <div class="container">
+      <article>
+  <div class="post">
+    <header>
+      <h1><a href="https://blog.monochromegane.com/blog/2017/12/25/wsa_1_kaleidoscope/">分散アプリケーションにおける複数端末利用を考慮したプライベートデータの管理</a></h1>
+      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2017-12-25</div></time>
+    </header>
+    <div class="post-inner">
+      
+
+<p>このエントリは、<a href="http://websystemarchitecture.hatenablog.jp/entry/2017/12/17/133301">第一回 Web System Architecture 研究会 (WSA研)</a>の予稿です。</p>
+
+<script async class="speakerdeck-embed" data-id="af69192ff1d84cd8967df33363605ccb" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
+
+<h1 id="1-はじめに">1. はじめに</h1>
+
+<p>ブロックチェーン技術の登場により、インターネットを経由した個人間での直接の価値交換が容易となりつつある。</p>
+
+<p>これまで、インターネット上での個人間での価値交換の場を提供してきた、マーケットプレイス型のECサイトや、シェアリングエコノミーの代表である、<a href="https://www.airbnb.jp/">Airbnb</a>や<a href="https://www.uber.com/ja-JP/">Uber</a>は、一旦情報を集約し提供する仲介者としてのビジネスを行ってきた。これらのビジネスはニーズのマッチングと取引の信頼性の提供の二つの側面で価値を提供している。一方、ブロックチェーンは、非中央集権的な台帳管理をトランザクションの順序性を明確にするデータ構造とブロック生成と検証に系が正しく回るような仕組みを組み込むことで、信頼性の提供を実現する。このように中央集権的な存在を介さないブロックチェーン上で動作するBitCoinやEthereumが通貨や契約機構としての役割を備えることでボーダレスかつ多様性を持った直接の価値交換が可能な仕組みが整ってきた。</p>
+
+<p>実際に、<a href="https://storj.io/">Storj</a>や<a href="https://filecoin.io/">Filecoin</a>といったストレージの空き容量を価値へと交換する分散型ファイルストレージサービスや、P2P上でマーケットプレイスを開設しBitCoinで支払いを行う<a href="https://www.openbazaar.org/">OpenBazzar</a>などが登場している。</p>
+
+<p>これらの価値交換プラットフォームは自律しており、中央集権的な運用やサーバーが存在しない。言い換えれば参加者全員がサーバーでありクライアントである。このような非中央集権的な価値交換プラットフォームの登場は従来型のWebサービス提供者に対してパラダイムシフトを迫るものである。</p>
+
+<p>本研究報告では、非中央集権的な価値交換プラットフォームにおけるアプリケーション実装の考察を行い、用途別データ管理、特にプライベートデータの取り扱いの方式について検討する。</p>
+
+<h1 id="2-分散アプリケーションにおけるプライベートデータ管理の課題">2. 分散アプリケーションにおけるプライベートデータ管理の課題</h1>
+
+<p>非中央集権的な価値交換プラットフォームにおけるアプリケーション実装は、中央集権的なサーバーが存在しないため、従来のアプリケーション実装方式は適用できない。そこで、本章でははじめに、非中央集権的なアプリケーション実装の方式とそれらの課題について述べる。</p>
+
+<p>なお、本章以降、非中央集権的な価値交換プラットフォームにおけるアプリケーション、すなわち中央の管理を受けない自律分散型のアプリケーションのことを分散アプリケーションと呼ぶこととする。DAppsとして提唱されている分散アプリケーションとは異なることに留意されたい。</p>
+
+<h2 id="2-1-分散アプリケーションの実装と用途別データ管理">2.1 分散アプリケーションの実装と用途別データ管理</h2>
+
+<p>従来の中央集権的なサービスは、サーバー、クライアント方式をとるが、分散アプリケーションではアプリケーションやデータはその分散ネットワークに参加する個々の端末に分散される。</p>
+
+<p>例えば、P2PファイルシステムとBitCoinを用いたマーケットプレイスを提供する分散アプリケーションであるOpenBazzarの構成は以下のようになる。</p>
+
+<ol>
+<li>商取引の履歴はブロックチェーン上に保存</li>
+<li>商品の情報はP2Pファイルシステム上に保存</li>
+<li>利用者の情報は端末に保存</li>
+<li>アプリケーションはローカルで起動し、上記のデータをつなぐ</li>
+</ol>
+
+<p>ブロックチェーンはその信頼性から、分散アプリケーションが重要とみなす取引の履歴を保存する。しかしながら、台帳記載に手数料がかかること、ブロックの確定にタイムラグがあることなどから重要度の低いデータや更新の多い情報はブロックチェーンの外側で管理される。また、取引自体が発生しないマスタデータなども台帳管理としては不適切である。つまり、分散アプリケーションでは用途に応じて管理されるデータを組み合わせて利用する必要がある。</p>
+
+<h2 id="2-2-分散アプリケーションにおけるプライベートデータ共有の課題">2.2 分散アプリケーションにおけるプライベートデータ共有の課題</h2>
+
+<p>分散アプリケーションに必要なデータの多くは非中央集権な仕組みで分散されるため、その分散ネットワークに参加できる環境において、どの端末からも比較的容易にアクセス可能である。一方、利用者の情報は各端末に保存されるため、複数端末で環境を揃えるためには端末間でデータを共有する必要がある。本研究では、従来のデータ共有モデルの検討を通して、分散アプリケーションにおけるプライベートなデータ共有の課題を示す。</p>
+
+<h3 id="2-2-1-分散ファイルシステムとデータベース">2.2.1 分散ファイルシステムとデータベース</h3>
+
+<p>マウント処理を通してサーバー上のデータ操作を透過的に行うことができるNFSや、端末上で操作したファイルがサーバー上に自動的に同期されるDropboxのようなアプリケーション、そしてデータを一元管理するデータベースサーバーなどは典型的な中央集権的なデータ共有であると言える。また、URLによって相互にドキュメントを参照する広大なドキュメントベースシステムとして捉えるとWWWもデータ共有の仕組みとみなすことができるが、各ドキュメントはサーバー単位で管理されており、これもまた、中央集権的なデータ共有となっている。</p>
+
+<p>これらの手法は中央集権的なアプリケーション実装において利用されているが、非中央集権的な構成をとる分散アプリケーションの実装においては、これらの中央集権的な仕組みに依存しないことが望ましい。</p>
+
+<h3 id="2-2-2-p2p型データベース">2.2.2 P2P型データベース</h3>
+
+<p>Amazon DynamoDBやApache CassandraはP2P型の分散データベースであり、クラスタリングされた各ノードがデータを分散して保存する。これらのデータベースへのノード追加やデータアクセスは中央集権的にコントロールされており、基本的には閉じた専用のネットワークとして構築、運用される。</p>
+
+<p>分散アプリケーションの実装においては、中央集権的な仕組みに依存しない開けたP2P型のネットワークであることが望ましい。また、そのネットワークは耐障害性や利便性の観点から参加ノードの多い、普及したネットワークであるとより良い。</p>
+
+<h3 id="2-2-3-p2p型分散ファイルシステム">2.2.3 P2P型分散ファイルシステム</h3>
+
+<p>非中央集権的なデータ共有としてP2Pネットワークを用いた分散ファイルシステムがある。データはP2Pネットワーク上のノードに分散して保存され、利用者は何らかのポインタによりそれらにアクセスする。<a href="https://ipfs.io/">IPFS(InterPlanetary File System)</a>は、P2Pネットワークを用いたドキュメントベースのデータ共有モデルである。データの分散保存とデータ内容に基づくアドレッシングにより、従来のWWWのサーバー依存を取り除き、非中央集権的なデータ共有を可能にしている。また、IPFSはディレクトリ構造も扱うことができるため、端末のデータ構造との親和性が高いことも特徴である。</p>
+
+<p>データ内容に基づくアドレッシングの場合、内容の変更がアドレスの変更につながるため、利用者は最新のアドレスを保持しておくことが求められる。なお、IPFSではIPNSと呼ばれる、固定アドレスと任意のアドレスを紐づけることができる名前解決の仕組みも提供することでこの問題の解決を図っている。</p>
+
+<p>また、IPFSを始めとするP2P型分散ファイルシステムは、ネットワーク参加者にデータの内容が参照されてしまう。プライベートデータの共有のためには、データ参照を制限する仕組みが求められる。</p>
+
+<h3 id="2-2-4-p2p分散ファイルシステム上のデータストア">2.2.4 P2P分散ファイルシステム上のデータストア</h3>
+
+<p>汎用的なP2P型分散ファイルシステム上でデータベースファイルを管理することでデータ共有を行う手法がある。IPFSを始めとするP2P型分散ファイルシステムはデータ内容に基づくアドレッシングを行うため、ファイル内容の一部変更であっても別データと見なされる。そのため、Sqliteなどの従来のデータベースファイルを直接配置すると変更の度に全データがP2P上に保存し直されることになる。これはデータ容量が大きくなるにつれて深刻なオーバーヘッドとなる。</p>
+
+<p>そのため、P2P型分散ファイルシステムの特性を考慮したデータベースが必要となる。つまり変更の局所化であり、修正内容に対するP2P上への保存量が少ないほど良い。<a href="https://github.com/orbitdb/orbit-db">OrbitDB</a>はIPFS上で動作するデータストアであり、データストアへのデータ追加更新削除などの操作内容履歴の一つづつをIPFS上にファイルとして保存することで変更を局所化する。</p>
+
+<p>また、複数端末での利用を考えると、データの競合への対処が必要となる。分散データ管理におけるCAP定理では、CAPの全てを満たすことは難しいとされているが、このうち、APを満たすデータ構造であるCRDTが知られている。CRDTはデータが順不同であることを前提とし、データ操作を可換なものに限定することで参照整合性を提供する。先ほど紹介したOrbitDBも複数のデータストア種別においてこれをサポートしている。</p>
+
+<p>なお、参照時はこれらの可換な操作の履歴を統合したものが利用されるが、履歴の増加に伴い参照時のオーバーヘッドが発生する。実運用ではメモリ上に展開しておくなどの工夫が必要となる。</p>
+
+<h1 id="3-分散アプリケーションにおけるプライベートデータ管理手法の提案">3. 分散アプリケーションにおけるプライベートデータ管理手法の提案</h1>
+
+<p>ここまで、従来のデータ共有モデルを比較しながら、分散アプリケーションにおけるプライベートデータ管理に求められる要件を抽出した。要件は以下の通りである。</p>
+
+<ul>
+<li>1. 非中央集権的な構成であること</li>
+<li>2. 分散保存されるデータに対して参照制限をかけれること</li>
+<li>3. 開かれた普及しているP2P型ネットワークを用いること</li>
+<li>4. 最新のアドレスを保持または解決できること</li>
+<li>5. 変更が局所化されていること</li>
+<li>6. 変更の競合に対応できること</li>
+<li>7. 参照時のオーバーヘッドが少ないこと</li>
+</ul>
+
+<p>3.以降はP2P型分散ファイルシステム利用にあたって必要となる要件である。本研究報告では、これらを満たす手法として<a href="https://github.com/monochromegane/kaleidoscope">Kaleidoscope</a>と名付けたOSSを実装、公開した。以降、Kaleidoscopeの構造と機能を示していく。</p>
+
+<p>なお、文中の[*N]は上記要件番号と対応するものとする。</p>
+
+<h2 id="3-1-提案手法の構造">3.1 提案手法の構造</h2>
+
+<p>KaleidoscopeはP2P分散ファイルシステム上で動作するKey-Value Storeである。データ共有モデルとしては、前述のP2P分散ファイルシステム上のデータストアに分類される[*1]。また、P2PネットワークとしてはIPFSを想定している[*3]。</p>
+
+<p>Kaleidoscopeのデータ構造は至ってシンプルである。データストア名、キー名をディレクトリとし、内容をファイルとするディレクトリ構造をIPFS上に保存する。データはタイムスタンプ等のメタデータと内容を合わせて暗号化が成される。暗号化は公開鍵方式で行われるため、秘密鍵の所有者以外は内容を把握できない[*2]。</p>
+
+<pre><code>├── __database_name
+├── key1
+│   └── value
+└── key2
+    └── value
+</code></pre>
+
+<p>Kaleidoscopeはデータストアと対応するディレクトリ構造の変更を内部で保持するだけでなく、IPNSを用いて固定されたデータストアのアドレスから最新のアドレスを解決する[*4]。</p>
+
+<p>以上の仕組みにより、利用者はKaleidoscopeを用いて、キーとディレクトリアドレスとの対応、暗号化と復号化、最新のアドレスの解決を意識することなく、透過的に個人用のKey-Value Storeを扱うことができる。</p>
+
+<p>次に、KaleidoscopeがP2P分散ファイルシステム上のデータストアの課題を解決する手法を紹介する。従来のP2P分散ファイルシステム上のデータストアは、ファイルシステムの特性を考慮しないファイルベース差分方式とOrbitDBに代表されるオペレーションベース差分方式と考えることができる。</p>
+
+<p>Kaleidoscopeはデータストアをディレクトリ構造で表現することでこれを解決するディレクトリベース差分方式を提案、採用する。</p>
+
+<p>ディレクトリベース差分方式での値の更新はキー単位に分離されており、データストア全体のデータ容量に依存しない[*5]。また、更新後のディレクトリ構造のアドレスを参照するため、常に最新の値を更新履歴に依存せず取得することができる[*7]。さらに値を表現するファイル内容にタイムスタンプを持つことで、ディレクトリ構造としての統合が可能になる[*6]。CRDTの思想に添えば、順不同な可換な操作を統合できればよく、必ずしも全履歴を保持する必要はないためである。</p>
+
+<h2 id="3-2-提案手法の機能">3.2 提案手法の機能</h2>
+
+<p>Kaleidoscopeの基本的な利用方法を以下に示す。</p>
+
+<pre><code class="language-sh"># IPFSデーモンの起動
+$ ipfs daemon
+
+# Kaleidoscope CLIによるIPFS操作
+$ kes
+&gt; create my-db
+# =&gt; データストア用の鍵ペアの作成とディレクトリをIPFSに登録
+&gt;
+&gt; set key1 value1
+# =&gt; IPFSに暗号化して保存
+&gt;
+&gt; get key1
+value1
+# =&gt; IPFSの該当するディレクトリ構造からファイルを取得し復号化する
+&gt;
+&gt; save
+# =&gt; 最新のハッシュ値でIPNSを更新する
+</code></pre>
+
+<p>端末間の共有に対しては<code>use</code>コマンドを利用し、最新のハッシュ値を得ることができる。</p>
+
+<pre><code class="language-sh">$ kes
+&gt; use my-db
+# =&gt; IPNSから最新のハッシュ値を得る
+</code></pre>
+
+<p>ただし、現状の実装ではIPNS更新に数秒かかるため、リアルタイムに端末間でデータを同期することが難しい。そこで、IPFSのPubSub機能を利用して変更の操作履歴を共有する<code>sync</code>コマンドを実験的に用意した。</p>
+
+<pre><code class="language-sh"># PubSubオプションを指定してIPFSデーモンの起動
+$ ipfs daemon --enable-pubsub-experiment
+
+$ kes
+&gt; sync
+# =&gt; 以降、オンラインの他の自身の端末からの操作履歴が共有される
+</code></pre>
+
+<p>現状、<code>sync</code>コマンドは操作履歴としてコマンド並びに対象となったファイルのハッシュ値をPubSub経由で送信する。受信側は、自身の操作にそれらの操作を差し込みながら順番に処理を行う。正確な実装ではタイムスタンプまで考慮した統合が必要であり、今後の対応案件である。</p>
+
+<p>また、マージ処理は現状未実装であり、これも今後の対応案件である。</p>
+
+<h1 id="4-評価">4. 評価</h1>
+
+<h2 id="4-1-差分方式による更新時間の比較">4.1 差分方式による更新時間の比較</h2>
+
+<p>まず、差分方式による更新時間の差を比較する。シナリオとして、1MBの値を繰り返し登録した際のIPFS上への登録時間を計測した（単位は秒）。ファイルベース差分方式では、値の蓄積に伴いファイル容量が増加するため当然ながら登録処理が遅くなる。オペレーションベースとディレクトリベースでは変更が局所化しているため、データストア全体の値の蓄積に処理時間が依存しないことがわかる。</p>
+
+<table>
+<thead>
+<tr>
+<th align="right">size(MB)</th>
+<th align="right">file-based</th>
+<th align="right">ope-based</th>
+<th align="right">dir-based</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="right">1</td>
+<td align="right">0.017593</td>
+<td align="right">0.021435</td>
+<td align="right">0.028095</td>
+</tr>
+
+<tr>
+<td align="right">2</td>
+<td align="right">0.040661</td>
+<td align="right">0.023311</td>
+<td align="right">0.031242</td>
+</tr>
+
+<tr>
+<td align="right">3</td>
+<td align="right">0.048258</td>
+<td align="right">0.026174</td>
+<td align="right">0.030879</td>
+</tr>
+
+<tr>
+<td align="right">4</td>
+<td align="right">0.073272</td>
+<td align="right">0.023378</td>
+<td align="right">0.026437</td>
+</tr>
+
+<tr>
+<td align="right">5</td>
+<td align="right">0.101438</td>
+<td align="right">0.022118</td>
+<td align="right">0.040008</td>
+</tr>
+
+<tr>
+<td align="right">6</td>
+<td align="right">0.073841</td>
+<td align="right">0.028761</td>
+<td align="right">0.032161</td>
+</tr>
+
+<tr>
+<td align="right">7</td>
+<td align="right">0.093803</td>
+<td align="right">0.025831</td>
+<td align="right">0.038100</td>
+</tr>
+
+<tr>
+<td align="right">8</td>
+<td align="right">0.092051</td>
+<td align="right">0.023874</td>
+<td align="right">0.026611</td>
+</tr>
+
+<tr>
+<td align="right">9</td>
+<td align="right">0.110011</td>
+<td align="right">0.026290</td>
+<td align="right">0.026626</td>
+</tr>
+
+<tr>
+<td align="right">10</td>
+<td align="right">0.116614</td>
+<td align="right">0.025109</td>
+<td align="right">0.031673</td>
+</tr>
+</tbody>
+</table>
+
+<p>なお、ディレクトリベースでは、値の更新時にルートディレクトリの更新処理が発生するため、その追加処理分だけ、オーバーヘッドが発生していることから、ファイルベース差分と比較して時間がかかっていると考えられる。</p>
+
+<h2 id="4-2-差分方式による初期起動時間の比較">4.2 差分方式による初期起動時間の比較</h2>
+
+<p>次に、差分方式による初期起動時間の差を比較する。シナリオとして、1MBの値が繰り返し登録されている状態のデータストアに対して初期起動の時間を計測した（単位は秒）。ファイルベースとオペレーションベースでは現在の情報を一旦読み込む必要があるため、蓄積されたデータに初期起動時間が比例する。ただし、オペレーションベース差分方式では、各操作履歴の取得は並行できるので、実装の工夫により短縮することは可能である。</p>
+
+<table>
+<thead>
+<tr>
+<th align="right">size(MB)</th>
+<th align="right">file-based</th>
+<th align="right">ope-based</th>
+<th align="right">dir-based</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="right">1</td>
+<td align="right">0.003264</td>
+<td align="right">0.002369</td>
+<td align="right">0</td>
+</tr>
+
+<tr>
+<td align="right">2</td>
+<td align="right">0.004155</td>
+<td align="right">0.005634</td>
+<td align="right">0</td>
+</tr>
+
+<tr>
+<td align="right">3</td>
+<td align="right">0.006680</td>
+<td align="right">0.007669</td>
+<td align="right">0</td>
+</tr>
+
+<tr>
+<td align="right">4</td>
+<td align="right">0.007542</td>
+<td align="right">0.011732</td>
+<td align="right">0</td>
+</tr>
+
+<tr>
+<td align="right">5</td>
+<td align="right">0.008023</td>
+<td align="right">0.012052</td>
+<td align="right">0</td>
+</tr>
+
+<tr>
+<td align="right">6</td>
+<td align="right">0.019605</td>
+<td align="right">0.015466</td>
+<td align="right">0</td>
+</tr>
+
+<tr>
+<td align="right">7</td>
+<td align="right">0.072510</td>
+<td align="right">0.019542</td>
+<td align="right">0</td>
+</tr>
+
+<tr>
+<td align="right">8</td>
+<td align="right">0.013462</td>
+<td align="right">0.018007</td>
+<td align="right">0</td>
+</tr>
+
+<tr>
+<td align="right">9</td>
+<td align="right">0.011672</td>
+<td align="right">0.027935</td>
+<td align="right">0</td>
+</tr>
+
+<tr>
+<td align="right">1</td>
+<td align="right">0.021468</td>
+<td align="right">0.026011</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+
+<p>なお、ディレクトリベース差分方式では、最新のデータストアがIPFS上に存在するため、初期起動時の読み込みは不要である。</p>
+
+<h2 id="4-3-差分方式によるマージ時間の比較">4.3 差分方式によるマージ時間の比較</h2>
+
+<p>現時点で未実装。ディレクトリベースでは競合するデータベースごとに最新の値を持っているので、操作ログを全て比較するオペレーションベースに対して優位であると想定する。</p>
+
+<h1 id="5-まとめ">5. まとめ</h1>
+
+<p>非中央集権的な直接の価値交換プラットフォームの進出により、分散アプリケーションの実装が増えるに伴い課題となるプライベートデータ共有について、従来手法を比較し、最も適していると考えられるP2P分散ファイルシステムを用いたデータストアが抱える課題をディレクトリベース差分方式により解決する手法を提案した。
+ディレクトリベースのデータ構造は単純なKey-Valueだけでなくサブディレクトリを設けることで利用可能なデータ構造の拡張が見込めるため今後の実装を進めていきたい。
+また、現在の実装ではデータ共有をIPNS更新とPubSubによるリアルタイム同期で行なっているが、それぞれ、保存処理に時間がかかること、対応する端末が常にネットワークに存在する必要があるという課題がある。今後、最新のアドレス履歴をバッファリングされて時間差で参照できるような仕組みにより、より快適に利用できる仕組みを検討していきたい。</p>
+
+<h1 id="参考文献">参考文献</h1>
+
+<ul>
+<li>Giuseppe DeCandia, Deniz Hastorun, Madan Jampani, Gunavardhan Kakulapati,
+Avinash Lakshman, Alex Pilchin, Swaminathan Sivasubramanian, Peter Vosshall
+and Werner Vogels, Dynamo: Amazon’s Highly Available Key-value Store,  In Proceedings of twenty-first
+ACM SIGOPS symposium on Operating systems principles, ACM Press New York, NY, USA, pp. 205–220, 2007</li>
+<li>Julian Browne, Brewer&rsquo;s CAP Theorem - The kool aid Amazon and Ebay have been drinking, 2009</li>
+<li>Mihai Letia and Nuno M. Preguiça and Marc Shapiro, CRDTs: Consistency without concurrency control, CoRR, 2009</li>
+</ul>
+
+<h1 id="発表を終えて">発表を終えて</h1>
+
+<p>時間調整をミスって持ち時間のうちほとんどを発表に当ててしまい、議論を存分にできなかったのが心残り。実際に発表の練度が低かったので、前提の共有もうまく行かず失敗したなあとしばらく落ち込んでしまった。次回はきちんと仕上げてきます。</p>
+
+    </div>
+    <footer class="tag">
+      <i class="fa fa-tags tag-icon"></i>
+      <ul>
+      
+        <li><a class="tag-link" href="/tags/wsa%E7%A0%94">WSA研</a></li>
+      
+      </ul>
+      <div class="clear"></div>
+    </footer>
+  </div>
+</article>
+
+      <div class="social-btn">
+  <div>
+    <a href="http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2017/12/25/wsa_1_kaleidoscope/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="en" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+  <div>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-via="monochromegane">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  </div>
+</div>
+
+    </div>
+    <footer class="footer">
+  <div class="author"></div>
+  <p class="author-name"><a href="https://twitter.com/monochromegane" target="_blank">@monochromegane</a></p>
+  
+    <p>monochromegane (モノクロめがね) と申します。</p>
+  
+    <p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+  
+  <ul class="social">
+    <li><a href="https://twitter.com/monochromegane" target="_blank"><i class="fa fa-twitter"></i></a></li>
+    <li><a href="https://github.com/monochromegane" target="_blank"><i class="fa fa-github"></i></a></li>
+    <li><a href="/index.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
+  </ul>
+  <p class="copyright">
+    <small>&copy;  <span class="">Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>, Designed by <a href="https://twitter.com/keita_kawamoto" target="_blank">&copy;keita_kawamoto</a></span></small>
+  </p>
+</footer>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+    
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-38374674-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+  </body>
+</html>
