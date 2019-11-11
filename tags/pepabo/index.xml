@@ -1,65 +1,27 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Pepabo on THINKING MEGANE</title>
-    <link>https://blog.monochromegane.com/tags/pepabo/</link>
-    <description>Recent content in Pepabo on THINKING MEGANE</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>ja-jp</language>
-    <lastBuildDate>Sun, 05 Jul 2015 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/pepabo/" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>第2回ペパボテックカンファレンスで発表してきた #pbtech</title>
-      <link>https://blog.monochromegane.com/blog/2015/07/05/pepabo-tech-conference-2-in-fukuoka/</link>
-      <pubDate>Sun, 05 Jul 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2015/07/05/pepabo-tech-conference-2-in-fukuoka/</guid>
-      <description>&lt;p&gt;&lt;sup&gt;7&lt;/sup&gt;&amp;frasl;&lt;sub&gt;4&lt;/sub&gt;(土)に福岡でペパボが開催したテックカンファレンスで発表してきました。&lt;/p&gt;
-
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>pepabo on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/pepabo/</link><description>Recent content in pepabo on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 05 Jul 2015 00:00:00 +0000</lastBuildDate><atom:link href="/tags/pepabo/" rel="self" type="application/rss+xml"/><item><title>第2回ペパボテックカンファレンスで発表してきた #pbtech</title><link>https://blog.monochromegane.com/blog/2015/07/05/pepabo-tech-conference-2-in-fukuoka/</link><pubDate>Sun, 05 Jul 2015 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2015/07/05/pepabo-tech-conference-2-in-fukuoka/</guid><description>&lt;p&gt;&lt;sup&gt;7&lt;/sup&gt;&amp;frasl;&lt;sub&gt;4&lt;/sub&gt;(土)に福岡でペパボが開催したテックカンファレンスで発表してきました。&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://pepabo.connpass.com/event/16457/&#34;&gt;第2回ペパボテックカンファレンス【福岡】&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;今回はGoの布教活動と称し、15分のライブコーディングでWebSocketのチャットサーバーをつくりました。&lt;/p&gt;
-
 &lt;div style=&#34;speakerdeck&#34;&gt;
 &lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;dc3e7e96920d4412b24786d48114bd15&#34; data-ratio=&#34;1.33333333333333&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
 &lt;/div&gt;
-
 &lt;p&gt;無事、時間内に作れて一安心。懇親会でもGoに興味持ってもらえたようでよかったです。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;全体の発表内容は @kimromi さんのブログがよくまとまっているのでご覧ください。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://kimromi.hatenablog.jp/entry/2015/07/04/211334&#34;&gt;第2回ペパボテックカンファレンスin福岡にいってきました&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;Youtubeでも公開しております。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=SUuaugJ4p7o&#34;&gt;第2回ペパボテックカンファレンス #pbtech - YouTube&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;個人的な感想としては&lt;/p&gt;
-
 &lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34; lang=&#34;ja&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;携わったサービスが最新の事例で紹介されるの非常に感慨深い。入った当時からすると雲泥の差。みんなほんとうにすごい。&lt;/p&gt;&amp;mdash; goroutine三段 (@monochromegane) &lt;a href=&#34;https://twitter.com/monochromegane/status/617229631066779648&#34;&gt;2015, 7月 4&lt;/a&gt;&lt;/blockquote&gt;
 &lt;script async src=&#34;//platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
-
 &lt;p&gt;に尽きます。&lt;/p&gt;
-
 &lt;p&gt;インフラ層からアプリケーション層まで様々なアプローチで改善が続けられ、最新の事例として、そして更に次世代のビジョンを語ることができる状態というのはエンジニアとしてとてもエキサイティングな環境じゃないかなと思います。&lt;/p&gt;
-
 &lt;p&gt;&lt;a href=&#34;http://pepabo.com/recruit/career/engineer/&#34;&gt;そんなペパボ、エンジニアを募集しております&lt;/a&gt;（宣伝）&lt;/p&gt;
-
 &lt;p&gt;一緒にエンジニア力でサービスの成長を支えてくれる仲間を待っています。
-&lt;a href=&#34;https://pepabo.com/recruit/pepaluncheon/&#34;&gt;まずはご飯でもどうですか？&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-  </channel>
-</rss>
+&lt;a href=&#34;https://pepabo.com/recruit/pepaluncheon/&#34;&gt;まずはご飯でもどうですか？&lt;/a&gt;&lt;/p&gt;</description></item></channel></rss>

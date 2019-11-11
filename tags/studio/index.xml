@@ -1,132 +1,65 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Studio on THINKING MEGANE</title>
-    <link>https://blog.monochromegane.com/tags/studio/</link>
-    <description>Recent content in Studio on THINKING MEGANE</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>ja-jp</language>
-    <lastBuildDate>Mon, 08 Jul 2013 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/studio/" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>Android Studioを使うときに調べたこと、いくつか</title>
-      <link>https://blog.monochromegane.com/blog/2013/07/08/android-studio-tips/</link>
-      <pubDate>Mon, 08 Jul 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2013/07/08/android-studio-tips/</guid>
-      <description>
-
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>studio on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/studio/</link><description>Recent content in studio on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Mon, 08 Jul 2013 00:00:00 +0000</lastBuildDate><atom:link href="/tags/studio/" rel="self" type="application/rss+xml"/><item><title>Android Studioを使うときに調べたこと、いくつか</title><link>https://blog.monochromegane.com/blog/2013/07/08/android-studio-tips/</link><pubDate>Mon, 08 Jul 2013 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2013/07/08/android-studio-tips/</guid><description>
 &lt;p&gt;ひさびさにAndroidアプリをつくるのに、せっかくなので公開された&lt;a href=&#34;http://developer.android.com/sdk/installing/studio.html&#34;&gt;Android Studio&lt;/a&gt;を使ってみました。&lt;/p&gt;
-
 &lt;p&gt;Eclipseでの開発環境と違いなど、調べたことがいくつかあったのでまとめておきます。&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2013/07/android_studio.png&#34; alt=&#34;Android Studio&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;今回調べたのは以下の4つです。&lt;/p&gt;
-
 &lt;ol&gt;
 &lt;li&gt;assetsディレクトリが作成されない&lt;/li&gt;
 &lt;li&gt;エミュレータでプロキシを使いたい&lt;/li&gt;
 &lt;li&gt;日本語コメントを入れるとコンパイルできない&lt;/li&gt;
 &lt;li&gt;ライブラリ(jar)追加でコンパイルできない&lt;/li&gt;
 &lt;/ol&gt;
-
 &lt;p&gt;なお、環境は2013/07/08時点での最新版、&lt;code&gt;Android Studio (I/O Preview) AI-130.729444&lt;/code&gt;です。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;1-assetsディレクトリが作成されない&#34;&gt;1. assetsディレクトリが作成されない&lt;/h1&gt;
-
 &lt;p&gt;Android Studioではプロジェクト作成時にassetsディレクトリが作成されませんでした。&lt;/p&gt;
-
 &lt;p&gt;また、assetsディレクトリを作成する場合、&lt;code&gt;src/main&lt;/code&gt;の下に作成しないといけませんでした。&lt;/p&gt;
-
 &lt;h3 id=&#34;どこで定義されている&#34;&gt;どこで定義されている？&lt;/h3&gt;
-
 &lt;p&gt;Eclipseでの開発時はassetsディレクトリはプロジェクト直下にありますが、Android Studioではそこにディレクトリを作成してもアプリから認識されません。&lt;/p&gt;
-
 &lt;p&gt;これは、モジュール定義ファイル(.iml)に以下のように定義されているためです。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;&amp;lt;sourceFolder url=&amp;quot;file://$MODULE_DIR$/src/main/assets&amp;quot; isTestSource=&amp;quot;false&amp;quot; /&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;2-エミュレータでプロキシを使いたい&#34;&gt;2. エミュレータでプロキシを使いたい&lt;/h1&gt;
-
 &lt;p&gt;[Run]メニュー &amp;gt; [Edit Configurations&amp;hellip;]を選択し、開いたウィンドウから[Emulator]タブを選択します。&lt;/p&gt;
-
 &lt;p&gt;[Additional command line options:]にチェックを入れ、以下のコマンドラインオプションを追加します。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;-http-proxy http://hostname:port
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;3-日本語コメントを入れるとコンパイルできない&#34;&gt;3. 日本語コメントを入れるとコンパイルできない&lt;/h1&gt;
-
 &lt;p&gt;Android Studioで、Javaソース内に日本語でコメントを入れると以下のエラーが出てコンパイルに失敗します。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;この文字は、エンコーディングsjisにマップできません。
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;VMのオプションを設定ファイルに追記する必要があるようです。&lt;/p&gt;
-
 &lt;p&gt;&lt;code&gt;/Applications/Android Studio.app/Contents/Info.plist&lt;/code&gt;&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;&amp;lt;key&amp;gt;VMOptions&amp;lt;/key&amp;gt;
 &amp;lt;string&amp;gt;-ea -Dsun.io.useCanonCaches=false -XX:+HeapDumpOnOutOfMemoryError -Xverify:none -Xbootclasspath/a:../lib/boot.jar -Dgroovy.source.encoding=UTF-8 -Dfile.encoding=UTF-8&amp;lt;/string&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;&lt;code&gt;-Dgroovy.source.encoding=UTF-8 -Dfile.encoding=UTF-8&lt;/code&gt;を追加しています。
 追加後にAndroid Studioを再起動すればOKです。&lt;/p&gt;
-
 &lt;p&gt;*こちらを参考にさせていただきました。&lt;/p&gt;
-
 &lt;p&gt;&lt;a href=&#34;http://takatoshimaeda.github.io/blog/2013/05/20/android-studio-character-code-build-error/&#34;&gt;takatoshi blog / [AndroidStudio]この文字は、エンコーディングsjisにマップできません。コンパイルエラーへの対処&lt;/a&gt;&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;4-ライブラリ-jar-追加でコンパイルできない&#34;&gt;4. ライブラリ(jar)追加でコンパイルできない&lt;/h1&gt;
-
 &lt;p&gt;ライブラリを追加した場合、以下の2つの設定を行なう必要がありました。&lt;/p&gt;
-
 &lt;p&gt;特に&lt;code&gt;実行時の設定&lt;/code&gt;がない場合、実行時に以下のエラーが発生します。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;パッケージ xxx は存在しません
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h3 id=&#34;コンパイルのための設定&#34;&gt;コンパイルのための設定&lt;/h3&gt;
-
 &lt;ol&gt;
 &lt;li&gt;プロジェクト直下のlibsディレクトリにjarファイルを配置する。&lt;/li&gt;
 &lt;li&gt;Android Studioで該当のjarファイルを右クリック &amp;gt; Add as Library&amp;hellip; を行う&lt;/li&gt;
 &lt;/ol&gt;
-
 &lt;h3 id=&#34;実行時の設定&#34;&gt;実行時の設定&lt;/h3&gt;
-
 &lt;p&gt;&lt;code&gt;build.gradle&lt;/code&gt;&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;dependencies {
-    compile files(&#39;libs/android-support-v4.jar&#39;)
-    compile files(&#39;libs/your-library.jar&#39;)
+compile files(&#39;libs/android-support-v4.jar&#39;)
+compile files(&#39;libs/your-library.jar&#39;)
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;&lt;code&gt;dependencies&lt;/code&gt;内にjarファイル名を追加します。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;以上、いくつか調べることはありましたがAndroid Studio、なかなか快適です。&lt;/p&gt;
-
 &lt;p&gt;Eclipseで開発している方であれば、比較的すんなり移行できると思います。&lt;/p&gt;
-
 &lt;p&gt;設定ファイルまわりの編集作業はAndroid Studioのバージョンが上がれば不要になってくる作業と思いますが、現時点ではこういう設定もあるということを覚えておいてもいいかもしれません。&lt;/p&gt;
-
-&lt;p&gt;以上です。&lt;/p&gt;
-</description>
-    </item>
-    
-  </channel>
-</rss>
+&lt;p&gt;以上です。&lt;/p&gt;</description></item></channel></rss>

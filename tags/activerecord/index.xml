@@ -1,144 +1,77 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Activerecord on THINKING MEGANE</title>
-    <link>https://blog.monochromegane.com/tags/activerecord/</link>
-    <description>Recent content in Activerecord on THINKING MEGANE</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>ja-jp</language>
-    <lastBuildDate>Wed, 04 Mar 2015 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/activerecord/" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>Go言語でActiveRecordライクなORMをつくった</title>
-      <link>https://blog.monochromegane.com/blog/2015/03/04/argen/</link>
-      <pubDate>Wed, 04 Mar 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2015/03/04/argen/</guid>
-      <description>
-
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>activerecord on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/activerecord/</link><description>Recent content in activerecord on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Wed, 04 Mar 2015 00:00:00 +0000</lastBuildDate><atom:link href="/tags/activerecord/" rel="self" type="application/rss+xml"/><item><title>Go言語でActiveRecordライクなORMをつくった</title><link>https://blog.monochromegane.com/blog/2015/03/04/argen/</link><pubDate>Wed, 04 Mar 2015 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2015/03/04/argen/</guid><description>
 &lt;p&gt;Goで DataMapperじゃなく、ActiveRecordライクにDB操作したいと思ってつくってみました。&lt;/p&gt;
-
 &lt;p&gt;&lt;code&gt;go/parser&lt;/code&gt;と&lt;code&gt;go/ast&lt;/code&gt;でソースを解析、個々の構造体ごとにARなコードを生成します。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;argen&#34;&gt;argen&lt;/h1&gt;
-
 &lt;p&gt;&lt;strong&gt;A&lt;/strong&gt;ctive&lt;strong&gt;R&lt;/strong&gt;ecord** Gen**eratorで&lt;code&gt;argen&lt;/code&gt;です。&lt;/p&gt;
-
 &lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fargen&#34; title=&#34;monochromegane/argen&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/argen&#34;&amp;gt;monochromegane/argen&amp;lt;/a&amp;gt;&lt;/iframe&gt;
-
 &lt;h2 id=&#34;クイックスタート&#34;&gt;クイックスタート&lt;/h2&gt;
-
 &lt;p&gt;テーブルを表す構造体に&lt;code&gt;+AR&lt;/code&gt;アノテーションをマークします。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;//+AR
 type User struct {
-	Name string
+Name string
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;ファイルに対して&lt;code&gt;argen&lt;/code&gt;コマンドを実行します。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ argen xxx.go
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;ActiveRecordライクなメソッドが定義された&lt;code&gt;*_gen.go&lt;/code&gt;が出力されます。あとはそれを使ってコード書いていくだけです。&lt;/p&gt;
-
 &lt;p&gt;こんな感じで使います。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;db, _ := sql.Open(&amp;quot;sqlite3&amp;quot;, &amp;quot;foo.db&amp;quot;)
 Use(db)
-
 u := User{Name: &amp;quot;test&amp;quot;, Age: 20}
 u.Save()
 //// INSERT INTO users (name, age) VALUES (?, ?); [test 20]
-
 User{}.Where(&amp;quot;name&amp;quot;, &amp;quot;test&amp;quot;).And(&amp;quot;age&amp;quot;, &amp;quot;&amp;gt;&amp;quot;, 20).Query()
 //// SELECT users.id, users.name, users.age FROM users WHERE name = ? AND age &amp;gt; ?; [test 20]
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h2 id=&#34;アソシエーション&#34;&gt;アソシエーション&lt;/h2&gt;
-
 &lt;p&gt;構造体に関連を表すメソッドを定義しておくことでアソシエーション系のメソッドを出力します。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func (m User) hasManyPosts() *ar.Association {
-	return nil
+return nil
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;こんな感じで使います。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;user, _ := User{}.Create(UserParams{Name: &amp;quot;user1&amp;quot;})
 user.BuildPost(PostParams{Name: &amp;quot;post1&amp;quot;}).Save()
-
 // Get the related records
 user.Posts()
 //// SELECT posts.id, posts.user_id, posts.name FROM posts WHERE user_id = ?; [1]
-
 // Join
 user.JoinsPosts()
 //// SELECT users.id, users.name, users.age FROM users INNER JOIN posts ON posts.user_id = users.id;
-
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h2 id=&#34;バリデーション&#34;&gt;バリデーション&lt;/h2&gt;
-
 &lt;p&gt;構造体に検証ルールを表すメソッドを定義しておくことでバリデーション系のメソッドを出力します。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func (u User) validatesName() ar.Rule {
-	// Define rule for &amp;quot;name&amp;quot; column
-	return ar.MakeRule().Format().With(&amp;quot;[a-z]&amp;quot;)
+// Define rule for &amp;quot;name&amp;quot; column
+return ar.MakeRule().Format().With(&amp;quot;[a-z]&amp;quot;)
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;バリデーションは構造体のSave時に実行されるように組み込まれます。エラーは以下のように扱うことができます。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;u := User{Name: &amp;quot;invalid name !!1&amp;quot;}
 _, errs := u.IsValid()
 if errs != nil {
-	fmt.Errorf(&amp;quot;%v\n&amp;quot;, errs.Messages)
-	//// map[name:[is invalid]]
+fmt.Errorf(&amp;quot;%v\n&amp;quot;, errs.Messages)
+//// map[name:[is invalid]]
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;OnCreateなどの実行トリガー、独自バリデーションにも対応しています。&lt;/p&gt;
-
 &lt;h2 id=&#34;go-generate&#34;&gt;go generate&lt;/h2&gt;
-
 &lt;p&gt;Go1.4から導入された&lt;code&gt;go generate&lt;/code&gt;を使うことで複数ファイルに対して一括でargenを適用させることができます。&lt;/p&gt;
-
 &lt;p&gt;ファイルの先頭に以下を定義。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;//go:generate argen
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;あとは定義を変更したときに&lt;code&gt;go generate&lt;/code&gt;コマンドを実行すればOK。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h4 id=&#34;ジェネレーターか&#34;&gt;ジェネレーターか〜&lt;/h4&gt;
-
 &lt;p&gt;はい。&lt;/p&gt;
-
 &lt;p&gt;「設計書からアプリケーションを全て生成します」みたいなものではなくて、最小限の定義に対して定型的なコードを生成してくれるという範囲で扱う分には悪いものではないと思っています。&lt;/p&gt;
-
 &lt;p&gt;特にGo言語だと現時点でジェネリクスがサポートされていないため、今回のような任意の構造体に共通のメソッドを持たせつつ、扱える型は個々のものにするといった場合は、構造体の埋込やインターフェースだと呼び出し側の型アサーションが必要になるので、ジェネレーターを利用してしまうのもひとつのやり方かなと思います。&lt;/p&gt;
-
 &lt;p&gt;(任意の型に対応するためにリフレクションを使うこともできますが、残念ながら実行速度に影響が出ますし、実行時エラーの可能性がどうしても高くなってしまいます)&lt;/p&gt;
-
 &lt;p&gt;このあたり、よりよいやり方についてコメントもらえるとうれしいです。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;&lt;code&gt;argen&lt;/code&gt;、まだまだライブラリとしては不足がありますが、よければご利用ください。PRお待ちしております。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/argen&#34;&gt;monochromegane/argen&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-  </channel>
-</rss>
+&lt;/ul&gt;</description></item></channel></rss>

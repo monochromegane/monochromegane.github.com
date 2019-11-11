@@ -1,61 +1,29 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Mysql on THINKING MEGANE</title>
-    <link>https://blog.monochromegane.com/tags/mysql/</link>
-    <description>Recent content in Mysql on THINKING MEGANE</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>ja-jp</language>
-    <lastBuildDate>Mon, 20 Jul 2015 21:15:28 +0900</lastBuildDate>
-    <atom:link href="/tags/mysql/" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>MySQLのslow_logテーブルをサマライズするGemをつくった</title>
-      <link>https://blog.monochromegane.com/blog/2015/07/20/mysql-dump-slow/</link>
-      <pubDate>Mon, 20 Jul 2015 21:15:28 +0900</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2015/07/20/mysql-dump-slow/</guid>
-      <description>
-
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mysql on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/mysql/</link><description>Recent content in mysql on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Mon, 20 Jul 2015 21:15:28 +0900</lastBuildDate><atom:link href="/tags/mysql/" rel="self" type="application/rss+xml"/><item><title>MySQLのslow_logテーブルをサマライズするGemをつくった</title><link>https://blog.monochromegane.com/blog/2015/07/20/mysql-dump-slow/</link><pubDate>Mon, 20 Jul 2015 21:15:28 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2015/07/20/mysql-dump-slow/</guid><description>
 &lt;p&gt;MySQLにはログファイルに出力したスロークエリをサマライズする&lt;code&gt;mysqldumpslow&lt;/code&gt;コマンドがあって重宝していたのですが、出力先をテーブルに変更すると使えなくなってしまったので、同じことができるmysql_dump_slowというGemをつくりました。&lt;/p&gt;
-
-&lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fmysql_dump_slow&#34; title=&#34;monochromegane/mysql_dump_slow&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame    border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/mysql_dump_slow&#34;&amp;gt;monochromegane/mysql_dump_slow&amp;lt;/a&amp;gt;&lt;/iframe&gt;
-
+&lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fmysql_dump_slow&#34; title=&#34;monochromegane/mysql_dump_slow&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/mysql_dump_slow&#34;&amp;gt;monochromegane/mysql_dump_slow&amp;lt;/a&amp;gt;&lt;/iframe&gt;
 &lt;h1 id=&#34;使い方&#34;&gt;使い方&lt;/h1&gt;
-
 &lt;p&gt;ActiveRecordで取得したスローログを渡して使います。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;# ActiveRecordでmysql.slow_logテーブルのレコードを取得します
 logs = SlowLog.all
-
 # スローログをサマライズします
 summary = MysqlDumpSlow.summarize(logs)
 summary.each do |counter|
-  # mysqldumpslowコマンド形式で出力することができます
-  counter.to_mysqldumpslow
-  # =&amp;gt; Count: 2  Time=100s (200s)  Lock=200s (400s)  Rows=300 (600),  2hosts
-  #      SELECT * FROM T
+# mysqldumpslowコマンド形式で出力することができます
+counter.to_mysqldumpslow
+# =&amp;gt; Count: 2 Time=100s (200s) Lock=200s (400s) Rows=300 (600), 2hosts
+# SELECT * FROM T
 end
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;&lt;code&gt;to_mysqldump&lt;/code&gt;を使って、サマリした結果ごとに&lt;code&gt;mysqldumpslow&lt;/code&gt;コマンドの形式で出力することができます。&lt;/p&gt;
-
 &lt;p&gt;社内ではこんな感じで前日分のスロークエリをSlackに通知するrakeタスクに組み込んで使っています。&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2015/07/mysql_dump_slow.png&#34; alt=&#34;mysql\_dump\_slow&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;このように某清貧会会長に煽られるので緊張感もってスロークエリの撲滅に取り組んでいます。&lt;/p&gt;
-
 &lt;h2 id=&#34;getter&#34;&gt;getter&lt;/h2&gt;
-
 &lt;p&gt;自分で結果を整形して使いたい場合は、それぞれの total, average の値を取得できます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;counter.total_query_time   # =&amp;gt; 100000
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;counter.total_query_time # =&amp;gt; 100000
 counter.average_query_time # =&amp;gt; 100000
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;以下の値を取得可能です。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;total_count&lt;/li&gt;
 &lt;li&gt;[ total | average ]_query_time&lt;/li&gt;
@@ -63,44 +31,23 @@ counter.average_query_time # =&amp;gt; 100000
 &lt;li&gt;[ total | average ]_rows_set&lt;/li&gt;
 &lt;li&gt;user_hosts&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;h2 id=&#34;サマリについて&#34;&gt;サマリについて&lt;/h2&gt;
-
 &lt;p&gt;&lt;code&gt;mysqldumpslow&lt;/code&gt;と同じ方式でサマライズします。&lt;/p&gt;
-
 &lt;p&gt;具体的には、同じクエリに対してそれぞれの実行時間、ロック時間、取得行数を集計し、合計、平均を求めます。&lt;/p&gt;
-
 &lt;p&gt;また、クエリについてはパラメタを抽象化しており、条件の値が違うだけのクエリであれば同じクエリと見なします。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT * FROM `users` WHERE `users`.`name` = &#39;hoge&#39; AND `users`.`age` &amp;gt; 20
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT * FROM `users` WHERE `users`.`name` = &#39;fuga&#39; AND `users`.`age` &amp;gt; 30
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;のようなクエリは&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT * FROM `users` WHERE `users`.`name` = &#39;S&#39; AND `users`.`age` &amp;gt; N
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;のように抽象化され、同じクエリと見なします。&lt;/p&gt;
-
 &lt;h1 id=&#34;インストール&#34;&gt;インストール&lt;/h1&gt;
-
 &lt;p&gt;RubyGemsに公開しているのでGemfileに書いてbundle installすればOKです。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;gem &#39;mysql_dump_slow&#39;
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
-
 &lt;p&gt;ログファイルの場合、解析するためにファイルを取得する必要があって少し手間がかかっていたのが、テーブルに出力することでクエリで取得できるようになって取り扱いしやすくなりました。&lt;/p&gt;
-
 &lt;p&gt;実装にあたっては同僚の&lt;a href=&#34;https://github.com/mizoR&#34;&gt;@mizoR&lt;/a&gt;にいろいろアドバイスもらえて助かりました。Thanks!&lt;/p&gt;
-
-&lt;p&gt;スロークエリが常に通知される状態になったことで、どんどん撲滅していくぞという空気が生まれるんじゃないかなと思ってます。よければ使ってみてください。&lt;/p&gt;
-</description>
-    </item>
-    
-  </channel>
-</rss>
+&lt;p&gt;スロークエリが常に通知される状態になったことで、どんどん撲滅していくぞという空気が生まれるんじゃないかなと思ってます。よければ使ってみてください。&lt;/p&gt;</description></item></channel></rss>

@@ -1,15 +1,4 @@
-<!DOCTYPE html>
-<html>
-  <head>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="viewport" content="width=device-width">
-  <meta name="author" content="">
-  
-    <title>初めて海外カンファレンス登壇するためにやったこと &middot; THINKING MEGANE</title>
-  
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:site" content="@monochromegane">
-  <meta property="og:description" content="7/24から27にかけてアメリカ、サンディエゴで開催されたGopherCon 2019で人生初となる海外カンファレンスに登壇してきました（発表の様子はこちらにまとめました）。 GopherConはGo関連で最大級の国際カンファレンスです。 6年目となる今年は世界中から1,800名のGopherが参加し、200名以上の応募の中から選ばれた36名がスピーカーとして登壇しました。 その中で、僕は「Optimization for Number of goroutines Using Feedback Control」というタイトルで45分のチュートリアルセッションを務めました。
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>初めて海外カンファレンス登壇するためにやったこと &middot; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="7/24から27にかけてアメリカ、サンディエゴで開催されたGopherCon 2019で人生初となる海外カンファレンスに登壇してきました（発表の様子はこちらにまとめました）。 GopherConはGo関連で最大級の国際カンファレンスです。 6年目となる今年は世界中から1,800名のGopherが参加し、200名以上の応募の中から選ばれた36名がスピーカーとして登壇しました。 その中で、僕は「Optimization for Number of goroutines Using Feedback Control」というタイトルで45分のチュートリアルセッションを務めました。
 これまで海外カンファレンス登壇経験はなく、英語にも不慣れであるものの、現在の自分にとって非常に重要な位置付けのイベントであり、1月のCfPから7月の発表に至るまでの長丁場を非常に高い優先度で取り組んできました。 これらの取り組みについて、自分自身の次の登壇への振り返りとして、何より今後、僕と同じように海外カンファレンス登壇を目指す方にとって何かしら参考になればと思いまとめておきます。
 採択に向けて 投稿のネタを育てておく まずは話すネタがなければ投稿できません。 普段の業務やOSS活動で得た生の経験や実績は、頭の中にあるだけではやがて自分にとって当たり前になり輝きを失っていきます。 そのため、普段から忘れないように登壇ネタとしてメモしておくだけでも有効です。 ただ、実際には、ブログや国内の勉強会での登壇などを通して、カタチを与えて上げておくと良いと思います。 このアウトプット作業に暗黙的に含まれる他人に伝えるという制約によって、ただの経験が洗練されてよそゆきの顔になっていくからです。 つまり、曖昧だったり複雑な部分を解きほぐし自分の理解が深まることで提案や動機付けに対する説得力が生まれます。
 今回の僕のネタは、幸いにもこの機会に恵まれました。 関連研究も含めるとWSA研究会とGoCon東京の計3回の発表とフィードバックを通して（現在進行形で）育てています。
@@ -19,394 +8,114 @@ CfPに応募する時の1番の秘訣は自分で諦めないこと。自分っ�
 提出することで査読者からのフィードバックがもらえることもありますし、カンファレンス登壇に興味があればまずは応募してみましょう&hellip;!
 ただし、発表実現性が著しく低いものは避けましょう。 発表までに実装や評価は間に合いますか？（採択されたら当日までにやることは他にもたくさんあります） プロポーザルを書くコスト、査読するコストは発表実現性が高いものへ。
 プロポーザルの書き方を学ぶ いかにして提案を査読者にアピールするかは重要であり難しい取り組みです。 ただし、査読者が求める事項は一般に共通しており、それゆえにベストプラクティスはあります。 今回、僕は@tenntennさんから教えてもらった以下のサイトに目を通してプロポーザル執筆に臨みました。
- Submit a Talk to GopherCon! How to write a successful conference proposal How to write a successful conference proposal (by Dave Cheney) Talking Tech: Getting Your Proposal Through the Door おすすめなカンファレンス用プロポーザルの書き方  もちろん対象のカンファレンスの選考基準も目を通します。">
-  <meta property="og:title" content="初めて海外カンファレンス登壇するためにやったこと">
-  <meta property="og:url" content="https://blog.monochromegane.com/blog/2019/08/11/toward_the_oversea_conference/">
-  <meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-  
-  <link rel="stylesheet" href="/css/reset.css">
-  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Source+Code+Pro' type='text/css'>
-  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Montserrat' type='text/css'>
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css">
-  <link rel="stylesheet" href="/css/text.css">
-  <link rel="stylesheet" href="/css/color.css">
-  <link rel="stylesheet" href="/css/layout.css">
-  <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="/images/apple-touch-icon-57-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="/images/apple-touch-icon-72-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144-precomposed.png">
-  <link rel="shortcut icon" href="/images/favicon.ico">
-  <link rel="canonical" href="https://blog.monochromegane.com/blog/2019/08/11/toward_the_oversea_conference/">
-  
-  <link href="" rel="alternate" type="application/rss+xml" title="THINKING MEGANE" />
-  
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async>
-    MathJax.Hub.Config({
-        HTML: ["input/TeX","output/HTML-CSS"],
-        TeX: {
-               Macros: {
-                        bm: ["\\boldsymbol{#1}", 1],
-                        argmax: ["\\mathop{\\rm arg\\,max}\\limits"],
-                        argmin: ["\\mathop{\\rm arg\\,min}\\limits"]},
-               extensions: ["AMSmath.js","AMSsymbols.js"],
-               equationNumbers: { autoNumber: "AMS" } },
-        extensions: ["tex2jax.js"],
-        jax: ["input/TeX","output/HTML-CSS"],
-        tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-                   displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-                   processEscapes: true },
-        "HTML-CSS": { availableFonts: ["TeX"],
-                      linebreaks: { automatic: true } }
-    });
-  </script>
-</head>
-
-  <body>
-    <div class="header">
-  <header>
-    <h1 class="logo"><a href="https://blog.monochromegane.com">THINKING MEGANE</a></h1>
-    <nav>
-      <ul class="menu">
-        <li><a href="/self-introduction/">Home</a></li>
-        <li><a href="/post/">Archives</a></li>
-        <li><a href="/diary/">Diary</a></li>
-        <li><a href="http://thinking-megane.blogspot.jp/">Old Blog</a></li>
-      </ul>
-    </nav>
-  </header>
-</div>
-
-    <div class="container">
-      <article>
-  <div class="post">
-    <header>
-      <h1><a href="https://blog.monochromegane.com/blog/2019/08/11/toward_the_oversea_conference/">初めて海外カンファレンス登壇するためにやったこと</a></h1>
-      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2019-08-11</div></time>
-    </header>
-    <div class="post-inner">
-      
-
-<p>7/24から27にかけてアメリカ、サンディエゴで開催されたGopherCon 2019で人生初となる海外カンファレンスに登壇してきました（発表の様子は<a href="https://blog.monochromegane.com/blog/2019/08/10/gophercon_2019/">こちら</a>にまとめました）。
+ Submit a Talk to GopherCon! How to write a successful conference proposal How to write a successful conference proposal (by Dave Cheney) Talking Tech: Getting Your Proposal Through the Door おすすめなカンファレンス用プロポーザルの書き方  もちろん対象のカンファレンスの選考基準も目を通します。"><meta property="og:title" content="初めて海外カンファレンス登壇するためにやったこと"><meta property="og:url" content="https://blog.monochromegane.com/blog/2019/08/11/toward_the_oversea_conference/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2019/08/11/toward_the_oversea_conference/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:true},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:true}}});</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2019/08/11/toward_the_oversea_conference/>初めて海外カンファレンス登壇するためにやったこと</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2019-08-11</div></time></header><div class=post-inner><p>7/24から27にかけてアメリカ、サンディエゴで開催されたGopherCon 2019で人生初となる海外カンファレンスに登壇してきました（発表の様子は<a href=https://blog.monochromegane.com/blog/2019/08/10/gophercon_2019/>こちら</a>にまとめました）。
 GopherConはGo関連で最大級の国際カンファレンスです。
 6年目となる今年は世界中から1,800名のGopherが参加し、200名以上の応募の中から選ばれた36名がスピーカーとして登壇しました。
-その中で、僕は「Optimization for Number of goroutines Using Feedback Control」というタイトルで45分の<a href="https://www.gophercon.com/agenda/speakers/442434">チュートリアルセッション</a>を務めました。</p>
-
-<p>これまで海外カンファレンス登壇経験はなく、英語にも不慣れであるものの、現在の自分にとって非常に重要な位置付けのイベントであり、1月のCfPから7月の発表に至るまでの長丁場を非常に高い優先度で取り組んできました。
-これらの取り組みについて、自分自身の次の登壇への振り返りとして、何より今後、僕と同じように海外カンファレンス登壇を目指す方にとって何かしら参考になればと思いまとめておきます。</p>
-
-<h1 id="採択に向けて">採択に向けて</h1>
-
-<h2 id="投稿のネタを育てておく">投稿のネタを育てておく</h2>
-
-<p>まずは話すネタがなければ投稿できません。
+その中で、僕は「Optimization for Number of goroutines Using Feedback Control」というタイトルで45分の<a href=https://www.gophercon.com/agenda/speakers/442434>チュートリアルセッション</a>を務めました。</p><p>これまで海外カンファレンス登壇経験はなく、英語にも不慣れであるものの、現在の自分にとって非常に重要な位置付けのイベントであり、1月のCfPから7月の発表に至るまでの長丁場を非常に高い優先度で取り組んできました。
+これらの取り組みについて、自分自身の次の登壇への振り返りとして、何より今後、僕と同じように海外カンファレンス登壇を目指す方にとって何かしら参考になればと思いまとめておきます。</p><h1 id=採択に向けて>採択に向けて</h1><h2 id=投稿のネタを育てておく>投稿のネタを育てておく</h2><p>まずは話すネタがなければ投稿できません。
 普段の業務やOSS活動で得た生の経験や実績は、頭の中にあるだけではやがて自分にとって当たり前になり輝きを失っていきます。
 そのため、普段から忘れないように登壇ネタとしてメモしておくだけでも有効です。
 ただ、実際には、ブログや国内の勉強会での登壇などを通して、カタチを与えて上げておくと良いと思います。
 このアウトプット作業に暗黙的に含まれる他人に伝えるという制約によって、ただの経験が洗練されてよそゆきの顔になっていくからです。
-つまり、曖昧だったり複雑な部分を解きほぐし自分の理解が深まることで提案や動機付けに対する説得力が生まれます。</p>
-
-<p>今回の僕のネタは、幸いにもこの機会に恵まれました。
-関連研究も含めるとWSA研究会とGoCon東京の計3回の発表とフィードバックを通して（現在進行形で）育てています。</p>
-
-<h2 id="投稿のネタを選ぶ">投稿のネタを選ぶ</h2>
-
-<p>どのようなネタであってもぜひ挑戦させてあげてください。
+つまり、曖昧だったり複雑な部分を解きほぐし自分の理解が深まることで提案や動機付けに対する説得力が生まれます。</p><p>今回の僕のネタは、幸いにもこの機会に恵まれました。
+関連研究も含めるとWSA研究会とGoCon東京の計3回の発表とフィードバックを通して（現在進行形で）育てています。</p><h2 id=投稿のネタを選ぶ>投稿のネタを選ぶ</h2><p>どのようなネタであってもぜひ挑戦させてあげてください。
 採択される可能性が限りなく高いネタはあっても絶対に通るネタはないのではないかなと思います。
 なぜならカンファレンスの特徴や査読者のバックグラウンド、他の発表とのバランスなど採択には色々なパラメタも影響するからです。
-なので、僕は<a href="https://twitter.com/tenntenn">@tenntenn</a>さんのこのスタンスで良いと思います。</p>
-
-<p><blockquote class="twitter-tweet"><p lang="ja" dir="ltr">CfPに応募する時の1番の秘訣は自分で諦めないこと。自分って案外自分に厳しいので、このレベルじゃ駄目でしょと決めつけがち。選ぶのは自分じゃないし、落ちてもデメリットないので応募するのが一番得。</p>&mdash; tenntennʕ ◔ϖ◔ʔ ==Go (@tenntenn) <a href="https://twitter.com/tenntenn/status/1113254427488509954?ref_src=twsrc%5Etfw">April 3, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
-
-<p>提出することで査読者からのフィードバックがもらえることもありますし、カンファレンス登壇に興味があればまずは応募してみましょう&hellip;!</p>
-
-<p>ただし、発表実現性が著しく低いものは避けましょう。
+なので、僕は<a href=https://twitter.com/tenntenn>@tenntenn</a>さんのこのスタンスで良いと思います。</p><p><blockquote class=twitter-tweet><p lang=ja dir=ltr>CfPに応募する時の1番の秘訣は自分で諦めないこと。自分って案外自分に厳しいので、このレベルじゃ駄目でしょと決めつけがち。選ぶのは自分じゃないし、落ちてもデメリットないので応募するのが一番得。</p>&mdash; tenntennʕ ◔ϖ◔ʔ ==Go (@tenntenn) <a href="https://twitter.com/tenntenn/status/1113254427488509954?ref_src=twsrc%5Etfw">April 3, 2019</a></blockquote><script async src=https://platform.twitter.com/widgets.js></script></p><p>提出することで査読者からのフィードバックがもらえることもありますし、カンファレンス登壇に興味があればまずは応募してみましょう&hellip;!</p><p>ただし、発表実現性が著しく低いものは避けましょう。
 発表までに実装や評価は間に合いますか？（採択されたら当日までにやることは他にもたくさんあります）
-プロポーザルを書くコスト、査読するコストは発表実現性が高いものへ。</p>
-
-<h2 id="プロポーザルの書き方を学ぶ">プロポーザルの書き方を学ぶ</h2>
-
-<p>いかにして提案を査読者にアピールするかは重要であり難しい取り組みです。
+プロポーザルを書くコスト、査読するコストは発表実現性が高いものへ。</p><h2 id=プロポーザルの書き方を学ぶ>プロポーザルの書き方を学ぶ</h2><p>いかにして提案を査読者にアピールするかは重要であり難しい取り組みです。
 ただし、査読者が求める事項は一般に共通しており、それゆえにベストプラクティスはあります。
-今回、僕は@tenntennさんから教えてもらった以下のサイトに目を通してプロポーザル執筆に臨みました。</p>
-
-<ul>
-<li><a href="https://carolynvanslyck.com/blog/2018/12/talk-at-gophercon/">Submit a Talk to GopherCon!</a></li>
-<li><a href="https://medium.com/@fox/how-to-write-a-successful-conference-proposal-4461509d3e32">How to write a successful conference proposal</a></li>
-<li><a href="https://dave.cheney.net/2017/02/12/how-to-write-a-successful-conference-proposal">How to write a successful conference proposal (by Dave Cheney)</a></li>
-<li><a href="http://russolsen.com/articles/2012/06/21/acing-the-technical-talk-getting-your-proposal-through-the-door.html">Talking Tech: Getting Your Proposal Through the Door</a></li>
-<li><a href="https://blog.builderscon.io/entry/2017/05/09/090000">おすすめなカンファレンス用プロポーザルの書き方</a></li>
-</ul>
-
-<p>もちろん対象のカンファレンスの選考基準も目を通します。</p>
-
-<blockquote>
-<p>The selection criteria:</p>
-
-<ol>
-<li>Relevance. The talk is relevant to the Go community. GopherCon is not a general software conference, our audience wants to hear about topics that relate to the Go programming language.</li>
-<li>Clarity. You’ve clearly explained what you are going to talk about.</li>
-<li>Correctness. You’ve demonstrated knowledge of your topic. You don’t have to be an expert, but you are expected to be speaking from experience.</li>
-<li>Achievability. You’ve thought about how to present your material in the time available.</li>
-<li>Impact. The goal of the talk. What new idea, technique, tool, or information will the audience leave your presentation with?</li>
-</ol>
-</blockquote>
-
-<p>僕はこの辺の書き方は論文執筆と同じだなあという感想を持ちました。
+今回、僕は@tenntennさんから教えてもらった以下のサイトに目を通してプロポーザル執筆に臨みました。</p><ul><li><a href=https://carolynvanslyck.com/blog/2018/12/talk-at-gophercon/>Submit a Talk to GopherCon!</a></li><li><a href=https://medium.com/@fox/how-to-write-a-successful-conference-proposal-4461509d3e32>How to write a successful conference proposal</a></li><li><a href=https://dave.cheney.net/2017/02/12/how-to-write-a-successful-conference-proposal>How to write a successful conference proposal (by Dave Cheney)</a></li><li><a href=http://russolsen.com/articles/2012/06/21/acing-the-technical-talk-getting-your-proposal-through-the-door.html>Talking Tech: Getting Your Proposal Through the Door</a></li><li><a href=https://blog.builderscon.io/entry/2017/05/09/090000>おすすめなカンファレンス用プロポーザルの書き方</a></li></ul><p>もちろん対象のカンファレンスの選考基準も目を通します。</p><blockquote><p>The selection criteria:</p><ol><li>Relevance. The talk is relevant to the Go community. GopherCon is not a general software conference, our audience wants to hear about topics that relate to the Go programming language.</li><li>Clarity. You’ve clearly explained what you are going to talk about.</li><li>Correctness. You’ve demonstrated knowledge of your topic. You don’t have to be an expert, but you are expected to be speaking from experience.</li><li>Achievability. You’ve thought about how to present your material in the time available.</li><li>Impact. The goal of the talk. What new idea, technique, tool, or information will the audience leave your presentation with?</li></ol></blockquote><p>僕はこの辺の書き方は論文執筆と同じだなあという感想を持ちました。
 つまり、提案の新規性、有用性、信頼性などをわかりやすい構成で伝える技術です。
 一方で、上で引用したGopherConの選考基準では、「専門家である必要はないが経験から語ることが期待される」と言う文言がありました。
 これは一般論で終わらないことを伝えていると捉えられますが、やったことをそのまま出せばいいというわけでもないはずです。
 つまり、経験から得られたものを一般化したり、潜在的な課題へと結びつけて、より多くの人に何かを持ち帰ってもらえるように思考することが求められます。
-そういう意味ではやはり論文執筆に通じるものを感じます。</p>
-
-<p>ただ、先の選考基準は「自分で」敷居を上げすぎるなという側面もあるとは思っていて、まずやったことを書く、それから上記を意識しながら少しづつ改善していくことが大切なのだろうと思います。</p>
-
-<h2 id="プロポーザルを書く">プロポーザルを書く</h2>
-
-<p>プロポーザルの書き方に従い、選んだネタを使ってプロポーザルを書きます。
+そういう意味ではやはり論文執筆に通じるものを感じます。</p><p>ただ、先の選考基準は「自分で」敷居を上げすぎるなという側面もあるとは思っていて、まずやったことを書く、それから上記を意識しながら少しづつ改善していくことが大切なのだろうと思います。</p><h2 id=プロポーザルを書く>プロポーザルを書く</h2><p>プロポーザルの書き方に従い、選んだネタを使ってプロポーザルを書きます。
 英語に慣れていない場合はまず日本語で書くと良いと思います。
-問題をわかりやすく整理して、可読性の高い構成にするのは難しい仕事なので、日本語で作って英語にする方が結果的に時間的・品質的に満足できるからです。</p>
-
-<p>提案型の場合、汎用的には以下のような流れで文字数制限に応じて分量を調整していけると思います。</p>
-
-<ul>
-<li>1. 現状（現状における問題の定義。つまり理想状態との差）</li>
-<li>2. 背景（定義した問題に対する従来のアプローチの整理。それらのアプローチの持つ課題を&rdquo;自分なりに&rdquo;整理）</li>
-<li>3. 提案（その課題を解決する方法を提案）</li>
-<li>4. 評価（提案手法の有効性を評価する方法、あれば結果を含める）</li>
-</ul>
-
-<p>従来ツールによる解決であれば、3はそのツールの紹介に、4は導入事例になります。
+問題をわかりやすく整理して、可読性の高い構成にするのは難しい仕事なので、日本語で作って英語にする方が結果的に時間的・品質的に満足できるからです。</p><p>提案型の場合、汎用的には以下のような流れで文字数制限に応じて分量を調整していけると思います。</p><ul><li>1. 現状（現状における問題の定義。つまり理想状態との差）</li><li>2. 背景（定義した問題に対する従来のアプローチの整理。それらのアプローチの持つ課題を&rdquo;自分なりに&rdquo;整理）</li><li>3. 提案（その課題を解決する方法を提案）</li><li>4. 評価（提案手法の有効性を評価する方法、あれば結果を含める）</li></ul><p>従来ツールによる解決であれば、3はそのツールの紹介に、4は導入事例になります。
 いずれにせよ、このようにしておくと各ステップの検討事項が分離できるので順番に議論すれば後戻りが発生しません。
 つまり査読者の思考の流れを妨げません。
 理想状態を念頭に、解決したい本当の問題と、従来アプローチの制約事項をうまく分離してあげるように考えるのがコツでしょうか。
 これは難しいので投稿ネタを育てる工程で意識しながら繰り返しやっておくと良いと思います。
 なお、論文だと理想状態がなぜ理想なのかの説明も求められるので大変ですが、エンジニア系のカンファレンスだとコンテキストが共有できているのでそこに文字数を割かなくても大丈夫です。
-また、エレベータピッチなどの極端に文字数が少ない場合は、1の理想と2の整理した課題だけを述べて3に繋げています（4は含めない）</p>
-
-<p>参考までに、僕が今回提出したプロポーザルを下記に置いておきます。
+また、エレベータピッチなどの極端に文字数が少ない場合は、1の理想と2の整理した課題だけを述べて3に繋げています（4は含めない）</p><p>参考までに、僕が今回提出したプロポーザルを下記に置いておきます。
 タイムテーブルのセクションは@tenntennさんの以前のプロポーザルを参考にさせてもらいました。
-査読者目線からも、提案の整合性や発表内容に対する時間配分の妥当性などが分かるのでとても良いセクションだと思います。</p>
-
-<ul>
-<li><a href="https://github.com/monochromegane/conference-proposals/blob/master/2019-07-24-gophercon-2019.md">Proposal for GopherCon 2019</a></li>
-</ul>
-
-<h2 id="プロポーザルを英語化する">プロポーザルを英語化する</h2>
-
-<p>まず、Google翻訳に放り込みたくなる気持ちをぐっと我慢します。
+査読者目線からも、提案の整合性や発表内容に対する時間配分の妥当性などが分かるのでとても良いセクションだと思います。</p><ul><li><a href=https://github.com/monochromegane/conference-proposals/blob/master/2019-07-24-gophercon-2019.md>Proposal for GopherCon 2019</a></li></ul><h2 id=プロポーザルを英語化する>プロポーザルを英語化する</h2><p>まず、Google翻訳に放り込みたくなる気持ちをぐっと我慢します。
 Google翻訳の進歩は目覚ましいですが、元となる日本語の文章に曖昧な点があるとどうしても翻訳の精度は下がります。
 また、係り受けの複雑な日本語の文章も、いたずらに長い文章へ翻訳され、文字数あたりの情報量が減ることもあるでしょう。
 査読者の思考を妨げないためには、簡潔で明解な英語文章が必要です。
-そのためには、元の日本語の文章を以下の点でチェックすると良さそうです。</p>
-
-<ul>
-<li>主語・述語があるか</li>
-<li>主語・述語がねじれていないか</li>
-<li>事実か意見かが判断できるか</li>
-<li>係り受けが適切か（不要な修飾を減らす、修飾順番を整理）</li>
-<li>文章が複数の主張を含んでいないか（文の分割を検討）</li>
-<li>接続助詞（〜が、〜て、〜ので）は従属節との関係を曖昧にしていないか（厳密な接続助詞への変更か文を分割）</li>
-</ul>
-
-<p>校正後の日本語文章に対しては、比較的短く基本的な構文だけで英作文ができるはずです。
-なお、専門用語や言い回しについては、普段から興味のある分野で論文や技術書を英語のものを読んで、レパートリーを増やしておくと良いです（自戒を込めて）。</p>
-
-<h2 id="ギリギリの提出を避ける">ギリギリの提出を避ける</h2>
-
-<p>提出時期は早ければ早いほど良いでしょう。
+そのためには、元の日本語の文章を以下の点でチェックすると良さそうです。</p><ul><li>主語・述語があるか</li><li>主語・述語がねじれていないか</li><li>事実か意見かが判断できるか</li><li>係り受けが適切か（不要な修飾を減らす、修飾順番を整理）</li><li>文章が複数の主張を含んでいないか（文の分割を検討）</li><li>接続助詞（〜が、〜て、〜ので）は従属節との関係を曖昧にしていないか（厳密な接続助詞への変更か文を分割）</li></ul><p>校正後の日本語文章に対しては、比較的短く基本的な構文だけで英作文ができるはずです。
+なお、専門用語や言い回しについては、普段から興味のある分野で論文や技術書を英語のものを読んで、レパートリーを増やしておくと良いです（自戒を込めて）。</p><h2 id=ギリギリの提出を避ける>ギリギリの提出を避ける</h2><p>提出時期は早ければ早いほど良いでしょう。
 今回、締め切りの5日前に提出しましたが、アーリーフィードバックとして、セッション枠の変更（25分ではなく45分へ）をはじめとする幾つかの提案をもらいました。
-これが締め切り寸前だと、もらえなかったかもしれず、そうすると時間に対するコンテンツ過剰によって発表の実現性が低く採点され、採択されなかった可能性もあります。</p>
-
-<p>実際、投稿数の遷移について、締め切り3日前が87、前日で130、当日の中間発表で192のように駆け込みで投稿数が一気に増える様が伝えられています。
-査読者数も限界があるため、締め切り前の全員分にアーリーフィードバックを返せないとすると、提出は早いほうがオススメです。</p>
-
-<p>僕がもらったフィードバックはこのようなものでした。</p>
-
-<pre><code class="language-txt">I have some early feedback from the reviewers. The general feeling is this is too much content to cover in a 25 minute keynote slot and may not be generally applicable to the full audience. The recommendation from the reviewers is to revise this proposal as a 45 minute tutorial session
+これが締め切り寸前だと、もらえなかったかもしれず、そうすると時間に対するコンテンツ過剰によって発表の実現性が低く採点され、採択されなかった可能性もあります。</p><p>実際、投稿数の遷移について、締め切り3日前が87、前日で130、当日の中間発表で192のように駆け込みで投稿数が一気に増える様が伝えられています。
+査読者数も限界があるため、締め切り前の全員分にアーリーフィードバックを返せないとすると、提出は早いほうがオススメです。</p><p>僕がもらったフィードバックはこのようなものでした。</p><pre><code class=language-txt>I have some early feedback from the reviewers. The general feeling is this is too much content to cover in a 25 minute keynote slot and may not be generally applicable to the full audience. The recommendation from the reviewers is to revise this proposal as a 45 minute tutorial session
 
 You can edit your proposal at any time before the end of the month. Best of luck!
-</code></pre>
-
-<h1 id="英語学習">英語学習</h1>
-
-<p>英語によるコミュニケーションは普段からの積み重ねが全てです（はい&hellip;）。
-この章に関しては誇れるものではないので参考までにお読みください。</p>
-
-<p>僕の場合、発作的に英語をやって身につかずに終わるというのを長年繰り返していました。
-そこで、今回、<a href="https://www.progrit.co.jp/">PROGRIT</a>という英語コーチングサービスを使ってカリキュラムを組んでもらい継続的な学習をサポートしてもらうことにしました。
+</code></pre><h1 id=英語学習>英語学習</h1><p>英語によるコミュニケーションは普段からの積み重ねが全てです（はい&hellip;）。
+この章に関しては誇れるものではないので参考までにお読みください。</p><p>僕の場合、発作的に英語をやって身につかずに終わるというのを長年繰り返していました。
+そこで、今回、<a href=https://www.progrit.co.jp/>PROGRIT</a>という英語コーチングサービスを使ってカリキュラムを組んでもらい継続的な学習をサポートしてもらうことにしました。
 結構なお値段（いやほんと）します。
 カリキュラムも画期的な手法というよりは地道にやることで効果が見込める王道のものを組み合わせていて、これを如何に継続してやり抜くかをサポートすることがサービスのコアかなと感じます。
 なので、自分にあった勉強法を見つけて継続してやれている方にとってはあまり意味のないサービスかもしれません。
 とはいえ、前述の英語に対する僕のニーズにはあっていたので今回利用しました。
-結果的に、Versantという英語コミュニケーション能力を図るテストは3ヶ月のカリキュラムを終えて5点上がり（TOEICだと75点UPぐらい？）、やはり継続は力だなと感じています。</p>
-
-<h2 id="カリキュラム">カリキュラム</h2>
-
-<p>最終的に日々のカリキュラムは以下のように落ち着きました。</p>
-
-<ul>
-<li>瞬間英作文(60min)</li>
-<li>単語(30min)</li>
-<li>シャドーイング(45min)</li>
-<li>多読(45min)</li>
-</ul>
-
-<p>登壇と質疑応答、そしてスピーカーディナーで自分の考えを述べられることを目標に進めました。
+結果的に、Versantという英語コミュニケーション能力を図るテストは3ヶ月のカリキュラムを終えて5点上がり（TOEICだと75点UPぐらい？）、やはり継続は力だなと感じています。</p><h2 id=カリキュラム>カリキュラム</h2><p>最終的に日々のカリキュラムは以下のように落ち着きました。</p><ul><li>瞬間英作文(60min)</li><li>単語(30min)</li><li>シャドーイング(45min)</li><li>多読(45min)</li></ul><p>登壇と質疑応答、そしてスピーカーディナーで自分の考えを述べられることを目標に進めました。
 英文法についてはなんとか理解しているものの、それらを「使う」ことの準備がほぼできていないことが分かったため、そこを補強するカリキュラムとなっています。
-つまり、英語を使ったコミュニケーションに必要な、文章や単語を通した概念と音声の変換に関する、知覚と瞬発力を鍛えます。</p>
-
-<p>まず単語は何をやるにも基礎となるのでひたすらボキャブラリを増やします。
+つまり、英語を使ったコミュニケーションに必要な、文章や単語を通した概念と音声の変換に関する、知覚と瞬発力を鍛えます。</p><p>まず単語は何をやるにも基礎となるのでひたすらボキャブラリを増やします。
 僕はキクタンを使って自分のレベルにあったものから進めました。
-一方で、発表に向けては普段から興味のある分野で論文や技術書を英語のものを読んで、ボキャブラリを増やしておくと良いのだろうなとも思いました。</p>
-
-<p>次に、概念と文章をつなぐ瞬発力向上のために、瞬間英作文をやりました。
-機械的に翻訳するような平易なものを瞬間で解くのはパズルのようで面白いですが、繰り返すと飽きてくるので覚えた英単語と組み合わせたりして応用するものいいかもしれません。</p>
-
-<p>逆に、文章を概念につなぐ瞬発力向上には、多読をやりました。
+一方で、発表に向けては普段から興味のある分野で論文や技術書を英語のものを読んで、ボキャブラリを増やしておくと良いのだろうなとも思いました。</p><p>次に、概念と文章をつなぐ瞬発力向上のために、瞬間英作文をやりました。
+機械的に翻訳するような平易なものを瞬間で解くのはパズルのようで面白いですが、繰り返すと飽きてくるので覚えた英単語と組み合わせたりして応用するものいいかもしれません。</p><p>逆に、文章を概念につなぐ瞬発力向上には、多読をやりました。
 戻り読みをしないという制約で、なるべく意味を理解しながらなるべく速く読みます（85%ぐらい理解しつつ1分あたり何word読めるかのスコアを伸ばす）。
 音が明確に聞こえたとしても（つまりテキストとして渡されたとしても）それを読んで理解できるスピード以上には意味理解が追いつかないよねという経験を経てこれも頑張るようになりました。
-自分にあったレベルのやつでやらないと途端につまらなくなるので教材選びが大事かも。</p>
-
-<p>音と文章（単語）をつなぐ知覚向上にはシャドーイングをやりました。
+自分にあったレベルのやつでやらないと途端につまらなくなるので教材選びが大事かも。</p><p>音と文章（単語）をつなぐ知覚向上にはシャドーイングをやりました。
 英語音源をテキストを見ずに少し遅れて聞こえたまま繰り返すという学習法です。
 30秒から60秒ぐらいの音源を1日50回とか繰り返しました&hellip;
 最初は聞こえないし口がついていかないしで「こんなんできるかボケ」と面談で悪態をついてばかりいたのですが、最終的にはこれがヒアリング力の向上につながったと思っています。
 では素直にヒアリング練習で良いのではないかと思えますが、口が回るようになったところが聞こえるようになるという経験を経て、頑張って繰り返すようになりました。
 また、多読と並行することで、こちらでは意味理解よりも知覚に集中できるようになったのも良かったです。
-以前に比べれば耳の解像度が上がったんじゃないかなあとVersantを前後で受けて見て思えます。</p>
-
-<p>文章（単語）と音をつなぐ発話、発音は今回やっていません。
+以前に比べれば耳の解像度が上がったんじゃないかなあとVersantを前後で受けて見て思えます。</p><p>文章（単語）と音をつなぐ発話、発音は今回やっていません。
 最初の面談で、まあ全く通じないというわけではないでしょうということで、上記のものを優先して進めました。
-とはいえ、実際の発表ではやはりもう少しうまく発音できたらなあと思うこともあったので引き続きやっていこうと思います。</p>
-
-<p>また、オンライン英会話についても（少ししか）やっていません。
-本当は実践が一番なのでしょうが、あまりにも引き出しが少ないと英会話の時間が苦痛になるため、英語学習がだれてきた時のカンフル剤としてたまにやる感じにして基礎を頑張りました。</p>
-
-<hr />
-
-<p>毎日3時間を確実に取れたわけではなく、発表前は資料作成の方へ専念したりもしましたが、それなりの時間を投入しながらも全然使いこなせる感じがしないので、英語学習は奥が深いなあと思います。
-それでも続けることで成果は出るので地道にやっていきましょう。</p>
-
-<h1 id="発表資料">発表資料</h1>
-
-<p>資料は一ヶ月ぐらい前から作り始めました。
+とはいえ、実際の発表ではやはりもう少しうまく発音できたらなあと思うこともあったので引き続きやっていこうと思います。</p><p>また、オンライン英会話についても（少ししか）やっていません。
+本当は実践が一番なのでしょうが、あまりにも引き出しが少ないと英会話の時間が苦痛になるため、英語学習がだれてきた時のカンフル剤としてたまにやる感じにして基礎を頑張りました。</p><hr><p>毎日3時間を確実に取れたわけではなく、発表前は資料作成の方へ専念したりもしましたが、それなりの時間を投入しながらも全然使いこなせる感じがしないので、英語学習は奥が深いなあと思います。
+それでも続けることで成果は出るので地道にやっていきましょう。</p><h1 id=発表資料>発表資料</h1><p>資料は一ヶ月ぐらい前から作り始めました。
 日本語の元となる資料があることだし十分余裕を持って着手したつもりでしたが、もう少し早くに着手しても良かったなというのが終わって見ての感想です。
 理由は母国語に頼らず説明するためには、資料の刷新と英語スクリプトの準備が必要だったからです。
 更には、発表練習についても日本語で行う時よりも何倍も時間をかける必要がありました。
-ですので、国際カンファレンスに臨むにあたっては余裕を持った準備をお勧めします（実際には渡航のための準備ややるべき仕事もありますし）。</p>
-
-<h2 id="発表資料-1">発表資料</h2>
-
-<p>スライドの構成は、基本的にプロポーザルの内容に沿うことになります。
-先ほどの例であれば、イントロダクション（現状、背景）、提案、評価、まとめの流れが王道でしょうか。</p>
-
-<p>大きなカンファレンスでの発表資料はイントロダクションを少し工夫すると良いかもしれません。
+ですので、国際カンファレンスに臨むにあたっては余裕を持った準備をお勧めします（実際には渡航のための準備ややるべき仕事もありますし）。</p><h2 id=発表資料-1>発表資料</h2><p>スライドの構成は、基本的にプロポーザルの内容に沿うことになります。
+先ほどの例であれば、イントロダクション（現状、背景）、提案、評価、まとめの流れが王道でしょうか。</p><p>大きなカンファレンスでの発表資料はイントロダクションを少し工夫すると良いかもしれません。
 なぜなら同じカンファレンスであっても参加者が多い場合は個々のバックグラウンドや問題意識が多様であり、導入部分で揃えておかなければならないからです。
 具体的には、トークの対象となるキーワードや問いなどを簡潔な形で伝えます。
 GopherConでは、キーワードを端的に表す写真とともに、「〜のような経験はないか」のような共感を引く導入が多かったように思えました。
-僕の資料では、少し前提が複雑だったので、最初の立てた問いをいくつかの実験結果を通して変化させていくような導入にして、より詳しい問題意識を共有するような作りにしました。</p>
-
-<p>また、各所の構成はやや冗長であっても、大枠を示してから詳細に移るのを意識しました。
+僕の資料では、少し前提が複雑だったので、最初の立てた問いをいくつかの実験結果を通して変化させていくような導入にして、より詳しい問題意識を共有するような作りにしました。</p><p>また、各所の構成はやや冗長であっても、大枠を示してから詳細に移るのを意識しました。
 これは聴衆が置いてけぼりになることを避けるためです。
 もちろん母国語の資料であっても気をつけるべきところではありますが、残念ながら、英語力が足りない場合、細かなフォローアップがその場その場でできないこともあり、資料の時点でその工夫はしておいた方が良いと思われます。
 簡単な例であれば、例えば解決したい課題が3つあるならば、先に列挙してそれらに番号を振っておくでもいいですし、解決編では先にゴールを述べておくでも良いと思います。
-僕の資料では、簡単なアプローチから出発して少しづつ課題を解決していくようにすることで、比較的複雑な箇所の説明の際に飛躍がないよう気をつけました。</p>
-
-<p>図で説明できるものは図を用意する方が良いと思います。
-ただし、図に頼って文章を考えなくていいわけではないので、あくまで聴衆の理解を助ける機会をできるだけ増やすという意識で用意します。</p>
-
-<p>細かい点ですが、ページ番号は必ずスライドテンプレートに組み込んでおきましょう。
+僕の資料では、簡単なアプローチから出発して少しづつ課題を解決していくようにすることで、比較的複雑な箇所の説明の際に飛躍がないよう気をつけました。</p><p>図で説明できるものは図を用意する方が良いと思います。
+ただし、図に頼って文章を考えなくていいわけではないので、あくまで聴衆の理解を助ける機会をできるだけ増やすという意識で用意します。</p><p>細かい点ですが、ページ番号は必ずスライドテンプレートに組み込んでおきましょう。
 質疑の時のやりとりがスムーズになります。
-また、ページ番号もそうですが、グラフの凡例なども視認できる大きさのフォントにしておくのも大切です（僕のは凡例が小さかった）</p>
-
-<p>僕の発表資料はこちらです。</p>
-
-<ul>
-<li><a href="https://speakerdeck.com/monochromegane/optimization-for-number-of-goroutines-using-feedback-control">Optimization for Number of goroutines Using Feedback Control</a></li>
-</ul>
-
-<h2 id="発表者ノート-英語スクリプト">発表者ノート（英語スクリプト）</h2>
-
-<p>英語に不慣れな場合は、一度、発表者ノート（英語スクリプト）を書き出しておくのをお勧めします。
-発表者ノートを作成する利点は以下の通りです。</p>
-
-<ul>
-<li>曖昧な箇所や飛躍がある点を潰すことができる</li>
-<li>原稿段階で英語話者に並行してチェックしてもらえる</li>
-<li>発表の再現性が高まる（特に時間）</li>
-</ul>
-
-<p>いずれも伝えるべきことを全て伝えられるようにするために必要なことだと思います。
-そのため、暗記するにしても読み上げるにしても、英語スクリプトは作っておく方が良いでしょう。</p>
-
-<p>Keynoteであれば発表者ノート機能で手元に写しながら発表に臨むことができます。
-ただし、演台があるか手元にPCが置けるかなどは事前に問い合わせて確認しておきましょう。</p>
-
-<p>発表原稿では以下を気をつけました。</p>
-
-<ul>
-<li>章や節の始めに、ここでは何を説明するのかを一言で伝える。</li>
-<li>章や節の終わりに、ここで伝えたかったことのサマリ、次に何を説明するかを一言入れる。</li>
-<li>1ページあたりの文章が多いのであればページの分割を検討する（発表時に発表者ノートをスクロールするのは結構大変）</li>
-<li>平易な文で記述する</li>
-</ul>
-
-<p>最後の平易な文については、自分の理解できるレベルの文章でスクリプトを作っておくということです。
+また、ページ番号もそうですが、グラフの凡例なども視認できる大きさのフォントにしておくのも大切です（僕のは凡例が小さかった）</p><p>僕の発表資料はこちらです。</p><ul><li><a href=https://speakerdeck.com/monochromegane/optimization-for-number-of-goroutines-using-feedback-control>Optimization for Number of goroutines Using Feedback Control</a></li></ul><h2 id=発表者ノート-英語スクリプト>発表者ノート（英語スクリプト）</h2><p>英語に不慣れな場合は、一度、発表者ノート（英語スクリプト）を書き出しておくのをお勧めします。
+発表者ノートを作成する利点は以下の通りです。</p><ul><li>曖昧な箇所や飛躍がある点を潰すことができる</li><li>原稿段階で英語話者に並行してチェックしてもらえる</li><li>発表の再現性が高まる（特に時間）</li></ul><p>いずれも伝えるべきことを全て伝えられるようにするために必要なことだと思います。
+そのため、暗記するにしても読み上げるにしても、英語スクリプトは作っておく方が良いでしょう。</p><p>Keynoteであれば発表者ノート機能で手元に写しながら発表に臨むことができます。
+ただし、演台があるか手元にPCが置けるかなどは事前に問い合わせて確認しておきましょう。</p><p>発表原稿では以下を気をつけました。</p><ul><li>章や節の始めに、ここでは何を説明するのかを一言で伝える。</li><li>章や節の終わりに、ここで伝えたかったことのサマリ、次に何を説明するかを一言入れる。</li><li>1ページあたりの文章が多いのであればページの分割を検討する（発表時に発表者ノートをスクロールするのは結構大変）</li><li>平易な文で記述する</li></ul><p>最後の平易な文については、自分の理解できるレベルの文章でスクリプトを作っておくということです。
 発表時は発表者ノートに釘付けで話すわけにはいかないため、さっと見て、ある程度自分自身で意味がわかる文法や単語で構成していないと、強調する文章なのか判断つかずに読み上げる不自然な感じになってしまいます。
-不慣れな言語でも自分自身が納得して説明できるように書いておきましょう（残念ながらここの段階で急には英語力は伸びません）。</p>
-
-<p>また、できるだけ英語話者に原稿はチェックしてもらうと良いでしょう。
+不慣れな言語でも自分自身が納得して説明できるように書いておきましょう（残念ながらここの段階で急には英語力は伸びません）。</p><p>また、できるだけ英語話者に原稿はチェックしてもらうと良いでしょう。
 結構な分量になるので、知り合いに頼むとかよりもできるだけお金を払って英文校正サービスなどでチェックをすると良いと思います。
-僕の場合は、先ほどのコーチが買って出てくれたのでお願いできました（コーチによるのでこれを期待してPROGRIT申し込まないように）</p>
-
-<p>僕の英語スクリプトはこちらです。</p>
-
-<ul>
-<li><a href="https://blog.monochromegane.com/blog/2019/08/10/gophercon_2019/">GopherCon 2019: Optimization for Number of goroutines Using Feedback Control</a></li>
-</ul>
-
-<h2 id="発表練習">発表練習</h2>
-
-<p>英語に不慣れな場合、暗記かスクリプトの読み上げになってしまいますが、一本調子だと聴衆はどこで共感するか反応するかの情報量が少なくなり混乱してしまいます。
+僕の場合は、先ほどのコーチが買って出てくれたのでお願いできました（コーチによるのでこれを期待してPROGRIT申し込まないように）</p><p>僕の英語スクリプトはこちらです。</p><ul><li><a href=https://blog.monochromegane.com/blog/2019/08/10/gophercon_2019/>GopherCon 2019: Optimization for Number of goroutines Using Feedback Control</a></li></ul><h2 id=発表練習>発表練習</h2><p>英語に不慣れな場合、暗記かスクリプトの読み上げになってしまいますが、一本調子だと聴衆はどこで共感するか反応するかの情報量が少なくなり混乱してしまいます。
 その余裕を持つために、英語スクリプトを自分自身で意味がわかる文法や単語で構成することを提案しました。
 それでもまだ目が滑ってしまう場合は、文に区切りを入れるのも良いでしょう。
-区切りは関係詞や節の間で適当な単語数のところで入れました（変なところで区切ると逆に不自然になるので気をつけます）</p>
-
-<p>僕の発表者ノートはこんな感じになっています。</p>
-
-<pre><code class="language-txt">I am developing a fast grep tool / named &quot;the platinum searcher&quot;.
+区切りは関係詞や節の間で適当な単語数のところで入れました（変なところで区切ると逆に不自然になるので気をつけます）</p><p>僕の発表者ノートはこんな感じになっています。</p><pre><code class=language-txt>I am developing a fast grep tool / named &quot;the platinum searcher&quot;.
 One day I conducted a measurement / of the optimal number of goroutines / to achieve good performance.
-</code></pre>
-
-<p>そして、定型の言い回し（I found that など）なるべく流暢にしたり、強調したいところは少しゆっくり大きく言うような工夫を入れました。</p>
-
-<p>ただし、これはあくまで、僕の場合のネイティブの発音じゃない状態で文全体を早口で言うよりはこの方が伝わる可能性が高いねとコーチと試行錯誤した結果です。
-つまり「今の」英語力でできるだけ伝えるための工夫であり、本来は継続的な英語の学習によって自然な状態に近づけていくようにすることが大切だと思います。</p>
-
-<p>あとは、英語話者もしくは読み上げ機能で録音した音源を繰り返し聞き、繰り返し練習します。
-また、良く出てきたり重要な単語は個別に練習しておくと良いでしょう（僕の場合はperformanceやdetermineなど）</p>
-
-<h2 id="資料のバックアップ">資料のバックアップ</h2>
-
-<p>現地の環境がわからないので、資料は複数の手段でアクセスできるようにしておくべきです。
+</code></pre><p>そして、定型の言い回し（I found that など）なるべく流暢にしたり、強調したいところは少しゆっくり大きく言うような工夫を入れました。</p><p>ただし、これはあくまで、僕の場合のネイティブの発音じゃない状態で文全体を早口で言うよりはこの方が伝わる可能性が高いねとコーチと試行錯誤した結果です。
+つまり「今の」英語力でできるだけ伝えるための工夫であり、本来は継続的な英語の学習によって自然な状態に近づけていくようにすることが大切だと思います。</p><p>あとは、英語話者もしくは読み上げ機能で録音した音源を繰り返し聞き、繰り返し練習します。
+また、良く出てきたり重要な単語は個別に練習しておくと良いでしょう（僕の場合はperformanceやdetermineなど）</p><h2 id=資料のバックアップ>資料のバックアップ</h2><p>現地の環境がわからないので、資料は複数の手段でアクセスできるようにしておくべきです。
 GopherConの場合は、持参したPCとプロジェクタとの接続がうまくいかない場合に備えて、USBメモリにファイルをバックアップしておくよう指示がありました。
 僕は発表者ノートが見れない状況を想定して念のため日本でスクリプトを印刷してカバンに忍ばせておきました。
-また現地の発表練習では、代替機がMacとは限らないのでPDFや画像ファイルといったポータブルな形式にしたり、クラウドストレージやSpeakerdeckにアップロードしておいたりスクリプトもクラウドストレージにアップロードしてiPhoneから見れるようにしておいてもいいかもねとコメントもらいました。</p>
-
-<h1 id="渡航">渡航</h1>
-
-<p>アメリカの場合、パスポートの他にESTAの申請が必要なので忘れないようにしましょう。
+また現地の発表練習では、代替機がMacとは限らないのでPDFや画像ファイルといったポータブルな形式にしたり、クラウドストレージやSpeakerdeckにアップロードしておいたりスクリプトもクラウドストレージにアップロードしてiPhoneから見れるようにしておいてもいいかもねとコメントもらいました。</p><h1 id=渡航>渡航</h1><p>アメリカの場合、パスポートの他にESTAの申請が必要なので忘れないようにしましょう。
 何もなければパスポートは10日間、ESTAは2週間ほどで発行・承認されますが、ギリギリにやると不測の事態に対応できないため、採択されたらすぐ申請ぐらいでいいと思います。
-渡航前は発表練習であまり余裕ないので&hellip;</p>
-
-<p>また、海外渡航に不慣れな人は時差ボケを解消する時間も込みで日程を組むことを忘れないようにしましょう。
+渡航前は発表練習であまり余裕ないので&hellip;</p><p>また、海外渡航に不慣れな人は時差ボケを解消する時間も込みで日程を組むことを忘れないようにしましょう。
 僕は時差-16時間のサンディエゴで発表でしたが、現地時間の前日入り(日本の7/24 夕方発 現地7/24午前着)してしまい、翌日のお昼すぎ(<sup>7</sup>&frasl;<sub>25</sub> 日本時間 午前6時)という時差ボケが激しい時間帯に発表になってしまいました。
 @tenntennさんに「なんてやんちゃな日程だ」と言われてしまった&hellip;
 この場合は最低でももう一日前(日本の7/23 夕方発 現地7/23午前着)して、翌日(<sup>7</sup>&frasl;<sub>24</sub>)で日中眠らずに現地時間に合わせて当日(<sup>7</sup>&frasl;<sub>25</sub>)に合わせるぐらいがいいらしいです。
-時差ボケは自分の発表だけでなく、他の発表を聞くときの集中力にも影響してくるのでできるだけ万全の体制で臨めるようにしたいものです。</p>
-
-<p>現地の移動はタクシーではなくUberを使いました。
+時差ボケは自分の発表だけでなく、他の発表を聞くときの集中力にも影響してくるのでできるだけ万全の体制で臨めるようにしたいものです。</p><p>現地の移動はタクシーではなくUberを使いました。
 Uberであれば、アプリから先に行き先を入力し、評価の高いドライバーを選択し、金額を確定しておくことができます。
 Comfort系を選ぶとちょっと高いですがゆったりした車になるので複数名の場合はそちらを選ぶと良いみたいです。
 サンディエゴだと大体10分ほどで来てくれます。
@@ -415,80 +124,12 @@ Comfort系を選ぶとちょっと高いですがゆったりした車になる�
 移動はアプリで現在地が分かるため安心です（そもそも事前に金額確定なので遠回りして稼ぐような動機がない）。
 日本でアプリをインストールし、クレジットカードまで登録しておくと良いでしょう。
 それから、自分のアカウントにきちんと顔写真登録しておく方が良いみたいです（ドライバーさん側への安心感かな？）
-決済は到着後にプッシュ通知が来るのでチップの額を上乗せして終了です。便利便利。</p>
-
-<h1 id="発表">発表</h1>
-
-<p>あとはこれまでやって来たことを信じて発表するだけです。
+決済は到着後にプッシュ通知が来るのでチップの額を上乗せして終了です。便利便利。</p><h1 id=発表>発表</h1><p>あとはこれまでやって来たことを信じて発表するだけです。
 せっかく自分の提案を国際カンファレンスで聞いてもらえる機会なので楽しんでいきましょう。
 会場の雰囲気はとても良く、とても積極的に聞いてくれます。
 なぜならカンファレンスに来ている人は、上手い下手をジャッジしに来てるのではなくて、僕たちの提案を経験をできるだけ聞きたいと言う姿勢で来てくれているからです。
 どうしても緊張する人は、前方の10人だけをターゲットに最初の挨拶を元気に言うことだけ考えましょう。
-あとは練習した通りに体と口が動いてくれます。</p>
-
-<p>発表後は、おそらく色々なところで質問や感想のために声をかけてもらえます。
+あとは練習した通りに体と口が動いてくれます。</p><p>発表後は、おそらく色々なところで質問や感想のために声をかけてもらえます。
 これはスピーカーとしてカンファレンスに参加したときの特典なので是非とも活かしたいところです。
-ですので、余裕があれば想定問答や提案のサマリ、自己紹介などを事前にまとめておくと良いと思います。</p>
-
-    </div>
-    <footer class="tag">
-      <i class="fa fa-tags tag-icon"></i>
-      <ul>
-      
-        <li><a class="tag-link" href="/tags/gophercon">gophercon</a></li>
-      
-      </ul>
-      <div class="clear"></div>
-    </footer>
-  </div>
-</article>
-
-      <div class="social-btn">
-  <div>
-    <a href="http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2019/08/11/toward_the_oversea_conference/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="en" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
-  </div>
-  <div>
-    <a href="https://twitter.com/share" class="twitter-share-button" data-via="monochromegane">Tweet</a>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-  </div>
-</div>
-
-    </div>
-    <footer class="footer">
-  <div class="author"></div>
-  <p class="author-name"><a href="https://twitter.com/monochromegane" target="_blank">@monochromegane</a></p>
-  
-    <p>monochromegane (モノクロめがね) と申します。</p>
-  
-    <p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-  
-  <ul class="social">
-    <li><a href="https://twitter.com/monochromegane" target="_blank"><i class="fa fa-twitter"></i></a></li>
-    <li><a href="https://github.com/monochromegane" target="_blank"><i class="fa fa-github"></i></a></li>
-    <li><a href="/index.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
-  </ul>
-  <p class="copyright">
-    <small>&copy;  <span class="">Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>, Designed by <a href="https://twitter.com/keita_kawamoto" target="_blank">&copy;keita_kawamoto</a></span></small>
-  </p>
-</footer>
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
-
-    
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-38374674-1', 'auto');
-  ga('send', 'pageview');
-
-</script>
-
-
-  </body>
-</html>
+ですので、余裕があれば想定問答や提案のサマリ、自己紹介などを事前にまとめておくと良いと思います。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/gophercon>gophercon</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2019/08/11/toward_the_oversea_conference/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','twitter-wjs');</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-38374674-1','auto');ga('send','pageview');</script></body></html>

@@ -1,70 +1,28 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Go Bincode on THINKING MEGANE</title>
-    <link>https://blog.monochromegane.com/tags/go-bincode/</link>
-    <description>Recent content in Go Bincode on THINKING MEGANE</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>ja-jp</language>
-    <lastBuildDate>Sun, 23 Aug 2015 01:24:07 +0900</lastBuildDate>
-    <atom:link href="/tags/go-bincode/" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>野良バイナリになっても大丈夫。Goのバイナリにソースコードを添付するツールをつくった。</title>
-      <link>https://blog.monochromegane.com/blog/2015/08/23/go-bincode/</link>
-      <pubDate>Sun, 23 Aug 2015 01:24:07 +0900</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2015/08/23/go-bincode/</guid>
-      <description>
-
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>go-bincode on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/go-bincode/</link><description>Recent content in go-bincode on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 23 Aug 2015 01:24:07 +0900</lastBuildDate><atom:link href="/tags/go-bincode/" rel="self" type="application/rss+xml"/><item><title>野良バイナリになっても大丈夫。Goのバイナリにソースコードを添付するツールをつくった。</title><link>https://blog.monochromegane.com/blog/2015/08/23/go-bincode/</link><pubDate>Sun, 23 Aug 2015 01:24:07 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2015/08/23/go-bincode/</guid><description>
 &lt;p&gt;サーバーにあるGoのバイナリのバージョン管理は気を使います。どのバージョンで動いているのかわからなくならないよう、バージョンやリビジョンを埋め込む方法がありますが、そもそもリポジトリもわからないバイナリがあったら&amp;hellip;そんなときに備えて、ソースコード自体をバイナリに埋め込んでおくというツールをつくってみました。&lt;/p&gt;
-
 &lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fgo-bincode&#34; title=&#34;monochromegane/go-bincode&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/go-bincode&#34;&amp;gt;monochromegane/go-bincode&amp;lt;/a&amp;gt;&lt;/iframe&gt;
-
 &lt;p&gt;&lt;code&gt;go-bincode&lt;/code&gt;は内部で&lt;code&gt;go-bindata&lt;/code&gt;を使い、goのソースコードをバイナリに埋め込みます。また、埋め込んだソースコードを参照/リストアするための各種オプションを提供します。&lt;/p&gt;
-
 &lt;h2 id=&#34;利用方法&#34;&gt;利用方法&lt;/h2&gt;
-
 &lt;p&gt;以下、様子です。&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://cloud.githubusercontent.com/assets/1845486/9424618/4ada7c6a-492d-11e5-9958-73bc329ac35c.gif&#34; alt=&#34;go-bincode&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;使い方は、ソースコードを埋め込みたい対象のリポジトリで go-bincode コマンドを叩くだけです。必要に応じて&lt;code&gt;pkg&lt;/code&gt;オプションでパッケージ名を指定してください。&lt;/p&gt;
-
 &lt;p&gt;&lt;code&gt;go-bincode.go&lt;/code&gt;と&lt;code&gt;go-bincoder.go&lt;/code&gt;が生成され、ソースコードの参照/リストアを行うためのオプションが使えるようになります。&lt;/p&gt;
-
 &lt;p&gt;あとはいつも通りビルドしたバイナリを配布すればOKです。&lt;/p&gt;
-
 &lt;h3 id=&#34;オプション&#34;&gt;オプション&lt;/h3&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;list-code&lt;/strong&gt;: ソースコード一覧を表示します&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;show-code&lt;/strong&gt;: 指定したソースコードの内容を表示します&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;restore-code&lt;/strong&gt;: ソースコードをリストアします&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;h2 id=&#34;生成したコードの依存関係&#34;&gt;生成したコードの依存関係&lt;/h2&gt;
-
 &lt;p&gt;go-bincodeを使って生成されるコードはコードのアーカイブと参照/リストア用のオプションを提供するだけです。
 生成後、あなたのコードを修正する必要はありません。&lt;/p&gt;
-
 &lt;p&gt;アーカイブされるコードには生成したコードは含まれませんが、上記の通り依存関係が存在しないため、リストア後のコードも問題なくビルドできます。&lt;/p&gt;
-
 &lt;h2 id=&#34;インストール&#34;&gt;インストール&lt;/h2&gt;
-
 &lt;p&gt;go-bindataを内部で使っているのであわせてインストールしてください。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ go get -u github.com/jteeuwen/go-bindata/... # Requirement
 $ go get -u github.com/monochromegane/go-bincode/...
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
-
 &lt;p&gt;CI、バージョン管理、デプロイ自動化や環境のコード化が一般になってきた時代なので、バイナリとリポジトリとの関連も分からない野良バイナリになるというのは正直なかなか考えにくいとは思いますが、いざという時に判断材料が多いのに越したことはないと思います。&lt;/p&gt;
-
-&lt;p&gt;念には念を入れ、数年後の「Goあるある」でバイナリのコードがわからない〜という話が出ないよう、よければ使ってみてください。&lt;/p&gt;
-</description>
-    </item>
-    
-  </channel>
-</rss>
+&lt;p&gt;念には念を入れ、数年後の「Goあるある」でバイナリのコードがわからない〜という話が出ないよう、よければ使ってみてください。&lt;/p&gt;</description></item></channel></rss>

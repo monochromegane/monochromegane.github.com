@@ -1,110 +1,50 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Go on THINKING MEGANE</title>
-    <link>https://blog.monochromegane.com/tags/go/</link>
-    <description>Recent content in Go on THINKING MEGANE</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>ja-jp</language>
-    <lastBuildDate>Thu, 17 Jul 2014 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/go/" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>「ほい、これ」ってファイルを渡せる Hoi というツールをつくった</title>
-      <link>https://blog.monochromegane.com/blog/2014/07/17/hoi/</link>
-      <pubDate>Thu, 17 Jul 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2014/07/17/hoi/</guid>
-      <description>
-
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>go on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/go/</link><description>Recent content in go on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Thu, 17 Jul 2014 00:00:00 +0000</lastBuildDate><atom:link href="/tags/go/" rel="self" type="application/rss+xml"/><item><title>「ほい、これ」ってファイルを渡せる Hoi というツールをつくった</title><link>https://blog.monochromegane.com/blog/2014/07/17/hoi/</link><pubDate>Thu, 17 Jul 2014 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2014/07/17/hoi/</guid><description>
 &lt;p&gt;PC間でのファイル受け渡しのときにファイルサーバを使うことがたまにありますが、OSによってファイルパスやその書式が違ったり、受け渡し用のディレクトリをつくるとか、ファイル渡したいだけなのに、なんだか小さなひっかかりがあってスマートじゃないなあといつも感じてました。&lt;/p&gt;
-
 &lt;p&gt;なので、もっと直感的に「ほい、これ」って渡せるツールをつくってみました。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;hoi&#34;&gt;Hoi&lt;/h1&gt;
-
 &lt;p&gt;&lt;strong&gt;Hoi&lt;/strong&gt;はファイルの受け渡しを簡単に行うためのコマンドラインツールです。Go言語で書かれており、HTTPファイルサーバを利用して機能を提供します。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/hoi&#34;&gt;monochromegane/hoi (An easy file transfer tool using http file server.)&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;h2 id=&#34;ファイルを渡す&#34;&gt;ファイルを渡す&lt;/h2&gt;
-
 &lt;p&gt;使い方は簡単でローカルのファイルパスを&lt;code&gt;hoi&lt;/code&gt;コマンドの引数に渡すだけです。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ hoi ~/Documents/hoge.txt
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;そうすると以下のような、ダウンロード用のURLが出力されます。&lt;/p&gt;
-
 &lt;p&gt;&lt;code&gt;http://192.168.0.100:8081/h6un2x8zx6018xuhhn3bu7twwnf4ol1y/hoge.txt&lt;/code&gt;&lt;/p&gt;
-
 &lt;p&gt;これをIRCなりなんなりで相手に伝えてください。&lt;/p&gt;
-
 &lt;h3 id=&#34;仕組み&#34;&gt;仕組み&lt;/h3&gt;
-
 &lt;p&gt;特に難しいことはしていません。主な処理はこういう感じです。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;ファイルダウンロード用にHTTPサーバを起動する&lt;/li&gt;
 &lt;li&gt;HTTPサーバのDocumentRootに対して引数のファイルのシンボリックリンクをはる&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;見ての通り、シンボリックリンクさえはればどんなファイルでもダウンロード対象になりますし、HTTPSでもないので、&lt;br /&gt;
 &lt;strong&gt;必ず信頼できるネットワーク上で使うようにしてください。&lt;/strong&gt;&lt;/p&gt;
-
 &lt;h2 id=&#34;ファイルを消す&#34;&gt;ファイルを消す&lt;/h2&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ hoi --clear
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;で公開しているファイルのシンボリックリンクを削除します。&lt;/p&gt;
-
 &lt;p&gt;そのうち、定期的に消すような処理を入れようかなと思ってます。&lt;/p&gt;
-
 &lt;h2 id=&#34;デーモン化について&#34;&gt;デーモン化について&lt;/h2&gt;
-
 &lt;p&gt;HTTPサーバのデーモン化、Supervisordとか使わず Hoi 単体だけでできるように、こんな感じのシンプルなやつにしてます。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func runAsDaemon() {
-	cmd := exec.Command(os.Args[0], &amp;quot;--server&amp;quot;)
-	cmd.Start()
+cmd := exec.Command(os.Args[0], &amp;quot;--server&amp;quot;)
+cmd.Start()
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;今のところ、PIDでしかHTTPサーバのプロセスにたどり着く手段がなくて、サーバのstatus/stopとかの実装をどうしようか思案中です。&lt;/p&gt;
-
 &lt;p&gt;Go言語でのデーモン化についてよい案をお持ちのかた、アドバイスお待ちしてます。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;Go言語、HTTPサーバを立てるだけならすぐできてしまって便利ですね。&lt;/p&gt;
-
-&lt;p&gt;ファイルの受け渡しのためにローカルにHTTPサーバを立てるというのはある意味ぜいたくですが、全然負荷もかからないので、こんな風に使ってみるのもありかなとちょっと遊んでみました。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Go言語での構造体実装パターン</title>
-      <link>https://blog.monochromegane.com/blog/2014/03/23/struct-implementaion-patterns-in-golang/</link>
-      <pubDate>Sun, 23 Mar 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2014/03/23/struct-implementaion-patterns-in-golang/</guid>
-      <description>
-
+&lt;p&gt;ファイルの受け渡しのためにローカルにHTTPサーバを立てるというのはある意味ぜいたくですが、全然負荷もかからないので、こんな風に使ってみるのもありかなとちょっと遊んでみました。&lt;/p&gt;</description></item><item><title>Go言語での構造体実装パターン</title><link>https://blog.monochromegane.com/blog/2014/03/23/struct-implementaion-patterns-in-golang/</link><pubDate>Sun, 23 Mar 2014 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2014/03/23/struct-implementaion-patterns-in-golang/</guid><description>
 &lt;p&gt;Go言語での構造体実装は、埋込や独自コンセプトのインターフェースといったGo言語独自の機能を理解して行う必要があります。
 今年からGo言語を始めましたが理解が曖昧なままだと実装に迷うことが何度かありました。今回よい機会なので、Go言語での構造体実装パターンとしてまとめてみることにしました。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;構造体実装パターン&#34;&gt;構造体実装パターン&lt;/h1&gt;
-
 &lt;p&gt;実装パターンの洗い出しとして、GoFデザインパターンをGo言語で実装する手法をとりました。
 その中で繰り返し現れる実装をGo言語での構造体実装パターンとしてまとめてみました。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;コンストラクタ関数&lt;/li&gt;
 &lt;li&gt;エクスポートによるアクセス許可&lt;/li&gt;
@@ -114,261 +54,189 @@
 &lt;li&gt;構造体による移譲&lt;/li&gt;
 &lt;li&gt;関数による移譲&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;以下、それぞれのパターンを解説していきます。&lt;/p&gt;
-
 &lt;h2 id=&#34;コンストラクタ関数&#34;&gt;コンストラクタ関数&lt;/h2&gt;
-
 &lt;p&gt;Go言語には構造体のコンストラクタがないため、構造体の初期化を行うには構造体の属するパッケージにコンストラクタ関数を定義します。&lt;/p&gt;
-
 &lt;p&gt;慣例では関数名としてNew + 構造体名() が用いられています。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;type StructA struct {
-	Name string
+Name string
 }
-
 // 初期化時に行いたい処理
 func (self *StructA) SomeInitialize() {
-	// Some initialize
+// Some initialize
 }
-
 // コンストラクタ関数を定義
 func NewStructA(name string) *StructA {
-	structA := &amp;amp;StructA{Name: name}
-	structA.SomeInitialize()
-	return structA
+structA := &amp;amp;StructA{Name: name}
+structA.SomeInitialize()
+return structA
 }
-
 func main() {
-	_ = NewStructA(&amp;quot;name&amp;quot;)
+_ = NewStructA(&amp;quot;name&amp;quot;)
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;コンストラクタ関数を用いることには以下の利点があります。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;構造体の生成と同時に行いたい処理を利用側から隠す&lt;/li&gt;
 &lt;li&gt;埋込構造体を利用側から隠す（構造体の構造を利用側から隠す。埋込構造体の存在を隠すことにも使えます（後述））&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;h2 id=&#34;エクスポートによるアクセス許可&#34;&gt;エクスポートによるアクセス許可&lt;/h2&gt;
-
 &lt;p&gt;Go言語ではパッケージ外へのアクセス許可は、名前の先頭を大文字にすることで行います（エクスポート）。
 これを利用することでシングルトンのようなインスタンス生成の制御を行うことが可能です。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package singleton
-
 // 構造体の名前を小文字にすることでパッケージ外へのエクスポートを行わない
 type singleton struct {
 }
-
 // インスタンスを保持する変数も小文字にすることでエクスポートを行わない
 var instance *singleton
-
 // インスタンス取得用の関数のみエクスポートしておき、ここでインスタンスが
 // 一意であることを保証する
 func GetInstance() *singleton {
-	if instance == nil {
-	     instance = &amp;amp;singleton{}
-	}
-	return instance
+if instance == nil {
+instance = &amp;amp;singleton{}
+}
+return instance
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;省略書式&lt;code&gt;:=&lt;/code&gt;を使うことで構造体自体をエクスポートしなくても利用できます。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;singleton := singleton.GetInstance()
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h2 id=&#34;インターフェースによるポリモフィズム&#34;&gt;インターフェースによるポリモフィズム&lt;/h2&gt;
-
 &lt;p&gt;Go言語には型の継承機能が用意されていませんが、インターフェースを用いることでポリモフィズムを実現できます。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// インターフェースの定義
 type SomeBehivor interface {
-	DoSomething(arg string) string
+DoSomething(arg string) string
 }
-
 // 構造体の定義
 type StructA struct {
 }
-
 // インターフェースの実装
 func (self *StructA) DoSomething(arg string) string {
-	return arg
+return arg
 }
-
 // ポリモフィズム
 func main() {
-	// インターフェース型の変数に格納できる
-	var behivor SomeBehivor
-	behivor = &amp;amp;StructA{}
-	behivor.DoSomething(&amp;quot;A&amp;quot;)
+// インターフェース型の変数に格納できる
+var behivor SomeBehivor
+behivor = &amp;amp;StructA{}
+behivor.DoSomething(&amp;quot;A&amp;quot;)
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;構造体の埋込により擬似的な継承ができると説明しているものがありますが、これはあくまで透過的に構造体を利用できるだけで、&amp;rdquo;型&amp;rdquo;としてポリモフィズムを実現できるわけではないことに注意してください。&lt;/p&gt;
-
 &lt;h2 id=&#34;構造体によるポリモフィズム&#34;&gt;構造体によるポリモフィズム&lt;/h2&gt;
-
 &lt;p&gt;ポリモフィズムを実現しつつ、構造体に共通の実装やメンバを定義したい場合があります。
 この場合は、インターフェースを実装した構造体を用意して、それを埋め込む方法を取ります。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// インターフェースの定義
 type SomeBehivor interface {
-	DoSomething() string
+DoSomething() string
 }
-
 // 共通構造体の定義
 type DefaultStruct struct {
-	// 共通メンバ
-	Name string
+// 共通メンバ
+Name string
 }
-
 // 共通構造体にインターフェースを実装
 func (self *DefaultStruct) DoSomething() string {
-	return self.Name
+return self.Name
 }
-
 // 共通構造体を埋め込む
 type StructA struct {
-	*DefaultStruct
+*DefaultStruct
 }
-
 func main() {
-	// インターフェース型の変数に格納できる
-	behivor := &amp;amp;StructA{&amp;amp;DefaultStruct{&amp;quot;A&amp;quot;}}
-
-	// 共通実装とメンバを使うことができる
-	behivor.DoSomething()
+// インターフェース型の変数に格納できる
+behivor := &amp;amp;StructA{&amp;amp;DefaultStruct{&amp;quot;A&amp;quot;}}
+// 共通実装とメンバを使うことができる
+behivor.DoSomething()
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;ただし、この場合、利用側が初期化時に埋込構造体を意識する必要があるため、前述のコンストラクタ関数を用意するとよいでしょう。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// コンストラクタ関数
 func NewStructA(name string) *StructA {
-	return &amp;amp;StructA{&amp;amp;DefaultStruct{&amp;quot;A&amp;quot;}}
+return &amp;amp;StructA{&amp;amp;DefaultStruct{&amp;quot;A&amp;quot;}}
 }
 // 利用側は埋込構造体の存在を意識しない
 behivor := NewStructA(&amp;quot;A&amp;quot;)
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h2 id=&#34;構造体によるサブクラス-レスポンシビリティ&#34;&gt;構造体によるサブクラス・レスポンシビリティ&lt;/h2&gt;
-
 &lt;p&gt;Go言語では、埋め込まれた構造体がもとの構造体の実装を利用することができません（Dispatch backされないと言います）。&lt;/p&gt;
-
 &lt;p&gt;そのため、TemplateMethodパターンのように子クラスに処理の実装を任せる機能をつくる場合、埋め込まれた構造体のメソッドに対してレシーバとなる、もとの構造体の参照を渡す必要があります。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;type Behivor interface {
-	DoSomethingByOther()
+DoSomethingByOther()
 }
-
 type Abstract struct {
 }
-
 // 内部で、もとの構造体の実装を利用するメソッド
 func (self *Abstract) DoSomething(behivor Behivor) {
-	behivor.DoSomethingByOther()
-
-	// 仮にここで AbstractにBehivorを埋め込むなど、メソッドがある状態でコンパイルを通るようにして、
-	// self.DoSomethingByOther()としてもpanic: runtime error: invalid memory address or nil pointer dereferenceが
-	// 発生し、Dispatch backされないことがわかる
+behivor.DoSomethingByOther()
+// 仮にここで AbstractにBehivorを埋め込むなど、メソッドがある状態でコンパイルを通るようにして、
+// self.DoSomethingByOther()としてもpanic: runtime error: invalid memory address or nil pointer dereferenceが
+// 発生し、Dispatch backされないことがわかる
 }
-
 // 上で定義した構造体を埋め込む
 type Concrete struct {
-	*Abstract
+*Abstract
 }
-
 // インターフェースを実装
 func (self *Concrete) DoSomethingByOther() {
-	// Do something
+// Do something
 }
-
 func main() {
-	concrete := &amp;amp;Concrete{}
-	// レシーバとなる自分自身を渡す
-	concrete.DoSomething(concrete)
+concrete := &amp;amp;Concrete{}
+// レシーバとなる自分自身を渡す
+concrete.DoSomething(concrete)
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;このレシーバを自ら指定する方法は、継承を利用できない言語で&lt;code&gt;Client-specified self&lt;/code&gt;というパターンという名前で使われているようです。
 ただし構造体間の依存関係が高くなるため、どうしても継承関係が必要な場合を除き、後述の構造体による移譲、または関数による移譲を検討するほうがよいでしょう。&lt;/p&gt;
-
 &lt;h2 id=&#34;構造体による移譲&#34;&gt;構造体による移譲&lt;/h2&gt;
-
 &lt;p&gt;Go言語では、処理の実装を適切な責務を持つ構造体に任せる移譲は簡単に実現できます。
 それには構造体をメンバとして保持し、必要に応じて、その構造体のメソッドを呼ぶようにします。&lt;/p&gt;
-
 &lt;p&gt;また、Strategyパターンのようにインターフェースに対して移譲するような設計にしておくと依存性をより下げることができるでしょう。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;type Strategy interface {
-	DoSomething()
+DoSomething()
 }
-
 type ConcreteStrategy struct {
 }
-
 func (self *ConcreteStrategy) DoSomething() {
-	// Do something
+// Do something
 }
-
 type StructA struct {
-	// 移譲先をメンバに保持
-	strategy Strategy
+// 移譲先をメンバに保持
+strategy Strategy
 }
-
 func (self *StructA) Operation() {
-	// 埋め込んだ構造体に処理を移譲
-	self.strategy.DoSomething()
+// 埋め込んだ構造体に処理を移譲
+self.strategy.DoSomething()
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h2 id=&#34;関数による移譲&#34;&gt;関数による移譲&lt;/h2&gt;
-
 &lt;p&gt;Go言語では、関数をファーストクラスの型として扱えるため、移譲する処理を関数として渡す手法もとることができます。
 Go言語の基本パッケージを見ていると、移譲処理を外部から注入する機能を提供する場合、関数型を渡すような設計になっているのが多いように思われます。
 　&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;
 // 関数型を定義
 type DoSomething func()
-
-
 type StructA struct {
 }
-
 // 関数型を引数で受け取るメソッドを定義
 func (self *StructA) Operation(strategy DoSomething) {
-	// 受け取った関数型に処理を移譲
-	strategy()
+// 受け取った関数型に処理を移譲
+strategy()
 }
-
 func main() {
-	structA := &amp;amp;StructA{}
-
-	// 関数リテラルで引数として渡す
-	structA.Operation(func(){
-	     // Do something
-	})
+structA := &amp;amp;StructA{}
+// 関数リテラルで引数として渡す
+structA.Operation(func(){
+// Do something
+})
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;go言語でのデザインパターン&#34;&gt;Go言語でのデザインパターン&lt;/h1&gt;
-
 &lt;p&gt;今回、パターンの洗い出しに使ったGo言語でのデザインパターン実装はこちらのリポジトリに公開しています。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/go_design_pattern&#34;&gt;monochromegane/go_design_pattern&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;パターン実装にあたっては、結城 浩さんの&lt;a href=&#34;http://www.amazon.co.jp/%E5%A2%97%E8%A3%9C%E6%94%B9%E8%A8%82%E7%89%88Java%E8%A8%80%E8%AA%9E%E3%81%A7%E5%AD%A6%E3%81%B6%E3%83%87%E3%82%B6%E3%82%A4%E3%83%B3%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3%E5%85%A5%E9%96%80-%E7%B5%90%E5%9F%8E-%E6%B5%A9/dp/4797327030/ref=sr_1_2?ie=UTF8&amp;amp;qid=1395468803&amp;amp;sr=8-2&amp;amp;keywords=%E3%83%87%E3%82%B6%E3%82%A4%E3%83%B3%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3&#34;&gt;増補改訂版Java言語で学ぶデザインパターン入門&lt;/a&gt;を参考にしました。
-各デザインパターンの解説についてはそちらを参考にしてください。&lt;/p&gt;
-</description>
-    </item>
-    
-  </channel>
-</rss>
+各デザインパターンの解説についてはそちらを参考にしてください。&lt;/p&gt;</description></item></channel></rss>

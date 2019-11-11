@@ -1,483 +1,257 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Fukuoka.go on THINKING MEGANE</title>
-    <link>https://blog.monochromegane.com/tags/fukuoka.go/</link>
-    <description>Recent content in Fukuoka.go on THINKING MEGANE</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>ja-jp</language>
-    <lastBuildDate>Sat, 25 Apr 2015 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/fukuoka.go/" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>Fukuoka.go#7 ソースコードリーディングvol.1を開催しました</title>
-      <link>https://blog.monochromegane.com/blog/2015/04/25/fukuoka-go-7/</link>
-      <pubDate>Sat, 25 Apr 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2015/04/25/fukuoka-go-7/</guid>
-      <description>
-
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>fukuoka.go on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/fukuoka.go/</link><description>Recent content in fukuoka.go on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sat, 25 Apr 2015 00:00:00 +0000</lastBuildDate><atom:link href="/tags/fukuoka.go/" rel="self" type="application/rss+xml"/><item><title>Fukuoka.go#7 ソースコードリーディングvol.1を開催しました</title><link>https://blog.monochromegane.com/blog/2015/04/25/fukuoka-go-7/</link><pubDate>Sat, 25 Apr 2015 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2015/04/25/fukuoka-go-7/</guid><description>
 &lt;p&gt;今年入ってちょっと休憩していたFukuoka.goなんですが、&lt;a href=&#34;https://twitter.com/nobkz&#34;&gt;@nobkz&lt;/a&gt;さんがソースコードリーディングやろうという企画を持ちかけてくれたので久々に開催しました。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://fukuokago.doorkeeper.jp/events/23212&#34;&gt;Fukuoka.go#7 ソースコードリーディングの会vol.1&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;今回は発表はしましたが、会場準備などの裏方だったので参加者としても勉強会を楽しむことができたのが個人的にはうれしかったです。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;発表&#34;&gt;発表&lt;/h1&gt;
-
 &lt;h2 id=&#34;ダウンタイム-ゼロを支える技術-in-go&#34;&gt;ダウンタイム・ゼロを支える技術 in Go&lt;/h2&gt;
-
 &lt;p&gt;Goでアプリをダウンタイムなしで運用するための方法あれこれを発表しました。&lt;/p&gt;
-
 &lt;iframe src=&#34;http://www.storyboards.jp/widget/7xay4r&#34; width=&#34;640&#34; height=&#34;480&#34;&gt;&lt;/iframe&gt;
-
 &lt;p&gt;アプリでがんばるところとインフラでがんばるところのバランスは難しいですね。
 ベストなやり方を取れるように検討することは大事だと思います。&lt;/p&gt;
-
 &lt;h2 id=&#34;並列とgo&#34;&gt;並列とGo&lt;/h2&gt;
-
 &lt;p&gt;&lt;a href=&#34;https://twitter.com/nobkz&#34;&gt;@nobkz&lt;/a&gt;さんの発表です。&lt;/p&gt;
-
 &lt;iframe src=&#34;//slides.com/nobukazuhanada/go/embed&#34; width=&#34;640&#34; height=&#34;480&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; webkitallowfullscreen mozallowfullscreen allowfullscreen&gt;&lt;/iframe&gt;
-
 &lt;p&gt;Go初学者向けにコードリーティングやりやすくなるようにgoroutineまわりなどを解説してくれました。&lt;/p&gt;
-
 &lt;h2 id=&#34;lexer実装について-keizo-bookman&#34;&gt;lexer実装について (@keizo_bookman)&lt;/h2&gt;
-
 &lt;p&gt;&lt;a href=&#34;https://twitter.com/keizo_bookman&#34;&gt;@keizo_bookman&lt;/a&gt;さんの発表。&lt;/p&gt;
-
 &lt;p&gt;資料まだアップしていないとのこと。goroutineとchannelを使ったきれいなlexer実装のお話でした。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;ソースコードリーディング-vol-1&#34;&gt;ソースコードリーディング vol.1&lt;/h1&gt;
-
 &lt;p&gt;ソースコードリーディングは3〜4人のチームに分かれて Go製のApacheBenchを読みました。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/rakyll/boom&#34;&gt;rakyll/boom - HTTP(S) load generator, ApacheBench (ab) replacement, written in Go&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;30分ぐらいでざっと読んでそのあとチームごとにプロダクトの概要や気になった点、よいと思った点などを発表していく流れ。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;チームで読むことで自分の考えを言葉に出して伝えるので理解が深まる&lt;/li&gt;
 &lt;li&gt;時間制限があるので全体を把握するため最短で読む方法を模索する&lt;/li&gt;
 &lt;li&gt;なぜそうなっているのかなど有識者の意見を聞ける&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;などなど。チームで読むというのはとてもおもしろいのでまたやっていきたい。&lt;/p&gt;
-
 &lt;p&gt;大きなプロダクトだと機能や範囲を絞らないと読みきれないと思うのでお題のチョイスは重要。
 今回のboomは初回としてはgoroutine扱いながらもコンパクトなプロダクトだったので&lt;a href=&#34;https://twitter.com/nobkz&#34;&gt;@nobkz&lt;/a&gt;さん良いチョイスだったと思います。&lt;/p&gt;
-
 &lt;h2 id=&#34;様子です&#34;&gt;様子です&lt;/h2&gt;
-
 &lt;p&gt;雰囲気など感じてもらえれば。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://togetter.com/li/812438&#34;&gt;Fukuoka.go#7 ソースコードリーディングの会vol.1 - Togetterまとめ&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;所感&#34;&gt;所感&lt;/h1&gt;
-
 &lt;p&gt;勉強会やコミュニティを続けていくのはひとりでは息切れしてしまうので、今回みたいに別の勉強会とかで知り合った人から企画あげてもらえたのはうれしかったです。
 また、今回は集客を積極的にやってくれた仲間もいて、つくづく繋がりなのだなあと思えたFukuoka.goでした。&lt;/p&gt;
-
 &lt;p&gt;またFukuoka.goぼちぼち続けていきます。福岡でGoに興味がある方気軽にご参加ください〜。
 ソースコードリーディングだけではなくてLT大会、もくもく会もまたやっていこうと思います。&lt;/p&gt;
-
-&lt;p&gt;ʕ◔ϖ◔ʔ &amp;lt; Go!&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Fukuoka.go#3を開催しました。</title>
-      <link>https://blog.monochromegane.com/blog/2014/09/20/fukuoka-go-3/</link>
-      <pubDate>Sat, 20 Sep 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2014/09/20/fukuoka-go-3/</guid>
-      <description>
-
+&lt;p&gt;ʕ◔ϖ◔ʔ &amp;lt; Go!&lt;/p&gt;</description></item><item><title>Fukuoka.go#3を開催しました。</title><link>https://blog.monochromegane.com/blog/2014/09/20/fukuoka-go-3/</link><pubDate>Sat, 20 Sep 2014 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2014/09/20/fukuoka-go-3/</guid><description>
 &lt;p&gt;&lt;strong&gt;Fukuoka.go&lt;/strong&gt;の第三回を9/16に開催しました。&lt;/p&gt;
-
 &lt;p&gt;Fukuoka.goは福岡でGo言語に興味のあるひとが集まる場所を目指して開催する会です。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://fukuokago.doorkeeper.jp/events/14905&#34;&gt;Fukuoka.go#3&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;今回の内容をまとめておきます。&lt;/p&gt;
-
 &lt;h2 id=&#34;タイムテーブル&#34;&gt;タイムテーブル&lt;/h2&gt;
-
 &lt;ul&gt;
 &lt;li&gt;19:30 - 20:15 LT&lt;/li&gt;
 &lt;li&gt;20:15 - 21:00 もくもく会&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;前回がLT大会だったのでもくもく多めで予定してましたが、結果的に半々ぐらいになりました。&lt;br /&gt;
 また、今回の参加者は7名でした。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;lt&#34;&gt;LT&lt;/h1&gt;
-
 &lt;h2 id=&#34;hcl-toml便利-linyows&#34;&gt;HCL/TOML便利 (@linyows)&lt;/h2&gt;
-
 &lt;p&gt;&lt;a href=&#34;https://twitter.com/linyows&#34;&gt;@linyows&lt;/a&gt;さんによるLT。&lt;/p&gt;
-
 &lt;p&gt;Go言語で設定ファイルを扱うのに便利なHCL/TOMLの紹介でした。&lt;/p&gt;
-
 &lt;div style=&#34;speakerdeck&#34;&gt;
 &lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;1e83ca80210d01328c621a1ab62a9337&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
 &lt;/div&gt;
-
 &lt;p&gt;HCL/TOMLはそれぞれJSONやYAMLライクですが、よりユーザフレンドリーな書き方ができるとのことで試してみようかなと思います。&lt;/p&gt;
-
 &lt;h2 id=&#34;twelve-go-best-practices-の解説-monochromegane&#34;&gt;Twelve Go Best Practices の解説 (@monochromegane)&lt;/h2&gt;
-
 &lt;p&gt;&lt;a href=&#34;https://twitter.com/monochromegane&#34;&gt;@monochromegane&lt;/a&gt;のLT。&lt;/p&gt;
-
 &lt;p&gt;今回は&lt;a href=&#34;https://talks.golang.org/2013/bestpractices.slide#1&#34;&gt;Twelve Go Best Practices&lt;/a&gt;を解説しました。&lt;/p&gt;
-
 &lt;p&gt;ベストプラクティスとしてはGo言語に限らないものも含まれますが、FunctionAdapterやパッケージ構成などGoっぽく書くにはどうするかみたいなものをいろいろ話してみました。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;もくもく会&#34;&gt;もくもく会&lt;/h1&gt;
-
 &lt;p&gt;後半は各々で作業を持ちよった、もくもく会でした。実際に環境つくったり、&lt;a href=&#34;http://go-tour-jp.appspot.com/#1&#34;&gt;A Tour of Go&lt;/a&gt;や&lt;a href=&#34;https://gist.github.com/monochromegane/8bb73390f2ebd9d325f4&#34;&gt;速習Go&lt;/a&gt;を進めたりされていたようです。&lt;/p&gt;
-
 &lt;p&gt;また、Daisuke Makiさんによる&lt;a href=&#34;http://go-talks.appspot.com/github.com/lestrrat/go-slides/2014-yapcasia-go-for-perl-mongers/main.slide#1&#34;&gt;Go For Perl Mongers&lt;/a&gt;を見ながら、Goの構造体設計、インターフェース設計について話したりもしました。&lt;/p&gt;
-
 &lt;p&gt;前回に比べ少人数だったこともあり、わいわいしながら楽しくもくもくできたと思います。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;様子&#34;&gt;様子&lt;/h1&gt;
-
 &lt;p&gt;つぶやきはこちら。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://togetter.com/li/720886&#34;&gt;Fukuoka.go#3 - Togetterまとめ&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;所感&#34;&gt;所感&lt;/h1&gt;
-
 &lt;p&gt;今回は入門用LTなどを用意せず、もくもく会を多めにとってみましたが、参加者の反応も思ったよりよく、今後の参考になりました。&lt;/p&gt;
-
 &lt;p&gt;福岡のGo言語人口はまだ少ないので、知り合う、質問しあう場所をつくる意味でもどんどん続けていきたいなと思っています。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;楽しくも学びのある Fukuoka.go は月一回を目安に定期的に開催しています。&lt;br /&gt;
 Goに興味がある方も、Go談義がしたい方も、どなたでもお気軽にご参加ください。&lt;/p&gt;
-
 &lt;p&gt;LTも絶賛募集しています！&lt;br /&gt;
-Go言語でこんなのやってみたというのがあればぜひぜひ教えてください。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Fukuoka.go#2&#43;Fukuoka.rbを開催しました。</title>
-      <link>https://blog.monochromegane.com/blog/2014/08/23/fukuoka-go-2/</link>
-      <pubDate>Sat, 23 Aug 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2014/08/23/fukuoka-go-2/</guid>
-      <description>
-
+Go言語でこんなのやってみたというのがあればぜひぜひ教えてください。&lt;/p&gt;</description></item><item><title>Fukuoka.go#2&#43;Fukuoka.rbを開催しました。</title><link>https://blog.monochromegane.com/blog/2014/08/23/fukuoka-go-2/</link><pubDate>Sat, 23 Aug 2014 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2014/08/23/fukuoka-go-2/</guid><description>
 &lt;p&gt;8月21日に &lt;strong&gt;Fukuoka.go#2+Fukuoka.rb&lt;/strong&gt; を開催しました。&lt;/p&gt;
-
 &lt;p&gt;Fukuoka.goは福岡でGo言語に興味のあるひとが集まる場所を目指して開催する会です。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://connpass.com/event/7559/&#34;&gt;Fukuoka.go#2+Fukuoka.rb&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;今回はFukuoka.rbと合同開催になったこともあり、参加者26名（キャンセル含めると申込自体は35名）と前回より多くの方に来ていただきました。福岡のGo熱は衰えず！です！&lt;/p&gt;
-
 &lt;p&gt;今回の内容をまとめておきます。&lt;/p&gt;
-
 &lt;h2 id=&#34;タイムテーブル&#34;&gt;タイムテーブル&lt;/h2&gt;
-
 &lt;ul&gt;
 &lt;li&gt;19:30 - 21:30 LT大会&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;当初もくもく会も予定していましたが、LT希望者が多く、最終的にはオールLTのLT大会になってしまいました。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;lt&#34;&gt;LT&lt;/h1&gt;
-
 &lt;h2 id=&#34;ルビーストのためのgo-linyows&#34;&gt;ルビーストのためのGo (@linyows)&lt;/h2&gt;
-
 &lt;p&gt;&lt;a href=&#34;https://twitter.com/linyows&#34;&gt;@linyows&lt;/a&gt;さんによるLT。&lt;/p&gt;
-
 &lt;p&gt;RubyとGoを比較しながらGoを学ぶ。&lt;/p&gt;
-
 &lt;div style=&#34;speakerdeck&#34;&gt;
 &lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;244385d00bc4013224d21eb14f30e1c6&#34; data-ratio=&#34;1.33333333333333&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
 &lt;/div&gt;
-
 &lt;p&gt;自分の知っている言語(知識)と比較していくと知識がメタ化、抽象化されて応用力がついていってよいですよね。&lt;/p&gt;
-
 &lt;p&gt;GoのBDD形式のテスティングフレームワーク、&lt;code&gt;onsi/ginkgo&lt;/code&gt;以外はまだ使ったことがないものもあったので調べてみようと思いました。&lt;/p&gt;
-
 &lt;h2 id=&#34;hello-godoc-laco0416&#34;&gt;Hello GoDoc! (@laco0416)&lt;/h2&gt;
-
 &lt;p&gt;&lt;a href=&#34;https://twitter.com/laco0416&#34;&gt;@laco0416&lt;/a&gt;さんによるLT。&lt;/p&gt;
-
 &lt;p&gt;GoのドキュメントホスティングサービスとしてのGoDocとコメントの書式について紹介。&lt;/p&gt;
-
 &lt;p&gt;&lt;iframe src=&#34;//www.slideshare.net/slideshow/embed_code/38209599?rel=0&#34; width=&#34;512&#34; height=&#34;421&#34; frameborder=&#34;0&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; style=&#34;border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;&#34; allowfullscreen&gt; &lt;/iframe&gt; &lt;div style=&#34;margin-bottom:5px&#34;&gt; &lt;strong&gt; &lt;a href=&#34;https://www.slideshare.net/laco0416/hello-godoc-38209599&#34; title=&#34;Hello GoDoc!&#34; target=&#34;_blank&#34;&gt;Hello GoDoc!&lt;/a&gt; &lt;/strong&gt; from &lt;strong&gt;&lt;a href=&#34;http://www.slideshare.net/laco0416&#34; target=&#34;_blank&#34;&gt;laco0416&lt;/a&gt;&lt;/strong&gt; &lt;/div&gt;&lt;/p&gt;
-
 &lt;p&gt;GoDocサービスがあることで、開発者はコメント記載して、リポジトリのURLを叩くだけで自動でドキュメントを公開できて非常に便利。&lt;/p&gt;
-
 &lt;p&gt;Exampleも書けるのはいいですね。
 バッジやLintも用意されているのでどんどん使っていきましょう（参加者中GoDoc利用者はゼロでした）。&lt;/p&gt;
-
 &lt;h2 id=&#34;最近やっていること-udzura&#34;&gt;最近やっていること (@udzura)&lt;/h2&gt;
-
 &lt;p&gt;&lt;a href=&#34;https://twitter.com/udzura&#34;&gt;@udzura&lt;/a&gt;さんによるLT。&lt;/p&gt;
-
 &lt;p&gt;DockerでPuppet/Chefのテストをするにあたって頑張ったお話。&lt;/p&gt;
-
 &lt;p&gt;&lt;a href=&#34;http://www.storyboards.jp/viewer/64t76r&#34;&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2014/08/udzura_saikin.png&#34; alt=&#34;udzura\_saikin&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
-
 &lt;p&gt;現場で得られたノウハウが盛り込まれた便利情報でした。失敗したイメージはタグをつけてコミットしておくの使えそう。&lt;/p&gt;
-
 &lt;p&gt;そのうち、Fukuoka.goでもDockerのソースコードリーディングとかもやってみたいなあと考えてます。&lt;/p&gt;
-
 &lt;h2 id=&#34;実践go-ツールの作成から配布まで-monochromegane&#34;&gt;実践Go - ツールの作成から配布まで (@monochromegane)&lt;/h2&gt;
-
 &lt;p&gt;&lt;a href=&#34;https://twitter.com/monochromegane&#34;&gt;@monochromegane&lt;/a&gt;によるLT。&lt;/p&gt;
-
 &lt;p&gt;Fukuoka.goで毎回やっているGo入門用LTです。&lt;/p&gt;
-
 &lt;p&gt;前回は構文を学ぶ&lt;a href=&#34;https://gist.github.com/monochromegane/8bb73390f2ebd9d325f4&#34;&gt;速習Go&lt;/a&gt;をやったので今回は実践Goとして、簡単なツールをつくって配布する部分を紹介しました。&lt;/p&gt;
-
 &lt;div style=&#34;speakerdeck&#34;&gt;
 &lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;943c17900bbf013224d21eb14f30e1c6&#34; data-ratio=&#34;1.33333333333333&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
 &lt;/div&gt;
-
 &lt;p&gt;ライブコーディングしながらGOPATHまわりの話やツールつくる上でのTipsなど話してみました。&lt;/p&gt;
-
 &lt;p&gt;Go書いたことない方にも雰囲気が伝わっていればうれしいです。&lt;/p&gt;
-
 &lt;p&gt;入門用LT、次回はHTTPサーバの実装を通して型とか構造体とか紹介するようなのを考えてます。お楽しみに。&lt;/p&gt;
-
 &lt;h2 id=&#34;gyowitter-の-ご紹介-morygonzalez&#34;&gt;gyowitter の ご紹介 (@morygonzalez)&lt;/h2&gt;
-
 &lt;p&gt;&lt;a href=&#34;https://twitter.com/morygonzalez&#34;&gt;@morygonzalez&lt;/a&gt;さんによるLT。&lt;/p&gt;
-
 &lt;p&gt;gyowitterというGo製のYo/Twitter連携サービスの紹介。&lt;/p&gt;
-
 &lt;div style=&#34;speakerdeck&#34;&gt;
 &lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;ccf4a2000bc7013260fd7e2d2d4e67ff&#34; data-ratio=&#34;1.33333333333333&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
 &lt;/div&gt;
-
 &lt;p&gt;圧倒的なLT力で会場を沸かせてくれました。&lt;/p&gt;
-
 &lt;p&gt;GoのHTTPサーバを利用しているとのことですが、全然落ちてないとのこと。すばらしい〜。&lt;/p&gt;
-
 &lt;h2 id=&#34;togetter&#34;&gt;Togetter&lt;/h2&gt;
-
 &lt;p&gt;今回、つぶやきも盛り上がっていたので、まとめてみました。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://togetter.com/li/710020&#34;&gt;Fukuoka.go#2+Fukuoka.rb - Togetterまとめ&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;所感など&#34;&gt;所感など&lt;/h1&gt;
-
 &lt;p&gt;参加していただいた方々、LTしていただいた方々、会場設営手伝っていただいた方々、&lt;strong&gt;ありがとうございます！&lt;/strong&gt;&lt;/p&gt;
-
 &lt;p&gt;今回はLT大会でしたが、参加した方のお話やつぶやきを見る限りでは、Goに対して興味を持ってもらえたり、情報を得られたりしたようなので、Go言語についてわいわいするという目的は今回も達成できたんじゃないかなと思ってます。&lt;/p&gt;
-
 &lt;p&gt;それから、Fukuoka.rbとの合同だったのでお互いの言語、コミュニティに対して興味を持つことができたのもよかったですね。&lt;/p&gt;
-
 &lt;p&gt;次回は、要望の多かったもくもく会も時間とってやろうと思います。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;&lt;strong&gt;楽しくも学びのある Fukuoka.go&lt;/strong&gt; は月一回を目安に定期的に開催しています。&lt;br /&gt;
 Goに興味がある方も、Go談義がしたい方も、どなたでもお気軽にご参加ください。&lt;/p&gt;
-
 &lt;p&gt;LTも絶賛募集しています！&lt;br /&gt;
-Go言語でこんなのやってみたというのがあればぜひぜひ教えてください。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Fukuoka.go#1を開催しました。</title>
-      <link>https://blog.monochromegane.com/blog/2014/07/06/fukuoka-go-1/</link>
-      <pubDate>Sun, 06 Jul 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2014/07/06/fukuoka-go-1/</guid>
-      <description>
-
+Go言語でこんなのやってみたというのがあればぜひぜひ教えてください。&lt;/p&gt;</description></item><item><title>Fukuoka.go#1を開催しました。</title><link>https://blog.monochromegane.com/blog/2014/07/06/fukuoka-go-1/</link><pubDate>Sun, 06 Jul 2014 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2014/07/06/fukuoka-go-1/</guid><description>
 &lt;p&gt;7月4日に &lt;strong&gt;Fukuoka.go#1&lt;/strong&gt; を開催しました。&lt;/p&gt;
-
 &lt;p&gt;Fukuoka.goは福岡でGo言語に興味のあるひとが集まる場所を目指して開催する会です。&lt;/p&gt;
-
 &lt;p&gt;今回が初開催でしたが、参加者18名（キャンセル含めると申込自体は28名）で、福岡にも着実にGo熱が来てるなと感じています。&lt;/p&gt;
-
 &lt;p&gt;ということで、今回の開催した内容をまとめておこうと思います。&lt;/p&gt;
-
 &lt;h2 id=&#34;タイムテーブル&#34;&gt;タイムテーブル&lt;/h2&gt;
-
 &lt;p&gt;&lt;a href=&#34;http://connpass.com/event/6887/&#34;&gt;イベント概要&lt;/a&gt;&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;19:35 - 19:45 自己紹介タイム(Go歴を教えてください)&lt;/li&gt;
 &lt;li&gt;19:45 - 20:20 LT: 速習Go (&lt;a href=&#34;https://twitter.com/monochromegane&#34;&gt;@monochromegane&lt;/a&gt;)&lt;/li&gt;
 &lt;li&gt;20:20 - 20:40 LT: GAE/Goの始め方 (&lt;a href=&#34;https://twitter.com/laco0416&#34;&gt;@laco0416&lt;/a&gt;)&lt;/li&gt;
 &lt;li&gt;20:40 - 21:40 もくもく会&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;h2 id=&#34;自己紹介タイム-go歴を教えてください&#34;&gt;自己紹介タイム(Go歴を教えてください)&lt;/h2&gt;
-
 &lt;p&gt;今回の参加者は18名で、Go歴は長くて半年、大半がGoのチュートリアルである、&lt;a href=&#34;http://go-tour-jp.appspot.com/#1&#34;&gt;A Tour of Go&lt;/a&gt;をやり終えた（または途中までやった）ぐらいの経験の方が多かったです。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;lt&#34;&gt;LT&lt;/h1&gt;
-
 &lt;h2 id=&#34;速習go-monochromegane-https-twitter-com-monochromegane&#34;&gt;速習Go (&lt;a href=&#34;https://twitter.com/monochromegane&#34;&gt;@monochromegane&lt;/a&gt;)&lt;/h2&gt;
-
 &lt;p&gt;自分のほうから、速習Goというタイトルで、Go環境の作り方から基本的な文法規則と注意したほうがよい点、ハマることが多い点などを説明させてもらいました。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://gist.github.com/monochromegane/8bb73390f2ebd9d325f4&#34;&gt;LT資料: 速習Go&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;GoのPlaygroundもつけてGo環境がない人でも試せるようにした点はよかったですが、足りない分はもくもく会でカバーする、という方針だったのでかなり駆け足になってしまいました。&lt;/p&gt;
-
 &lt;p&gt;もう少し、ライブコーディング的なものもやったほうが興味ひけたかなあと思いますが、次回に活かそうと思います。&lt;/p&gt;
-
 &lt;h2 id=&#34;gae-goの始め方-laco0416-https-twitter-com-laco0416&#34;&gt;GAE/Goの始め方 (&lt;a href=&#34;https://twitter.com/laco0416&#34;&gt;@laco0416&lt;/a&gt;)&lt;/h2&gt;
-
 &lt;p&gt;&lt;a href=&#34;https://twitter.com/laco0416&#34;&gt;@laco0416&lt;/a&gt;さんによるLTは、「GAE/Goの始め方」でした。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://docs.google.com/presentation/d/1jz4h1-V4CCL0emQjxl-3BL12lGonol1A0dZrEc96oTw/pub?start=false&amp;amp;loop=false&amp;amp;delayms=3000#slide=id.p&#34;&gt;LT資料: GAE/Goの始め方&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;統合開発環境での開発のノウハウや、GAE/Goで気をつける点などをLTしていただきました。
 Go言語はシンプルなHTTPサーバを立てるのは非常に簡単なのでGAEと組み合わせることで簡易なAPIサーバであればさくっとつくってしまえるみたいです。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;もくもく会&#34;&gt;もくもく会&lt;/h1&gt;
-
 &lt;p&gt;各々で作業を持ちよって、もくもくする会をしました。今回はLTでわからなかったことを調べたり話しあったりする方々が多かったようです。&lt;/p&gt;
-
 &lt;p&gt;こんな感じのことを話しました。&lt;/p&gt;
-
 &lt;h2 id=&#34;メソッドのレシーバ変数に-self-を使わないほうがよい理由とは&#34;&gt;メソッドのレシーバ変数に self を使わないほうがよい理由とは&lt;/h2&gt;
-
 &lt;p&gt;速習GoのLTのときに話はしたけど、明確な根拠が出せなかったので調べなおしました。&lt;/p&gt;
-
 &lt;p&gt;当初は、selfだとレシーバとして何を指しているのかわからないということだと考えていたのですが、まあ定義には型名もきちんとあるわけで&amp;hellip;&lt;/p&gt;
-
 &lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34; data-cards=&#34;hidden&#34; lang=&#34;ja&#34;&gt;&lt;p&gt;&lt;a href=&#34;https://twitter.com/monochromegane&#34;&gt;@monochromegane&lt;/a&gt; 以前Qiitaに記事書きましたのでよかったらどうぞ。元ネタは go-nuts MLの &lt;a href=&#34;https://t.co/UGabHgGUSV&#34;&gt;https://t.co/UGabHgGUSV&lt;/a&gt; です / &amp;quot;Goのメソッドレシーバの命名慣習 - Qiita&amp;quot; &lt;a href=&#34;http://t.co/xMncnSKmXv&#34;&gt;http://t.co/xMncnSKmXv&lt;/a&gt;&lt;/p&gt;&amp;mdash; Hiroaki Nakamura (@hnakamur2) &lt;a href=&#34;https://twitter.com/hnakamur2/statuses/485056364033499138&#34;&gt;2014, 7月 4&lt;/a&gt;&lt;/blockquote&gt;
 &lt;script async src=&#34;//platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
-
 &lt;p&gt;いつもありがとうございます！&lt;/p&gt;
-
 &lt;p&gt;自分なりに整理してみました。&lt;/p&gt;
-
 &lt;h3 id=&#34;1-レシーバ変数はメソッド内で不変ではない&#34;&gt;1. レシーバ変数はメソッド内で不変ではない&lt;/h3&gt;
-
 &lt;p&gt;レシーバ変数に同じ型の別の値を設定することができてしまうので、意味的に整合性がとれるのは&lt;code&gt;self&lt;/code&gt;ではなくて 型名をもとにした名前になります。&lt;br /&gt;
 自分の中ではこれが一番納得できる理由でした。&lt;/p&gt;
-
 &lt;h3 id=&#34;2-goの標準ライブラリではレシーバ変数には-self-ではなく型名の先頭または二文字程度を使っている&#34;&gt;2. Goの標準ライブラリではレシーバ変数には self ではなく型名の先頭または二文字程度を使っている&lt;/h3&gt;
-
 &lt;p&gt;理由といか命名慣習がなぜそうなっているのかですが、上述のとおり型名をもとにした名前なので、Client型であれば&lt;code&gt;c&lt;/code&gt;とか&lt;code&gt;cl&lt;/code&gt;とかにするようです。&lt;br /&gt;
 型名をそのまま小文字(&lt;code&gt;client&lt;/code&gt;)にしないのはエクスポートしない小文字で始まる型を使う場合に同じになってしまうから、かなと思ってます。&lt;/p&gt;
-
 &lt;h3 id=&#34;3-メソッドは関数として呼ぶことができる&#34;&gt;3. メソッドは関数として呼ぶことができる&lt;/h3&gt;
-
 &lt;p&gt;これも知らなかったのですが、型のメソッドは型を引数に渡して関数として実行することができるようです。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;type Foo int
-
 func (f Foo) Bar() {
-	fmt.Printf(&amp;quot;My receiver is %v\n&amp;quot;, f)
+fmt.Printf(&amp;quot;My receiver is %v\n&amp;quot;, f)
 }
-
 func main() {
-	a := Foo(46)
-	a.Bar()
-	b := Foo(51)
-	Foo.Bar(b)
+a := Foo(46)
+a.Bar()
+b := Foo(51)
+Foo.Bar(b)
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;であれば、レシーバ変数は引数ともみなすことができるわけで、selfとつけるのは少し違うのかなとも思えます。&lt;/p&gt;
-
 &lt;h2 id=&#34;構造体定義の型名のあとの文字列にはどうやってアクセスするんだろう&#34;&gt;構造体定義の型名のあとの文字列にはどうやってアクセスするんだろう&lt;/h2&gt;
-
 &lt;p&gt;&lt;a href=&#34;https://twitter.com/laco0416&#34;&gt;@laco0416&lt;/a&gt;さんのLTで JSON文字列を構造体に変換する際に、JSONのキーと構造体のフィールド名をマッピングするため、このような定義をしていました。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;type Person struct {
-	Name string `json:&amp;quot;name&amp;quot;`
+Name string `json:&amp;quot;name&amp;quot;`
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;型名のあとに&lt;code&gt;json:&amp;quot;name&amp;quot;&lt;/code&gt;という文字列があります。プログラムからこの値にアクセスするやり方がわからなかったので調べました。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;この定義は&lt;code&gt;タグ&lt;/code&gt;というようです。&lt;/li&gt;
 &lt;li&gt;reflectパッケージを使って型情報からアクセスします。&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;先ほどの構造体定義であれば以下のようにアクセスできるようです。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;person := Person{&amp;quot;hoge&amp;quot;}
-
 // リフレクションを使って型情報を取得する
 t := reflect.TypeOf(person)
-
 // フィールド情報を取得する
 f, _ := t.FieldByName(&amp;quot;Name&amp;quot;)
-
 // フィールドからタグ情報を取得する
 tag := f.Tag
-
 // タグ文字列全体
 fmt.Println(tag) // json:&amp;quot;name&amp;quot;
-
 // key:&amp;quot;value&amp;quot;形式で定義した場合、key名を指定して取得できる
 fmt.Println(tag.Get(&amp;quot;json&amp;quot;)) // name
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;&lt;code&gt;key1:&amp;quot;value1&amp;quot; key2:&amp;quot;value2&amp;quot;&lt;/code&gt;のように複数の情報を持たせることもできるのでうまく使えば面白いかもしれません。&lt;/p&gt;
-
 &lt;p&gt;ただし、定義自体は文字列であり、リフレクションを使ってアクセスされるため静的型チェックが効かず、実行時エラーになるため乱用は避けたほうがよさそうです。&lt;/p&gt;
-
 &lt;h2 id=&#34;go言語の日付フォーマットが独特&#34;&gt;Go言語の日付フォーマットが独特&lt;/h2&gt;
-
 &lt;p&gt;Go言語の日付や時刻のフォーマットに使う書式はよくある%Y%m%dとかではなく、2006とか01とかを使います。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;fmt.Println(time.Now().Format(&amp;quot;2006/01/02 15:04:05 MST&amp;quot;))
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;最初は戸惑いますが、以下の様な順番になっているというのがわかれば、意外とわかりやすいかもしれません。&lt;/p&gt;
-
 &lt;ol&gt;
 &lt;li&gt;月 01 or Jan&lt;/li&gt;
 &lt;li&gt;日 02&lt;/li&gt;
@@ -487,46 +261,32 @@ fmt.Println(tag.Get(&amp;quot;json&amp;quot;)) // name
 &lt;li&gt;年 2006&lt;/li&gt;
 &lt;li&gt;標準時 -0700 or MST&lt;/li&gt;
 &lt;/ol&gt;
-
 &lt;p&gt;timeパッケージに定数も用意されているようです。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;const (
-        ANSIC       = &amp;quot;Mon Jan _2 15:04:05 2006&amp;quot;
-        UnixDate    = &amp;quot;Mon Jan _2 15:04:05 MST 2006&amp;quot;
-        RubyDate    = &amp;quot;Mon Jan 02 15:04:05 -0700 2006&amp;quot;
-        RFC822      = &amp;quot;02 Jan 06 15:04 MST&amp;quot;
-        RFC822Z     = &amp;quot;02 Jan 06 15:04 -0700&amp;quot; // RFC822 with numeric zone
-        RFC850      = &amp;quot;Monday, 02-Jan-06 15:04:05 MST&amp;quot;
-        RFC1123     = &amp;quot;Mon, 02 Jan 2006 15:04:05 MST&amp;quot;
-        RFC1123Z    = &amp;quot;Mon, 02 Jan 2006 15:04:05 -0700&amp;quot; // RFC1123 with numeric zone
-        RFC3339     = &amp;quot;2006-01-02T15:04:05Z07:00&amp;quot;
-        RFC3339Nano = &amp;quot;2006-01-02T15:04:05.999999999Z07:00&amp;quot;
-        Kitchen     = &amp;quot;3:04PM&amp;quot;
-        // Handy time stamps.
-        Stamp      = &amp;quot;Jan _2 15:04:05&amp;quot;
-        StampMilli = &amp;quot;Jan _2 15:04:05.000&amp;quot;
-        StampMicro = &amp;quot;Jan _2 15:04:05.000000&amp;quot;
-        StampNano  = &amp;quot;Jan _2 15:04:05.000000000&amp;quot;
+ANSIC = &amp;quot;Mon Jan _2 15:04:05 2006&amp;quot;
+UnixDate = &amp;quot;Mon Jan _2 15:04:05 MST 2006&amp;quot;
+RubyDate = &amp;quot;Mon Jan 02 15:04:05 -0700 2006&amp;quot;
+RFC822 = &amp;quot;02 Jan 06 15:04 MST&amp;quot;
+RFC822Z = &amp;quot;02 Jan 06 15:04 -0700&amp;quot; // RFC822 with numeric zone
+RFC850 = &amp;quot;Monday, 02-Jan-06 15:04:05 MST&amp;quot;
+RFC1123 = &amp;quot;Mon, 02 Jan 2006 15:04:05 MST&amp;quot;
+RFC1123Z = &amp;quot;Mon, 02 Jan 2006 15:04:05 -0700&amp;quot; // RFC1123 with numeric zone
+RFC3339 = &amp;quot;2006-01-02T15:04:05Z07:00&amp;quot;
+RFC3339Nano = &amp;quot;2006-01-02T15:04:05.999999999Z07:00&amp;quot;
+Kitchen = &amp;quot;3:04PM&amp;quot;
+// Handy time stamps.
+Stamp = &amp;quot;Jan _2 15:04:05&amp;quot;
+StampMilli = &amp;quot;Jan _2 15:04:05.000&amp;quot;
+StampMicro = &amp;quot;Jan _2 15:04:05.000000&amp;quot;
+StampNano = &amp;quot;Jan _2 15:04:05.000000000&amp;quot;
 )
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;KitchenとかRubyDateとかあっておもしろいですね。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;所感など&#34;&gt;所感など&lt;/h1&gt;
-
 &lt;p&gt;LTでGo言語の情報を教え合ったり、もくもく会で気軽に質問とかできたので、Go言語についてわいわいするという今回の目的は達成できたんじゃなかろうかと勝手に思っています。&lt;/p&gt;
-
 &lt;p&gt;わいわいする中でも、ちゃんと学びがあるのもよかったですね。&lt;/p&gt;
-
 &lt;p&gt;そんな、&lt;strong&gt;楽しくも学びのある Fukuoka.go&lt;/strong&gt; は月一回を目安に定期的に開催していきます。&lt;br /&gt;
 Goに興味がある方も、Go談義がしたい方も、どなたでもお気軽にご参加ください&lt;/p&gt;
-
 &lt;p&gt;LTも絶賛募集しています！&lt;br /&gt;
-Go言語でこんなのやってみたというのがあればぜひぜひ教えてください。&lt;/p&gt;
-</description>
-    </item>
-    
-  </channel>
-</rss>
+Go言語でこんなのやってみたというのがあればぜひぜひ教えてください。&lt;/p&gt;</description></item></channel></rss>

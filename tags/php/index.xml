@@ -1,384 +1,228 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Php on THINKING MEGANE</title>
-    <link>https://blog.monochromegane.com/tags/php/</link>
-    <description>Recent content in Php on THINKING MEGANE</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>ja-jp</language>
-    <lastBuildDate>Sun, 02 Jun 2013 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/php/" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>ComposerとPackagistでPHPライブラリを開発、テスト、公開する(1/2)</title>
-      <link>https://blog.monochromegane.com/blog/2013/06/02/development-php-composer-library-at-packagist-1/</link>
-      <pubDate>Sun, 02 Jun 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2013/06/02/development-php-composer-library-at-packagist-1/</guid>
-      <description>
-
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>php on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/php/</link><description>Recent content in php on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 02 Jun 2013 00:00:00 +0000</lastBuildDate><atom:link href="/tags/php/" rel="self" type="application/rss+xml"/><item><title>ComposerとPackagistでPHPライブラリを開発、テスト、公開する(1/2)</title><link>https://blog.monochromegane.com/blog/2013/06/02/development-php-composer-library-at-packagist-1/</link><pubDate>Sun, 02 Jun 2013 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2013/06/02/development-php-composer-library-at-packagist-1/</guid><description>
 &lt;p&gt;&lt;a href=&#34;http://ja.phptherightway.com/&#34;&gt;PHP: The Right Way&lt;/a&gt;を読んで、そのコンセプトに共感したので、今回、ComposerとPackagistでライブラリを開発、テスト、公開する手順をまとめておこうと思います。&lt;/p&gt;
-
 &lt;h1 id=&#34;composerって&#34;&gt;Composerって&lt;/h1&gt;
-
 &lt;p&gt;&lt;a href=&#34;http://getcomposer.org/&#34;&gt;Composer&lt;/a&gt;は、PHPのライブラリ依存管理ツールです。RubyのBundlerのように依存するライブラリを設定ファイルに書いてコマンドたたけばライブラリのインストールと利用準備が整います。&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2013/06/logo-composer-transparent.png&#34; alt=&#34;logo-composer-transparent&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;また、Composer用のリポジトリだけでなく、PEARやGithubのリポジトリもComposer経由で取得できるので、とても便利です。&lt;/p&gt;
-
 &lt;h1 id=&#34;基本的な使い方&#34;&gt;基本的な使い方&lt;/h1&gt;
-
 &lt;h2 id=&#34;インストール&#34;&gt;インストール&lt;/h2&gt;
-
 &lt;p&gt;プロジェクトのカレントディレクトリに&lt;code&gt;composer.phar&lt;/code&gt;をダウンロードする。これだけ。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ cd MyProject
 $ curl -s http://getcomposer.org/installer | php
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h2 id=&#34;使いたいライブラリをcomposer-jsonに書く&#34;&gt;使いたいライブラリをcomposer.jsonに書く&lt;/h2&gt;
-
 &lt;p&gt;カレントディレクトリにcomposer.jsonというファイルをつくって必要なライブラリを記述します。&lt;/p&gt;
-
 &lt;p&gt;&lt;code&gt;composer.json&lt;/code&gt;&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
-    &amp;quot;require&amp;quot;: {
-        &amp;quot;monochromegane/query-builder&amp;quot;: &amp;quot;dev-master&amp;quot;
-    }
+&amp;quot;require&amp;quot;: {
+&amp;quot;monochromegane/query-builder&amp;quot;: &amp;quot;dev-master&amp;quot;
+}
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h2 id=&#34;ライブラリをダウンロードする&#34;&gt;ライブラリをダウンロードする&lt;/h2&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ php composer.phar install
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;カレントディレクトリにcomposer.lockとvendorというディレクトリができていれば成功。
 ライブラリを使うには、使う側でvendor/autoload.phpを読み込むだけでOKです。
 かんたん、かんたん。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;require_once(&amp;quot;vendor/autoload.php&amp;quot;);
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;composerに対応したライブラリをつくる&#34;&gt;Composerに対応したライブラリをつくる&lt;/h1&gt;
-
 &lt;p&gt;では、実際にComposerに対応したライブラリを開発していきましょう。
 サンプルとして、今回公開した、&lt;a href=&#34;https://github.com/monochromegane/QueryBuilder&#34;&gt;QueryBuilder&lt;/a&gt;を使います。必要に応じてGithubの資産も参考にしてください。&lt;/p&gt;
-
 &lt;h2 id=&#34;プロジェクトの準備&#34;&gt;プロジェクトの準備&lt;/h2&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ mkdir MyLibrary
 $ cd MyLibrary
 $ curl -s http://getcomposer.org/installer | php
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h2 id=&#34;ライブラリの情報を定義する&#34;&gt;ライブラリの情報を定義する&lt;/h2&gt;
-
 &lt;p&gt;プロジェクトのトップディレクトリにcomposer.jsonをつくります。&lt;/p&gt;
-
 &lt;p&gt;&lt;code&gt;composer.json&lt;/code&gt;&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
-    &amp;quot;name&amp;quot;: &amp;quot;monochromegane/query-builder&amp;quot;,
-    &amp;quot;description&amp;quot;: &amp;quot;Simple query builder&amp;quot;,
-    &amp;quot;keywords&amp;quot;: [&amp;quot;query&amp;quot;, &amp;quot;builder&amp;quot;, &amp;quot;pdo&amp;quot;],
-    &amp;quot;type&amp;quot;: &amp;quot;library&amp;quot;,
-    &amp;quot;license&amp;quot;: &amp;quot;MIT&amp;quot;,
-    &amp;quot;homepage&amp;quot;: &amp;quot;https://github.com/monochromegane/QueryBuilder&amp;quot;,
-    &amp;quot;authors&amp;quot;: [
-      {
-        &amp;quot;name&amp;quot;: &amp;quot;Your account&amp;quot;,
-        &amp;quot;email&amp;quot;: &amp;quot;Your email&amp;quot;
-      }
-    ],
-    &amp;quot;require-dev&amp;quot;: {
-        &amp;quot;phpunit/phpunit&amp;quot;: &amp;quot;3.7.*&amp;quot;
-    },
-    &amp;quot;autoload&amp;quot;: {
-      &amp;quot;psr-0&amp;quot;: {
-        &amp;quot;Monochromegane\\QueryBuilder&amp;quot;: &amp;quot;src/&amp;quot;
-      }
-    }
+&amp;quot;name&amp;quot;: &amp;quot;monochromegane/query-builder&amp;quot;,
+&amp;quot;description&amp;quot;: &amp;quot;Simple query builder&amp;quot;,
+&amp;quot;keywords&amp;quot;: [&amp;quot;query&amp;quot;, &amp;quot;builder&amp;quot;, &amp;quot;pdo&amp;quot;],
+&amp;quot;type&amp;quot;: &amp;quot;library&amp;quot;,
+&amp;quot;license&amp;quot;: &amp;quot;MIT&amp;quot;,
+&amp;quot;homepage&amp;quot;: &amp;quot;https://github.com/monochromegane/QueryBuilder&amp;quot;,
+&amp;quot;authors&amp;quot;: [
+{
+&amp;quot;name&amp;quot;: &amp;quot;Your account&amp;quot;,
+&amp;quot;email&amp;quot;: &amp;quot;Your email&amp;quot;
+}
+],
+&amp;quot;require-dev&amp;quot;: {
+&amp;quot;phpunit/phpunit&amp;quot;: &amp;quot;3.7.*&amp;quot;
+},
+&amp;quot;autoload&amp;quot;: {
+&amp;quot;psr-0&amp;quot;: {
+&amp;quot;Monochromegane\\QueryBuilder&amp;quot;: &amp;quot;src/&amp;quot;
+}
+}
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;name&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;重複回避のため、必ずベンダー名を先頭につけてください。ベンダー名はGithubのアカウント名がよさそうです。&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
-
 &lt;li&gt;&lt;p&gt;keywords&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;後述のライブラリ公開サイトでの検索キーワードとして利用されます。複数指定可。&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
-
 &lt;li&gt;&lt;p&gt;require-dev&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;開発環境でのみ使われるライブラリを定義します。テストは必要なのでここは常に書いておきましょう。&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
-
 &lt;li&gt;&lt;p&gt;autoload&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;これからつくるライブラリがどのディレクトリにあって、名前空間がなんなのかを記載します。名前空間にもベンダー名をつけておきましょう。ちなみにここがないとうまくautoloadされないとおもいます。&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;h2 id=&#34;ライブラリをつくる&#34;&gt;ライブラリをつくる&lt;/h2&gt;
-
 &lt;h3 id=&#34;ディレクトリ構成&#34;&gt;ディレクトリ構成&lt;/h3&gt;
-
 &lt;p&gt;&lt;code&gt;autoload&lt;/code&gt;の項で&lt;code&gt;ベンダー名\\ライブラリ名: &amp;quot;ライブラリ格納先&amp;quot;&lt;/code&gt;と定義している場合、以下のようなディレクトリ構成をとります。&lt;/p&gt;
-
 &lt;p&gt;&lt;code&gt;src/Monochromegane/QueryBuilder&lt;/code&gt;(ライブラリ格納先/ベンダー名/ライブラリ名)&lt;/p&gt;
-
 &lt;h3 id=&#34;ファイル配置と名前空間&#34;&gt;ファイル配置と名前空間&lt;/h3&gt;
-
 &lt;p&gt;上記で作成したディレクトリにライブラリ資産を作成します。&lt;/p&gt;
-
 &lt;p&gt;&lt;code&gt;src/Monochromegane/QueryBuilder/Query.php&lt;/code&gt;(ライブラリ格納先/ベンダー名/ライブラリ名/ファイル名)&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;&amp;lt;?php
 namespace Monochromegane\QueryBuilder;
 class Query
 {
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;ファイルの先頭に名前空間を定義します。名前空間はディレクトリ構成をバックスラッシュで区切った記述になります。&lt;/p&gt;
-
 &lt;h2 id=&#34;テストする&#34;&gt;テストする&lt;/h2&gt;
-
 &lt;p&gt;テストないライブラリとか使う気がしないと思うのでテストを書きます。&lt;/p&gt;
-
 &lt;h3 id=&#34;phpunitのインストール&#34;&gt;PHPUnitのインストール&lt;/h3&gt;
-
 &lt;p&gt;&lt;code&gt;require-dev&lt;/code&gt;項にphpunitを記載していれば以下のコマンドでテスト環境が作成されます。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ php composer.phar install --dev
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;vendor/bin/phpunitが格納されていればOKです。&lt;/p&gt;
-
 &lt;h3 id=&#34;phpunit-xmlを作成する&#34;&gt;phpunit.xmlを作成する&lt;/h3&gt;
-
 &lt;p&gt;phpunit.xmlを作成しておけば、テストの実行が楽になります。&lt;/p&gt;
-
 &lt;p&gt;&lt;code&gt;tests/phpunit.xml&lt;/code&gt;&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;&amp;lt;phpunit backupGlobals=&amp;quot;false&amp;quot;
-         backupStaticAttributes=&amp;quot;false&amp;quot;
-         bootstrap=&amp;quot;../vendor/autoload.php&amp;quot;
-         cacheTokens=&amp;quot;true&amp;quot;
-         colors=&amp;quot;true&amp;quot;
-         convertErrorsToExceptions=&amp;quot;true&amp;quot;
-         convertNoticesToExceptions=&amp;quot;true&amp;quot;
-         convertWarningsToExceptions=&amp;quot;true&amp;quot;
-         processIsolation=&amp;quot;false&amp;quot;
-         stopOnFailure=&amp;quot;false&amp;quot;
-         syntaxCheck=&amp;quot;false&amp;quot;
-         verbose=&amp;quot;false&amp;quot;&amp;gt;
-    &amp;lt;filter&amp;gt;
-        &amp;lt;whitelist addUncoveredFilesFromWhitelist=&amp;quot;false&amp;quot;&amp;gt;
-            &amp;lt;directory&amp;gt;../src/Monochromegane/&amp;lt;/directory&amp;gt;
-        &amp;lt;/whitelist&amp;gt;
-    &amp;lt;/filter&amp;gt;
-    &amp;lt;testsuite name=&amp;quot;Monochromegane\QueryBuilder Test Suite&amp;quot;&amp;gt;
-        &amp;lt;directory&amp;gt;.&amp;lt;/directory&amp;gt;
-    &amp;lt;/testsuite&amp;gt;
+backupStaticAttributes=&amp;quot;false&amp;quot;
+bootstrap=&amp;quot;../vendor/autoload.php&amp;quot;
+cacheTokens=&amp;quot;true&amp;quot;
+colors=&amp;quot;true&amp;quot;
+convertErrorsToExceptions=&amp;quot;true&amp;quot;
+convertNoticesToExceptions=&amp;quot;true&amp;quot;
+convertWarningsToExceptions=&amp;quot;true&amp;quot;
+processIsolation=&amp;quot;false&amp;quot;
+stopOnFailure=&amp;quot;false&amp;quot;
+syntaxCheck=&amp;quot;false&amp;quot;
+verbose=&amp;quot;false&amp;quot;&amp;gt;
+&amp;lt;filter&amp;gt;
+&amp;lt;whitelist addUncoveredFilesFromWhitelist=&amp;quot;false&amp;quot;&amp;gt;
+&amp;lt;directory&amp;gt;../src/Monochromegane/&amp;lt;/directory&amp;gt;
+&amp;lt;/whitelist&amp;gt;
+&amp;lt;/filter&amp;gt;
+&amp;lt;testsuite name=&amp;quot;Monochromegane\QueryBuilder Test Suite&amp;quot;&amp;gt;
+&amp;lt;directory&amp;gt;.&amp;lt;/directory&amp;gt;
+&amp;lt;/testsuite&amp;gt;
 &amp;lt;/phpunit&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h3 id=&#34;テストを作成する&#34;&gt;テストを作成する&lt;/h3&gt;
-
 &lt;p&gt;&lt;code&gt;tests/ベンダー名/ライブラリ名/テストファイル名&lt;/code&gt;のような構成でテストを作成します。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;&amp;lt;?php
 namespace Monochromegane\QueryBuilder\Tests;
-
 class QueryTest extends \PHPUnit_Framework_TestCase
 {
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;ここにも名前空間を適用しておきましょう。&lt;/p&gt;
-
 &lt;h3 id=&#34;テストを実行する&#34;&gt;テストを実行する&lt;/h3&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ cd tests
 $ ../vendor/bin/phpunit
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;あとはライブラリとテストを整備していけばOKです。
 長くなってきたので公開編は、別エントリにわけたいと思います。&lt;/p&gt;
-
 &lt;p&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2013/06/02/development-php-composer-library-at-packagist-2/&#34;&gt;ComposerとPackagistでPHPライブラリを開発、テスト、公開する(&lt;sup&gt;2&lt;/sup&gt;&amp;frasl;&lt;sub&gt;2&lt;/sub&gt;)&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;PHP: The Right Way !&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>ComposerとPackagistでPHPライブラリを開発、テスト、公開する(2/2)</title>
-      <link>https://blog.monochromegane.com/blog/2013/06/02/development-php-composer-library-at-packagist-2/</link>
-      <pubDate>Sun, 02 Jun 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2013/06/02/development-php-composer-library-at-packagist-2/</guid>
-      <description>
-
+&lt;p&gt;PHP: The Right Way !&lt;/p&gt;</description></item><item><title>ComposerとPackagistでPHPライブラリを開発、テスト、公開する(2/2)</title><link>https://blog.monochromegane.com/blog/2013/06/02/development-php-composer-library-at-packagist-2/</link><pubDate>Sun, 02 Jun 2013 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2013/06/02/development-php-composer-library-at-packagist-2/</guid><description>
 &lt;p&gt;今回は、前回&lt;a href=&#34;https://blog.monochromegane.com/blog/2013/06/02/development-php-composer-library-at-packagist-1/&#34;&gt;ComposerとPackagistでPHPライブラリを開発、テスト、公開する(&lt;sup&gt;1&lt;/sup&gt;&amp;frasl;&lt;sub&gt;2&lt;/sub&gt;)&lt;/a&gt;で作成したライブラリをPackagistに公開します。&lt;/p&gt;
-
 &lt;h1 id=&#34;packagistって&#34;&gt;Packagistって&lt;/h1&gt;
-
 &lt;p&gt;&lt;a href=&#34;https://packagist.org/&#34;&gt;Packagist&lt;/a&gt;はComposerのメインリポジトリとなるサイトです。&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2013/06/01_packagist_submit_package.png&#34; alt=&#34;Packagist&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;ここで公開しておくことでcompser.jsonにリポジトリの指定をしなくてもライブラリを取得できるようになります。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;ライブラリのgit管理&#34;&gt;ライブラリのGit管理&lt;/h1&gt;
-
 &lt;p&gt;Packagistでの公開する場合は、ライブラリをGit管理しましょう。&lt;/p&gt;
-
 &lt;h2 id=&#34;gitignoreの準備&#34;&gt;.gitignoreの準備&lt;/h2&gt;
-
 &lt;p&gt;以下の内容で&lt;code&gt;.gitignore&lt;/code&gt;を作成しておきます。&lt;/p&gt;
-
 &lt;p&gt;&lt;code&gt;.gitignore&lt;/code&gt;&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;vendor/
 composer.lock
 composer.phar
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h2 id=&#34;資産のコミットとタグ付け&#34;&gt;資産のコミットとタグ付け&lt;/h2&gt;
-
 &lt;p&gt;ライブラリが公開できるようになったら、資産をコミットします。
 このとき、タグも一緒につけてください。このタグがバージョン番号としてPackagistで使われます。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ git tag 1.0.0
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;タグ名(バージョン番号)はx.y.zの形式を使うようです。&lt;/p&gt;
-
 &lt;h2 id=&#34;githubへの公開&#34;&gt;Githubへの公開&lt;/h2&gt;
-
 &lt;p&gt;タグ付けまで終わったら、Githubにリポジトリを作成して、プッシュします。
 このとき、通常のプッシュに加えてタグのプッシュも行います。&lt;/p&gt;
-
 &lt;p&gt;ちなみに後述のServiceHookの仕組みを使う場合、タグがプッシュされたタイミングでPackagist側が更新されます。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ git push origin master
 $ git push origin タグ名
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;packagistへの公開&#34;&gt;Packagistへの公開&lt;/h1&gt;
-
 &lt;p&gt;いよいよ、Packagistに公開です。&lt;/p&gt;
-
 &lt;h2 id=&#34;composer-jsonをチェック&#34;&gt;composer.jsonをチェック&lt;/h2&gt;
-
 &lt;p&gt;公開情報に問題がないか以下のコマンドで検証します。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ php composer.phar validate
 ./composer.json is valid
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;上記のような結果が出ればOK。&lt;/p&gt;
-
 &lt;h2 id=&#34;アカウント取得&#34;&gt;アカウント取得&lt;/h2&gt;
-
 &lt;p&gt;まずは&lt;a href=&#34;https://packagist.org/&#34;&gt;Packagist&lt;/a&gt;にアクセスしてアカウント取得を行なってください。
 特に難しいことはないはずです。&lt;/p&gt;
-
 &lt;h2 id=&#34;ライブラリの登録&#34;&gt;ライブラリの登録&lt;/h2&gt;
-
 &lt;p&gt;ログイン後、画面上部に&lt;code&gt;Submit Package&lt;/code&gt;ボタンがあるので押下します。&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2013/06/01_packagist_submit_package.png&#34; alt=&#34;Submit Package&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;画面下部の&lt;code&gt;Repository URL&lt;/code&gt;欄に先ほどGithubで公開したリポジトリのURLを入力します。
 ライブラリ名が重複してなければSubmitボタンが出るので押下します。&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2013/06/02_packagist_submit_package.png&#34; alt=&#34;Check Package&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;パッケージの公開が完了です！&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2013/06/03_packagist_not_autoupdate.png&#34; alt=&#34;Package Not Auto-update&#34; /&gt;&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;自動更新を設定する&#34;&gt;自動更新を設定する&lt;/h1&gt;
-
 &lt;p&gt;上記の手順までで公開はできていますが、Github側に下記手順を行なっておくことで、ライブラリの更新が自動的にPackagistに反映されるようになります。&lt;/p&gt;
-
 &lt;h2 id=&#34;servicehookの設定&#34;&gt;ServiceHookの設定&lt;/h2&gt;
-
 &lt;p&gt;公開したリポジトリで&lt;code&gt;Settings&lt;/code&gt;を押下します。&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2013/06/04_github_repository_settings.png&#34; alt=&#34;Settings&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;再度メニューから&lt;code&gt;ServiceHook&lt;/code&gt;を選択、一覧から&lt;code&gt;Packagist&lt;/code&gt;を選びます。&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2013/06/05_github_service_hook.png&#34; alt=&#34;ServiceHook&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;必要な情報を入力します&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;User: Packagistのユーザ名&lt;/li&gt;
 &lt;li&gt;Token: Packagistの&lt;a href=&#34;https://packagist.org/profile/&#34;&gt;Your API Token&lt;/a&gt;で取得&lt;/li&gt;
 &lt;li&gt;Domain: &lt;code&gt;http://packagist.org&lt;/code&gt;で問題無さそう&lt;/li&gt;
 &lt;li&gt;Active: チェックをいれる&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2013/06/06_github_service_hook.png&#34; alt=&#34;Update Settings&#34; /&gt;&lt;/p&gt;
-
 &lt;h2 id=&#34;接続テスト&#34;&gt;接続テスト&lt;/h2&gt;
-
 &lt;p&gt;設定が完了したら、もう一度PackagistのServiceHook設定ページを表示します。&lt;/p&gt;
-
 &lt;p&gt;&lt;code&gt;Test Hook&lt;/code&gt;ボタンが表示されているので押下します。&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2013/06/07_github_test_hook.png&#34; alt=&#34;Test Hook&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;Packagist側で&lt;code&gt;Not Auto-update&lt;/code&gt;表記が消えていれば接続テスト成功です。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;公開したライブラリを使う&#34;&gt;公開したライブラリを使う&lt;/h1&gt;
-
 &lt;p&gt;公開したライブラリを使うには、通常、プロジェクトのcomposer.jsonに以下の記述後、&lt;code&gt;php compser.phar install&lt;/code&gt;を行いますが、&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
-  &amp;quot;require&amp;quot;: {
-    &amp;quot;monochromegane/query-builder&amp;quot;: &amp;quot;dev-master&amp;quot;
-  }
+&amp;quot;require&amp;quot;: {
+&amp;quot;monochromegane/query-builder&amp;quot;: &amp;quot;dev-master&amp;quot;
+}
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;&lt;code&gt;php composer.phar require monochromegane/query-builder:dev-master&lt;/code&gt;コマンドを使うことで設定ファイルへの追記、インストールを一度にやってくれます。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;ちょっと長かったですが、慣れてしまえば気にならない手順だと思います。&lt;/p&gt;
-
 &lt;p&gt;ComposerとPackagistを使うことでPHPのライブラリ管理がとてもやりやすくなるので、どんどん使っていきましょうー。&lt;/p&gt;
-
-&lt;p&gt;PHP: The Right Way！&lt;/p&gt;
-</description>
-    </item>
-    
-  </channel>
-</rss>
+&lt;p&gt;PHP: The Right Way！&lt;/p&gt;</description></item></channel></rss>

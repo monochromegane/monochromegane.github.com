@@ -1,15 +1,4 @@
-<!DOCTYPE html>
-<html>
-  <head>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="viewport" content="width=device-width">
-  <meta name="author" content="">
-  
-    <title>待ち行列理論に使われる分布に従う乱数をGo言語で生成する &middot; THINKING MEGANE</title>
-  
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:site" content="@monochromegane">
-  <meta property="og:description" content="待ち行列理論をシミュレーションする際にいくつかの分布に従う乱数を生成する必要があったのでメモ． また，確率まわりの用語と分布についても理解が曖昧な点があったのでこの機会にまとめておく．
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>待ち行列理論に使われる分布に従う乱数をGo言語で生成する &middot; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="待ち行列理論をシミュレーションする際にいくつかの分布に従う乱数を生成する必要があったのでメモ． また，確率まわりの用語と分布についても理解が曖昧な点があったのでこの機会にまとめておく．
 用語の整理 確率 確率は，
 \[ \frac{ある事象の起こる場合の数}{全ての事象の起こる場合の数} \]
 で求められる．
@@ -23,239 +12,37 @@
 確率密度は，その確率変数の相対的な発生のしやすさを表すに過ぎないので，部分的にy軸(確率密度関数の返す値)が1を超えても構わない（全体の面積として1になれば良い．例えば，確率密度関数が$f(x)=2x (0 \leqq X \leqq 1)$のときなど）．
 待ち行列理論で使う分布 待ち行列理論では待ち行列のモデルの構造を以下のようなケンドール記号を用いて記述する．
  X/Y/S(N)  ここでXは到着過程の種類，Yはサービス過程の種類，Sは窓口数，Nは待ち行列の長さの制限数が入る． 過程の種類は以下の通り．
-   種類 説明 備考     M マルコフ過程 到着過程ならポアソン分布，サービス過程なら指数分布   D 確定分布 到着間隔やサービス時間が一定   G 一般の分布 平均値と分散が既知の任意の分布   $E_k$ アーラン分布 k個の指数分布の和の分布    ポアソン分布 単位時間に平均$\lambda$回起きる事象が単位時間に$k$回発生する分布[3]．">
-  <meta property="og:title" content="待ち行列理論に使われる分布に従う乱数をGo言語で生成する">
-  <meta property="og:url" content="https://blog.monochromegane.com/blog/2019/10/11/random_number_gen_using_go/">
-  <meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-  
-  <link rel="stylesheet" href="/css/reset.css">
-  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Source+Code+Pro' type='text/css'>
-  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Montserrat' type='text/css'>
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css">
-  <link rel="stylesheet" href="/css/text.css">
-  <link rel="stylesheet" href="/css/color.css">
-  <link rel="stylesheet" href="/css/layout.css">
-  <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="/images/apple-touch-icon-57-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="/images/apple-touch-icon-72-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144-precomposed.png">
-  <link rel="shortcut icon" href="/images/favicon.ico">
-  <link rel="canonical" href="https://blog.monochromegane.com/blog/2019/10/11/random_number_gen_using_go/">
-  
-  <link href="" rel="alternate" type="application/rss+xml" title="THINKING MEGANE" />
-  
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async>
-    MathJax.Hub.Config({
-        HTML: ["input/TeX","output/HTML-CSS"],
-        TeX: {
-               Macros: {
-                        bm: ["\\boldsymbol{#1}", 1],
-                        argmax: ["\\mathop{\\rm arg\\,max}\\limits"],
-                        argmin: ["\\mathop{\\rm arg\\,min}\\limits"]},
-               extensions: ["AMSmath.js","AMSsymbols.js"],
-               equationNumbers: { autoNumber: "AMS" } },
-        extensions: ["tex2jax.js"],
-        jax: ["input/TeX","output/HTML-CSS"],
-        tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-                   displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-                   processEscapes: true },
-        "HTML-CSS": { availableFonts: ["TeX"],
-                      linebreaks: { automatic: true } }
-    });
-  </script>
-</head>
-
-  <body>
-    <div class="header">
-  <header>
-    <h1 class="logo"><a href="https://blog.monochromegane.com">THINKING MEGANE</a></h1>
-    <nav>
-      <ul class="menu">
-        <li><a href="/self-introduction/">Home</a></li>
-        <li><a href="/post/">Archives</a></li>
-        <li><a href="/diary/">Diary</a></li>
-        <li><a href="http://thinking-megane.blogspot.jp/">Old Blog</a></li>
-      </ul>
-    </nav>
-  </header>
-</div>
-
-    <div class="container">
-      <article>
-  <div class="post">
-    <header>
-      <h1><a href="https://blog.monochromegane.com/blog/2019/10/11/random_number_gen_using_go/">待ち行列理論に使われる分布に従う乱数をGo言語で生成する</a></h1>
-      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2019-10-11</div></time>
-    </header>
-    <div class="post-inner">
-      
-
-<p>待ち行列理論をシミュレーションする際にいくつかの分布に従う乱数を生成する必要があったのでメモ．
-また，確率まわりの用語と分布についても理解が曖昧な点があったのでこの機会にまとめておく．</p>
-
-<h1 id="用語の整理">用語の整理</h1>
-
-<h2 id="確率">確率</h2>
-
-<p>確率は，</p>
-
-<p>\[
-  \frac{ある事象の起こる場合の数}{全ての事象の起こる場合の数}
-\]</p>
-
-<p>で求められる．</p>
-
-<h2 id="確率変数">確率変数</h2>
-
-<p>確率変数は，事象に対応した実数のこと．
+   種類 説明 備考     M マルコフ過程 到着過程ならポアソン分布，サービス過程なら指数分布   D 確定分布 到着間隔やサービス時間が一定   G 一般の分布 平均値と分散が既知の任意の分布   $E_k$ アーラン分布 k個の指数分布の和の分布    ポアソン分布 単位時間に平均$\lambda$回起きる事象が単位時間に$k$回発生する分布[3]．"><meta property="og:title" content="待ち行列理論に使われる分布に従う乱数をGo言語で生成する"><meta property="og:url" content="https://blog.monochromegane.com/blog/2019/10/11/random_number_gen_using_go/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2019/10/11/random_number_gen_using_go/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:true},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:true}}});</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2019/10/11/random_number_gen_using_go/>待ち行列理論に使われる分布に従う乱数をGo言語で生成する</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2019-10-11</div></time></header><div class=post-inner><p>待ち行列理論をシミュレーションする際にいくつかの分布に従う乱数を生成する必要があったのでメモ．
+また，確率まわりの用語と分布についても理解が曖昧な点があったのでこの機会にまとめておく．</p><h1 id=用語の整理>用語の整理</h1><h2 id=確率>確率</h2><p>確率は，</p><p>\[
+\frac{ある事象の起こる場合の数}{全ての事象の起こる場合の数}
+\]</p><p>で求められる．</p><h2 id=確率変数>確率変数</h2><p>確率変数は，事象に対応した実数のこと．
 確率変数には，離散型と連続型の二種類がある．
-サイコロの出目のようなものは離散型で，身長や体重のような（原理的には）連続の値になるものは連続型．</p>
-
-<h2 id="確率分布">確率分布</h2>
-
-<p>確率分布は確率と確率変数との対応付け．
+サイコロの出目のようなものは離散型で，身長や体重のような（原理的には）連続の値になるものは連続型．</p><h2 id=確率分布>確率分布</h2><p>確率分布は確率と確率変数との対応付け．
 そもそも辞書的な意味での「分布」は「粗密の程度を含めた，空間的な広がり具合」を表す．
 度数分布では階級と度数（階級に含まれる変量の数）の対応付けであった．
-また，これらの分布は，度数分布と同様に確率分布表や確率分布グラフとして表すことができる．</p>
-
-<h2 id="確率を返す関数">確率を返す関数</h2>
-
-<p>ここで，ある確率変数を入力に，対応する確率を出力する関数を考える．</p>
-
-<h3 id="確率質量関数">確率質量関数</h3>
-
-<p>離散型の確率変数であれば，確率分布表を照会し，対応する確率を得ることができる．
+また，これらの分布は，度数分布と同様に確率分布表や確率分布グラフとして表すことができる．</p><h2 id=確率を返す関数>確率を返す関数</h2><p>ここで，ある確率変数を入力に，対応する確率を出力する関数を考える．</p><h3 id=確率質量関数>確率質量関数</h3><p>離散型の確率変数であれば，確率分布表を照会し，対応する確率を得ることができる．
 確率変数を入力に，対応する確率を出力する関数を確率質量関数（または確率関数）[1]と言い，サイコロの出目を確率変数$X$とした時に1が出る確率を$P(X=1)=\frac{1}{6}$のように書ける．
-もちろん確率の総和は1である．</p>
-
-<h3 id="確率密度関数">確率密度関数</h3>
-
-<p>連続型の確率変数の場合は，ある一点の値を入力とすると対応する確率は常に0となる．
+もちろん確率の総和は1である．</p><h3 id=確率密度関数>確率密度関数</h3><p>連続型の確率変数の場合は，ある一点の値を入力とすると対応する確率は常に0となる．
 これは，ある範囲においても実数は無限個あるため，全事象が無限になることから，確率の定義より$\frac{1}{\infty}=0$となるためである．
 このように連続型の確率変数からは直接的に確率を求めることができないので，この連続型の確率変数を対応する「何か」に変換する必要がある．
 また，その「何か」は確率に変換できる必要がある．
 確率の定義から，総和は1である．
-また，連続型の確率変数であることから，和は積分で求めることになる．</p>
-
-<p>連続型の確率変数をx軸に，この連続型の確率変数を対応する「何か」をy軸にプロットした時に，ある範囲の割合は該当範囲の定積分によって導くことができる．
+また，連続型の確率変数であることから，和は積分で求めることになる．</p><p>連続型の確率変数をx軸に，この連続型の確率変数を対応する「何か」をy軸にプロットした時に，ある範囲の割合は該当範囲の定積分によって導くことができる．
 そして，全体の積分が1で，その中のある範囲の定積分が，事象がその範囲に含まれる確率に従うような「何か」があれば，それを連続型の確率変数の確率に用いることができる．
-そのような「何か」が存在するとき，「何か」は「確率密度」と呼ばれ，連続型の確率変数を入力とし，確率密度を出力する関数を「確率密度関数」と呼ばれる[2]．</p>
-
-<p>このとき，確率密度関数$f(x)$に従う確率変数$X$が$(a \leqq X \leqq b)$となる確率は\[\int_a^b f(x) dx\]のように書ける．</p>
-
-<p>確率密度は，その確率変数の相対的な発生のしやすさを表すに過ぎないので，部分的にy軸(確率密度関数の返す値)が1を超えても構わない（全体の面積として1になれば良い．例えば，確率密度関数が$f(x)=2x (0 \leqq X \leqq 1)$のときなど）．</p>
-
-<h1 id="待ち行列理論で使う分布">待ち行列理論で使う分布</h1>
-
-<p>待ち行列理論では待ち行列のモデルの構造を以下のようなケンドール記号を用いて記述する．</p>
-
-<ul>
-<li><code>X/Y/S(N)</code></li>
-</ul>
-
-<p>ここでXは到着過程の種類，Yはサービス過程の種類，Sは窓口数，Nは待ち行列の長さの制限数が入る．
-過程の種類は以下の通り．</p>
-
-<table>
-<thead>
-<tr>
-<th>種類</th>
-<th>説明</th>
-<th>備考</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>M</td>
-<td>マルコフ過程</td>
-<td>到着過程ならポアソン分布，サービス過程なら指数分布</td>
-</tr>
-
-<tr>
-<td>D</td>
-<td>確定分布</td>
-<td>到着間隔やサービス時間が一定</td>
-</tr>
-
-<tr>
-<td>G</td>
-<td>一般の分布</td>
-<td>平均値と分散が既知の任意の分布</td>
-</tr>
-
-<tr>
-<td>$E_k$</td>
-<td>アーラン分布</td>
-<td>k個の指数分布の和の分布</td>
-</tr>
-</tbody>
-</table>
-
-<h2 id="ポアソン分布">ポアソン分布</h2>
-
-<p>単位時間に平均$\lambda$回起きる事象が単位時間に$k$回発生する分布[3]．</p>
-
-<p>平均が$\lambda$のポアソン分布を表す確率質量関数は\[P(X=k)=\frac{\lambda^{k}}{k!}\cdot e^{-\lambda}\]であり平均$E[X]$は$\lambda$となる．</p>
-
-<h2 id="指数分布">指数分布</h2>
-
-<p>平均$\theta$時間に一回発生する事象の発生間隔を表す分布[4]．</p>
-
-<p>平均が$\theta$の指数分布を表す確率密度関数は\[f(x)=\frac{1}{\theta}e^{-\frac{x}{\theta}} (x \geqq 0)\]であり平均$E[X]$は$\theta$となる．</p>
-
-<h3 id="待ち行列とマルコフ過程">待ち行列とマルコフ過程</h3>
-
-<p>あるランダムに起きる事象を発生回数から見たのがポアソン分布，発生間隔(または時間)から見たのが指数関数とみなすことができる．
-マルコフ過程は未来の挙動は過去の挙動とは無関係であるとする性質を持つ確率過程であり，これらの分布が適合するため利用されている．</p>
-
-<p>単位時間に$\lambda$回到着するとした到着過程はポアソン分布が利用されるが，シミュレーションにおいては平均到着間隔を知りたい．
+そのような「何か」が存在するとき，「何か」は「確率密度」と呼ばれ，連続型の確率変数を入力とし，確率密度を出力する関数を「確率密度関数」と呼ばれる[2]．</p><p>このとき，確率密度関数$f(x)$に従う確率変数$X$が$(a \leqq X \leqq b)$となる確率は\[\int_a^b f(x) dx\]のように書ける．</p><p>確率密度は，その確率変数の相対的な発生のしやすさを表すに過ぎないので，部分的にy軸(確率密度関数の返す値)が1を超えても構わない（全体の面積として1になれば良い．例えば，確率密度関数が$f(x)=2x (0 \leqq X \leqq 1)$のときなど）．</p><h1 id=待ち行列理論で使う分布>待ち行列理論で使う分布</h1><p>待ち行列理論では待ち行列のモデルの構造を以下のようなケンドール記号を用いて記述する．</p><ul><li><code>X/Y/S(N)</code></li></ul><p>ここでXは到着過程の種類，Yはサービス過程の種類，Sは窓口数，Nは待ち行列の長さの制限数が入る．
+過程の種類は以下の通り．</p><table><thead><tr><th>種類</th><th>説明</th><th>備考</th></tr></thead><tbody><tr><td>M</td><td>マルコフ過程</td><td>到着過程ならポアソン分布，サービス過程なら指数分布</td></tr><tr><td>D</td><td>確定分布</td><td>到着間隔やサービス時間が一定</td></tr><tr><td>G</td><td>一般の分布</td><td>平均値と分散が既知の任意の分布</td></tr><tr><td>$E_k$</td><td>アーラン分布</td><td>k個の指数分布の和の分布</td></tr></tbody></table><h2 id=ポアソン分布>ポアソン分布</h2><p>単位時間に平均$\lambda$回起きる事象が単位時間に$k$回発生する分布[3]．</p><p>平均が$\lambda$のポアソン分布を表す確率質量関数は\[P(X=k)=\frac{\lambda^{k}}{k!}\cdot e^{-\lambda}\]であり平均$E[X]$は$\lambda$となる．</p><h2 id=指数分布>指数分布</h2><p>平均$\theta$時間に一回発生する事象の発生間隔を表す分布[4]．</p><p>平均が$\theta$の指数分布を表す確率密度関数は\[f(x)=\frac{1}{\theta}e^{-\frac{x}{\theta}} (x \geqq 0)\]であり平均$E[X]$は$\theta$となる．</p><h3 id=待ち行列とマルコフ過程>待ち行列とマルコフ過程</h3><p>あるランダムに起きる事象を発生回数から見たのがポアソン分布，発生間隔(または時間)から見たのが指数関数とみなすことができる．
+マルコフ過程は未来の挙動は過去の挙動とは無関係であるとする性質を持つ確率過程であり，これらの分布が適合するため利用されている．</p><p>単位時間に$\lambda$回到着するとした到着過程はポアソン分布が利用されるが，シミュレーションにおいては平均到着間隔を知りたい．
 この場合は，$\frac{1}{\lambda}$を到着間隔とした指数分布で求めることができる（1時間に平均5人くる場合，平均1/5時間(12分)の間隔で到着する）．
-つまり，$\theta=\frac{1}{\lambda}$として，確率密度関数は\[f(x)=\lambda e^{-\lambda x} (x \geqq 0)\]であり平均$E[X]$は$\frac{1}{\lambda}$となる．</p>
-
-<p>なお，ポアソン分布と指数分布の関係の理解には[5]が参考になる．このサイトでは時刻$t$を導入したポアソン分布の累積分布関数から指数分布の確率密度関数を導いている．</p>
-
-<h2 id="アーラン分布">アーラン分布</h2>
-
-<p>まず，ガンマ分布は平均$\theta$時間に一回発生する事象（指数分布）が$k$回発生するまでの時間の分布[6]である．
-ガンマ分布の$k=1$のとき，指数分布と等しく，$k$が整数の場合にアーラン分布と呼ばれる．</p>
-
-<p>ガンマ分布を表す確率密度関数は\[\frac{1}{\Gamma(k)\theta^{k}}x^{k-1}e^{-x/\theta}\]であり平均$E[x]$は$k\theta$となる．</p>
-
-<p>また，前述のポアソン分布のパラメタから指数分布の確率密度関数を求めたのと同様に，$\theta=\frac{1}{\lambda}$として，確率密度関数は\[\frac{\lambda^k}{\Gamma(k)}x^{k-1}e^{-\lambda x}\]であり平均$E[x]$は$\frac{k}{\lambda}$とも書ける．</p>
-
-<p>ここまで，$k$回の$\theta=1/\lambda$の指数分布を場合を見てきたが，待ち行列理論の書籍においては，$k$回の$\frac{\theta}{k}=\frac{1}{k\lambda}$の指数分布としている場合がある．
+つまり，$\theta=\frac{1}{\lambda}$として，確率密度関数は\[f(x)=\lambda e^{-\lambda x} (x \geqq 0)\]であり平均$E[X]$は$\frac{1}{\lambda}$となる．</p><p>なお，ポアソン分布と指数分布の関係の理解には[5]が参考になる．このサイトでは時刻$t$を導入したポアソン分布の累積分布関数から指数分布の確率密度関数を導いている．</p><h2 id=アーラン分布>アーラン分布</h2><p>まず，ガンマ分布は平均$\theta$時間に一回発生する事象（指数分布）が$k$回発生するまでの時間の分布[6]である．
+ガンマ分布の$k=1$のとき，指数分布と等しく，$k$が整数の場合にアーラン分布と呼ばれる．</p><p>ガンマ分布を表す確率密度関数は\[\frac{1}{\Gamma(k)\theta^{k}}x^{k-1}e^{-x/\theta}\]であり平均$E[x]$は$k\theta$となる．</p><p>また，前述のポアソン分布のパラメタから指数分布の確率密度関数を求めたのと同様に，$\theta=\frac{1}{\lambda}$として，確率密度関数は\[\frac{\lambda^k}{\Gamma(k)}x^{k-1}e^{-\lambda x}\]であり平均$E[x]$は$\frac{k}{\lambda}$とも書ける．</p><p>ここまで，$k$回の$\theta=1/\lambda$の指数分布を場合を見てきたが，待ち行列理論の書籍においては，$k$回の$\frac{\theta}{k}=\frac{1}{k\lambda}$の指数分布としている場合がある．
 すなわち，一つのサービス時間$\theta$が$k$個の工程（1工程あたり$\frac{\theta}{k}$）からなるとみなしている．
-この場合，確率密度関数は\[\frac{(k\lambda)^k}{\Gamma(k)}x^{k-1}e^{-k\lambda x}\]であり平均$E[X]$は$\theta=1/\lambda$となる．</p>
-
-<h1 id="待ち行列理論で使う分布に従う乱数">待ち行列理論で使う分布に従う乱数</h1>
-
-<p>ここでは，ある分布に従う乱数をGoでの生成する．</p>
-
-<h2 id="指数分布-1">指数分布</h2>
-
-<p>指数分布に従う乱数はGoの標準パッケージ<a href="https://golang.org/pkg/math/rand/#Rand.ExpFloat64">math/randで提供</a>されている．</p>
-
-<pre><code class="language-go">func Exponential(rnd *rand.Rand, lambda float64) float64 {
+この場合，確率密度関数は\[\frac{(k\lambda)^k}{\Gamma(k)}x^{k-1}e^{-k\lambda x}\]であり平均$E[X]$は$\theta=1/\lambda$となる．</p><h1 id=待ち行列理論で使う分布に従う乱数>待ち行列理論で使う分布に従う乱数</h1><p>ここでは，ある分布に従う乱数をGoでの生成する．</p><h2 id=指数分布-1>指数分布</h2><p>指数分布に従う乱数はGoの標準パッケージ<a href=https://golang.org/pkg/math/rand/#Rand.ExpFloat64>math/randで提供</a>されている．</p><pre><code class=language-go>func Exponential(rnd *rand.Rand, lambda float64) float64 {
         return rnd.ExpFloat64() / lambda
 }
-</code></pre>
-
-<p>パラメタ$\theta=1/\lambda$に合わせるためには結果を$\lambda$で割る（平均到着率が増えるほど平均到着間隔は狭くなる）．</p>
-
-<p>動作確認のため，生成した乱数のヒストグラムと指数分布の確率密度関数を重ねてプロットした．</p>
-
-<p><img src="/images/2019/10/hist_and_pdf_exponential.png" alt="hist_and_pdf_exponential" /></p>
-
-<h2 id="ポアソン分布-1">ポアソン分布</h2>
-
-<p>ポアソン分布に従う乱数はGoの標準パッケージで提供されていない．
+</code></pre><p>パラメタ$\theta=1/\lambda$に合わせるためには結果を$\lambda$で割る（平均到着率が増えるほど平均到着間隔は狭くなる）．</p><p>動作確認のため，生成した乱数のヒストグラムと指数分布の確率密度関数を重ねてプロットした．</p><p><img src=/images/2019/10/hist_and_pdf_exponential.png alt=hist_and_pdf_exponential></p><h2 id=ポアソン分布-1>ポアソン分布</h2><p>ポアソン分布に従う乱数はGoの標準パッケージで提供されていない．
 そこで指数分布とポアソン分布の関係性を利用して，指数分布で得られた乱数の和が1を超えるまでの最小のカウント数を用いる方法がある[7][8]．
 例えば平均到着率($\lambda$)が5人であれば，平均到着間隔($1/\lambda=0.2$)である．
-ここでカウントは$0.2*5$が平均して得られると考えられる．</p>
-
-<pre><code class="language-go">func Poisson(rnd *rand.Rand, lambda float64) float64 {
+ここでカウントは$0.2*5$が平均して得られると考えられる．</p><pre><code class=language-go>func Poisson(rnd *rand.Rand, lambda float64) float64 {
         p := 0.0
         for i := 0; ; i++ {
                 p += Exponential(rnd, lambda)
@@ -265,135 +52,21 @@
         }
         return 0.0
 }
-</code></pre>
-
-<p>生成した乱数のヒストグラムとポアソン分布の確率質量関数のプロット．</p>
-
-<p><img src="/images/2019/10/hist_and_pmf_poisson.png" alt="hist_and_pmf_poisson" /></p>
-
-<h2 id="アーラン分布-1">アーラン分布</h2>
-
-<p>アーラン分布もしくはガンマ分布に従う乱数はGoの標準パッケージで提供されていない．
-しかし，ガンマ分布の定義（k個の指数分布の和の分布）[6]から以下の実装が可能である．</p>
-
-<pre><code class="language-go">func ErlangKL(rnd *rand.Rand, lambda float64, k int) float64 {
+</code></pre><p>生成した乱数のヒストグラムとポアソン分布の確率質量関数のプロット．</p><p><img src=/images/2019/10/hist_and_pmf_poisson.png alt=hist_and_pmf_poisson></p><h2 id=アーラン分布-1>アーラン分布</h2><p>アーラン分布もしくはガンマ分布に従う乱数はGoの標準パッケージで提供されていない．
+しかし，ガンマ分布の定義（k個の指数分布の和の分布）[6]から以下の実装が可能である．</p><pre><code class=language-go>func ErlangKL(rnd *rand.Rand, lambda float64, k int) float64 {
         g := 0.0
         for i := 0; i &lt; k; i++ {
                 g += Exponential(rnd, lambda)
         }
         return g
 }
-</code></pre>
-
-<p>ここで，<code>KL</code>は平均が$\frac{k}{\lambda}$であることを表している．</p>
-
-<p>生成した乱数のヒストグラムとアーラン分布の確率密度関数のプロット．</p>
-
-<p><img src="/images/2019/10/hist_and_pdf_erlangkl.png" alt="hist_and_pdf_erlangkl" /></p>
-
-<p>待ち行列理論の参考書にあるようなサービス工程を$k$個に分割するアーラン分布では$k$回の$\frac{\theta}{k}=\frac{1}{k\lambda}$の指数分布となることから以下の実装となる．</p>
-
-<pre><code class="language-go">func Erlang1L(rnd *rand.Rand, lambda float64, k int) float64 {
+</code></pre><p>ここで，<code>KL</code>は平均が$\frac{k}{\lambda}$であることを表している．</p><p>生成した乱数のヒストグラムとアーラン分布の確率密度関数のプロット．</p><p><img src=/images/2019/10/hist_and_pdf_erlangkl.png alt=hist_and_pdf_erlangkl></p><p>待ち行列理論の参考書にあるようなサービス工程を$k$個に分割するアーラン分布では$k$回の$\frac{\theta}{k}=\frac{1}{k\lambda}$の指数分布となることから以下の実装となる．</p><pre><code class=language-go>func Erlang1L(rnd *rand.Rand, lambda float64, k int) float64 {
         g := 0.0
         for i := 0; i &lt; k; i++ {
                 g += Exponential(rnd, float64(k)*lambda)
         }
         return g
 }
-</code></pre>
-
-<p>ここで<code>1L</code>は平均が$\frac{1}{\lambda}$であることを表している．</p>
-
-<p>生成した乱数のヒストグラムとアーラン分布の確率密度関数のプロット．</p>
-
-<p><img src="/images/2019/10/hist_and_pdf_erlang1l.png" alt="hist_and_pdf_erlang1l" /></p>
-
-<h1 id="動作確認用のコード">動作確認用のコード</h1>
-
-<p>動作確認用のコードは以下にある．</p>
-
-<ul>
-<li><a href="https://gist.github.com/monochromegane/be5b872b3aa71d1a314a8b8bb74be60b">main.go</a></li>
-<li><a href="https://gist.github.com/monochromegane/13123f681db5cf376e79b854cfdec5ba">plot.py</a></li>
-</ul>
-
-<p>このような感じで利用できる．</p>
-
-<pre><code class="language-sh">go run main.go -size 100000 -dist erlang -e k/l -lambda 0.5 -k 2 &gt; data.txt &amp;&amp; python plot.py --dist erlang -e k/l --lambda 0.5 -k 2
-</code></pre>
-
-<h1 id="参考">参考</h1>
-
-<ul>
-<li>[1] <a href="https://ja.wikipedia.org/wiki/%E7%A2%BA%E7%8E%87%E8%B3%AA%E9%87%8F%E9%96%A2%E6%95%B0">確率質量関数 - Wikipedia</a></li>
-<li>[2] <a href="https://ja.wikipedia.org/wiki/%E7%A2%BA%E7%8E%87%E5%AF%86%E5%BA%A6%E9%96%A2%E6%95%B0">確率密度関数 - Wikipedia</a></li>
-<li>[3] <a href="https://ja.wikipedia.org/wiki/%E3%83%9D%E3%82%A2%E3%82%BD%E3%83%B3%E5%88%86%E5%B8%83">ポアソン分布 - Wikipedia</a></li>
-<li>[4] <a href="https://ja.wikipedia.org/wiki/%E6%8C%87%E6%95%B0%E5%88%86%E5%B8%83">指数分布 - Wikipedia</a></li>
-<li>[5] <a href="http://www.f-denshi.com/000TokiwaJPN/17kakto/100prob.html">ときわ台学/統計学/ポアソン分布と指数分布</a></li>
-<li>[6] <a href="https://ja.wikipedia.org/wiki/%E3%82%AC%E3%83%B3%E3%83%9E%E5%88%86%E5%B8%83">ガンマ分布 - Wikipedia</a></li>
-<li>[7] <a href="https://www.ishikawa-lab.com/montecarlo/4shou.html">どんな分布の乱数でも作り出せる</a></li>
-<li>[8] <a href="https://nineties.github.io/math-seminar/14.html">擬似乱数の生成法・推定 - プログラマの為の数学勉強会</a></li>
-</ul>
-
-    </div>
-    <footer class="tag">
-      <i class="fa fa-tags tag-icon"></i>
-      <ul>
-      
-        <li><a class="tag-link" href="/tags/golang">golang</a></li>
-      
-      </ul>
-      <div class="clear"></div>
-    </footer>
-  </div>
-</article>
-
-      <div class="social-btn">
-  <div>
-    <a href="http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2019/10/11/random_number_gen_using_go/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="en" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
-  </div>
-  <div>
-    <a href="https://twitter.com/share" class="twitter-share-button" data-via="monochromegane">Tweet</a>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-  </div>
-</div>
-
-    </div>
-    <footer class="footer">
-  <div class="author"></div>
-  <p class="author-name"><a href="https://twitter.com/monochromegane" target="_blank">@monochromegane</a></p>
-  
-    <p>monochromegane (モノクロめがね) と申します。</p>
-  
-    <p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-  
-  <ul class="social">
-    <li><a href="https://twitter.com/monochromegane" target="_blank"><i class="fa fa-twitter"></i></a></li>
-    <li><a href="https://github.com/monochromegane" target="_blank"><i class="fa fa-github"></i></a></li>
-    <li><a href="/index.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
-  </ul>
-  <p class="copyright">
-    <small>&copy;  <span class="">Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>, Designed by <a href="https://twitter.com/keita_kawamoto" target="_blank">&copy;keita_kawamoto</a></span></small>
-  </p>
-</footer>
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
-
-    
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-38374674-1', 'auto');
-  ga('send', 'pageview');
-
-</script>
-
-
-  </body>
-</html>
+</code></pre><p>ここで<code>1L</code>は平均が$\frac{1}{\lambda}$であることを表している．</p><p>生成した乱数のヒストグラムとアーラン分布の確率密度関数のプロット．</p><p><img src=/images/2019/10/hist_and_pdf_erlang1l.png alt=hist_and_pdf_erlang1l></p><h1 id=動作確認用のコード>動作確認用のコード</h1><p>動作確認用のコードは以下にある．</p><ul><li><a href=https://gist.github.com/monochromegane/be5b872b3aa71d1a314a8b8bb74be60b>main.go</a></li><li><a href=https://gist.github.com/monochromegane/13123f681db5cf376e79b854cfdec5ba>plot.py</a></li></ul><p>このような感じで利用できる．</p><pre><code class=language-sh>go run main.go -size 100000 -dist erlang -e k/l -lambda 0.5 -k 2 &gt; data.txt &amp;&amp; python plot.py --dist erlang -e k/l --lambda 0.5 -k 2
+</code></pre><h1 id=参考>参考</h1><ul><li>[1] <a href=https://ja.wikipedia.org/wiki/%E7%A2%BA%E7%8E%87%E8%B3%AA%E9%87%8F%E9%96%A2%E6%95%B0>確率質量関数 - Wikipedia</a></li><li>[2] <a href=https://ja.wikipedia.org/wiki/%E7%A2%BA%E7%8E%87%E5%AF%86%E5%BA%A6%E9%96%A2%E6%95%B0>確率密度関数 - Wikipedia</a></li><li>[3] <a href=https://ja.wikipedia.org/wiki/%E3%83%9D%E3%82%A2%E3%82%BD%E3%83%B3%E5%88%86%E5%B8%83>ポアソン分布 - Wikipedia</a></li><li>[4] <a href=https://ja.wikipedia.org/wiki/%E6%8C%87%E6%95%B0%E5%88%86%E5%B8%83>指数分布 - Wikipedia</a></li><li>[5] <a href=http://www.f-denshi.com/000TokiwaJPN/17kakto/100prob.html>ときわ台学/統計学/ポアソン分布と指数分布</a></li><li>[6] <a href=https://ja.wikipedia.org/wiki/%E3%82%AC%E3%83%B3%E3%83%9E%E5%88%86%E5%B8%83>ガンマ分布 - Wikipedia</a></li><li>[7] <a href=https://www.ishikawa-lab.com/montecarlo/4shou.html>どんな分布の乱数でも作り出せる</a></li><li>[8] <a href=https://nineties.github.io/math-seminar/14.html>擬似乱数の生成法・推定 - プログラマの為の数学勉強会</a></li></ul></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/golang>golang</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2019/10/11/random_number_gen_using_go/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','twitter-wjs');</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-38374674-1','auto');ga('send','pageview');</script></body></html>

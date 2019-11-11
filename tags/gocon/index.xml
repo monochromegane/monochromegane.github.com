@@ -1,40 +1,16 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Gocon on THINKING MEGANE</title>
-    <link>https://blog.monochromegane.com/tags/gocon/</link>
-    <description>Recent content in Gocon on THINKING MEGANE</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>ja-jp</language>
-    <lastBuildDate>Fri, 02 Aug 2019 15:33:36 +0900</lastBuildDate>
-    <atom:link href="/tags/gocon/" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>福岡でGoConを開催した</title>
-      <link>https://blog.monochromegane.com/blog/2019/08/02/gocon_fukuoka/</link>
-      <pubDate>Fri, 02 Aug 2019 15:33:36 +0900</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2019/08/02/gocon_fukuoka/</guid>
-      <description>
-
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>gocon on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/gocon/</link><description>Recent content in gocon on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Fri, 02 Aug 2019 15:33:36 +0900</lastBuildDate><atom:link href="/tags/gocon/" rel="self" type="application/rss+xml"/><item><title>福岡でGoConを開催した</title><link>https://blog.monochromegane.com/blog/2019/08/02/gocon_fukuoka/</link><pubDate>Fri, 02 Aug 2019 15:33:36 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2019/08/02/gocon_fukuoka/</guid><description>
 &lt;p&gt;7/13に&lt;a href=&#34;https://fukuoka.gocon.jp/&#34;&gt;Go Conference&amp;rsquo;19 Summer in Fukuoka&lt;/a&gt;を開催した。
 諸々落ち着いたので、初めて200名規模の大きなカンファレンスを開催するまでに駆け抜けた日々を振り返っておく。&lt;/p&gt;
-
 &lt;h1 id=&#34;準備&#34;&gt;準備&lt;/h1&gt;
-
 &lt;p&gt;Fukuoka.goの主催の一人としてGoConの福岡開催は是非ともやりたい気持ちがあり、Go Conference 2018 Autumnで登壇した際の懇親会で盛り上がったのが去年の11/25。&lt;/p&gt;
-
 &lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34; data-lang=&#34;ja&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;ホテル到着。移動で朝早かったので懇親会途中までとさせていただきました。お誘いありがとうございます。色々な話が聞けて楽しかったです！ カンファレンスも濃い話から体系的な整理がなされたものまであり来れて良かったです。自分の登壇内容も反応いただけて嬉しい限り。次は福岡版どうですか &lt;a href=&#34;https://twitter.com/hashtag/gocon?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#gocon&lt;/a&gt;&lt;/p&gt;&amp;mdash; モノクロメガネ研究員 (@monochromegane) &lt;a href=&#34;https://twitter.com/monochromegane/status/1066697776912691200?ref_src=twsrc%5Etfw&#34;&gt;2018年11月25日&lt;/a&gt;&lt;/blockquote&gt;
 &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;11/30にFukuoka.go運営でやっていきのIssue起票。&lt;/li&gt;
 &lt;li&gt;12/04に会場と時期のおおまかなあたりがついたので正式にGoCon地方開催を東京GoCon運営に打診。&lt;/li&gt;
 &lt;li&gt;12/14に企画書を元に関係者に一通り話しが通った状態へ。&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;と良い感じのスピード感で進み出し、後は運営スタッフ一同で&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;1月はマスコットのデザインやらLPの準備やら&lt;/li&gt;
 &lt;li&gt;2月はGo1.12のリリパでイベント開催を初めて告知。GoCon運営スタッフも増えた。&lt;/li&gt;
@@ -44,81 +20,56 @@
 &lt;li&gt;6月は集客草の根宣伝活動、Tシャツやバックパネル、会場の軽食や飲み物、スピーカーディナーなどについて検討・確認・発注&lt;/li&gt;
 &lt;li&gt;7月は当日までの作業の整理をして確定していないものを一つづつ対応（受付方法、司会進行、会場レイアウトや設営日、名札作成、ノベルティ配布準備、アンケート、市長、段ボール、張り紙 etc）&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;と、ひたすら準備を進めた。
 大規模カンファレンス開催のノウハウがない中でも、準備は共同主催の&lt;a href=&#34;https://twitter.com/linyows&#34;&gt;@linyows&lt;/a&gt;が皆を引っ張った。
 作業分担は、@linyowsが打ち出したデザインやおもてなしの世界観に皆がイイねをしながら、できる人が具体化を進めていく形に落ち着いた。
 @linyows自身がガンガンとタスクをこなしていく（会社では傭兵と呼ばれている&amp;hellip;）ので、僕自身は具体化を担当する他、方針の見直し案や進捗整理からの抜け漏れ対応といった補佐役に徹した。
 &lt;a href=&#34;https://twitter.com/seike460&#34;&gt;@seike460&lt;/a&gt;をはじめとする運営スタッフとSlackでワイワイしながらだんだんと形になっていく過程も含めて（大変だったけど）楽しめたと思う。
 開催時期については会場都合で少し延ばして7月としたが、今思えばこれぐらいの準備期間がないと納得いく形にするのは無理だったかもしれない。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;個人的に大変だったのは、連絡まわりで、いくつかの連絡経路を使ってたくさんの関係者と個別または全体で効率よく相談、告知するのは骨が折れた。
 他のカンファレンス運営でどういう風にやっているのかを聞いてみたい。
 反対にCfPの選考は多様なプロポーザルを見る機会として有益であったと思う。
 また、より良いプロポーザルにするためのアドバイスをアーリーフィードバックという形で進めることができたのも非常に良かった。
 特に、このフィードバックを通してプロポーザルの説得力が格段に上がっていく例などを見るのは嬉しかった。&lt;/p&gt;
-
 &lt;p&gt;準備は前日と当日の朝が一番大変であった。
 会場のリニューアル直後であったことも手伝い、搬入されるスポンサー物品を含む会場設営などはその場で詳細を決定して進めなければならなかったため、開場までの時間がない中で慌てて進めた。
 特に当日朝は雨がすごかったので準備頑張ってるぞ感がすごかった気がする。&lt;/p&gt;
-
 &lt;h1 id=&#34;当日&#34;&gt;当日&lt;/h1&gt;
-
 &lt;p&gt;当日は幸いなことに@linyowsと僕は専任のタスクを持たずに各種ジャッジや遊撃手的な動きをできたことで全体に柔軟に対応できたと思う。
 受付がひと段落して、高島市長のスペシャルセッション前後の応対が終わって、ビールや生ハムの提供が軌道にのるまでは、イベントがスムーズに進むように、心地よく過ごしてもらえるように裏側では様々な物品や情報が行き交っており、とにかく忙しかった（けど何をやったかは覚えていない）みたいな感じだった。
 これが16:00ぐらいで、ビールが入ったこともあって一瞬寝落ちしたのを写真に撮られてしまった。&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2019/08/gocon_00.jpg&#34; alt=&#34;gocon_00&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;この後、少しだけセッションを聞けたけども、楽しみにしていたセッションをほぼ聞けなかったのでここは次への課題だねと振り返りで話した。
 セッションは最後まで盛況で、懇親会まで盛り上がっていたので嬉しい気持ちで眺めていた。&lt;/p&gt;
-
 &lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;経費精算用エビデンスはこちら &lt;a href=&#34;https://twitter.com/hashtag/gocon?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#gocon&lt;/a&gt; &lt;a href=&#34;https://t.co/zCsDLKBXJW&#34;&gt;pic.twitter.com/zCsDLKBXJW&lt;/a&gt;&lt;/p&gt;&amp;mdash; L I N Y O W S 🤡 (@linyows) &lt;a href=&#34;https://twitter.com/linyows/status/1150059130633068544?ref_src=twsrc%5Etfw&#34;&gt;July 13, 2019&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
-
 &lt;p&gt;僕たちのソフトウェアの仕事は作った後に動く期間が長いので、こういった半年以上の準備とわずか1日のイベントという形式の経験はなかなか貴重だったし、大変ながらも充実した時間を過ごせて楽しかった。&lt;/p&gt;
-
 &lt;h1 id=&#34;スピーカーディナー&#34;&gt;スピーカーディナー&lt;/h1&gt;
-
 &lt;p&gt;カンファレンス後のスピーカーディナーでは豪華なメンバと素敵な料理に囲まれてこれまた楽しいひと時であったものの、各種支払いや幹事的な動きをしていたらあっという間に終わってしまったので、ちょっと残念だった。
 ただ、テーブルの右も左もみんなが新しいつながりを作って飯食って酒飲んでGoの話して笑っているのを見て、「アーーーこれはやって良かったんではーーーーーー！！」と一人泣きそうになっていたのは秘密である。&lt;/p&gt;
-
 &lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;&lt;a href=&#34;https://twitter.com/hashtag/spekerdinner?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#spekerdinner&lt;/a&gt; &lt;a href=&#34;https://twitter.com/hashtag/gocon?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#gocon&lt;/a&gt; &lt;a href=&#34;https://twitter.com/hashtag/nulab?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#nulab&lt;/a&gt; マジすごい！圧倒的感謝！！！！ &lt;a href=&#34;https://t.co/oZi3hfXHON&#34;&gt;pic.twitter.com/oZi3hfXHON&lt;/a&gt;&lt;/p&gt;&amp;mdash; L I N Y O W S 🤡 (@linyows) &lt;a href=&#34;https://twitter.com/linyows/status/1150008128953413632?ref_src=twsrc%5Etfw&#34;&gt;July 13, 2019&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
-
 &lt;h1 id=&#34;カンファレンスを終えて&#34;&gt;カンファレンスを終えて&lt;/h1&gt;
-
 &lt;p&gt;まず、@linyowsにスタッフ一同からお礼を伝えたいです。ありがとう！
 今回のイベントは@linyowsなしでは考えられない。
 @linyowsの行動力、大人力に対して尊敬の念が更に高まりました。Fukuoka.goを共同で主催してくれることが非常に心強いです。これからもよろしくお願いします。&lt;/p&gt;
-
 &lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;&lt;a href=&#34;https://twitter.com/monochromegane?ref_src=twsrc%5Etfw&#34;&gt;@monochromegane&lt;/a&gt; さん、&lt;a href=&#34;https://twitter.com/linyows?ref_src=twsrc%5Etfw&#34;&gt;@linyows&lt;/a&gt; さん、スタッフの皆様、スポンサーの皆様、発表者の皆様、参加者の皆様、お疲れ様でした＆ありがとうGoざいました！q@w@p &lt;a href=&#34;https://twitter.com/hashtag/gocon?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#gocon&lt;/a&gt; &lt;a href=&#34;https://twitter.com/hashtag/fukuokago?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#fukuokago&lt;/a&gt; &lt;a href=&#34;https://t.co/hzSWpgZ4ij&#34;&gt;pic.twitter.com/hzSWpgZ4ij&lt;/a&gt;&lt;/p&gt;&amp;mdash; Ryuji Iwata (@qt_luigi) &lt;a href=&#34;https://twitter.com/qt_luigi/status/1150069073427886080?ref_src=twsrc%5Etfw&#34;&gt;July 13, 2019&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
-
 &lt;p&gt;そして、改めてスタッフの皆様、スポンサーの皆様、発表者の皆様、参加者の皆様に感謝を伝えたいです。ありがとうございます！&lt;/p&gt;
-
 &lt;h1 id=&#34;カンファレンスへの想い&#34;&gt;カンファレンスへの想い&lt;/h1&gt;
-
 &lt;p&gt;どうして集う形の勉強会やカンファレンスにするかというのは、何度か聞かれていて、&lt;a href=&#34;https://pr.forkwell.com/2018-10-01-community_lovers/&#34;&gt;この辺り&lt;/a&gt;でも答えていたのだけど、まず単純に集まって楽しく話す仲間がいることの嬉しさがあって、その背景として「場やコミュニティは実在しないので。定期的にやることが大事」という考えがあった。
 コミュニティというネットワークを継続させていくためには、接合点である参加者の間の接続を活性化する必要がある。
 そのためにはネットワークが活性化するように情報を行き交いさせるんだけれども、均等な一方向の情報発信は刺激に乏しいこともある。
 人間も単純な部分は残っているので、実際に会ったとか、その場の熱量とかに影響されて発信側も受信側も一時的に接続が活性化する。
 こういう励起された状態は、例えばカンファレンスを地元でやろうとか、触発されてツールを作って見たとか、ネットワークへの新しい情報の元になってコミュニティに還元される。
 勉強会やカンファレンスは、そういうやり方での重みの活性化を担っていると思う。&lt;/p&gt;
-
 &lt;p&gt;今回のカンファレンスがGo言語コミュニティや福岡にとって上のような影響を与えることができたのであればとても嬉しい。
 何より、カンファレンス運営を通して、スタッフみんながエキサイティングな経験を楽しんでいたことがとても嬉しい。
 なぜなら、僕たちが楽しみ続けることがまず大事だから〜〜。お疲れ様でした！！！&lt;/p&gt;
-
 &lt;p&gt;そしてオフィシャルのイベントレポートが非常によくまとまっています。こちらも是非ご覧ください！&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://fukuoka.gocon.jp/report/&#34;&gt;The Official event report of Go Conference &amp;lsquo;19 Summer in Fukuoka&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;h1 id=&#34;フォトギャラリー&#34;&gt;フォトギャラリー&lt;/h1&gt;
-
 &lt;p&gt;最後に、誰得 モノクロメガネ フォトギャラリーを置いておきます。いやぁ、楽しんでるなあ〜&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2019/08/gocon_01.jpg&#34; alt=&#34;gocon_01&#34; /&gt;
 &lt;img src=&#34;https://blog.monochromegane.com/images/2019/08/gocon_02.jpg&#34; alt=&#34;gocon_02&#34; /&gt;
 &lt;img src=&#34;https://blog.monochromegane.com/images/2019/08/gocon_03.jpg&#34; alt=&#34;gocon_03&#34; /&gt;
@@ -127,227 +78,118 @@
 &lt;img src=&#34;https://blog.monochromegane.com/images/2019/08/gocon_06.jpg&#34; alt=&#34;gocon_06&#34; /&gt;
 &lt;img src=&#34;https://blog.monochromegane.com/images/2019/08/gocon_07.jpg&#34; alt=&#34;gocon_07&#34; /&gt;
 &lt;img src=&#34;https://blog.monochromegane.com/images/2019/08/gocon_08.jpg&#34; alt=&#34;gocon_08&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;Photo by &lt;a href=&#34;https://twitter.com/atani&#34;&gt;@atani&lt;/a&gt;&lt;/p&gt;
-
 &lt;hr /&gt;
-
-&lt;p&gt;𝝣Go&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>拠点間勉強会を接続するリモート勉強会への誘い</title>
-      <link>https://blog.monochromegane.com/blog/2019/02/23/remote-study-group/</link>
-      <pubDate>Sat, 23 Feb 2019 17:26:50 +0900</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2019/02/23/remote-study-group/</guid>
-      <description>
-
+&lt;p&gt;𝝣Go&lt;/p&gt;</description></item><item><title>拠点間勉強会を接続するリモート勉強会への誘い</title><link>https://blog.monochromegane.com/blog/2019/02/23/remote-study-group/</link><pubDate>Sat, 23 Feb 2019 17:26:50 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2019/02/23/remote-study-group/</guid><description>
 &lt;p&gt;主催する&lt;a href=&#34;https://fukuokago.tech/&#34;&gt;Fukuoka.go&lt;/a&gt;は今月2回のリモート勉強会を実施しました。リモート勉強会に関心のある主催者の参考になればと思い、このエントリではリモート勉強会の開催に関するハウツーと利点、課題を整理します。タイトルは&amp;rdquo;いざない&amp;rdquo;と読んでください。雅ですね。&lt;/p&gt;
-
 &lt;h1 id=&#34;経緯&#34;&gt;経緯&lt;/h1&gt;
-
 &lt;p&gt;私は福岡在住です。前回の&lt;a href=&#34;https://gocon.jp/&#34;&gt;GoCon&lt;/a&gt;で東京に&lt;a href=&#34;https://speakerdeck.com/monochromegane/optimization-of-goroutine-numbers-by-feedback-control&#34;&gt;発表&lt;/a&gt;しに行った際に、岡山の&lt;a href=&#34;https://twitter.com/qt_luigi&#34;&gt;岩田プロ&lt;/a&gt;とお話しする機会がありました。
 知り合えたのも何かの縁、福岡と岡山で何か面白いことやりましょうとふわっと約束したのを覚えています。
 福岡への帰路、イベントのアイディアを考えながら、やはり物理的な距離の制約が面倒だなと思い至りました。
 幸い、所属するGMOペパボでは東京オフィスと福岡オフィス間を繋いだ&lt;a href=&#34;https://tech.pepabo.com/2018/09/11/pepabo-tech-friday/&#34;&gt;勉強会（PTF）&lt;/a&gt;を定期的に開催しており、この方式を社外の勉強会に転用するという着想を得ました。&lt;/p&gt;
-
 &lt;p&gt;&lt;a href=&#34;https://fukuokago.connpass.com/event/112073/&#34;&gt;Fukuoka.go#13+Okayama.go&lt;/a&gt;と銘打ったイベントの準備は順調に進み、当日は、&lt;a href=&#34;https://togetter.com/li/1318568&#34;&gt;両会場からの発表を行い&lt;/a&gt;会場を挟んだ質疑応答のコールアンドレスポンスも楽しめました。
 気を良くして数日後に東京で行われた&lt;a href=&#34;https://fukuokago.connpass.com/event/118377/&#34;&gt;Go1.12 Release Party&lt;/a&gt;にも接続させてもらい、東京会場の発表を聞いたり、福岡からも&lt;a href=&#34;https://speakerdeck.com/monochromegane/understanding-go-language-server&#34;&gt;発表&lt;/a&gt;を行いました。当日は大阪会場も接続していたようです。
 各回、各会場とも満足度が高く成功だったと言えるでしょう。&lt;/p&gt;
-
 &lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34; data-lang=&#34;ja&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;いやあ，大成功じゃないですか〜楽しかった〜また繋いでやりましょう〜〜！！ &lt;a href=&#34;https://twitter.com/hashtag/fukuokago?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#fukuokago&lt;/a&gt; &lt;a href=&#34;https://twitter.com/hashtag/okayamago?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#okayamago&lt;/a&gt;&lt;/p&gt;&amp;mdash; モノクロメガネ研究員 (@monochromegane) &lt;a href=&#34;https://twitter.com/monochromegane/status/1095307409428340736?ref_src=twsrc%5Etfw&#34;&gt;2019年2月12日&lt;/a&gt;&lt;/blockquote&gt;
 &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
-
 &lt;p&gt;以下では、これらのリモート勉強会を通して得たハウツーや考察を紹介します。リモート勉強会の開催に興味を持った方は良ければ参考にしてください。&lt;/p&gt;
-
 &lt;h1 id=&#34;1-リモート勉強会とは&#34;&gt;1. リモート勉強会とは&lt;/h1&gt;
-
 &lt;p&gt;このエントリでは、勉強会を、一定人数が会場に集まり発表者の登壇を参加者が聴講し、必要に応じて質疑応答がなされる形式のものとします。
 そして、リモート勉強会とは、そのような複数の勉強会会場がインターネット越しに音声と映像を双方向に中継され、同期したタイムテーブルの下で進行される形式のものとします。&lt;/p&gt;
-
 &lt;h1 id=&#34;2-接続方式と構成&#34;&gt;2. 接続方式と構成&lt;/h1&gt;
-
 &lt;h2 id=&#34;接続&#34;&gt;接続&lt;/h2&gt;
-
 &lt;p&gt;拠点間接続にはビデオ会議サービスを利用します。音声、映像、そして画面共有ができるものが必要です。
 さらに参加時の敷居を下げるため特定のアプリケーションに依存せずブラウザ単体で動作するものが望ましいと考えます。
 今回はこれらの要件を満たす、&lt;a href=&#34;https://gsuite.google.co.jp/intl/ja/products/meet/&#34;&gt;Google Hangouts Meet&lt;/a&gt;を利用しました。&lt;/p&gt;
-
 &lt;p&gt;Hangouts MeetはG Suite利用者のみミーティングを作成することができますが、Googleアカウントを持っていれば（許可制ではありますが）G Suite利用者以外のアカウントも参加することが可能です。&lt;/p&gt;
-
 &lt;h2 id=&#34;構成&#34;&gt;構成&lt;/h2&gt;
-
 &lt;p&gt;会場ごとに少なくとも1台のPCから会議に参加している状態とします。会場参加者の映像や音声を伝えるのはこのPC（と外部接続のカメラやマイク）が担当します。
 また発表資料のあるPC上（一般には発表者の個人PC）からも同様に会議に参加しておきます。会場の音声が重複することを避けるため、発表者PCではマイクをオフにしておきます。
 映像は自由ですが、だいたい他の人の発表を聞いている時の間抜け面が全会場に配信されるため、特に理由がない限りカメラもオフにしておくと良いでしょう。
 発表時は、発表者のPCから画面共有を行い、資料を全会場で閲覧できるようにします。&lt;/p&gt;
-
 &lt;p&gt;小さい会場の場合は会場のPCと発表者のPCが兼業することになり、より直感的に準備が進むと思います。
 大きな会場の場合は、会場のPCとカメラやマイクの外部接続が必要になります。ここについては共同主催者の&lt;a href=&#34;https://twitter.com/linyows&#34;&gt;@linyows&lt;/a&gt;が別途、「リモート勉強会を支えるオーディオ技術」としてエントリを書いてくれるはずです。読みたい！&lt;/p&gt;
-
 &lt;p&gt;なお、これまでの開催を通して、各会場のカメラは、登壇者を写すもの、会場の様子を写すものの2つがあると一体感が増すように感じました。
 そのため各会場からはこれを担う2つのPCが会議に参加していると良さそうです（マイクは一台のみオンとする）。&lt;/p&gt;
-
 &lt;h1 id=&#34;3-リモート勉強会におけるリモート会議サービスの実用性&#34;&gt;3. リモート勉強会におけるリモート会議サービスの実用性&lt;/h1&gt;
-
 &lt;p&gt;現在のリモート会議サービスであれば十分リモート勉強会で利用することは可能だと考えます。&lt;/p&gt;
-
 &lt;p&gt;特に、このエントリで定める勉強会方式、つまり情報の向きが単方向でシーケンシャルに制御されている、登壇と質疑応答のような方式にはビデオ会議サービスは非常に適していると思えました。
 個人的には現実の会議ではリモート会議越しだと視線や挙動をうまくつかめずに同時に話してしまったり逆に沈黙があったりとまだ少しだけ違和感を感じますが、登壇形式であればそのような状況はあまり発生しません。&lt;/p&gt;
-
 &lt;p&gt;また、別会場の音声が聞き取りにくいとストレスを感じますが、少なくともGoogle Hangouts Meetを使用している限りでは接続は非常に安定しており、ここを課題と感じることはありませんでした。
 ただ、音声機器に関してはPC内蔵マイク/スピーカーと外付け機器を比較した場合、品質向上はもちろんのことボリューム調整なども容易になるため、予算に応じて良いものを手配した方が良いと思います。
 関連して、Google Hangouts Meetの設定で外付け機器が適切に選択されていることも確認する操作も準備の際に忘れないようしたいところです（今まで二回ともこれでハマっている）&lt;/p&gt;
-
 &lt;p&gt;準備についても初回こそ念のため別日に接続リハーサルを行いましたが、2回目からは初めての会場同士であっても開始1時間前に接続して音量チェックを行う程度で十分間に合いました。&lt;/p&gt;
-
 &lt;h1 id=&#34;4-リモート勉強会-実施時の課題&#34;&gt;4. リモート勉強会、実施時の課題&lt;/h1&gt;
-
 &lt;h2 id=&#34;別会場からの質問が届かない場合がある&#34;&gt;別会場からの質問が届かない場合がある&lt;/h2&gt;
-
 &lt;p&gt;これは発表者のいる会場側でも同時に質問が上がった場合に発生します。おそらく音声が被って聞こえなかったのだと思われます。
 会場間で情報をシーケンシャルに制御できないことに起因するものであり、例えば各会場の司会が明示的に会場を指定した質問の募集をする等、質疑応答の進め方を事前に相談しておくと良さそうです。&lt;/p&gt;
-
 &lt;h2 id=&#34;発表者は-別会場のリアクションを知ることができない&#34;&gt;発表者は、別会場のリアクションを知ることができない&lt;/h2&gt;
-
 &lt;p&gt;発表者のPCはスライドモードで全画面が占められていることから、他の会場の映像を見ることができません。そのため渾身のネタがスベったのか笑いが発生したのか、今の説明が聴衆を置いてけぼりにしていないかなどの反応を知るためには自分の会場の聴衆をサンプルとする必要があります。
 実際の発表中は、前の方の十数名ぐらいしか見ていないので問題はないのですが、例えば別会場の笑い声などをうまく伝えられるようにしたり、発表者が見ることができる別のディスプレイに他の会場の様子が映されていたりするのも良いかもしれません（嗚呼、どんどん設備が豪華になっていく&amp;hellip;）&lt;/p&gt;
-
 &lt;p&gt;反対に、会場間の聴衆側の雰囲気の共有については他のツールに移譲してしまって良いと思っています。
 具体的にはTwitterのハッシュタグを共有するなどして実況ツイートが流れれば十分、会場間の一体感が感じられました。&lt;/p&gt;
-
 &lt;h2 id=&#34;google-hangouts-meetとkeynoteの画面共有で発表者ディスプレイモードが利用できない&#34;&gt;Google Hangouts MeetとKeynoteの画面共有で発表者ディスプレイモードが利用できない&lt;/h2&gt;
-
 &lt;p&gt;これはリモート勉強会というよりはGoogle Hangouts MeetとKeynoteの使い方の問題ですが、発表者ディスプレイモード（発表者の手元の表示が次のスライドや経過時間がわかるようになる）が利用できなかったため発表が若干やりにくかったです。
 ウィンドウの共有からKeynoteを選択し、スライドを開始すると手元のディスプレイが真っ黒になるため、画面全体を共有してスライドを開始していますが、手元のディスプレイが発表者ディスプレイモード（次のスライドや経過時間がわかる表示）ではなく参加者が見ているのと同じ状態になってしまいます。&lt;/p&gt;
-
 &lt;p&gt;ただ、ここに関しては、&lt;code&gt;外部モニターを接続し、外部モニターを画面共有先にすることで回避が可能&lt;/code&gt;と検証していただいていたので次回試してみようと思います。&lt;/p&gt;
-
 &lt;h1 id=&#34;5-なぜ勉強会会場を接合点としたか&#34;&gt;5. なぜ勉強会会場を接合点としたか&lt;/h1&gt;
-
 &lt;p&gt;リモート会議サービスへ参加すればよい環境となっていることから、勉強会会場に行かずとも家やオフィスから見たいという声も聞くようになりました。
 これについては、極端な場合、接合点を参加者とするような、会場という概念がない勉強会は開催はできても継続はできないのではないかなと考えます。
 ただ、最終的には勉強会ごとのポリシーに沿うでしょうし、絶対的な正解はないことから、ここでは個人としての考えを述べます。&lt;/p&gt;
-
 &lt;h2 id=&#34;サービスの制限&#34;&gt;サービスの制限&lt;/h2&gt;
-
 &lt;p&gt;単純にサービスの制限として同時接続数が定められている（Google Hangouts Meetだと50ぐらい）ために接続を会場と発表者に限定したい。
 ですので制限が緩和されたり制限未満の参加者であれば勉強会開催はもちろん可能です。&lt;/p&gt;
-
 &lt;h2 id=&#34;発表者のモチベーション&#34;&gt;発表者のモチベーション&lt;/h2&gt;
-
 &lt;p&gt;本エントリで述べる形式の勉強会で発表する方のモチベーションはプレゼンス向上や議論による提案のレベルアップ、便利情報の共有によるコミュニティへの還元など様々ですが、一定の人数を相手に一定の時間、注目をしてもらうために少なからず時間を投資してクオリティを確保した資料と発表準備を行なっています。&lt;/p&gt;
-
 &lt;p&gt;これに応じるようなある種の熱量は、たとえ数が揃っていたとしても個人の集まりでは発生させるのは難しいと思っていて、やはり目的や時間を共有しているような集団とこれをオーガナイズする人がいてこそだと思います。
 この熱量を相互に期待することで会が成り立ち、活発な議論やスパイク的な反応が生まれる、これを満たす集団が各会場の勉強会にあたると考えています。
 また、家やオフィスだとどうしても&amp;rdquo;ながら見&amp;rdquo;になりますし、発表者にとっても自分の前に実際に誰もいない状態での発表というのは（発表に慣れた人であるほど）逆にやりにくいものです。
 これらの理由から、どうしても最寄りの会場への移動が困難である等の個人接続は許容した上で、勉強会会場単位での接続が良いのではないかと考えます。&lt;/p&gt;
-
 &lt;h2 id=&#34;そもそも集うことが目的でもある&#34;&gt;そもそも集うことが目的でもある&lt;/h2&gt;
-
 &lt;p&gt;特にFukuoka.goは、単純に集まって&lt;a href=&#34;https://press.forkwell.com/entry/2018/10/01/community_lovers&#34;&gt;興味関心を同じくする人と知的好奇心をくすぐる話題を肴に同じ時間を過ごしたい&lt;/a&gt;というのが源流としてあり、普段はバラバラに活動している人たちが集まってワイワイするのが目的だったりします。&lt;/p&gt;
-
 &lt;p&gt;コミュニティは実在するものではなく活動が継続していることでのみ存在を維持できると思っており、主催側自体も楽しめること、新しい参加者や知識、提案が吹き込まれることを常時望んでいます。
 そのため、志を同じくする熱量のある集団として別地域の勉強会と知り合えることはお互いに利がありますし、単純に嬉しいものです。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;いくつかの理由を述べましたが、上述の通り何が正解というわけではなく、今後、色々試してみてより楽しんで楽にできるやり方を探したいところです。&lt;/p&gt;
-
 &lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
-
 &lt;p&gt;福岡在住の技術者として、リモート勉強会を通して、距離の制約から解放され、興味ある分野の勉強会に参加して発表をリアルタイムに聞けること、さらに自分のノウハウや提案をより多くの人に聞いてもらえる機会が広がったことを嬉しく思います。
 また、勉強会の主催者としても、知らないうちに出来上がるコミュニティの枠に対して新規の参加者同士が交流しやすくなることによって、停滞感が払拭され結果的に各勉強会自身の活発化が促されるであろう利点にも注目しています。
-今後もリモート勉強会を通して、地域の勉強会が等価に柔軟に接続し合うことで一層のコミュニティ発展に繋がることを願っています。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Go Conference 2018 Autumnで発表してきた(3年ぶり3回目)</title>
-      <link>https://blog.monochromegane.com/blog/2018/11/27/go-conference-2018-autumn/</link>
-      <pubDate>Tue, 27 Nov 2018 16:58:11 +0900</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2018/11/27/go-conference-2018-autumn/</guid>
-      <description>
-
+今後もリモート勉強会を通して、地域の勉強会が等価に柔軟に接続し合うことで一層のコミュニティ発展に繋がることを願っています。&lt;/p&gt;</description></item><item><title>Go Conference 2018 Autumnで発表してきた(3年ぶり3回目)</title><link>https://blog.monochromegane.com/blog/2018/11/27/go-conference-2018-autumn/</link><pubDate>Tue, 27 Nov 2018 16:58:11 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2018/11/27/go-conference-2018-autumn/</guid><description>
 &lt;p&gt;11/25に&lt;a href=&#34;https://gocon.jp/&#34;&gt;Go Conference 2018 Autumn&lt;/a&gt;というイベントで&lt;code&gt;フィードバック制御によるGoroutine起動数の最適化&lt;/code&gt;を発表してきました．&lt;/p&gt;
-
 &lt;p&gt;Goでの開発時に常に悩んでいたGoroutine起動数に関してフィードバック制御という切り口でKaburayaアーキテクチャと題して解決策を検討したものです．
 直前に&lt;a href=&#34;https://blog.monochromegane.com/blog/2018/11/25/wsa_3_kaburaya/&#34;&gt;WSA研向けに研究として再定義した&lt;/a&gt;ことでGoroutineにこだわらない，より汎用的な問題に対するアプローチとして検討し直すことができ，まだ最適解は模索中ですが，面白いと思っていただける発表ができたのではと考えています．&lt;/p&gt;
-
 &lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;3fb10a250cd44b8799eac767baec5cc9&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
-
 &lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fkaburaya&#34; title=&#34;monochromegane/kaburaya&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/kaburaya&#34;&amp;gt;monochromegane/kaburaya&amp;lt;/a&amp;gt;&lt;/iframe&gt;
-
 &lt;p&gt;歴史ある制御工学という分野の手法を用いることで蓄積されたノウハウを活用できると考えていましたが，発表後に早速有意義なアドバイスなど頂くことができ，今後の精度，速度向上並びに汎用化に向けて面白くなってきそうです．&lt;/p&gt;
-
 &lt;p&gt;ちなみに開発にあたってGoランタイムを調べていた時の資料も&lt;code&gt;#gocon&lt;/code&gt;ハッシュタグで放流したところ，こちらも好評でしたので改めて置いておきます．&lt;/p&gt;
-
 &lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;4046d92f81c545ab99e5b974c874d4e0&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
-
 &lt;h2 id=&#34;発表を終えて&#34;&gt;発表を終えて&lt;/h2&gt;
-
 &lt;p&gt;GoConでの登壇は今回で3回目となりました．ここ数年，自分のキャリアや興味範囲が広がっていく中でも，Go言語はずっと相棒として付き合ってくれる言語でしたし，Go言語を中心に色々な付き合いができていると感じています．
 そしてその契機となったGoConと，これを継続して開催してくれている運営の方々に本当に感謝いたします．&lt;/p&gt;
-
 &lt;p&gt;主催するFukuoka.goでも微力ながらコミュニティの活発化に繋がるよう引き続き&amp;rdquo;&lt;a href=&#34;https://press.forkwell.com/entry/2018/10/01/community_lovers&#34;&gt;楽しみながら&lt;/a&gt;&amp;ldquo;やっていきたいと思います．&lt;/p&gt;
-
 &lt;p&gt;次は海外カンファレンスで登壇するぞう．&lt;/p&gt;
-
 &lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34; data-lang=&#34;ja&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;ホテル到着。移動で朝早かったので懇親会途中までとさせていただきました。お誘いありがとうございます。色々な話が聞けて楽しかったです！ カンファレンスも濃い話から体系的な整理がなされたものまであり来れて良かったです。自分の登壇内容も反応いただけて嬉しい限り。次は福岡版どうですか &lt;a href=&#34;https://twitter.com/hashtag/gocon?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#gocon&lt;/a&gt;&lt;/p&gt;&amp;mdash; モノクロメガネ研究員 (@monochromegane) &lt;a href=&#34;https://twitter.com/monochromegane/status/1066697776912691200?ref_src=twsrc%5Etfw&#34;&gt;2018年11月25日&lt;/a&gt;&lt;/blockquote&gt;
 &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
-
 &lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34; data-lang=&#34;ja&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;GoConお疲れ様でした！いわたプロと知り合えたので何か一緒にやりたいなと思ってマス．Fukuoka.goはいつも10名ほどが発表してまして，例えば岡山のコミュニティの皆さんへ中継もしくは双方向の合同トーク大会とか一回どうでしょうか？ お気軽にご検討いただければ &lt;a href=&#34;https://twitter.com/qt_luigi?ref_src=twsrc%5Etfw&#34;&gt;@qt_luigi&lt;/a&gt;&lt;/p&gt;&amp;mdash; モノクロメガネ研究員 (@monochromegane) &lt;a href=&#34;https://twitter.com/monochromegane/status/1067258144995201024?ref_src=twsrc%5Etfw&#34;&gt;2018年11月27日&lt;/a&gt;&lt;/blockquote&gt;
 &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
-
 &lt;h2 id=&#34;gopherくん&#34;&gt;Gopherくん&lt;/h2&gt;
-
 &lt;p&gt;今回で登壇特典のGopherくん全色コンプリート！！&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2018/11/gophers.jpg&#34; alt=&#34;gophers&#34; /&gt;&lt;/p&gt;
-
 &lt;h2 id=&#34;過去の発表&#34;&gt;過去の発表&lt;/h2&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2014/06/08/go-conference-2014-spring/&#34;&gt;Go Conference 2014 spring で発表してきた&lt;/a&gt; - &lt;a href=&#34;https://speakerdeck.com/monochromegane/pt-and-goroutines&#34;&gt;発表資料: pt &amp;amp; Goroutine&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2015/06/23/go-conference-2015-summer/&#34;&gt;Go Conference 2015 summer で発表してきた&lt;/a&gt; - &lt;a href=&#34;https://speakerdeck.com/monochromegane/generative-programming-in-go&#34;&gt;発表資料: Generative Programming in Go&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Go Conference 2015 summer で発表してきた</title>
-      <link>https://blog.monochromegane.com/blog/2015/06/23/go-conference-2015-summer/</link>
-      <pubDate>Tue, 23 Jun 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2015/06/23/go-conference-2015-summer/</guid>
-      <description>&lt;p&gt;6/21に&lt;a href=&#34;http://gocon.connpass.com/event/14063/&#34;&gt;GoConference 2015 summer&lt;/a&gt;というイベントで &lt;code&gt;Generative Programming in Go&lt;/code&gt; というタイトルの発表をしてきました。&lt;/p&gt;
-
+&lt;/ul&gt;</description></item><item><title>Go Conference 2015 summer で発表してきた</title><link>https://blog.monochromegane.com/blog/2015/06/23/go-conference-2015-summer/</link><pubDate>Tue, 23 Jun 2015 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2015/06/23/go-conference-2015-summer/</guid><description>&lt;p&gt;6/21に&lt;a href=&#34;http://gocon.connpass.com/event/14063/&#34;&gt;GoConference 2015 summer&lt;/a&gt;というイベントで &lt;code&gt;Generative Programming in Go&lt;/code&gt; というタイトルの発表をしてきました。&lt;/p&gt;
 &lt;p&gt;内容的には、今年に入ってつくった &lt;a href=&#34;https://blog.monochromegane.com/blog/2015/03/04/argen/&#34;&gt;argen&lt;/a&gt;の紹介を通して生成的なプログラミングの使いドコロやTipsなどを紹介するものでした。&lt;/p&gt;
-
 &lt;div style=&#34;speakerdeck&#34;&gt;
 &lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;baea21c51cb9413992b74786804e9109&#34; data-ratio=&#34;1.33333333333333&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
 &lt;/div&gt;
-
 &lt;p&gt;コード生成、ニッチな分野だからニーズあるかなと心配でしたが、意外にもこの分野での発表/プロダクトの報告が多かったです。&lt;/p&gt;
-
 &lt;p&gt;コード生成という解決策は、便利な反面、使いドコロ誤るとみんなツライ思いをすることになるので、&lt;code&gt;なんでもGenerateはダメ&lt;/code&gt;を含めて、自分なりに得た知見を共有できたのはよかったかなと思っています。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;GoConの発表は一年前に&lt;code&gt;pt &amp;amp; Goroutine&lt;/code&gt;を発表して以来、2回目です。&lt;/p&gt;
-
 &lt;p&gt;200名ぐらいの参加者がいて、海外からのスピーカー来ているという今回のカンファレンスは、福岡から参加する自分にとっては気合い入れていくぞって感じで緊張もするんですが、今回は「ブログ読んでます」とか「あのPR送ったの僕です」とか声かけてもらえることがあって、インターネットは最高だ〜って思ってました。&lt;/p&gt;
-
 &lt;p&gt;最初のGoCon発表もOSSのきっかけが広がってからの参加だったし、なんというか、
 みんなGo書いてGoConで発表するとよいと思います！&lt;/p&gt;
-
 &lt;p&gt;今度はプロダクション導入した話とかできたらいいなと考えています。
-運営の方々、楽しいカンファレンスありがとうございました！&lt;/p&gt;
-</description>
-    </item>
-    
-  </channel>
-</rss>
+運営の方々、楽しいカンファレンスありがとうございました！&lt;/p&gt;</description></item></channel></rss>

@@ -1,98 +1,55 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Shift Jis on THINKING MEGANE</title>
-    <link>https://blog.monochromegane.com/tags/shift-jis/</link>
-    <description>Recent content in Shift Jis on THINKING MEGANE</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>ja-jp</language>
-    <lastBuildDate>Sun, 15 Sep 2013 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/shift-jis/" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>ag(The Silver Searcher)でEUC-JP/Shift-JISのファイルも検索できるようにしてみた</title>
-      <link>https://blog.monochromegane.com/blog/2013/09/15/the-silver-searcher-detects-japanese-char-set/</link>
-      <pubDate>Sun, 15 Sep 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2013/09/15/the-silver-searcher-detects-japanese-char-set/</guid>
-      <description>
-
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>shift-jis on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/shift-jis/</link><description>Recent content in shift-jis on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 15 Sep 2013 00:00:00 +0000</lastBuildDate><atom:link href="/tags/shift-jis/" rel="self" type="application/rss+xml"/><item><title>ag(The Silver Searcher)でEUC-JP/Shift-JISのファイルも検索できるようにしてみた</title><link>https://blog.monochromegane.com/blog/2013/09/15/the-silver-searcher-detects-japanese-char-set/</link><pubDate>Sun, 15 Sep 2013 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2013/09/15/the-silver-searcher-detects-japanese-char-set/</guid><description>
 &lt;p&gt;&lt;a href=&#34;https://github.com/ggreer/the_silver_searcher&#34;&gt;ag(The Silver Searcher)&lt;/a&gt;は、高速なパターン検索が行えるため、ackから切り替える人も多いと思いますが、日本語文字セット（EUC-JPやShift-JIS）のファイルがバイナリファイルとして判定されて検索対象からスキップされてしまうという問題があります。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://www.naney.org/diki/d/2013-07-17-The-Silver-Searcher.html&#34;&gt;nDiki: ag やめて ack に戻す&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;業務ではまだEUC-JPやShift-JISのファイルを触る機会があるため、ag でEUC-JP/Shift-JISのファイルも検索できるようにしてみました。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;インストール&#34;&gt;インストール&lt;/h1&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ git clone https://github.com/monochromegane/the_silver_searcher
 $ cd the_silver_searcher
 $ git checkout detect-japanese-char-set
 $ ./build.sh
 $ make install
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;ul&gt;
 &lt;li&gt;** 既にhomebrewなどでインストール済みの agコマンド がある場合はアンインストールしておいてください **&lt;/li&gt;
 &lt;li&gt;** コンパイル前に&lt;code&gt;automake&lt;/code&gt;とか&lt;code&gt;pcre-devel&lt;/code&gt;を適宜インストールおねがいします **&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;利用方法&#34;&gt;利用方法&lt;/h1&gt;
-
 &lt;p&gt;通常の ag コマンドと同様です。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ ag [options] PATTERN [PATH]
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;修正点など&#34;&gt;修正点など&lt;/h1&gt;
-
 &lt;p&gt;&lt;code&gt;src/util.c&lt;/code&gt;の&lt;code&gt;is_binary&lt;/code&gt;内に EUC-JPとShift-JISの判定を追加しています。&lt;/p&gt;
-
 &lt;p&gt;( なぜか10進数になっているのは既存のUTF-8を検出しているとこにあわせてるからです。16進数のほうがいいかな&amp;hellip; )&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-c&#34;&gt;/* EUC-JP detection */
 if (buf_c[i] == 142) {
-    i++;
-    if (buf_c[i] &amp;gt; 160 &amp;amp;&amp;amp; buf_c[i] &amp;lt; 224) {
-      continue;
-    }
+i++;
+if (buf_c[i] &amp;gt; 160 &amp;amp;&amp;amp; buf_c[i] &amp;lt; 224) {
+continue;
+}
 } else if (buf_c[i] &amp;gt; 160 &amp;amp;&amp;amp; buf_c[i] &amp;lt; 255) {
-  i++;
-  if(buf_c[i] &amp;gt; 160 &amp;amp;&amp;amp; buf_c[i] &amp;lt; 255) {
-    continue;
-  }
+i++;
+if(buf_c[i] &amp;gt; 160 &amp;amp;&amp;amp; buf_c[i] &amp;lt; 255) {
+continue;
+}
 }
 /* Shift-JIS detection */
 if (buf_c[i] &amp;gt; 160 &amp;amp;&amp;amp; buf_c[i] &amp;lt; 224) {
-  continue;
+continue;
 } else if ((buf_c[i] &amp;gt; 128 &amp;amp;&amp;amp; buf_c[i] &amp;lt; 160) || (buf_c[i] &amp;gt; 223 &amp;amp;&amp;amp; buf_c[i] &amp;lt; 240)) {
-  i++;
-  if ((buf_c[i] &amp;gt; 63 &amp;amp;&amp;amp; buf_c[i] &amp;lt; 127) || (buf_c[i] &amp;gt; 127 &amp;amp;&amp;amp; buf_c[i] &amp;lt; 253)) {
-    continue;
-  }
+i++;
+if ((buf_c[i] &amp;gt; 63 &amp;amp;&amp;amp; buf_c[i] &amp;lt; 127) || (buf_c[i] &amp;gt; 127 &amp;amp;&amp;amp; buf_c[i] &amp;lt; 253)) {
+continue;
+}
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;性能に関しても特に劣化していないと思います。
 不具合などあれば、プルリクください。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;今後&#34;&gt;今後&lt;/h1&gt;
-
 &lt;p&gt;日本語圏に限定された修正なので、プルリクだしても本家側には取り込まれない気がする…&lt;/p&gt;
-
-&lt;p&gt;このForkしたブランチでも本家masterの修正に追随していく予定なので、EUC-JPやShift-JISの資産をさわる方々、しばらくはこちらを使ってみてください。&lt;/p&gt;
-</description>
-    </item>
-    
-  </channel>
-</rss>
+&lt;p&gt;このForkしたブランチでも本家masterの修正に追随していく予定なので、EUC-JPやShift-JISの資産をさわる方々、しばらくはこちらを使ってみてください。&lt;/p&gt;</description></item></channel></rss>

@@ -1,15 +1,4 @@
-<!DOCTYPE html>
-<html>
-  <head>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="viewport" content="width=device-width">
-  <meta name="author" content="">
-  
-    <title>Sanny: 大規模ECサイトのための精度と速度を両立した分散可能な近似近傍探索エンジン &middot; THINKING MEGANE</title>
-  
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:site" content="@monochromegane">
-  <meta property="og:description" content="このエントリは、第二回 Web System Architecture 研究会 (WSA研)の予稿です。
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>Sanny: 大規模ECサイトのための精度と速度を両立した分散可能な近似近傍探索エンジン &middot; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="このエントリは、第二回 Web System Architecture 研究会 (WSA研)の予稿です。
 はじめに ECサイトの商品種類増大に伴う情報過多問題を解決するため，利用者の要求を満たす商品を自動的に提案する機能がECサイトにとっての関心事となる．商品の提案は任意の観点での商品同士の類似性を根拠とすることから，商品の特性を数値化し，任意の距離空間で近傍に位置する要素を求めることで，機械的に扱えるようにする．この数値化された商品特性を特徴量と呼ぶ． 深層ニューラルネットワークの発展によって，これまで適切な特徴量を導くことが難しかった画像やテキストに対しても，人の感性に近い，特性をよく表現する高精度な特徴量を得られるようになったことからECサイトの商品提案機能に利用され始めている． これらの深層ニューラルネットワークから得られる特徴量は，数百から数千次元の高次元ベクトルとして表現される． また，大規模なECサイトでは提案対象となる商品数も多いため，この特徴量の集合も数十から数百万を超える大規模なものとなる． このような大規模かつ高次元ベクトル集合に対する類似度の比較において，正確ではあるが，データ数と次元数に比例して計算量が増加する線形探索は現実的ではない．そこで，事前に近傍候補となる集団を求めておくことで，少数の近傍候補から計算量を抑えて近傍点を得る空間分割や局所性鋭敏型ハッシュといった手法が用いられる． しかしながら，高次元ベクトル集合においては正確な近傍を求めるための計算量が線形探索と同程度となると考えられており，精度を犠牲にして近似解を用いることで計算量の増加に対処する近似近傍探索が採用されているが，商品を自動的に提案する機能は、提案内容の的確さと充分な応答速度が求められることから，大規模かつ高次元ベクトル集合に対して精度と速度を両立する近似近傍探索の手法が必要となる．
 大規模かつ高次元ベクトル集合に対する近似近傍探索では，データ数と次元数に依存して計算量が増加するため，これらを分割して処理することが効果的である． ベクトル集合を行列と見なし，行方向での分割，つまりデータ数によって分割する手法は一般に採用されるが，依然として次元数に依存した計算量の課題は残る． そこで，列方向での分割が必要となる． 直積量子化は，高次元ベクトル集合を任意の次元数の低次元ベクトル集合に等分し，各低次元ベクトル集合に対する近傍探索結果を集約する． しかしながら，集約処理はデータ数に依存するという課題がある．
 そこで，本報告では，大規模ECサイトで商品を提案することを想定して，精度と速度を両立した分散可能な近似近傍探索エンジンSannyを提案する． Sannyは，商品特性をよく表現しており高精度に類似度が比較可能な高次元かつ密なベクトルの集合において，検索質問データ(クエリ)に対する高次元ベクトル集合の近傍探索結果の上位集合が，クエリと高次元ベクトル集合を任意の次元数で等分した部分ベクトル単位で近傍探索した結果の上位集合と類似しやすいことに着目して，提案すべき商品の近傍探索を部分ベクトル単位での探索に分解することで分散処理可能にし，その探索結果の和集合である近傍候補から再度近傍探索を行うことにより，全体として高速に近似近傍探索を行える．
@@ -19,209 +8,25 @@
 \begin{align} NN(p_j) = \argmin_{s \in S_j} d(p_j,s) \end{align}
 $NN(p_j)$の結果を$n$個の識別子からなる集合$N_j$とし，全ての$N_j$の和集合を$N$としてこれを近傍候補とする．なお，距離関数には現時点でユークリッド距離を想定しているが，すべての部分ベクトルで統一されていれば近傍探索の手法自体は問わない．
 最後に近傍候補$N$に対応する元のベクトル集合 $YN \subset \mathbb{R}^D$ に対して正確な類似度を比較するためにクエリベクトル$q$との線形探索を行う．$|YN|$は最大$n*m$であることから線形探索のコストは非常に小さいが，距離関数にユークリッド距離を用いる場合，以下で求まる近似的な線形探索を用いることで一層の高速化が見込める．
-\begin{align} argmin_a (a - b)^2 = argmin_a a^2 - 2ab &#43; b^2 = argmin_a a^2 - 2ab \end{align}">
-  <meta property="og:title" content="Sanny: 大規模ECサイトのための精度と速度を両立した分散可能な近似近傍探索エンジン">
-  <meta property="og:url" content="https://blog.monochromegane.com/blog/2018/05/16/wsa_2_sanny/">
-  <meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-  
-  <link rel="stylesheet" href="/css/reset.css">
-  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Source+Code+Pro' type='text/css'>
-  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Montserrat' type='text/css'>
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css">
-  <link rel="stylesheet" href="/css/text.css">
-  <link rel="stylesheet" href="/css/color.css">
-  <link rel="stylesheet" href="/css/layout.css">
-  <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="/images/apple-touch-icon-57-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="/images/apple-touch-icon-72-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144-precomposed.png">
-  <link rel="shortcut icon" href="/images/favicon.ico">
-  <link rel="canonical" href="https://blog.monochromegane.com/blog/2018/05/16/wsa_2_sanny/">
-  
-  <link href="" rel="alternate" type="application/rss+xml" title="THINKING MEGANE" />
-  
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async>
-    MathJax.Hub.Config({
-        HTML: ["input/TeX","output/HTML-CSS"],
-        TeX: {
-               Macros: {
-                        bm: ["\\boldsymbol{#1}", 1],
-                        argmax: ["\\mathop{\\rm arg\\,max}\\limits"],
-                        argmin: ["\\mathop{\\rm arg\\,min}\\limits"]},
-               extensions: ["AMSmath.js","AMSsymbols.js"],
-               equationNumbers: { autoNumber: "AMS" } },
-        extensions: ["tex2jax.js"],
-        jax: ["input/TeX","output/HTML-CSS"],
-        tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-                   displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-                   processEscapes: true },
-        "HTML-CSS": { availableFonts: ["TeX"],
-                      linebreaks: { automatic: true } }
-    });
-  </script>
-</head>
-
-  <body>
-    <div class="header">
-  <header>
-    <h1 class="logo"><a href="https://blog.monochromegane.com">THINKING MEGANE</a></h1>
-    <nav>
-      <ul class="menu">
-        <li><a href="/self-introduction/">Home</a></li>
-        <li><a href="/post/">Archives</a></li>
-        <li><a href="/diary/">Diary</a></li>
-        <li><a href="http://thinking-megane.blogspot.jp/">Old Blog</a></li>
-      </ul>
-    </nav>
-  </header>
-</div>
-
-    <div class="container">
-      <article>
-  <div class="post">
-    <header>
-      <h1><a href="https://blog.monochromegane.com/blog/2018/05/16/wsa_2_sanny/">Sanny: 大規模ECサイトのための精度と速度を両立した分散可能な近似近傍探索エンジン</a></h1>
-      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2018-05-16</div></time>
-    </header>
-    <div class="post-inner">
-      
-
-<p>このエントリは、<a href="http://websystemarchitecture.hatenablog.jp/entry/2018/03/22/104006">第二回 Web System Architecture 研究会 (WSA研)</a>の予稿です。</p>
-
-<h1 id="はじめに">はじめに</h1>
-
-<p>ECサイトの商品種類増大に伴う情報過多問題を解決するため，利用者の要求を満たす商品を自動的に提案する機能がECサイトにとっての関心事となる．商品の提案は任意の観点での商品同士の類似性を根拠とすることから，商品の特性を数値化し，任意の距離空間で近傍に位置する要素を求めることで，機械的に扱えるようにする．この数値化された商品特性を特徴量と呼ぶ．
+\begin{align} argmin_a (a - b)^2 = argmin_a a^2 - 2ab &#43; b^2 = argmin_a a^2 - 2ab \end{align}"><meta property="og:title" content="Sanny: 大規模ECサイトのための精度と速度を両立した分散可能な近似近傍探索エンジン"><meta property="og:url" content="https://blog.monochromegane.com/blog/2018/05/16/wsa_2_sanny/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2018/05/16/wsa_2_sanny/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:true},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:true}}});</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2018/05/16/wsa_2_sanny/>Sanny: 大規模ECサイトのための精度と速度を両立した分散可能な近似近傍探索エンジン</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2018-05-16</div></time></header><div class=post-inner><p>このエントリは、<a href=http://websystemarchitecture.hatenablog.jp/entry/2018/03/22/104006>第二回 Web System Architecture 研究会 (WSA研)</a>の予稿です。</p><h1 id=はじめに>はじめに</h1><p>ECサイトの商品種類増大に伴う情報過多問題を解決するため，利用者の要求を満たす商品を自動的に提案する機能がECサイトにとっての関心事となる．商品の提案は任意の観点での商品同士の類似性を根拠とすることから，商品の特性を数値化し，任意の距離空間で近傍に位置する要素を求めることで，機械的に扱えるようにする．この数値化された商品特性を特徴量と呼ぶ．
 深層ニューラルネットワークの発展によって，これまで適切な特徴量を導くことが難しかった画像やテキストに対しても，人の感性に近い，特性をよく表現する高精度な特徴量を得られるようになったことからECサイトの商品提案機能に利用され始めている．
 これらの深層ニューラルネットワークから得られる特徴量は，数百から数千次元の高次元ベクトルとして表現される．
 また，大規模なECサイトでは提案対象となる商品数も多いため，この特徴量の集合も数十から数百万を超える大規模なものとなる．
 このような大規模かつ高次元ベクトル集合に対する類似度の比較において，正確ではあるが，データ数と次元数に比例して計算量が増加する線形探索は現実的ではない．そこで，事前に近傍候補となる集団を求めておくことで，少数の近傍候補から計算量を抑えて近傍点を得る空間分割や局所性鋭敏型ハッシュといった手法が用いられる．
-しかしながら，高次元ベクトル集合においては正確な近傍を求めるための計算量が線形探索と同程度となると考えられており，精度を犠牲にして近似解を用いることで計算量の増加に対処する近似近傍探索が採用されているが，商品を自動的に提案する機能は、提案内容の的確さと充分な応答速度が求められることから，大規模かつ高次元ベクトル集合に対して精度と速度を両立する近似近傍探索の手法が必要となる．</p>
-
-<p>大規模かつ高次元ベクトル集合に対する近似近傍探索では，データ数と次元数に依存して計算量が増加するため，これらを分割して処理することが効果的である．
+しかしながら，高次元ベクトル集合においては正確な近傍を求めるための計算量が線形探索と同程度となると考えられており，精度を犠牲にして近似解を用いることで計算量の増加に対処する近似近傍探索が採用されているが，商品を自動的に提案する機能は、提案内容の的確さと充分な応答速度が求められることから，大規模かつ高次元ベクトル集合に対して精度と速度を両立する近似近傍探索の手法が必要となる．</p><p>大規模かつ高次元ベクトル集合に対する近似近傍探索では，データ数と次元数に依存して計算量が増加するため，これらを分割して処理することが効果的である．
 ベクトル集合を行列と見なし，行方向での分割，つまりデータ数によって分割する手法は一般に採用されるが，依然として次元数に依存した計算量の課題は残る．
 そこで，列方向での分割が必要となる．
 直積量子化は，高次元ベクトル集合を任意の次元数の低次元ベクトル集合に等分し，各低次元ベクトル集合に対する近傍探索結果を集約する．
-しかしながら，集約処理はデータ数に依存するという課題がある．</p>
-
-<p>そこで，本報告では，大規模ECサイトで商品を提案することを想定して，精度と速度を両立した分散可能な近似近傍探索エンジンSannyを提案する．
-Sannyは，商品特性をよく表現しており高精度に類似度が比較可能な高次元かつ密なベクトルの集合において，検索質問データ(クエリ)に対する高次元ベクトル集合の近傍探索結果の上位集合が，クエリと高次元ベクトル集合を任意の次元数で等分した部分ベクトル単位で近傍探索した結果の上位集合と類似しやすいことに着目して，提案すべき商品の近傍探索を部分ベクトル単位での探索に分解することで分散処理可能にし，その探索結果の和集合である近傍候補から再度近傍探索を行うことにより，全体として高速に近似近傍探索を行える．</p>
-
-<h1 id="提案手法">提案手法</h1>
-
-<h2 id="事前準備">事前準備</h2>
-
-<p>提案手法ではまず，商品特性をよく表現しており高精度に類似度が比較可能な高次元かつ密なベクトルの集合を対象とする．
+しかしながら，集約処理はデータ数に依存するという課題がある．</p><p>そこで，本報告では，大規模ECサイトで商品を提案することを想定して，精度と速度を両立した分散可能な近似近傍探索エンジンSannyを提案する．
+Sannyは，商品特性をよく表現しており高精度に類似度が比較可能な高次元かつ密なベクトルの集合において，検索質問データ(クエリ)に対する高次元ベクトル集合の近傍探索結果の上位集合が，クエリと高次元ベクトル集合を任意の次元数で等分した部分ベクトル単位で近傍探索した結果の上位集合と類似しやすいことに着目して，提案すべき商品の近傍探索を部分ベクトル単位での探索に分解することで分散処理可能にし，その探索結果の和集合である近傍候補から再度近傍探索を行うことにより，全体として高速に近似近傍探索を行える．</p><h1 id=提案手法>提案手法</h1><h2 id=事前準備>事前準備</h2><p>提案手法ではまず，商品特性をよく表現しており高精度に類似度が比較可能な高次元かつ密なベクトルの集合を対象とする．
 このような集合として，学習済み深層畳み込みニューラルネットワークを特徴抽出器として利用して画像から得られる特徴量集合や，テキストを分散表現へ変換するWord2vecのネットワークから得られる特徴量集合がある．
 筆者らはこれらの集合において，検索質問データ(クエリ)に対する高次元ベクトル集合の近傍探索結果の上位集合が，クエリと高次元ベクトル集合を任意の次元数で等分した部分ベクトル単位で近傍探索した結果の上位集合と類似しやすい特性があることを見出した．
-この，高次元ベクトルで表現される特徴量のうち，部分が類似しているものは全体としても類似する可能性が高いという特性を利用することで，高次元ベクトル集合を列方向に分割した結果の集約のデータ数依存の課題を解決する．</p>
-
-<p>ここでは，対象となるベクトル集合を$Y \subset \mathbb{R}^D$と置き，これを重複しない$D^*=D/m$次元の部分ベクトル$S_j(1 \leq j \leq m)$に分割する．</p>
-
-<h2 id="近傍探索">近傍探索</h2>
-
-<p>Yに対する近傍探索は次のように行う．
-クエリベクトル$q \in \mathbb{R}^D$を$p_j (1 \leq j \leq m)$に分割し，対応する添え字$j$の部分ベクトル集合$s_j$に対して上位$n$件を得る近傍探索を行う．</p>
-
-<p>\begin{align}
+この，高次元ベクトルで表現される特徴量のうち，部分が類似しているものは全体としても類似する可能性が高いという特性を利用することで，高次元ベクトル集合を列方向に分割した結果の集約のデータ数依存の課題を解決する．</p><p>ここでは，対象となるベクトル集合を$Y \subset \mathbb{R}^D$と置き，これを重複しない$D^*=D/m$次元の部分ベクトル$S_j(1 \leq j \leq m)$に分割する．</p><h2 id=近傍探索>近傍探索</h2><p>Yに対する近傍探索は次のように行う．
+クエリベクトル$q \in \mathbb{R}^D$を$p_j (1 \leq j \leq m)$に分割し，対応する添え字$j$の部分ベクトル集合$s_j$に対して上位$n$件を得る近傍探索を行う．</p><p>\begin{align}
 NN(p_j) = \argmin_{s \in S_j} d(p_j,s)
-\end{align}</p>
-
-<p>$NN(p_j)$の結果を$n$個の識別子からなる集合$N_j$とし，全ての$N_j$の和集合を$N$としてこれを近傍候補とする．なお，距離関数には現時点でユークリッド距離を想定しているが，すべての部分ベクトルで統一されていれば近傍探索の手法自体は問わない．</p>
-
-<p>最後に近傍候補$N$に対応する元のベクトル集合 $YN \subset \mathbb{R}^D$ に対して正確な類似度を比較するためにクエリベクトル$q$との線形探索を行う．$|YN|$は最大$n*m$であることから線形探索のコストは非常に小さいが，距離関数にユークリッド距離を用いる場合，以下で求まる近似的な線形探索を用いることで一層の高速化が見込める．</p>
-
-<p>\begin{align}
+\end{align}</p><p>$NN(p_j)$の結果を$n$個の識別子からなる集合$N_j$とし，全ての$N_j$の和集合を$N$としてこれを近傍候補とする．なお，距離関数には現時点でユークリッド距離を想定しているが，すべての部分ベクトルで統一されていれば近傍探索の手法自体は問わない．</p><p>最後に近傍候補$N$に対応する元のベクトル集合 $YN \subset \mathbb{R}^D$ に対して正確な類似度を比較するためにクエリベクトル$q$との線形探索を行う．$|YN|$は最大$n*m$であることから線形探索のコストは非常に小さいが，距離関数にユークリッド距離を用いる場合，以下で求まる近似的な線形探索を用いることで一層の高速化が見込める．</p><p>\begin{align}
 argmin_a (a - b)^2 = argmin_a a^2 - 2ab + b^2 = argmin_a a^2 - 2ab
-\end{align}</p>
-
-<h2 id="システム構成">システム構成</h2>
-
-<p>提案手法では，探索対象となる高次元ベクトル集合を任意の次元数で等分した部分ベクトルに分割する．これらの部分ベクトルに対する近傍探索は互いに独立していることから並列に処理することができるため，データ数や次元数に応じた分散構成を取ることができる．
-分散構成では，部分ベクトルの近傍探索結果$N_j$がネットワーク上でやり取りされるが，前述のように最小限のデータ量のみが通信されることからネットワーク通信における影響を抑えることができる．なお，大規模なECサイトにおいては大量のクエリが想定されることから，HTTP/2のバイナリフレームレイヤーのように通信の多重化を行うことで影響を抑える手法も合わせて導入する．</p>
-
-<p>また，分散構成では，データを重複して保持することで，可用性も高めることができる．</p>
-
-<h1 id="評価">評価</h1>
-
-<h2 id="速度と精度による性能評価">速度と精度による性能評価</h2>
-
-<p>以下に，2048次元，40,000件程度の高次元ベクトル集合に対して提案手法と従来手法の精度と速度のバランスを比較した予備実験の結果を示す．横軸は再現率であり，各手法の提示した予測近傍集合と正しい近傍集合との重複率である．縦軸は検索にかかった秒数の逆数を取ったもので，上にあるほど高速である．
-従来手法として，線形探索(brute_force)，近似線形探索(brute_force_blas)，近似近傍探索(annoy)と比較した．提案手法は，近傍候補から正確な近傍を求めるために用いた手法ごとに評価を行なっている．</p>
-
-<p><img src="https://user-images.githubusercontent.com/1845486/39663980-251292b2-50b7-11e8-84ce-b072f4c42e3a.png" alt="sanny" /></p>
-
-<p>結果から，近傍候補からの探索に近似線形探索を用いた場合の提案手法が従来の近似近傍探索手法より精度並びに速度でも有効であることを示している．</p>
-
-<h1 id="発表スライド">発表スライド</h1>
-
-<script async class="speakerdeck-embed" data-id="892943b4cfe14595ae1f5df01386389e" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
-
-<h1 id="発表を終えて">発表を終えて</h1>
-
-<p>大規模なデータセットでの評価，事前分類による推薦との差など研究報告としてはまだ新規性や有用性の面で示しきれていない箇所もあったが，そこも含めて議論ができてよかったと思う．特にGPU環境での評価や，データ数や次元数への依存が少ないと思われるLSHなどの手法への適用など具体的に差を示すべき箇所が浮かんできたのが収穫である．サーベイ並びに評価を進めたい．</p>
-
-<p>WSA研は，事業で研究的なアプローチをどう活かすかを普段から考えて実際に成果を出している人々が集まっている．研究成果とサーベイを携えて次はどう論述するかについて吸収し，次回は誰かに影響を与えられるようになれたら良いなと思う．</p>
-
-    </div>
-    <footer class="tag">
-      <i class="fa fa-tags tag-icon"></i>
-      <ul>
-      
-        <li><a class="tag-link" href="/tags/wsa%E7%A0%94">WSA研</a></li>
-      
-      </ul>
-      <div class="clear"></div>
-    </footer>
-  </div>
-</article>
-
-      <div class="social-btn">
-  <div>
-    <a href="http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2018/05/16/wsa_2_sanny/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="en" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
-  </div>
-  <div>
-    <a href="https://twitter.com/share" class="twitter-share-button" data-via="monochromegane">Tweet</a>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-  </div>
-</div>
-
-    </div>
-    <footer class="footer">
-  <div class="author"></div>
-  <p class="author-name"><a href="https://twitter.com/monochromegane" target="_blank">@monochromegane</a></p>
-  
-    <p>monochromegane (モノクロめがね) と申します。</p>
-  
-    <p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-  
-  <ul class="social">
-    <li><a href="https://twitter.com/monochromegane" target="_blank"><i class="fa fa-twitter"></i></a></li>
-    <li><a href="https://github.com/monochromegane" target="_blank"><i class="fa fa-github"></i></a></li>
-    <li><a href="/index.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
-  </ul>
-  <p class="copyright">
-    <small>&copy;  <span class="">Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>, Designed by <a href="https://twitter.com/keita_kawamoto" target="_blank">&copy;keita_kawamoto</a></span></small>
-  </p>
-</footer>
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
-
-    
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-38374674-1', 'auto');
-  ga('send', 'pageview');
-
-</script>
-
-
-  </body>
-</html>
+\end{align}</p><h2 id=システム構成>システム構成</h2><p>提案手法では，探索対象となる高次元ベクトル集合を任意の次元数で等分した部分ベクトルに分割する．これらの部分ベクトルに対する近傍探索は互いに独立していることから並列に処理することができるため，データ数や次元数に応じた分散構成を取ることができる．
+分散構成では，部分ベクトルの近傍探索結果$N_j$がネットワーク上でやり取りされるが，前述のように最小限のデータ量のみが通信されることからネットワーク通信における影響を抑えることができる．なお，大規模なECサイトにおいては大量のクエリが想定されることから，HTTP/2のバイナリフレームレイヤーのように通信の多重化を行うことで影響を抑える手法も合わせて導入する．</p><p>また，分散構成では，データを重複して保持することで，可用性も高めることができる．</p><h1 id=評価>評価</h1><h2 id=速度と精度による性能評価>速度と精度による性能評価</h2><p>以下に，2048次元，40,000件程度の高次元ベクトル集合に対して提案手法と従来手法の精度と速度のバランスを比較した予備実験の結果を示す．横軸は再現率であり，各手法の提示した予測近傍集合と正しい近傍集合との重複率である．縦軸は検索にかかった秒数の逆数を取ったもので，上にあるほど高速である．
+従来手法として，線形探索(brute_force)，近似線形探索(brute_force_blas)，近似近傍探索(annoy)と比較した．提案手法は，近傍候補から正確な近傍を求めるために用いた手法ごとに評価を行なっている．</p><p><img src=https://user-images.githubusercontent.com/1845486/39663980-251292b2-50b7-11e8-84ce-b072f4c42e3a.png alt=sanny></p><p>結果から，近傍候補からの探索に近似線形探索を用いた場合の提案手法が従来の近似近傍探索手法より精度並びに速度でも有効であることを示している．</p><h1 id=発表スライド>発表スライド</h1><script async class=speakerdeck-embed data-id=892943b4cfe14595ae1f5df01386389e data-ratio=1.77777777777778 src=//speakerdeck.com/assets/embed.js></script><h1 id=発表を終えて>発表を終えて</h1><p>大規模なデータセットでの評価，事前分類による推薦との差など研究報告としてはまだ新規性や有用性の面で示しきれていない箇所もあったが，そこも含めて議論ができてよかったと思う．特にGPU環境での評価や，データ数や次元数への依存が少ないと思われるLSHなどの手法への適用など具体的に差を示すべき箇所が浮かんできたのが収穫である．サーベイ並びに評価を進めたい．</p><p>WSA研は，事業で研究的なアプローチをどう活かすかを普段から考えて実際に成果を出している人々が集まっている．研究成果とサーベイを携えて次はどう論述するかについて吸収し，次回は誰かに影響を与えられるようになれたら良いなと思う．</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/wsa%E7%A0%94>WSA研</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2018/05/16/wsa_2_sanny/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','twitter-wjs');</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-38374674-1','auto');ga('send','pageview');</script></body></html>

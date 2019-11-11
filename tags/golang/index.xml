@@ -1,222 +1,130 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Golang on THINKING MEGANE</title>
-    <link>https://blog.monochromegane.com/tags/golang/</link>
-    <description>Recent content in Golang on THINKING MEGANE</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>ja-jp</language>
-    <lastBuildDate>Fri, 25 Oct 2019 17:24:43 +0900</lastBuildDate>
-    <atom:link href="/tags/golang/" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>コマンドラインオプションをパースするコードをコマンドラインオプションから生成するツールをつくった</title>
-      <link>https://blog.monochromegane.com/blog/2019/10/25/fukuokago14_flagen/</link>
-      <pubDate>Fri, 25 Oct 2019 17:24:43 +0900</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2019/10/25/fukuokago14_flagen/</guid>
-      <description>
-
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>golang on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/golang/</link><description>Recent content in golang on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Fri, 25 Oct 2019 17:24:43 +0900</lastBuildDate><atom:link href="/tags/golang/" rel="self" type="application/rss+xml"/><item><title>コマンドラインオプションをパースするコードをコマンドラインオプションから生成するツールをつくった</title><link>https://blog.monochromegane.com/blog/2019/10/25/fukuokago14_flagen/</link><pubDate>Fri, 25 Oct 2019 17:24:43 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2019/10/25/fukuokago14_flagen/</guid><description>
 &lt;p&gt;コマンドラインオプションの形式は決まったけれども、パース処理を実装するために各言語やライブラリのドキュメントを読むことを繰り返していたので、この手間を省くためのツールをつくりました。&lt;/p&gt;
-
-&lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fflagen&#34; title=&#34;monochromegane/flagen&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/flagen&#34;&amp;gt;monochromegane/flagen&amp;lt;/a&amp;gt;&lt;/iframe&gt; 
-
+&lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fflagen&#34; title=&#34;monochromegane/flagen&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/flagen&#34;&amp;gt;monochromegane/flagen&amp;lt;/a&amp;gt;&lt;/iframe&gt;
 &lt;p&gt;flagenは、先に決めたコマンドラインオプションから、これを解析するための各言語用のコードを出力するツールです。
 オプション名から変数名や変数の型、デフォルト値が決定されるため、汎用的なボイラーテンプレートと比較して編集の手間が少なくなります。
 また、テンプレートによって任意の出力を行えるため、エディタや自前のボイラーテンプレート出力ツールとの連携が容易です。
 使いやすくするため、プリセットのテンプレートとしてGo、Ruby、Python、Shellのものを提供しています。&lt;/p&gt;
-
 &lt;h1 id=&#34;使い方&#34;&gt;使い方&lt;/h1&gt;
-
 &lt;p&gt;使い方は、テンプレートと実際に使う時のコマンドラインオプションを渡すだけです。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ flagen YOUR_TEMPLATE YOUR_COMMAND_LINE_OPTIONS...
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;例えば、&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ flagen go --dist erlang -e k/l --lambda 1.5 -k 1 -v
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;と指定すると、Go用のコマンドラインオプションの解析処理を出力します。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var (
-	dist	string
-	e	string
-	lambda	float64
-	k	int
-	v	bool
+dist string
+e string
+lambda float64
+k int
+v bool
 )
-
 func init() {
-	flag.StringVar(&amp;amp;dist, &amp;quot;dist&amp;quot;, &amp;quot;erlang&amp;quot;, &amp;quot;usage of dist&amp;quot;)
-	flag.StringVar(&amp;amp;e, &amp;quot;e&amp;quot;, &amp;quot;k/l&amp;quot;, &amp;quot;usage of e&amp;quot;)
-	flag.Float64Var(&amp;amp;lambda, &amp;quot;lambda&amp;quot;, 1.5, &amp;quot;usage of lambda&amp;quot;)
-	flag.IntVar(&amp;amp;k, &amp;quot;k&amp;quot;, 1, &amp;quot;usage of k&amp;quot;)
-	flag.BoolVar(&amp;amp;v, &amp;quot;v&amp;quot;, false, &amp;quot;usage of v&amp;quot;)
+flag.StringVar(&amp;amp;dist, &amp;quot;dist&amp;quot;, &amp;quot;erlang&amp;quot;, &amp;quot;usage of dist&amp;quot;)
+flag.StringVar(&amp;amp;e, &amp;quot;e&amp;quot;, &amp;quot;k/l&amp;quot;, &amp;quot;usage of e&amp;quot;)
+flag.Float64Var(&amp;amp;lambda, &amp;quot;lambda&amp;quot;, 1.5, &amp;quot;usage of lambda&amp;quot;)
+flag.IntVar(&amp;amp;k, &amp;quot;k&amp;quot;, 1, &amp;quot;usage of k&amp;quot;)
+flag.BoolVar(&amp;amp;v, &amp;quot;v&amp;quot;, false, &amp;quot;usage of v&amp;quot;)
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;指定されたコマンドラインオプションから変数名、オプション名、型、デフォルト値が設定されることで編集の手間が極力ない状態になっています。&lt;/p&gt;
-
 &lt;p&gt;Python、Ruby、Shellの例は&lt;a href=&#34;https://godoc.org/github.com/monochromegane/flagen#pkg-examples&#34;&gt;GodocのExamples&lt;/a&gt;を参考にしてください。&lt;/p&gt;
-
 &lt;h1 id=&#34;テンプレート&#34;&gt;テンプレート&lt;/h1&gt;
-
 &lt;p&gt;テンプレートはGoの&lt;a href=&#34;https://golang.org/pkg/text/template/&#34;&gt;text/template&lt;/a&gt;を利用して解析されます。
 テンプレート内では、&lt;code&gt;.Flags&lt;/code&gt;（解析したオプションの情報）と&lt;code&gt;.Args&lt;/code&gt;（残りのコマンドライン引数）が利用可能です。
 &lt;code&gt;.Flags&lt;/code&gt;は&lt;code&gt;Name&lt;/code&gt;と&lt;code&gt;Value&lt;/code&gt;をもち、&lt;code&gt;Value&lt;/code&gt;は更に&lt;code&gt;Type&lt;/code&gt;と&lt;code&gt;Get&lt;/code&gt;をもちます。&lt;/p&gt;
-
 &lt;p&gt;以下は、解析したオプションの情報を列挙するシンプルなテンプレート(my.tmpl)です。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;{{ range $flag := .Flags -}}
-  {{ $flag.Name }}={{ $flag.Value.Get}}({{ $flag.Value.Type }})
+{{ $flag.Name }}={{ $flag.Value.Get}}({{ $flag.Value.Type }})
 {{ end }}
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ flagen my.tmpl --dist erlang -e k/l --lambda 1.5 -k 1 -v
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;このテンプレートから以下の出力を得ることができます&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;dist=erlang(string)
 e=k/l(string)
 lambda=1.5(float)
 k=1(int)
 v=false(bool)
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;また、テンプレート内では文字列のケース変換のための関数を利用することができます。
 主に変数を言語の命名規約に合わせるのに使えます。
 使える関数は、&lt;a href=&#34;https://godoc.org/github.com/monochromegane/flagen#pkg-variables&#34;&gt;こちら&lt;/a&gt; で確認ください。&lt;/p&gt;
-
 &lt;h1 id=&#34;連携&#34;&gt;連携&lt;/h1&gt;
-
 &lt;h2 id=&#34;vim&#34;&gt;Vim&lt;/h2&gt;
-
 &lt;p&gt;flagenの結果は標準出力を使っているため、エディタとの連携も容易です。
 例えば、Vimでは以下により、カーソル位置に結果を挿入することができます。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;:r!flagen YOUR_TEMPLATE YOUR_COMMAND_LINE_OPTIONS...
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h2 id=&#34;ボイラーテンプレート出力ツール&#34;&gt;ボイラーテンプレート出力ツール&lt;/h2&gt;
-
 &lt;p&gt;flagenはライブラリとして利用することができるため、自前のボイラーテンプレート出力ツールがGo製であれば以下のように呼び出すことができます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;	tmpl, err := flagen.NewTemplate(args[0])
-	if err != nil {
-		return err
-	}
-	return tmpl.Execute(outStream, args[1:])
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt; tmpl, err := flagen.NewTemplate(args[0])
+if err != nil {
+return err
+}
+return tmpl.Execute(outStream, args[1:])
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;また、独自の関数が必要な場合は &lt;code&gt;flagen.TemplateFuncMap&lt;/code&gt;に設定することでテンプレート内で利用することができます。&lt;/p&gt;
-
 &lt;h1 id=&#34;ワークアラウンド&#34;&gt;ワークアラウンド&lt;/h1&gt;
-
 &lt;h2 id=&#34;曖昧なフラグ&#34;&gt;曖昧なフラグ&lt;/h2&gt;
-
 &lt;p&gt;flagenはオプションに値が指定されていないときにboolだと見なすため、以下のようにboolフラグで終わって引数がある場合に判断がつきません。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ flagen TEMPLATE --bool-flag arg1
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;想定どおりにするためには値としてtrue or falseを受け取ることを明示する必要があります。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ flagen TEMPLATE --bool-flag=false arg1
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
-
 &lt;p&gt;様々な実装が提供されているコマンドラインオプションの解析処理を利用形式から動的に生成するジェネレーターとしてflagenをつくりました。実際にいくつかの言語のテンプレートを用意してエディタと連携させることでCLI開発の効率が改善しています。&lt;/p&gt;
-
 &lt;p&gt;今後はflagen自体のオプションとしてprefixなどを提供すれば構造体の変数に設定する用途などのテンプレートとの相性もよくなりそうだと考えています。
 便利なテンプレート追加のプルリクエストやイシュー、ボイラーテンプレートのツールへ組み込んだ報告などお待ちしています。&lt;/p&gt;
-
 &lt;h1 id=&#34;fukuoka-go&#34;&gt;Fukuoka.go&lt;/h1&gt;
-
 &lt;p&gt;このツールは&lt;a href=&#34;https://fukuokago.connpass.com/event/146447/&#34;&gt;Fukuoka.go#14+Umeda.go&lt;/a&gt;で発表しました。
 発表資料はこちらです。&lt;/p&gt;
-
-&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;ece61cadb91e46febd8b692e32a8679f&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>待ち行列理論に使われる分布に従う乱数をGo言語で生成する</title>
-      <link>https://blog.monochromegane.com/blog/2019/10/11/random_number_gen_using_go/</link>
-      <pubDate>Fri, 11 Oct 2019 09:42:13 +0900</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2019/10/11/random_number_gen_using_go/</guid>
-      <description>
-
+&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;ece61cadb91e46febd8b692e32a8679f&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;</description></item><item><title>待ち行列理論に使われる分布に従う乱数をGo言語で生成する</title><link>https://blog.monochromegane.com/blog/2019/10/11/random_number_gen_using_go/</link><pubDate>Fri, 11 Oct 2019 09:42:13 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2019/10/11/random_number_gen_using_go/</guid><description>
 &lt;p&gt;待ち行列理論をシミュレーションする際にいくつかの分布に従う乱数を生成する必要があったのでメモ．
 また，確率まわりの用語と分布についても理解が曖昧な点があったのでこの機会にまとめておく．&lt;/p&gt;
-
 &lt;h1 id=&#34;用語の整理&#34;&gt;用語の整理&lt;/h1&gt;
-
 &lt;h2 id=&#34;確率&#34;&gt;確率&lt;/h2&gt;
-
 &lt;p&gt;確率は，&lt;/p&gt;
-
 &lt;p&gt;\[
-  \frac{ある事象の起こる場合の数}{全ての事象の起こる場合の数}
+\frac{ある事象の起こる場合の数}{全ての事象の起こる場合の数}
 \]&lt;/p&gt;
-
 &lt;p&gt;で求められる．&lt;/p&gt;
-
 &lt;h2 id=&#34;確率変数&#34;&gt;確率変数&lt;/h2&gt;
-
 &lt;p&gt;確率変数は，事象に対応した実数のこと．
 確率変数には，離散型と連続型の二種類がある．
 サイコロの出目のようなものは離散型で，身長や体重のような（原理的には）連続の値になるものは連続型．&lt;/p&gt;
-
 &lt;h2 id=&#34;確率分布&#34;&gt;確率分布&lt;/h2&gt;
-
 &lt;p&gt;確率分布は確率と確率変数との対応付け．
 そもそも辞書的な意味での「分布」は「粗密の程度を含めた，空間的な広がり具合」を表す．
 度数分布では階級と度数（階級に含まれる変量の数）の対応付けであった．
 また，これらの分布は，度数分布と同様に確率分布表や確率分布グラフとして表すことができる．&lt;/p&gt;
-
 &lt;h2 id=&#34;確率を返す関数&#34;&gt;確率を返す関数&lt;/h2&gt;
-
 &lt;p&gt;ここで，ある確率変数を入力に，対応する確率を出力する関数を考える．&lt;/p&gt;
-
 &lt;h3 id=&#34;確率質量関数&#34;&gt;確率質量関数&lt;/h3&gt;
-
 &lt;p&gt;離散型の確率変数であれば，確率分布表を照会し，対応する確率を得ることができる．
 確率変数を入力に，対応する確率を出力する関数を確率質量関数（または確率関数）[1]と言い，サイコロの出目を確率変数$X$とした時に1が出る確率を$P(X=1)=\frac{1}{6}$のように書ける．
 もちろん確率の総和は1である．&lt;/p&gt;
-
 &lt;h3 id=&#34;確率密度関数&#34;&gt;確率密度関数&lt;/h3&gt;
-
 &lt;p&gt;連続型の確率変数の場合は，ある一点の値を入力とすると対応する確率は常に0となる．
 これは，ある範囲においても実数は無限個あるため，全事象が無限になることから，確率の定義より$\frac{1}{\infty}=0$となるためである．
 このように連続型の確率変数からは直接的に確率を求めることができないので，この連続型の確率変数を対応する「何か」に変換する必要がある．
 また，その「何か」は確率に変換できる必要がある．
 確率の定義から，総和は1である．
 また，連続型の確率変数であることから，和は積分で求めることになる．&lt;/p&gt;
-
 &lt;p&gt;連続型の確率変数をx軸に，この連続型の確率変数を対応する「何か」をy軸にプロットした時に，ある範囲の割合は該当範囲の定積分によって導くことができる．
 そして，全体の積分が1で，その中のある範囲の定積分が，事象がその範囲に含まれる確率に従うような「何か」があれば，それを連続型の確率変数の確率に用いることができる．
 そのような「何か」が存在するとき，「何か」は「確率密度」と呼ばれ，連続型の確率変数を入力とし，確率密度を出力する関数を「確率密度関数」と呼ばれる[2]．&lt;/p&gt;
-
 &lt;p&gt;このとき，確率密度関数$f(x)$に従う確率変数$X$が$(a \leqq X \leqq b)$となる確率は\[\int_a^b f(x) dx\]のように書ける．&lt;/p&gt;
-
 &lt;p&gt;確率密度は，その確率変数の相対的な発生のしやすさを表すに過ぎないので，部分的にy軸(確率密度関数の返す値)が1を超えても構わない（全体の面積として1になれば良い．例えば，確率密度関数が$f(x)=2x (0 \leqq X \leqq 1)$のときなど）．&lt;/p&gt;
-
 &lt;h1 id=&#34;待ち行列理論で使う分布&#34;&gt;待ち行列理論で使う分布&lt;/h1&gt;
-
 &lt;p&gt;待ち行列理論では待ち行列のモデルの構造を以下のようなケンドール記号を用いて記述する．&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;X/Y/S(N)&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;ここでXは到着過程の種類，Yはサービス過程の種類，Sは窓口数，Nは待ち行列の長さの制限数が入る．
 過程の種類は以下の通り．&lt;/p&gt;
-
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
@@ -225,26 +133,22 @@ v=false(bool)
 &lt;th&gt;備考&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
-
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td&gt;M&lt;/td&gt;
 &lt;td&gt;マルコフ過程&lt;/td&gt;
 &lt;td&gt;到着過程ならポアソン分布，サービス過程なら指数分布&lt;/td&gt;
 &lt;/tr&gt;
-
 &lt;tr&gt;
 &lt;td&gt;D&lt;/td&gt;
 &lt;td&gt;確定分布&lt;/td&gt;
 &lt;td&gt;到着間隔やサービス時間が一定&lt;/td&gt;
 &lt;/tr&gt;
-
 &lt;tr&gt;
 &lt;td&gt;G&lt;/td&gt;
 &lt;td&gt;一般の分布&lt;/td&gt;
 &lt;td&gt;平均値と分散が既知の任意の分布&lt;/td&gt;
 &lt;/tr&gt;
-
 &lt;tr&gt;
 &lt;td&gt;$E_k$&lt;/td&gt;
 &lt;td&gt;アーラン分布&lt;/td&gt;
@@ -252,138 +156,92 @@ v=false(bool)
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-
 &lt;h2 id=&#34;ポアソン分布&#34;&gt;ポアソン分布&lt;/h2&gt;
-
 &lt;p&gt;単位時間に平均$\lambda$回起きる事象が単位時間に$k$回発生する分布[3]．&lt;/p&gt;
-
 &lt;p&gt;平均が$\lambda$のポアソン分布を表す確率質量関数は\[P(X=k)=\frac{\lambda^{k}}{k!}\cdot e^{-\lambda}\]であり平均$E[X]$は$\lambda$となる．&lt;/p&gt;
-
 &lt;h2 id=&#34;指数分布&#34;&gt;指数分布&lt;/h2&gt;
-
 &lt;p&gt;平均$\theta$時間に一回発生する事象の発生間隔を表す分布[4]．&lt;/p&gt;
-
 &lt;p&gt;平均が$\theta$の指数分布を表す確率密度関数は\[f(x)=\frac{1}{\theta}e^{-\frac{x}{\theta}} (x \geqq 0)\]であり平均$E[X]$は$\theta$となる．&lt;/p&gt;
-
 &lt;h3 id=&#34;待ち行列とマルコフ過程&#34;&gt;待ち行列とマルコフ過程&lt;/h3&gt;
-
 &lt;p&gt;あるランダムに起きる事象を発生回数から見たのがポアソン分布，発生間隔(または時間)から見たのが指数関数とみなすことができる．
 マルコフ過程は未来の挙動は過去の挙動とは無関係であるとする性質を持つ確率過程であり，これらの分布が適合するため利用されている．&lt;/p&gt;
-
 &lt;p&gt;単位時間に$\lambda$回到着するとした到着過程はポアソン分布が利用されるが，シミュレーションにおいては平均到着間隔を知りたい．
 この場合は，$\frac{1}{\lambda}$を到着間隔とした指数分布で求めることができる（1時間に平均5人くる場合，平均1/5時間(12分)の間隔で到着する）．
 つまり，$\theta=\frac{1}{\lambda}$として，確率密度関数は\[f(x)=\lambda e^{-\lambda x} (x \geqq 0)\]であり平均$E[X]$は$\frac{1}{\lambda}$となる．&lt;/p&gt;
-
 &lt;p&gt;なお，ポアソン分布と指数分布の関係の理解には[5]が参考になる．このサイトでは時刻$t$を導入したポアソン分布の累積分布関数から指数分布の確率密度関数を導いている．&lt;/p&gt;
-
 &lt;h2 id=&#34;アーラン分布&#34;&gt;アーラン分布&lt;/h2&gt;
-
 &lt;p&gt;まず，ガンマ分布は平均$\theta$時間に一回発生する事象（指数分布）が$k$回発生するまでの時間の分布[6]である．
 ガンマ分布の$k=1$のとき，指数分布と等しく，$k$が整数の場合にアーラン分布と呼ばれる．&lt;/p&gt;
-
 &lt;p&gt;ガンマ分布を表す確率密度関数は\[\frac{1}{\Gamma(k)\theta^{k}}x^{k-1}e^{-x/\theta}\]であり平均$E[x]$は$k\theta$となる．&lt;/p&gt;
-
 &lt;p&gt;また，前述のポアソン分布のパラメタから指数分布の確率密度関数を求めたのと同様に，$\theta=\frac{1}{\lambda}$として，確率密度関数は\[\frac{\lambda^k}{\Gamma(k)}x^{k-1}e^{-\lambda x}\]であり平均$E[x]$は$\frac{k}{\lambda}$とも書ける．&lt;/p&gt;
-
 &lt;p&gt;ここまで，$k$回の$\theta=1/\lambda$の指数分布を場合を見てきたが，待ち行列理論の書籍においては，$k$回の$\frac{\theta}{k}=\frac{1}{k\lambda}$の指数分布としている場合がある．
 すなわち，一つのサービス時間$\theta$が$k$個の工程（1工程あたり$\frac{\theta}{k}$）からなるとみなしている．
 この場合，確率密度関数は\[\frac{(k\lambda)^k}{\Gamma(k)}x^{k-1}e^{-k\lambda x}\]であり平均$E[X]$は$\theta=1/\lambda$となる．&lt;/p&gt;
-
 &lt;h1 id=&#34;待ち行列理論で使う分布に従う乱数&#34;&gt;待ち行列理論で使う分布に従う乱数&lt;/h1&gt;
-
 &lt;p&gt;ここでは，ある分布に従う乱数をGoでの生成する．&lt;/p&gt;
-
 &lt;h2 id=&#34;指数分布-1&#34;&gt;指数分布&lt;/h2&gt;
-
 &lt;p&gt;指数分布に従う乱数はGoの標準パッケージ&lt;a href=&#34;https://golang.org/pkg/math/rand/#Rand.ExpFloat64&#34;&gt;math/randで提供&lt;/a&gt;されている．&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func Exponential(rnd *rand.Rand, lambda float64) float64 {
-        return rnd.ExpFloat64() / lambda
+return rnd.ExpFloat64() / lambda
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;パラメタ$\theta=1/\lambda$に合わせるためには結果を$\lambda$で割る（平均到着率が増えるほど平均到着間隔は狭くなる）．&lt;/p&gt;
-
 &lt;p&gt;動作確認のため，生成した乱数のヒストグラムと指数分布の確率密度関数を重ねてプロットした．&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2019/10/hist_and_pdf_exponential.png&#34; alt=&#34;hist_and_pdf_exponential&#34; /&gt;&lt;/p&gt;
-
 &lt;h2 id=&#34;ポアソン分布-1&#34;&gt;ポアソン分布&lt;/h2&gt;
-
 &lt;p&gt;ポアソン分布に従う乱数はGoの標準パッケージで提供されていない．
 そこで指数分布とポアソン分布の関係性を利用して，指数分布で得られた乱数の和が1を超えるまでの最小のカウント数を用いる方法がある[7][8]．
 例えば平均到着率($\lambda$)が5人であれば，平均到着間隔($1/\lambda=0.2$)である．
 ここでカウントは$0.2*5$が平均して得られると考えられる．&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func Poisson(rnd *rand.Rand, lambda float64) float64 {
-        p := 0.0
-        for i := 0; ; i++ {
-                p += Exponential(rnd, lambda)
-                if p &amp;gt;= 1.0 {
-                        return float64(i)
-                }
-        }
-        return 0.0
+p := 0.0
+for i := 0; ; i++ {
+p += Exponential(rnd, lambda)
+if p &amp;gt;= 1.0 {
+return float64(i)
+}
+}
+return 0.0
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;生成した乱数のヒストグラムとポアソン分布の確率質量関数のプロット．&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2019/10/hist_and_pmf_poisson.png&#34; alt=&#34;hist_and_pmf_poisson&#34; /&gt;&lt;/p&gt;
-
 &lt;h2 id=&#34;アーラン分布-1&#34;&gt;アーラン分布&lt;/h2&gt;
-
 &lt;p&gt;アーラン分布もしくはガンマ分布に従う乱数はGoの標準パッケージで提供されていない．
 しかし，ガンマ分布の定義（k個の指数分布の和の分布）[6]から以下の実装が可能である．&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func ErlangKL(rnd *rand.Rand, lambda float64, k int) float64 {
-        g := 0.0
-        for i := 0; i &amp;lt; k; i++ {
-                g += Exponential(rnd, lambda)
-        }
-        return g
+g := 0.0
+for i := 0; i &amp;lt; k; i++ {
+g += Exponential(rnd, lambda)
+}
+return g
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;ここで，&lt;code&gt;KL&lt;/code&gt;は平均が$\frac{k}{\lambda}$であることを表している．&lt;/p&gt;
-
 &lt;p&gt;生成した乱数のヒストグラムとアーラン分布の確率密度関数のプロット．&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2019/10/hist_and_pdf_erlangkl.png&#34; alt=&#34;hist_and_pdf_erlangkl&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;待ち行列理論の参考書にあるようなサービス工程を$k$個に分割するアーラン分布では$k$回の$\frac{\theta}{k}=\frac{1}{k\lambda}$の指数分布となることから以下の実装となる．&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func Erlang1L(rnd *rand.Rand, lambda float64, k int) float64 {
-        g := 0.0
-        for i := 0; i &amp;lt; k; i++ {
-                g += Exponential(rnd, float64(k)*lambda)
-        }
-        return g
+g := 0.0
+for i := 0; i &amp;lt; k; i++ {
+g += Exponential(rnd, float64(k)*lambda)
+}
+return g
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;ここで&lt;code&gt;1L&lt;/code&gt;は平均が$\frac{1}{\lambda}$であることを表している．&lt;/p&gt;
-
 &lt;p&gt;生成した乱数のヒストグラムとアーラン分布の確率密度関数のプロット．&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2019/10/hist_and_pdf_erlang1l.png&#34; alt=&#34;hist_and_pdf_erlang1l&#34; /&gt;&lt;/p&gt;
-
 &lt;h1 id=&#34;動作確認用のコード&#34;&gt;動作確認用のコード&lt;/h1&gt;
-
 &lt;p&gt;動作確認用のコードは以下にある．&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://gist.github.com/monochromegane/be5b872b3aa71d1a314a8b8bb74be60b&#34;&gt;main.go&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://gist.github.com/monochromegane/13123f681db5cf376e79b854cfdec5ba&#34;&gt;plot.py&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;このような感じで利用できる．&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;go run main.go -size 100000 -dist erlang -e k/l -lambda 0.5 -k 2 &amp;gt; data.txt &amp;amp;&amp;amp; python plot.py --dist erlang -e k/l --lambda 0.5 -k 2
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h1 id=&#34;参考&#34;&gt;参考&lt;/h1&gt;
-
 &lt;ul&gt;
 &lt;li&gt;[1] &lt;a href=&#34;https://ja.wikipedia.org/wiki/%E7%A2%BA%E7%8E%87%E8%B3%AA%E9%87%8F%E9%96%A2%E6%95%B0&#34;&gt;確率質量関数 - Wikipedia&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;[2] &lt;a href=&#34;https://ja.wikipedia.org/wiki/%E7%A2%BA%E7%8E%87%E5%AF%86%E5%BA%A6%E9%96%A2%E6%95%B0&#34;&gt;確率密度関数 - Wikipedia&lt;/a&gt;&lt;/li&gt;
@@ -393,109 +251,68 @@ v=false(bool)
 &lt;li&gt;[6] &lt;a href=&#34;https://ja.wikipedia.org/wiki/%E3%82%AC%E3%83%B3%E3%83%9E%E5%88%86%E5%B8%83&#34;&gt;ガンマ分布 - Wikipedia&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;[7] &lt;a href=&#34;https://www.ishikawa-lab.com/montecarlo/4shou.html&#34;&gt;どんな分布の乱数でも作り出せる&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;[8] &lt;a href=&#34;https://nineties.github.io/math-seminar/14.html&#34;&gt;擬似乱数の生成法・推定 - プログラマの為の数学勉強会&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>GopherCon 2019で初の海外カンファレンス登壇をしてきました</title>
-      <link>https://blog.monochromegane.com/blog/2019/08/10/gophercon_2019/</link>
-      <pubDate>Sat, 10 Aug 2019 20:52:57 +0900</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2019/08/10/gophercon_2019/</guid>
-      <description>
-
+&lt;/ul&gt;</description></item><item><title>GopherCon 2019で初の海外カンファレンス登壇をしてきました</title><link>https://blog.monochromegane.com/blog/2019/08/10/gophercon_2019/</link><pubDate>Sat, 10 Aug 2019 20:52:57 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2019/08/10/gophercon_2019/</guid><description>
 &lt;p&gt;7/24から27にかけてアメリカ、サンディエゴで開催された&lt;a href=&#34;https://www.gophercon.com/home&#34;&gt;GopherCon 2019&lt;/a&gt;で人生初となる海外カンファレンスに登壇してきました。&lt;/p&gt;
-
 &lt;p&gt;GopherConはGo関連で最大級の国際カンファレンスです。
 6年目となる今年は世界中から1,800名のGopherが参加し、200名以上の応募の中から選ばれた36名がスピーカーとして登壇しました。
 今回のGopherConではPre-Conference Workshopと呼ばれるカンファレンス前日に終日行われるワークショップと、カンファレンス期間中に行われる25分のキーノートセッション、そして45分のチュートリアルセッションがありました。
 その中で、僕は「Optimization for Number of goroutines Using Feedback Control」というタイトルで45分の&lt;a href=&#34;https://www.gophercon.com/agenda/speakers/442434&#34;&gt;チュートリアルセッション&lt;/a&gt;を務めました。&lt;/p&gt;
-
 &lt;h1 id=&#34;動画&#34;&gt;動画&lt;/h1&gt;
-
 &lt;iframe width=&#34;560&#34; height=&#34;315&#34; src=&#34;https://www.youtube.com/embed/O_R7Nwsix1c&#34; frameborder=&#34;0&#34; allow=&#34;accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture&#34; allowfullscreen&gt;&lt;/iframe&gt;
-
 &lt;h1 id=&#34;スライド&#34;&gt;スライド&lt;/h1&gt;
-
 &lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;aa53e4353d9b4efc9064eefba40e13b7&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
-
 &lt;h1 id=&#34;スピーカーノート&#34;&gt;スピーカーノート&lt;/h1&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/07/25/gophercon_2019_kaburaya/&#34;&gt;GopherCon 2019: Optimization for Number of goroutines Using Feedback Control&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;h1 id=&#34;発表内容&#34;&gt;発表内容&lt;/h1&gt;
-
 &lt;p&gt;今回の発表は以前東京で開催されたGo Conference 2018 Autumnで発表した&lt;a href=&#34;https://speakerdeck.com/monochromegane/optimization-of-goroutine-numbers-by-feedback-control&#34;&gt;フィードバック制御によるGoroutine起動数の最適化&lt;/a&gt;を英語化したものです。
 また、今回向けに実際に&lt;a href=&#34;https://github.com/monochromegane/the_platinum_searcher&#34;&gt;The Platinum Searcher&lt;/a&gt;に組み込んで有効性を評価する実験結果を追加しています。&lt;/p&gt;
-
 &lt;p&gt;発表資料については、45分という時間で母国語を使わずにできるだけわかりやすく伝えるため、結果的にほぼ刷新する形となりましたが、母国語の慣れに頼らずとも説明可能なわかりやすい資料になったのではないかと自分では思っています。
 具体的には、まずイントロダクションとバックグラウンドの章を少し手厚くしました。
 今回の手法は、フィードバック制御を用いてgoroutine数を継続的に最適に保つことを目的としています。
 しかしながら、そもそもGo言語の並行処理においては、goroutineのコストの低さとランタイムがgoroutineを効果的に切り替えることから、その必要性はないのではないかと考えることができます。
 そこで、リソース競合や枯渇などの影響も受けてしまう可能性があること、それらを考慮した汎用的な並行設計に対する難しさを、実際にプラチナサーチャーによるパフォーマンスチューニングの例を踏まえながら前提を合わせるようにしました。
 また、手法の説明では、簡単なアプローチから出発して少しづつ課題を解決していくようにすることで、比較的複雑な箇所の説明の際に飛躍がないように気をつけました。&lt;/p&gt;
-
 &lt;p&gt;発表について、普段は資料のみで臨んでもそれなりに話せると自負していますが、初の英語での登壇となるため今回は発表内容のスクリプトを用意して、伝えるべきことを全て伝えられるようにしました。
 また、不慣れな言語でも自分自身が納得して説明できるように、できるだけ平易な文で説明することで、発表資料と同様に曖昧な箇所や飛躍がある点を潰すことができたと思います。&lt;/p&gt;
-
 &lt;p&gt;本番の発表は、4スクリーンある300-400人規模の会場ではありましたが、とても熱心に頷いてくれる方がいたり日本から来たメンバが前に座っていたりして、幸いにも落ち着いて自分のペースで登壇することができたと思います。
 発表では、あまり一本調子にならないように、文の中でも意味や文法上切れる箇所は間をおいたり、定型の言い回し（I found that など）なるべく流暢にしたり、強調したいところは少しゆっくり大きく言うなど、「今の」英語力でできる工夫をしていきました。
 一方で、個別の単語の発音などはまだまだ課題意識があるので、今後、そちらも重点的に取り組んでいきたいと感じました。&lt;/p&gt;
-
 &lt;p&gt;質疑の時間は登壇時間には含まれなかったのですが、終了して台を降りると同時に7人ぐらいに囲まれて質問責めに会い、発表に興味を持ってくれたことをとても嬉しく思いました。
 質問としては、発表内容について理解があっているか確認するものと、実装上の質問などがあり、資料やKaburayaのコードを見ながら説明していきました。
 それでも、今の英語力では、発表内容以外の部分については拙い説明になることも多々あり、これも今後改めて英語をやるモチベーションが高まりました。
 また、発表後もカンファレンス期間中に何度も感想や質問をもらう機会があり、これがとても嬉しかったです。&lt;/p&gt;
-
 &lt;h3 id=&#34;会場と発表の様子&#34;&gt;会場と発表の様子&lt;/h3&gt;
-
 &lt;div class=&#34;parent_iframe&#34; style=&#34;position:relative;width:75%;height:0;padding-top:75%;&#34;&gt;
-  &lt;iframe class=&#34;embed_iframe&#34; src=&#34;https://s.insta360.com/p/28b6fbdd988f775d97328c5179e8061a?e=true&amp;locale=en-us&#34; frameborder=&#34;0&#34; width=&#34;666&#34; height=&#34;413&#34; style=&#34;position:absolute;top:0;left:0;width:100%;height:100%;&#34;&gt;&lt;/iframe&gt;
+&lt;iframe class=&#34;embed_iframe&#34; src=&#34;https://s.insta360.com/p/28b6fbdd988f775d97328c5179e8061a?e=true&amp;locale=en-us&#34; frameborder=&#34;0&#34; width=&#34;666&#34; height=&#34;413&#34; style=&#34;position:absolute;top:0;left:0;width:100%;height:100%;&#34;&gt;&lt;/iframe&gt;
 &lt;/div&gt;
-
 &lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;.&lt;a href=&#34;https://twitter.com/monochromegane?ref_src=twsrc%5Etfw&#34;&gt;@monochromegane&lt;/a&gt; is giving talk about Go&amp;#39;s concurrency mechanism and his proposal to optimize the number of goroutine. &lt;a href=&#34;https://twitter.com/hashtag/gophercon?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#gophercon&lt;/a&gt; &lt;a href=&#34;https://t.co/LXnnx5vQ6D&#34;&gt;pic.twitter.com/LXnnx5vQ6D&lt;/a&gt;&lt;/p&gt;&amp;mdash; Yoshi Yamaguchi 🇯🇵 (@ymotongpoo) &lt;a href=&#34;https://twitter.com/ymotongpoo/status/1154500168181379072?ref_src=twsrc%5Etfw&#34;&gt;July 25, 2019&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
-
 &lt;h3 id=&#34;発表に関する反応&#34;&gt;発表に関する反応&lt;/h3&gt;
-
 &lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;Thanks to Yusuke Miyake for speaking to us on the Optimization for Number of goroutines Using Feedback Control! The &lt;a href=&#34;https://twitter.com/hashtag/gophercon?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#gophercon&lt;/a&gt; tutorial sessions are killin&amp;#39; it! &lt;a href=&#34;https://t.co/4I5ihE1wKG&#34;&gt;pic.twitter.com/4I5ihE1wKG&lt;/a&gt;&lt;/p&gt;&amp;mdash; GopherCon (@GopherCon) &lt;a href=&#34;https://twitter.com/GopherCon/status/1154502084634406917?ref_src=twsrc%5Etfw&#34;&gt;July 25, 2019&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
-
 &lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;This was a really good talk, &lt;a href=&#34;https://twitter.com/monochromegane?ref_src=twsrc%5Etfw&#34;&gt;@monochromegane&lt;/a&gt; is very smart! Also it was really interesting hearing about the fukuoka Golang community. I need to read slides again. &lt;a href=&#34;https://t.co/bdGZK7p6DX&#34;&gt;https://t.co/bdGZK7p6DX&lt;/a&gt; &lt;a href=&#34;https://t.co/82GKvlFseO&#34;&gt;pic.twitter.com/82GKvlFseO&lt;/a&gt;&lt;/p&gt;&amp;mdash; Jamal Yusuf (@JamalYusuf_) &lt;a href=&#34;https://twitter.com/JamalYusuf_/status/1154587450242502656?ref_src=twsrc%5Etfw&#34;&gt;July 26, 2019&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
-
 &lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;&lt;a href=&#34;https://twitter.com/monochromegane?ref_src=twsrc%5Etfw&#34;&gt;@monochromegane&lt;/a&gt; talking about dynamic concurrency scaling with a PID controller and dynamic semaphores. &lt;a href=&#34;https://twitter.com/hashtag/golang?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#golang&lt;/a&gt; &lt;a href=&#34;https://twitter.com/hashtag/gophercon?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#gophercon&lt;/a&gt; &lt;a href=&#34;https://t.co/dufxZNhKEZ&#34;&gt;https://t.co/dufxZNhKEZ&lt;/a&gt; &lt;a href=&#34;https://t.co/5eyRazxg2g&#34;&gt;pic.twitter.com/5eyRazxg2g&lt;/a&gt;&lt;/p&gt;&amp;mdash; Andy Walker (@flowchartsman) &lt;a href=&#34;https://twitter.com/flowchartsman/status/1154503310327439360?ref_src=twsrc%5Etfw&#34;&gt;July 25, 2019&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
-
 &lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;Really interesting thoughts on controlling &lt;a href=&#34;https://twitter.com/hashtag/golang?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#golang&lt;/a&gt; concurrency dynamically while a program is running. Thanks to Yusuke Miyake for traveling from Japan to present this at &lt;a href=&#34;https://twitter.com/hashtag/gophercon?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#gophercon&lt;/a&gt;! &lt;a href=&#34;https://t.co/WWfsJo5nNi&#34;&gt;pic.twitter.com/WWfsJo5nNi&lt;/a&gt;&lt;/p&gt;&amp;mdash; Daniel Whitenack (@dwhitena) &lt;a href=&#34;https://twitter.com/dwhitena/status/1154500909713383424?ref_src=twsrc%5Etfw&#34;&gt;July 25, 2019&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
-
 &lt;h1 id=&#34;カンファレンス&#34;&gt;カンファレンス&lt;/h1&gt;
-
 &lt;p&gt;会場はカリフォルニア サンディエゴのホテル &lt;a href=&#34;https://www.gophercon.com/page/1388212/hotel&#34;&gt;Marriott Marquis San Diego Marina&lt;/a&gt;でした。
 サンディエゴが比較的温暖な気候であること、ホテルもいわゆるリゾートホテルのような感じであったことも手伝って、期間中はとても快適に過ごせました。&lt;/p&gt;
-
 &lt;p&gt;GopherConのタイムテーブルは朝が早いものの（最初のセッションがAM9:00から）、2-3セッションごとに30-40分の空き時間が設けられており、この時間に登壇者とディスカッションしたり、ポップアップミーティングスペースやスポンサーブースでコミュニティや企業への関係を作ったりすることができました。
 日本でも学術系のシンボジウムだとこういったタイムテーブルは見かけるものの、GopherConではより積極的に関係を作っていこう、そしてそのために運営がその接点を作る機会（場所、時間）やホスピタリティを提供していこうという気概が感じられました。
 また、Welcome Partyが本物の空母の上で開催されたのはめちゃくちゃ驚きました。こういう「楽しんでるぞ」というのが一貫して感じられるのも良かったです。
 実際に #gophercon ハッシュタグを追っていると、たくさんの知見や関係を得たという感想と合わせて一種のバケーションを楽しんだような満足感を持っている方が多かったようです。
 ちょうど、GoCon福岡を2週間前に開催したところであったため、「カンファレンス」をどういう設計で進めるのかという観点はとても勉強になりました。&lt;/p&gt;
-
 &lt;p&gt;トークについては、どれも最新の情報だけでなく、スピーカーの方の実際の経験に基づく興味深く、かつ面白いセッションばかりでとてもためになりました。
 それでも、自分の発表前後の緊張や疲れ、時差ボケなどで万全の状態で全てを聞くことはできなかったのが悔やまれますが、幸い個別のトークについては今後動画も公開されるようです。
 &lt;a href=&#34;https://www.gophercon.com/agenda&#34;&gt;Agenda&lt;/a&gt;を見て興味あるセッションを是非ご覧ください。&lt;/p&gt;
-
 &lt;h1 id=&#34;スピーカーディナー&#34;&gt;スピーカーディナー&lt;/h1&gt;
-
 &lt;p&gt;発表は7/25でしたが、実は7/26の夜にスピーカーディナーなるものが控えていました。
 登壇者ばかりが集う3時間の立食パーティーを英語で乗り切るという、ある意味では登壇よりもプレッシャーのかかるイベントでした。
 それでも、とてもよい機会であるし無駄にはしたくないと、できるだけ話に加わり自分の意見や要望を伝えることができたと思います。
 特に日本や福岡のコミュニティ活動やカンファレンスに何人か興味を持ってもらうことができたのは非常に有意義でした。
 また、ワークショップを担当したエンジニアの方とは日本に戻ってからも連絡を取り合っており、今後何か面白いことが一緒にできるといいなあと考えています。&lt;/p&gt;
-
 &lt;p&gt;とにかくこの3時間は僕の英語に対する心理的な苦手意識を取り除いてくれる絶好の機会となりました。
 同時にやはり英語力の足りなさを痛感したことで、引き続き英語もやっていきたいと強く思えました。&lt;/p&gt;
-
 &lt;h1 id=&#34;おわりに&#34;&gt;おわりに&lt;/h1&gt;
-
 &lt;p&gt;2014年の東京のGoConference 2014 springで発表したのが僕にとって初めての全国区のカンファレンス登壇でした。
 そこから、自分のキャリアや興味範囲が広がっていく中でも、Go言語はずっと相棒として付き合ってくれる言語でしたし、Go言語を中心に色々な付き合いができていると感じています。
 また、ここ数年の研究職としての試行錯誤がなければ今回の発表内容はありませんでした。
@@ -503,50 +320,26 @@ v=false(bool)
 幸いにも、発表に対して興味を持ってもらえたこと、一定の反響があったことを、非常に嬉しく思っています。
 同時に、このような大きな海外のカンファレンスで発表できたことは（2014にGoConで発表した時と同じように）素直に自信につながりました。
 （当日聞いたのですが、スピーカーのうち、ワークショップを行われた約10名の応募枠は別だったとのことで今回は改めて狭き門を抜けることができたんだなあと感じています）&lt;/p&gt;
-
 &lt;p&gt;この登壇に向けてアドバイスや協力をいただいた皆様、本当に感謝いたします。
 このカンファレンスで得た様々な知見や関係、そして至らなかった点は次へ活かし、この契機となったGoコミュニティの活発化に繋がるよう引き続き”楽しみながら“やっていきたいと思います。&lt;/p&gt;
-
 &lt;h3 id=&#34;俺たちが日本代表だ&#34;&gt;俺たちが日本代表だ！&lt;/h3&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2019/08/gophercon_japan.jpg&#34; alt=&#34;gophercon_japan&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;LTセッションで登壇した&lt;a href=&#34;https://twitter.com/hajimehoshi&#34;&gt;@hajimehoshi&lt;/a&gt;さんと&lt;a href=&#34;https://twitter.com/hgsgtk&#34;&gt;@hgsgtk&lt;/a&gt;さんと共に。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;そして最後に、Russ Coxと隣に扱われる機会ってそうそうないので記念に&lt;a href=&#34;https://www.gophercon.com/page/1388210/speakers&#34;&gt;スピーカー一覧&lt;/a&gt;のスクショを置いておきます、えへへ。（ただのアルファベット順だけど）&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2019/08/gophercon_russ.jpg&#34; alt=&#34;gophercon_russ&#34; /&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>福岡でGoConを開催した</title>
-      <link>https://blog.monochromegane.com/blog/2019/08/02/gocon_fukuoka/</link>
-      <pubDate>Fri, 02 Aug 2019 15:33:36 +0900</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2019/08/02/gocon_fukuoka/</guid>
-      <description>
-
+&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2019/08/gophercon_russ.jpg&#34; alt=&#34;gophercon_russ&#34; /&gt;&lt;/p&gt;</description></item><item><title>福岡でGoConを開催した</title><link>https://blog.monochromegane.com/blog/2019/08/02/gocon_fukuoka/</link><pubDate>Fri, 02 Aug 2019 15:33:36 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2019/08/02/gocon_fukuoka/</guid><description>
 &lt;p&gt;7/13に&lt;a href=&#34;https://fukuoka.gocon.jp/&#34;&gt;Go Conference&amp;rsquo;19 Summer in Fukuoka&lt;/a&gt;を開催した。
 諸々落ち着いたので、初めて200名規模の大きなカンファレンスを開催するまでに駆け抜けた日々を振り返っておく。&lt;/p&gt;
-
 &lt;h1 id=&#34;準備&#34;&gt;準備&lt;/h1&gt;
-
 &lt;p&gt;Fukuoka.goの主催の一人としてGoConの福岡開催は是非ともやりたい気持ちがあり、Go Conference 2018 Autumnで登壇した際の懇親会で盛り上がったのが去年の11/25。&lt;/p&gt;
-
 &lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34; data-lang=&#34;ja&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;ホテル到着。移動で朝早かったので懇親会途中までとさせていただきました。お誘いありがとうございます。色々な話が聞けて楽しかったです！ カンファレンスも濃い話から体系的な整理がなされたものまであり来れて良かったです。自分の登壇内容も反応いただけて嬉しい限り。次は福岡版どうですか &lt;a href=&#34;https://twitter.com/hashtag/gocon?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#gocon&lt;/a&gt;&lt;/p&gt;&amp;mdash; モノクロメガネ研究員 (@monochromegane) &lt;a href=&#34;https://twitter.com/monochromegane/status/1066697776912691200?ref_src=twsrc%5Etfw&#34;&gt;2018年11月25日&lt;/a&gt;&lt;/blockquote&gt;
 &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;11/30にFukuoka.go運営でやっていきのIssue起票。&lt;/li&gt;
 &lt;li&gt;12/04に会場と時期のおおまかなあたりがついたので正式にGoCon地方開催を東京GoCon運営に打診。&lt;/li&gt;
 &lt;li&gt;12/14に企画書を元に関係者に一通り話しが通った状態へ。&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;と良い感じのスピード感で進み出し、後は運営スタッフ一同で&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;1月はマスコットのデザインやらLPの準備やら&lt;/li&gt;
 &lt;li&gt;2月はGo1.12のリリパでイベント開催を初めて告知。GoCon運営スタッフも増えた。&lt;/li&gt;
@@ -556,81 +349,56 @@ v=false(bool)
 &lt;li&gt;6月は集客草の根宣伝活動、Tシャツやバックパネル、会場の軽食や飲み物、スピーカーディナーなどについて検討・確認・発注&lt;/li&gt;
 &lt;li&gt;7月は当日までの作業の整理をして確定していないものを一つづつ対応（受付方法、司会進行、会場レイアウトや設営日、名札作成、ノベルティ配布準備、アンケート、市長、段ボール、張り紙 etc）&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;と、ひたすら準備を進めた。
 大規模カンファレンス開催のノウハウがない中でも、準備は共同主催の&lt;a href=&#34;https://twitter.com/linyows&#34;&gt;@linyows&lt;/a&gt;が皆を引っ張った。
 作業分担は、@linyowsが打ち出したデザインやおもてなしの世界観に皆がイイねをしながら、できる人が具体化を進めていく形に落ち着いた。
 @linyows自身がガンガンとタスクをこなしていく（会社では傭兵と呼ばれている&amp;hellip;）ので、僕自身は具体化を担当する他、方針の見直し案や進捗整理からの抜け漏れ対応といった補佐役に徹した。
 &lt;a href=&#34;https://twitter.com/seike460&#34;&gt;@seike460&lt;/a&gt;をはじめとする運営スタッフとSlackでワイワイしながらだんだんと形になっていく過程も含めて（大変だったけど）楽しめたと思う。
 開催時期については会場都合で少し延ばして7月としたが、今思えばこれぐらいの準備期間がないと納得いく形にするのは無理だったかもしれない。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;個人的に大変だったのは、連絡まわりで、いくつかの連絡経路を使ってたくさんの関係者と個別または全体で効率よく相談、告知するのは骨が折れた。
 他のカンファレンス運営でどういう風にやっているのかを聞いてみたい。
 反対にCfPの選考は多様なプロポーザルを見る機会として有益であったと思う。
 また、より良いプロポーザルにするためのアドバイスをアーリーフィードバックという形で進めることができたのも非常に良かった。
 特に、このフィードバックを通してプロポーザルの説得力が格段に上がっていく例などを見るのは嬉しかった。&lt;/p&gt;
-
 &lt;p&gt;準備は前日と当日の朝が一番大変であった。
 会場のリニューアル直後であったことも手伝い、搬入されるスポンサー物品を含む会場設営などはその場で詳細を決定して進めなければならなかったため、開場までの時間がない中で慌てて進めた。
 特に当日朝は雨がすごかったので準備頑張ってるぞ感がすごかった気がする。&lt;/p&gt;
-
 &lt;h1 id=&#34;当日&#34;&gt;当日&lt;/h1&gt;
-
 &lt;p&gt;当日は幸いなことに@linyowsと僕は専任のタスクを持たずに各種ジャッジや遊撃手的な動きをできたことで全体に柔軟に対応できたと思う。
 受付がひと段落して、高島市長のスペシャルセッション前後の応対が終わって、ビールや生ハムの提供が軌道にのるまでは、イベントがスムーズに進むように、心地よく過ごしてもらえるように裏側では様々な物品や情報が行き交っており、とにかく忙しかった（けど何をやったかは覚えていない）みたいな感じだった。
 これが16:00ぐらいで、ビールが入ったこともあって一瞬寝落ちしたのを写真に撮られてしまった。&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2019/08/gocon_00.jpg&#34; alt=&#34;gocon_00&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;この後、少しだけセッションを聞けたけども、楽しみにしていたセッションをほぼ聞けなかったのでここは次への課題だねと振り返りで話した。
 セッションは最後まで盛況で、懇親会まで盛り上がっていたので嬉しい気持ちで眺めていた。&lt;/p&gt;
-
 &lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;経費精算用エビデンスはこちら &lt;a href=&#34;https://twitter.com/hashtag/gocon?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#gocon&lt;/a&gt; &lt;a href=&#34;https://t.co/zCsDLKBXJW&#34;&gt;pic.twitter.com/zCsDLKBXJW&lt;/a&gt;&lt;/p&gt;&amp;mdash; L I N Y O W S 🤡 (@linyows) &lt;a href=&#34;https://twitter.com/linyows/status/1150059130633068544?ref_src=twsrc%5Etfw&#34;&gt;July 13, 2019&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
-
 &lt;p&gt;僕たちのソフトウェアの仕事は作った後に動く期間が長いので、こういった半年以上の準備とわずか1日のイベントという形式の経験はなかなか貴重だったし、大変ながらも充実した時間を過ごせて楽しかった。&lt;/p&gt;
-
 &lt;h1 id=&#34;スピーカーディナー&#34;&gt;スピーカーディナー&lt;/h1&gt;
-
 &lt;p&gt;カンファレンス後のスピーカーディナーでは豪華なメンバと素敵な料理に囲まれてこれまた楽しいひと時であったものの、各種支払いや幹事的な動きをしていたらあっという間に終わってしまったので、ちょっと残念だった。
 ただ、テーブルの右も左もみんなが新しいつながりを作って飯食って酒飲んでGoの話して笑っているのを見て、「アーーーこれはやって良かったんではーーーーーー！！」と一人泣きそうになっていたのは秘密である。&lt;/p&gt;
-
 &lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;&lt;a href=&#34;https://twitter.com/hashtag/spekerdinner?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#spekerdinner&lt;/a&gt; &lt;a href=&#34;https://twitter.com/hashtag/gocon?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#gocon&lt;/a&gt; &lt;a href=&#34;https://twitter.com/hashtag/nulab?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#nulab&lt;/a&gt; マジすごい！圧倒的感謝！！！！ &lt;a href=&#34;https://t.co/oZi3hfXHON&#34;&gt;pic.twitter.com/oZi3hfXHON&lt;/a&gt;&lt;/p&gt;&amp;mdash; L I N Y O W S 🤡 (@linyows) &lt;a href=&#34;https://twitter.com/linyows/status/1150008128953413632?ref_src=twsrc%5Etfw&#34;&gt;July 13, 2019&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
-
 &lt;h1 id=&#34;カンファレンスを終えて&#34;&gt;カンファレンスを終えて&lt;/h1&gt;
-
 &lt;p&gt;まず、@linyowsにスタッフ一同からお礼を伝えたいです。ありがとう！
 今回のイベントは@linyowsなしでは考えられない。
 @linyowsの行動力、大人力に対して尊敬の念が更に高まりました。Fukuoka.goを共同で主催してくれることが非常に心強いです。これからもよろしくお願いします。&lt;/p&gt;
-
 &lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;&lt;a href=&#34;https://twitter.com/monochromegane?ref_src=twsrc%5Etfw&#34;&gt;@monochromegane&lt;/a&gt; さん、&lt;a href=&#34;https://twitter.com/linyows?ref_src=twsrc%5Etfw&#34;&gt;@linyows&lt;/a&gt; さん、スタッフの皆様、スポンサーの皆様、発表者の皆様、参加者の皆様、お疲れ様でした＆ありがとうGoざいました！q@w@p &lt;a href=&#34;https://twitter.com/hashtag/gocon?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#gocon&lt;/a&gt; &lt;a href=&#34;https://twitter.com/hashtag/fukuokago?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#fukuokago&lt;/a&gt; &lt;a href=&#34;https://t.co/hzSWpgZ4ij&#34;&gt;pic.twitter.com/hzSWpgZ4ij&lt;/a&gt;&lt;/p&gt;&amp;mdash; Ryuji Iwata (@qt_luigi) &lt;a href=&#34;https://twitter.com/qt_luigi/status/1150069073427886080?ref_src=twsrc%5Etfw&#34;&gt;July 13, 2019&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
-
 &lt;p&gt;そして、改めてスタッフの皆様、スポンサーの皆様、発表者の皆様、参加者の皆様に感謝を伝えたいです。ありがとうございます！&lt;/p&gt;
-
 &lt;h1 id=&#34;カンファレンスへの想い&#34;&gt;カンファレンスへの想い&lt;/h1&gt;
-
 &lt;p&gt;どうして集う形の勉強会やカンファレンスにするかというのは、何度か聞かれていて、&lt;a href=&#34;https://pr.forkwell.com/2018-10-01-community_lovers/&#34;&gt;この辺り&lt;/a&gt;でも答えていたのだけど、まず単純に集まって楽しく話す仲間がいることの嬉しさがあって、その背景として「場やコミュニティは実在しないので。定期的にやることが大事」という考えがあった。
 コミュニティというネットワークを継続させていくためには、接合点である参加者の間の接続を活性化する必要がある。
 そのためにはネットワークが活性化するように情報を行き交いさせるんだけれども、均等な一方向の情報発信は刺激に乏しいこともある。
 人間も単純な部分は残っているので、実際に会ったとか、その場の熱量とかに影響されて発信側も受信側も一時的に接続が活性化する。
 こういう励起された状態は、例えばカンファレンスを地元でやろうとか、触発されてツールを作って見たとか、ネットワークへの新しい情報の元になってコミュニティに還元される。
 勉強会やカンファレンスは、そういうやり方での重みの活性化を担っていると思う。&lt;/p&gt;
-
 &lt;p&gt;今回のカンファレンスがGo言語コミュニティや福岡にとって上のような影響を与えることができたのであればとても嬉しい。
 何より、カンファレンス運営を通して、スタッフみんながエキサイティングな経験を楽しんでいたことがとても嬉しい。
 なぜなら、僕たちが楽しみ続けることがまず大事だから〜〜。お疲れ様でした！！！&lt;/p&gt;
-
 &lt;p&gt;そしてオフィシャルのイベントレポートが非常によくまとまっています。こちらも是非ご覧ください！&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://fukuoka.gocon.jp/report/&#34;&gt;The Official event report of Go Conference &amp;lsquo;19 Summer in Fukuoka&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;h1 id=&#34;フォトギャラリー&#34;&gt;フォトギャラリー&lt;/h1&gt;
-
 &lt;p&gt;最後に、誰得 モノクロメガネ フォトギャラリーを置いておきます。いやぁ、楽しんでるなあ〜&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2019/08/gocon_01.jpg&#34; alt=&#34;gocon_01&#34; /&gt;
 &lt;img src=&#34;https://blog.monochromegane.com/images/2019/08/gocon_02.jpg&#34; alt=&#34;gocon_02&#34; /&gt;
 &lt;img src=&#34;https://blog.monochromegane.com/images/2019/08/gocon_03.jpg&#34; alt=&#34;gocon_03&#34; /&gt;
@@ -639,44 +407,22 @@ v=false(bool)
 &lt;img src=&#34;https://blog.monochromegane.com/images/2019/08/gocon_06.jpg&#34; alt=&#34;gocon_06&#34; /&gt;
 &lt;img src=&#34;https://blog.monochromegane.com/images/2019/08/gocon_07.jpg&#34; alt=&#34;gocon_07&#34; /&gt;
 &lt;img src=&#34;https://blog.monochromegane.com/images/2019/08/gocon_08.jpg&#34; alt=&#34;gocon_08&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;Photo by &lt;a href=&#34;https://twitter.com/atani&#34;&gt;@atani&lt;/a&gt;&lt;/p&gt;
-
 &lt;hr /&gt;
-
-&lt;p&gt;𝝣Go&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>GopherCon 2019: Optimization for Number of goroutines Using Feedback Control</title>
-      <link>https://blog.monochromegane.com/blog/2019/07/25/gophercon_2019_kaburaya/</link>
-      <pubDate>Thu, 25 Jul 2019 14:00:00 +0900</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2019/07/25/gophercon_2019_kaburaya/</guid>
-      <description>
-
+&lt;p&gt;𝝣Go&lt;/p&gt;</description></item><item><title>GopherCon 2019: Optimization for Number of goroutines Using Feedback Control</title><link>https://blog.monochromegane.com/blog/2019/07/25/gophercon_2019_kaburaya/</link><pubDate>Thu, 25 Jul 2019 14:00:00 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2019/07/25/gophercon_2019_kaburaya/</guid><description>
 &lt;p&gt;&lt;strong&gt;The slides and speaker-notes about optimization for the number of goroutines I talked at &lt;a href=&#34;https://www.gophercon.com/agenda/speakers/442434&#34;&gt;GopherCon 2019&lt;/a&gt;.&lt;/strong&gt;&lt;/p&gt;
-
 &lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;aa53e4353d9b4efc9064eefba40e13b7&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
-
 &lt;blockquote&gt;
 &lt;p&gt;The design for the number of concurrency is important to achieve both speed and stability. To give a good performance without depending on platform and load conditions, it’s desirable for the number to be dynamic and rapidly controlled. In this talk, I will propose an architecture to solve this by utilizing feedback control.&lt;/p&gt;
 &lt;/blockquote&gt;
-
 &lt;h1 id=&#34;1-title&#34;&gt;1. Title&lt;/h1&gt;
-
 &lt;p&gt;Good afternoon, everyone.
 Thank you very much for coming today.&lt;/p&gt;
-
 &lt;h1 id=&#34;2-self-introduction&#34;&gt;2. Self-introduction&lt;/h1&gt;
-
 &lt;p&gt;My name is Yusuke MIYAKE.
 My social account is @monochromegane.
 I am a researcher of internet and operation technology, as well as a web developer.&lt;/p&gt;
-
 &lt;h1 id=&#34;3-go-and-i&#34;&gt;3. Go and I&lt;/h1&gt;
-
 &lt;p&gt;Let me introduce the relation between Go and me.
 I am a Japanese gopher who loves writing OSS using Go.
 My popular repositories are here (the_platinum_searcher is a fast grep tool).
@@ -687,27 +433,19 @@ It was a lot of fun!
 This is our conference gopher.
 He has ramen which is a Japanese famous food on his head.
 Isn&amp;rsquo;t he good?&lt;/p&gt;
-
 &lt;h1 id=&#34;4-agenda&#34;&gt;4. Agenda&lt;/h1&gt;
-
 &lt;p&gt;Today I am here to talk to you about optimization for the number of goroutines.
 My talk has 5 parts.
 I’ll start by talking about why there is a need for optimization for the number of goroutines through the introduction and background section.
 After that, I&amp;rsquo;ll introduce my proposal that optimizes the number using feedback control.
 And I will evaluate the efficacy of the method.
 Finally, I will conclude about possible and some issues of the method.&lt;/p&gt;
-
 &lt;h1 id=&#34;5-introduction&#34;&gt;5. Introduction&lt;/h1&gt;
-
 &lt;p&gt;To begin with let’s speak to my experience of performance tuning of my OSS tool.&lt;/p&gt;
-
 &lt;h1 id=&#34;6-how-many-are-the-optimal-number-of-goroutines&#34;&gt;6. How many are the optimal number of goroutines?&lt;/h1&gt;
-
 &lt;p&gt;I am developing a fast grep tool named &amp;ldquo;the platinum searcher&amp;rdquo;.
 One day I conducted a measurement of the optimal number of goroutines to achieve good performance.&lt;/p&gt;
-
 &lt;h1 id=&#34;7-performance-tuning-in-case-of-pt&#34;&gt;7. Performance tuning in case of pt&lt;/h1&gt;
-
 &lt;p&gt;&amp;ldquo;the platinum searcher&amp;rdquo; uses many goroutines to search string matching to pattern from files.
 So, I measured performance while bounding concurrency using a semaphore.
 Here is a result.
@@ -716,9 +454,7 @@ It is a log scale.
 The Y-axis represents the speedup of processing time against sequential processing.
 The result shows 8 or 32 goroutines make performance good.
 This is 2 or 8 times more than the number of CPUs.&lt;/p&gt;
-
 &lt;h1 id=&#34;8-performance-tuning-in-case-of-pt&#34;&gt;8. Performance tuning in case of pt&lt;/h1&gt;
-
 &lt;p&gt;However, measurement in different environments showed a different result.
 The result shows 16 goroutines make performance good.
 This is 2 times more than the number of CPUs.
@@ -726,42 +462,29 @@ But I found that more goroutines cause performance degradation.
 In this environment, the real-time virus scan process was running at the same time.
 The process turns system-call of opening file slow and consumes CPU resources.
 As a result, performance is degraded when searching for many files at the same time.&lt;/p&gt;
-
 &lt;h1 id=&#34;9-performance-tuning-in-case-of-pt&#34;&gt;9. Performance tuning in case of pt&lt;/h1&gt;
-
 &lt;p&gt;Besides, there were other results.
 When the real-time virus scan process stops, 4 goroutines made performance good.
 This is half times less than the number of CPUs.
 I don&amp;rsquo;t know how many the optimal number of goroutines are?&lt;/p&gt;
-
 &lt;h1 id=&#34;10-performance-tuning-in-case-of-pt&#34;&gt;10. Performance tuning in case of pt&lt;/h1&gt;
-
 &lt;p&gt;Currently, &amp;ldquo;the platinum searcher&amp;rdquo; is bounding concurrency using the number of CPUs.
 Namely, I am choosing a safer way.
 But it isn&amp;rsquo;t the fastest.&lt;/p&gt;
-
 &lt;h1 id=&#34;11-how-many-are-the-optimal-number-of-goroutines-in-each-case&#34;&gt;11. How many are the optimal number of goroutines in each case?&lt;/h1&gt;
-
 &lt;p&gt;So, that concludes this part of my talk on my experience of performance tuning.
 Achieving both speed and stability, we have to decide optimum number of goroutines through our experiences and continuous tuning.
 And, in most case, the environment on which the program is tuned and the environment on which it will be executed are different.
 Thus, I&amp;rsquo;d like to consider optimization for number of goroutines without depending on environments.&lt;/p&gt;
-
 &lt;h1 id=&#34;12-background&#34;&gt;12. Background&lt;/h1&gt;
-
 &lt;p&gt;In this section, I will organize the issues about design for concurrency.&lt;/p&gt;
-
 &lt;h1 id=&#34;13&#34;&gt;13.&lt;/h1&gt;
-
 &lt;p&gt;I’m going to organize these issues in the following order;
 Let us start with the first, which is the complexity of concurrency.
 Then we come to the next, which is the contribution of Go to solve the complexity.
 We will find an approach to solve the remaining issues, finally.&lt;/p&gt;
-
 &lt;h1 id=&#34;14-concurrency-and-complexity&#34;&gt;14. Concurrency and complexity&lt;/h1&gt;
-
 &lt;p&gt;In this page, I will organize the relation of concurrency and complexity.&lt;/p&gt;
-
 &lt;p&gt;We introduce concurrency to improve performance.
 Concurrency brings our application good performance and complexity.
 Because concurrent processing is often considered as compared to simple serial processing.
@@ -770,22 +493,16 @@ We have to consider efficient thread management from a parallelism of view.
 And we have to avoid race conditions and synchronize memory access.
 And we have to design to be scalable.
 Like this, we are dealing with many issues to improve performance.&lt;/p&gt;
-
 &lt;h1 id=&#34;15&#34;&gt;15.&lt;/h1&gt;
-
 &lt;p&gt;Then, I will organize the contribution of Go to solve the complexity.&lt;/p&gt;
-
 &lt;h1 id=&#34;16-concurrency-and-go&#34;&gt;16. Concurrency and Go&lt;/h1&gt;
-
 &lt;p&gt;This is one of the reasons why we are interested in Go.
 &amp;ldquo;Go&amp;rdquo; hides some complexities.
 Because Go has rich features that support concurrency.
 For example, we are freed from managing thread by runtime scheduler of Go.
 And we also can avoid race conditions by using a channel.
 In other words, Go decouples between your code and the complexity of parallelism.&lt;/p&gt;
-
 &lt;h1 id=&#34;17-runtime-scheduler-of-go&#34;&gt;17. Runtime scheduler of Go&lt;/h1&gt;
-
 &lt;p&gt;In this page, I&amp;rsquo;ll explain how Go&amp;rsquo;s runtime hide the complexity.
 This figure shows Go’s scheduler workflow.
 Go’s scheduler has three basic concepts.
@@ -793,15 +510,12 @@ G is goroutine.
 M is an OS thread.
 P is a processor.
 P handles multiplexing some goroutines onto some OS threads.&lt;/p&gt;
-
 &lt;p&gt;So, We can think of Goroutines as application-level threads. 
 OS thread behaves like a worker for goroutine using a run queue.
 What is important is P uses a smart scheduling strategy called a work-stealing algorithm.
 Therefore P efficiently schedules available goroutines onto OS threads.
 As Go&amp;rsquo;s runtime automatically dose these, we don&amp;rsquo;t need to consider the complexity of parallelism.&lt;/p&gt;
-
 &lt;h1 id=&#34;18-new-g&#34;&gt;18. New “g”&lt;/h1&gt;
-
 &lt;p&gt;Besides, lightweight goroutines make Go&amp;rsquo;s scheduler more practical.
 Creating a goroutine is cheap.
 Because a newly created goroutine is allocated only 2kB stack.
@@ -809,159 +523,107 @@ Switching a goroutine is also cheap.
 Because goroutine has only minimal context.
 These points show that many goroutines can run at the same time.
 As this practical runtime gives the illusion of parallelism more than the actual number of CPUs, we don&amp;rsquo;t need to consider the complexity of parallelism.&lt;/p&gt;
-
 &lt;h1 id=&#34;19&#34;&gt;19.&lt;/h1&gt;
-
 &lt;p&gt;Finally, I will organize the remaining issues and find an approach to solve them.&lt;/p&gt;
-
 &lt;h1 id=&#34;20-concurrency-and-application&#34;&gt;20. Concurrency and application&lt;/h1&gt;
-
 &lt;p&gt;Due to Go hides the complexity of parallelism, we can focus on concurrency issues in our application.
 One of them is the design of the number of concurrency.
 The reason is that the number of concurrency affects the performance depending on the characteristics of the application.
 Certainly, the cost of generating and switching goroutines is very cheap.
 On the other hand, when tasks on goroutine use shared resources, the upper limit of shared resources become a bottleneck.
 Therefore, in this case, it is necessary to find the optimal number of concurrency to improve performance.&lt;/p&gt;
-
 &lt;h1 id=&#34;21-concurrency-and-application&#34;&gt;21. Concurrency and application&lt;/h1&gt;
-
 &lt;p&gt;But the design for the number of concurrency is difficult.
 Because the optimal number depends on app, environments and load condition.
 And, in most cases, the environment in which the program is tuned and the environment in which it will be executed is different.
 Thus, I&amp;rsquo;d like to consider optimization for the number of goroutines without depending on environments.
 In order to achieve this, it&amp;rsquo;s desirable for the number of concurrency to be determined dynamically and be controlled rapidly by detection the bottleneck on running program.&lt;/p&gt;
-
 &lt;h1 id=&#34;22-proposal&#34;&gt;22. Proposal&lt;/h1&gt;
-
 &lt;p&gt;In this section, I&amp;rsquo;ll introduce my proposal that optimizes the number of concurrency.&lt;/p&gt;
-
 &lt;h1 id=&#34;23-goal&#34;&gt;23. Goal&lt;/h1&gt;
-
 &lt;p&gt;The proposed method&amp;rsquo;s goal is here.
 The optimal number of concurrency to be determined dynamically and be controlled rapidly.&lt;/p&gt;
-
 &lt;h1 id=&#34;24-basic-idea&#34;&gt;24. Basic idea&lt;/h1&gt;
-
 &lt;p&gt;To begin with let’s speak to the basic idea of the method.
 At first, It increases the number of goroutines to performance target.&lt;/p&gt;
-
 &lt;h1 id=&#34;25-basic-idea&#34;&gt;25. Basic idea&lt;/h1&gt;
-
 &lt;p&gt;After that, it stops increasing the number of goroutines if it meets the performance target.&lt;/p&gt;
-
 &lt;h1 id=&#34;26-basic-idea&#34;&gt;26. Basic idea&lt;/h1&gt;
-
 &lt;p&gt;After a while, it attempts to decrease the number of goroutines.
 If it fails to meet the performance target, it backs to step 1.&lt;/p&gt;
-
 &lt;h1 id=&#34;27-issues-to-solve-for-the-realization&#34;&gt;27. Issues to solve for the realization&lt;/h1&gt;
-
 &lt;p&gt;We have two issues to solve for the realization of the idea.&lt;/p&gt;
-
 &lt;p&gt;First, Selection of performance metrics
 Next, finding how to control rapidly and continuously&lt;/p&gt;
-
 &lt;p&gt;In the following subsections, I try to realize the proposal while solving these problems.&lt;/p&gt;
-
 &lt;h1 id=&#34;28-performance-metrics&#34;&gt;28. Performance metrics&lt;/h1&gt;
-
 &lt;p&gt;In this subsection, I will consider performance metrics that are without depending on application characteristics.&lt;/p&gt;
-
 &lt;h1 id=&#34;29-performance-metrics&#34;&gt;29. Performance metrics&lt;/h1&gt;
-
 &lt;p&gt;In the basic idea subsection, I was assuming that there is a performance target.&lt;/p&gt;
-
 &lt;p&gt;It&amp;rsquo;s desirable for the performance target not to depend on resource type whom task use.
 Because different applications have different bottlenecks.
 For example, I/O, Capacity of memory and processing load due to the external process.
 If we find an ideal performance target, it will allow us to use the proposed method in as many applications as possible.&lt;/p&gt;
-
 &lt;p&gt;I think that CPU usage or throughput suits for the purpose.
 Go&amp;rsquo;s scheduler turns blocking tasks into as CPU bound as possible by switching tasks continuously.
 Thus, I adopt the CPU usage of the Go application as the performance target.&lt;/p&gt;
-
 &lt;h1 id=&#34;30-performance-metrics&#34;&gt;30. Performance metrics&lt;/h1&gt;
-
 &lt;p&gt;But the performance upper limit is different for each application.
 In other words, we don&amp;rsquo;t know the actual value of the target.
 Thus, it is calculated on running.&lt;/p&gt;
-
 &lt;p&gt;At first, it sets the target value high.
 It increases the number of goroutines to performance targets.&lt;/p&gt;
-
 &lt;h1 id=&#34;31-performance-metrics&#34;&gt;31. Performance metrics&lt;/h1&gt;
-
 &lt;p&gt;If it doesn&amp;rsquo;t meet the performance target, it regards the point as metrics upper limit.
 After that, it gradually adjusts it to the new upper limit value.&lt;/p&gt;
-
 &lt;p&gt;So, that concludes this part of my talk on performance metrics.
 The summary is the following:
 The proposed method uses CPU usage upper limit as the performance target.
 And the value is calculated on running.&lt;/p&gt;
-
 &lt;h1 id=&#34;32-determining&#34;&gt;32. Determining&lt;/h1&gt;
-
 &lt;p&gt;In this subsection, I will consider how to determine the number of concurrency rapidly, continuously and accurately.&lt;/p&gt;
-
 &lt;h1 id=&#34;33-determine-the-number-of-goroutines&#34;&gt;33. Determine the number of goroutines&lt;/h1&gt;
-
 &lt;p&gt;In the previous subsection, we defined performance metrics and dynamic value.
 Next, we have to consider how to determine the number of goroutines to meet the target value.
 In the basic idea subsection, we increased goroutine one by one
 But it has to determine rapidly, continuously, accurately to adjust the number of goroutines to rapid changes in the actual environment.
 I think that feedback control is a good way to meet these conditions.&lt;/p&gt;
-
 &lt;h1 id=&#34;34-feedback-control&#34;&gt;34. Feedback control&lt;/h1&gt;
-
 &lt;p&gt;In this page, I will explain the basis of feedback control.&lt;/p&gt;
-
 &lt;p&gt;This figure shows the structure of a feedback loop.
 There is a system with input and output.
 The output is sent back and compared to the set-point to calculate a new input.
 The error is a deviation of the output from the set-point.
 The controller calculates how much to increase (or decrease) based on the error.&lt;/p&gt;
-
 &lt;p&gt;Feedback control applies an automatic correction continuously.
 Determining set-point and Identifying suitable input/output is important.
 Instead, Feedback control does not need to know the detail of the system.
 I think that the robustness of feedback control is effective for rapid changes in the actual environment.&lt;/p&gt;
-
 &lt;h1 id=&#34;35-pid-controller-1-2&#34;&gt;35. PID Controller (&lt;sup&gt;1&lt;/sup&gt;&amp;frasl;&lt;sub&gt;2&lt;/sub&gt;)&lt;/h1&gt;
-
 &lt;p&gt;In this page, I will explain a controller used frequently.&lt;/p&gt;
-
 &lt;p&gt;As I mentioned before, the job of controllers is to calculate the value of new input based on the error.
 PID Controller applies a correction rapidly and accurately.
 The controller has three sub-controllers inside.
 The output is a combination of its proportional, integral and derivative subcontrol.&lt;/p&gt;
-
 &lt;p&gt;Now I’d like to look at the strategy of each sub-controller.&lt;/p&gt;
-
 &lt;h1 id=&#34;36-pid-controller-2-2&#34;&gt;36. PID Controller (&lt;sup&gt;2&lt;/sup&gt;&amp;frasl;&lt;sub&gt;2&lt;/sub&gt;)&lt;/h1&gt;
-
 &lt;p&gt;The proportional control output is proportional to the error.
 Namely, a large error will lead to a large adjustment.
 KP is the controller gain.&lt;/p&gt;
-
 &lt;p&gt;The integral control output is proportional to the integral of the error over time.
 The output becomes a cumulative sum of the error if it is a computer implementation.
 KI is the controller gain.
 The I controller deal with the small error that the P controller loses its effectiveness.&lt;/p&gt;
-
 &lt;p&gt;The derivative control output is proportional to the derivative of the error.
 The output becomes the amount that has changed since the previous time step if it is a computer implementation.
 KD is the controller gain.
 The D controller encourages converge using the output.&lt;/p&gt;
-
 &lt;p&gt;So, that concludes this part of my talk on basic of PID controller.
 The controller is intended to take the system closer to a set-point.
 However, the set-point has to be determined beforehand.
 In the proposed method, the value of the set-point is calculated on running.&lt;/p&gt;
-
 &lt;p&gt;Now I’d like to consider the structure of the controller to meet this condition.&lt;/p&gt;
-
 &lt;h1 id=&#34;37-dynamic-target-controller&#34;&gt;37. Dynamic Target Controller&lt;/h1&gt;
-
 &lt;p&gt;This figure shows the structure of the controller of the proposed method.
 This controller has two nested control loops.
 The inner loop is the PID controller which we have learned just before.
@@ -972,42 +634,32 @@ The job of the outer loop is to calculate this value.
 The outer loop&amp;rsquo;s input is current CPU usage as same as the inner loop.
 Its output is a new set-point of the inner loop.
 Namely, the inner loop&amp;rsquo;s set-point is changed by the outer loop&amp;rsquo;s output.&lt;/p&gt;
-
 &lt;p&gt;The outer loop behavior has been mentioned at the performance metrics subsection.
 When CPU usage reached the upper limit by many goroutines, the outer loop begins to use its value as a new set-point.
 In the current implementation, the outer loop sets a new set-point when CPU usage changes significantly.
 Because Go&amp;rsquo;s scheduler attempts to consume CPU resources incessantly by switching goroutines.
 Namely, CPU usage stays on the upper limit in most cases.
 Therefore, I figured it would be easier to detect change points in short-term observations than to detect stability in long-term observations.&lt;/p&gt;
-
 &lt;p&gt;(If time remains)
 Indeed the design for the controller is pretty hard.
 The current controller version is 11.
 I published past designs and their evaluation.
 if you have an interest in it, let&amp;rsquo;s conversation about a better way during this conference.&lt;/p&gt;
-
 &lt;p&gt;So, that concludes this talk of my talk on dynamic target controller.
 Now, we should be able to determine the optimal number of goroutines rapidly, continuously, accurately.
 Finally, I’d like to consider how to bound concurrency with the determined number.&lt;/p&gt;
-
 &lt;h1 id=&#34;38-bounding&#34;&gt;38. Bounding&lt;/h1&gt;
-
 &lt;p&gt;In this subsection, I will explain about bounding concurrency dynamically.&lt;/p&gt;
-
 &lt;h1 id=&#34;39-to-bound-concurrency&#34;&gt;39. To bound concurrency&lt;/h1&gt;
-
 &lt;p&gt;This is a Go code that appeared after a long time.
 We often write such code to bound concurrency in Go.
 We usually use the buffered channel as a semaphore.
 In this example, the buffer for the channel is 3.
 Therefore, only three goroutines run at the same time.&lt;/p&gt;
-
 &lt;p&gt;On the other hand, in the proposed method the optimal number of goroutines will be different in every iteration of the feedback loop.
 However, we can&amp;rsquo;t change the buffer size of the channel later.
 Therefore, we need a dynamic semaphore for the method.&lt;/p&gt;
-
 &lt;h1 id=&#34;40-elastic-semaphore&#34;&gt;40. Elastic semaphore&lt;/h1&gt;
-
 &lt;p&gt;This figure shows the elastic semaphore.
 This elastic semaphore provides &amp;ldquo;wait&amp;rdquo; and &amp;ldquo;signal&amp;rdquo; operations as same as a semaphore.
 &amp;ldquo;wait&amp;rdquo; operation decrements the value of the semaphore variable.
@@ -1016,9 +668,7 @@ If the new value of the semaphore variable is negative, it is blocked.
 &amp;ldquo;incrementLimit&amp;rdquo; changes upper of the semaphore variable.
 The value of the limit is determined by the feedback controller in the proposed method.
 This elastic semaphore ensures the atomicity of these operations.&lt;/p&gt;
-
 &lt;p&gt;(If time remains)&lt;/p&gt;
-
 &lt;p&gt;This semaphore is not strict.
 Because it allows that goroutines more than the upper limit run temporarily.
 For example, 10 goroutines are running when the upper limit is 10.
@@ -1027,573 +677,316 @@ Of course, generating new goroutine is blocked.
 Therefore, a long term goroutine like a worker process is not suitable for the elastic semaphore.
 Fortunately, generating goroutine is cheap in Go.
 So, we can generate it each time.&lt;/p&gt;
-
 &lt;h1 id=&#34;41-kaburaya&#34;&gt;41. Kaburaya&lt;/h1&gt;
-
 &lt;p&gt;In this subsection, I will explain kaburaya as the implementation of the proposed method.&lt;/p&gt;
-
 &lt;h1 id=&#34;42-architecture-of-kaburaya&#34;&gt;42. Architecture of kaburaya&lt;/h1&gt;
-
 &lt;p&gt;As I mentioned before, the goal of the proposed method is here.&lt;/p&gt;
-
 &lt;p&gt;I&amp;rsquo;d like to determine the number of concurrency dynamically.
 I&amp;rsquo;d like to control the number of concurrency rapidly.&lt;/p&gt;
-
 &lt;p&gt;For the purpose,&lt;/p&gt;
-
 &lt;p&gt;Firstly, we decided to use CPU usage upper limit as performance metrics.
 The value is calculated on running.
 Secondly, we decided to determine the optimal number of goroutine using the metrics.
 The value is determined rapidly, continuously, accurately using feedback control.
 Finally, we decided to bound concurrency using the number.
 The concurrency is bounded using elastic semaphore dynamically.&lt;/p&gt;
-
 &lt;p&gt;I am developing this implementation as OSS named kaburaya.
 The URL is here.&lt;/p&gt;
-
 &lt;p&gt;As a side note, Kaburaya is the name of a Japanese arrow with a whistle.&lt;/p&gt;
-
 &lt;h1 id=&#34;43-monochromegane-kaburaya&#34;&gt;43. monochromegane/kaburaya&lt;/h1&gt;
-
 &lt;p&gt;This code is the usage of kaburaya.
 It is very similar to the code of bounding concurrency with buffered channels.&lt;/p&gt;
-
 &lt;p&gt;&amp;ldquo;NewSem&amp;rdquo; specifies the period for feedback control and creates a new semaphore.
 We can use &amp;ldquo;Wait&amp;rdquo; and &amp;ldquo;Signal&amp;rdquo; like a send or receive of a channel.
 Kaburaya changes the limit of semaphore variables automatically and continuously.
 So, we don&amp;rsquo;t need the &amp;ldquo;incrementLimit&amp;rdquo; operation.
 Lastly, if the tasks finished, we have to stop kaburaya to stop the feedback loop.&lt;/p&gt;
-
 &lt;p&gt;So, that concludes this part of my talk on the proposed method and its implementation.
 I’d like to speak about the evaluation of kaburaya.&lt;/p&gt;
-
 &lt;h1 id=&#34;44-evaluation&#34;&gt;44. Evaluation&lt;/h1&gt;
-
 &lt;p&gt;In this section, I will explain the evaluation of kaburaya.&lt;/p&gt;
-
 &lt;h1 id=&#34;45-evaluation&#34;&gt;45. Evaluation&lt;/h1&gt;
-
 &lt;p&gt;There are 6 patterns of environments.
 I evaluated the efficacy of kaburaya in each environment.
 There are 3 contents.
 They are speedup of processing, CPU usage based on time series, and limit of semaphore on time series.
 I found good and not so good points in each environment accordingly.&lt;/p&gt;
-
 &lt;h1 id=&#34;46-pt-mac-scan&#34;&gt;46. pt_mac-scan&lt;/h1&gt;
-
 &lt;p&gt;At first, I will explain this environment and task.&lt;/p&gt;
-
 &lt;p&gt;In this environment, &amp;ldquo;the platinum searcher&amp;rdquo; runs on Mac with a real-time virus scan.
 The number of CPU is 8 and the memory size is 16GB.
 GOMAXPROCS is set 8.&lt;/p&gt;
-
 &lt;p&gt;The graph represents performance against the number of goroutines.
 The X-axis represents the number of goroutines.
 It is a log scale.
 The Y-axis represents the speedup of processing time against sequential processing.
 The result shows 16 goroutines make performance itself good.
 This task is more degradation of performance due to increased goroutines&lt;/p&gt;
-
 &lt;p&gt;Next, I’d like to take a look at the experiment result of kaburaya.&lt;/p&gt;
-
 &lt;h1 id=&#34;47-pt-mac-scan&#34;&gt;47. pt_mac-scan&lt;/h1&gt;
-
 &lt;p&gt;This is a good pattern.
 Because kaburaya achieved both speed and stability.&lt;/p&gt;
-
 &lt;p&gt;These figures show the results of the evaluation in the environment.
 The number of the left graph which is 11 represents the median value of goroutine number determined by kaburaya.
 As a consequence, kaburaya let processing time 6 times faster than sequential processing.&lt;/p&gt;
-
 &lt;p&gt;There are 3 plots based on time series in the right graph.
 The blue dash line represents the set-point of CPU usage.
 The blue line represents the actual value of CPU usage.
 And the green line represents the number of semaphores determined by kaburaya.&lt;/p&gt;
-
 &lt;p&gt;In this environment and task, Kaburaya found good set points and adjust numbers within the ideal range.
 Kaburaya was able to avoid performance degradation by determining the minimum number of the semaphore to meet the performance metrics.
 As a result, not the best, but it achieved a good speedup.
 Namely, kaburaya achieved both speed and stability.&lt;/p&gt;
-
 &lt;h1 id=&#34;48-task-pt-mac-no-scan&#34;&gt;48. Task: pt_mac-no-scan&lt;/h1&gt;
-
 &lt;p&gt;This is also a good pattern.
 In this environment, I stopped the real-time virus scan process and ran &amp;ldquo;the platinum searcher&amp;rdquo;.&lt;/p&gt;
-
 &lt;p&gt;The result shows 4 goroutines make performance good.
 This task is less degradation of performance due to increased goroutines.&lt;/p&gt;
-
 &lt;h1 id=&#34;49-task-pt-mac-no-scan-good&#34;&gt;49. Task: pt_mac-no-scan (Good)&lt;/h1&gt;
-
 &lt;p&gt;In this environment and task, Kaburaya found good set points and adjust numbers within the ideal range.&lt;/p&gt;
-
 &lt;p&gt;Please pay attention to the blue dash line in the right graph.
 This shows that the feedback controller continued to set a new set-point when CPU usage changed significantly.
 As a result, kaburaya adjusted the number of semaphore within a good range.
 Not the best, but it achieved a good speedup as few concurrency as possible.&lt;/p&gt;
-
 &lt;h1 id=&#34;50-task-pt-mac-no-scan-bad&#34;&gt;50. Task: pt_mac-no-scan (Bad)&lt;/h1&gt;
-
 &lt;p&gt;Unfortunately, there is a bad pattern.
 This is the same as the previous environment.
 But the number of semaphores continued to increase.
 Because kaburaya failed to reset the set point.
 Therefore actual CPU usage was always lower than set-point.&lt;/p&gt;
-
 &lt;p&gt;The cause is the range of change rate is too large.
 It is used as a condition of determining set-point.&lt;/p&gt;
-
 &lt;p&gt;So, I have to adjust the value in order to improve the controller.&lt;/p&gt;
-
 &lt;p&gt;#51. Task: pt_linux&lt;/p&gt;
-
 &lt;p&gt;This is not so bad pattern.&lt;/p&gt;
-
 &lt;p&gt;In this environment, &amp;ldquo;the platinum searcher&amp;rdquo; runs on Linux.
 The number of CPU is 4 and the memory size is 4GB.
 GOMAXPROCS is set 4.&lt;/p&gt;
-
 &lt;p&gt;The result shows 8 or 32 goroutines make performance good.
 This task is less degradation of performance due to increased goroutines.&lt;/p&gt;
-
 &lt;h1 id=&#34;52-task-pt-linux-not-so-bad&#34;&gt;52. Task: pt_linux (Not so bad)&lt;/h1&gt;
-
 &lt;p&gt;The number of the left graph which is 15 represents the median value of goroutine number determined by kaburaya.
 As a consequence, kaburaya let processing time 3.5 times faster than sequential processing.&lt;/p&gt;
-
 &lt;p&gt;In this environment and task, Kaburaya found good set points and adjust numbers within the ideal range.
 However, at the end of the period, the number of semaphores increased due to the failure to reset the set point.&lt;/p&gt;
-
 &lt;p&gt;The cause is the same as before.
 So, I have to adjust the range of change rate.&lt;/p&gt;
-
 &lt;h1 id=&#34;53-task-mem-4096000-10000&#34;&gt;53. Task: mem_4096000_10000&lt;/h1&gt;
-
 &lt;p&gt;Here is another task.
 The task uses the memory of a shared resource.
 In this case, the size is 4MB.
 Many concurrencies will cause starvation of resources.&lt;/p&gt;
-
 &lt;p&gt;The number of CPU is 4 and the memory size is 4GB.
 GOMAXPROCS is set 4.&lt;/p&gt;
-
 &lt;p&gt;Better concurrent is 512.
 This task leads to more degradation of performance (swap out) due to increased goroutines.&lt;/p&gt;
-
 &lt;h1 id=&#34;54-task-mem-4096000-10000-good&#34;&gt;54. Task: mem_4096000_10000 (Good)&lt;/h1&gt;
-
 &lt;p&gt;The number of the left graph which is 63 represents the median value of goroutine number determined by kaburaya.
 As a consequence, kaburaya let processing time 3 times faster than sequential processing.
 So, Kaburaya found good set points and adjust numbers within the ideal range.&lt;/p&gt;
-
 &lt;p&gt;What is important is that it avoided the starvation of resources.
 These results show the good set-point keep an ideal number of semaphore.&lt;/p&gt;
-
 &lt;h1 id=&#34;55-task-mem-40960-1000000&#34;&gt;55. Task: mem_40960_1000000&lt;/h1&gt;
-
 &lt;p&gt;This is also a good pattern.&lt;/p&gt;
-
 &lt;p&gt;I changed memory size to 40kb from 4MB.
 The environment is the same as before.
 Better concurrent are from 4 to 64.&lt;/p&gt;
-
 &lt;h1 id=&#34;56-task-mem-40960-1000000-good&#34;&gt;56. Task: mem_40960_1000000 (Good)&lt;/h1&gt;
-
 &lt;p&gt;The number of the left graph which is 19 represents the median value of goroutine number determined by kaburaya.
 As a consequence, kaburaya let processing time 2.5 times faster than sequential processing.
 So, Kaburaya found good set points and adjust numbers within the ideal range.&lt;/p&gt;
-
 &lt;h1 id=&#34;57-task-mem-409600-100000&#34;&gt;57. Task: mem_409600_100000&lt;/h1&gt;
-
 &lt;p&gt;At last, I will show you an interesting pattern.&lt;/p&gt;
-
 &lt;p&gt;I changed memory size to 400kB.
 The environment is the same as before.&lt;/p&gt;
-
 &lt;p&gt;Although when the number of the semaphore is 16 it seemed performance reached the limit, more goroutines made performance good.
 Perhaps better concurrent will be over 1024.&lt;/p&gt;
-
 &lt;h1 id=&#34;58-task-mem-409600-100000-not-so-good&#34;&gt;58. Task: mem_409600_100000 (Not so good)&lt;/h1&gt;
-
 &lt;p&gt;The number of the left graph which is 29 represents the median value of goroutine number determined by kaburaya.
 As a consequence, kaburaya let processing time 2 times faster than sequential processing.&lt;/p&gt;
-
 &lt;p&gt;The results show kaburaya solved this task with a local solution.
 Certainly, Kaburaya found set points and adjusted the numbers within a range.
 But it didn&amp;rsquo;t reach the upper of performance metrics.&lt;/p&gt;
-
 &lt;p&gt;So, I think that Kaburaya has to explore the set-point aggressively when the set-point is too low.&lt;/p&gt;
-
 &lt;h1 id=&#34;59-experimental-results&#34;&gt;59. Experimental results&lt;/h1&gt;
-
 &lt;p&gt;In this page, I conclude experimental results.&lt;/p&gt;
-
 &lt;p&gt;Kaburaya finds a good set point and adjusts numbers within ideal range by feedback control and elastic semaphore continuously.&lt;/p&gt;
-
 &lt;p&gt;On the other hand, we found some key factors to improve kaburaya.&lt;/p&gt;
-
 &lt;p&gt;The most important is the prediction accuracy of the set point.
 The improvement will avoid that the number of the semaphore is too much or too less.&lt;/p&gt;
-
 &lt;p&gt;And finding optimal parameters is also important.
 Based on my experience, I got good results in most cases when the gain of the feedback controller is from 0.1 to 0.3 and the range of change rate is 0.3.
 However, I think that we have to tune the parameters as necessary.&lt;/p&gt;
-
 &lt;p&gt;I expect that there is a solution in the related researches on feedback control.&lt;/p&gt;
-
 &lt;h1 id=&#34;60-conclusion&#34;&gt;60. Conclusion&lt;/h1&gt;
-
 &lt;p&gt;OK, This is a conclusion.&lt;/p&gt;
-
 &lt;h1 id=&#34;61-conclusion&#34;&gt;61. Conclusion&lt;/h1&gt;
-
 &lt;p&gt;I proposed kaburaya to control the number of goroutines without depending on the platform, runtime, and current load.
 Experimental results show possible and some issues of kaburaya.
 In particular, improvement in detecting performance upper limit of the task is important.
 In the future, I will also consider the application to auto-scaling of cloud computing.&lt;/p&gt;
-
 &lt;h1 id=&#34;62-appendix&#34;&gt;62. Appendix&lt;/h1&gt;
-
 &lt;p&gt;This is the Appendix.&lt;/p&gt;
-
 &lt;h1 id=&#34;63-reference&#34;&gt;63. Reference&lt;/h1&gt;
-
 &lt;p&gt;Here is Reference.
 If you want to learn more about kaburaya, you can jump to the link.
 Sorry, some texts are in Japanese.&lt;/p&gt;
-
 &lt;h1 id=&#34;64-go-gopher&#34;&gt;64. Go gopher&lt;/h1&gt;
-
 &lt;p&gt;The Go gophers in this slide were drawn by Keita Kawamoto.&lt;/p&gt;
-
 &lt;h1 id=&#34;65-thank-you&#34;&gt;65. Thank you!&lt;/h1&gt;
-
 &lt;p&gt;Thank you for listening.
-It was a pleasure being here today.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Go Conference 2018 Autumnで発表してきた(3年ぶり3回目)</title>
-      <link>https://blog.monochromegane.com/blog/2018/11/27/go-conference-2018-autumn/</link>
-      <pubDate>Tue, 27 Nov 2018 16:58:11 +0900</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2018/11/27/go-conference-2018-autumn/</guid>
-      <description>
-
+It was a pleasure being here today.&lt;/p&gt;</description></item><item><title>Go Conference 2018 Autumnで発表してきた(3年ぶり3回目)</title><link>https://blog.monochromegane.com/blog/2018/11/27/go-conference-2018-autumn/</link><pubDate>Tue, 27 Nov 2018 16:58:11 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2018/11/27/go-conference-2018-autumn/</guid><description>
 &lt;p&gt;11/25に&lt;a href=&#34;https://gocon.jp/&#34;&gt;Go Conference 2018 Autumn&lt;/a&gt;というイベントで&lt;code&gt;フィードバック制御によるGoroutine起動数の最適化&lt;/code&gt;を発表してきました．&lt;/p&gt;
-
 &lt;p&gt;Goでの開発時に常に悩んでいたGoroutine起動数に関してフィードバック制御という切り口でKaburayaアーキテクチャと題して解決策を検討したものです．
 直前に&lt;a href=&#34;https://blog.monochromegane.com/blog/2018/11/25/wsa_3_kaburaya/&#34;&gt;WSA研向けに研究として再定義した&lt;/a&gt;ことでGoroutineにこだわらない，より汎用的な問題に対するアプローチとして検討し直すことができ，まだ最適解は模索中ですが，面白いと思っていただける発表ができたのではと考えています．&lt;/p&gt;
-
 &lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;3fb10a250cd44b8799eac767baec5cc9&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
-
 &lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fkaburaya&#34; title=&#34;monochromegane/kaburaya&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/kaburaya&#34;&amp;gt;monochromegane/kaburaya&amp;lt;/a&amp;gt;&lt;/iframe&gt;
-
 &lt;p&gt;歴史ある制御工学という分野の手法を用いることで蓄積されたノウハウを活用できると考えていましたが，発表後に早速有意義なアドバイスなど頂くことができ，今後の精度，速度向上並びに汎用化に向けて面白くなってきそうです．&lt;/p&gt;
-
 &lt;p&gt;ちなみに開発にあたってGoランタイムを調べていた時の資料も&lt;code&gt;#gocon&lt;/code&gt;ハッシュタグで放流したところ，こちらも好評でしたので改めて置いておきます．&lt;/p&gt;
-
 &lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;4046d92f81c545ab99e5b974c874d4e0&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
-
 &lt;h2 id=&#34;発表を終えて&#34;&gt;発表を終えて&lt;/h2&gt;
-
 &lt;p&gt;GoConでの登壇は今回で3回目となりました．ここ数年，自分のキャリアや興味範囲が広がっていく中でも，Go言語はずっと相棒として付き合ってくれる言語でしたし，Go言語を中心に色々な付き合いができていると感じています．
 そしてその契機となったGoConと，これを継続して開催してくれている運営の方々に本当に感謝いたします．&lt;/p&gt;
-
 &lt;p&gt;主催するFukuoka.goでも微力ながらコミュニティの活発化に繋がるよう引き続き&amp;rdquo;&lt;a href=&#34;https://press.forkwell.com/entry/2018/10/01/community_lovers&#34;&gt;楽しみながら&lt;/a&gt;&amp;ldquo;やっていきたいと思います．&lt;/p&gt;
-
 &lt;p&gt;次は海外カンファレンスで登壇するぞう．&lt;/p&gt;
-
 &lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34; data-lang=&#34;ja&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;ホテル到着。移動で朝早かったので懇親会途中までとさせていただきました。お誘いありがとうございます。色々な話が聞けて楽しかったです！ カンファレンスも濃い話から体系的な整理がなされたものまであり来れて良かったです。自分の登壇内容も反応いただけて嬉しい限り。次は福岡版どうですか &lt;a href=&#34;https://twitter.com/hashtag/gocon?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#gocon&lt;/a&gt;&lt;/p&gt;&amp;mdash; モノクロメガネ研究員 (@monochromegane) &lt;a href=&#34;https://twitter.com/monochromegane/status/1066697776912691200?ref_src=twsrc%5Etfw&#34;&gt;2018年11月25日&lt;/a&gt;&lt;/blockquote&gt;
 &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
-
 &lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34; data-lang=&#34;ja&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;GoConお疲れ様でした！いわたプロと知り合えたので何か一緒にやりたいなと思ってマス．Fukuoka.goはいつも10名ほどが発表してまして，例えば岡山のコミュニティの皆さんへ中継もしくは双方向の合同トーク大会とか一回どうでしょうか？ お気軽にご検討いただければ &lt;a href=&#34;https://twitter.com/qt_luigi?ref_src=twsrc%5Etfw&#34;&gt;@qt_luigi&lt;/a&gt;&lt;/p&gt;&amp;mdash; モノクロメガネ研究員 (@monochromegane) &lt;a href=&#34;https://twitter.com/monochromegane/status/1067258144995201024?ref_src=twsrc%5Etfw&#34;&gt;2018年11月27日&lt;/a&gt;&lt;/blockquote&gt;
 &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
-
 &lt;h2 id=&#34;gopherくん&#34;&gt;Gopherくん&lt;/h2&gt;
-
 &lt;p&gt;今回で登壇特典のGopherくん全色コンプリート！！&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2018/11/gophers.jpg&#34; alt=&#34;gophers&#34; /&gt;&lt;/p&gt;
-
 &lt;h2 id=&#34;過去の発表&#34;&gt;過去の発表&lt;/h2&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2014/06/08/go-conference-2014-spring/&#34;&gt;Go Conference 2014 spring で発表してきた&lt;/a&gt; - &lt;a href=&#34;https://speakerdeck.com/monochromegane/pt-and-goroutines&#34;&gt;発表資料: pt &amp;amp; Goroutine&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2015/06/23/go-conference-2015-summer/&#34;&gt;Go Conference 2015 summer で発表してきた&lt;/a&gt; - &lt;a href=&#34;https://speakerdeck.com/monochromegane/generative-programming-in-go&#34;&gt;発表資料: Generative Programming in Go&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Go言語でTCPやソケット通信を多重化，高速化するsmux(ソケットマルチプレクサ)をつくった</title>
-      <link>https://blog.monochromegane.com/blog/2018/05/03/smux/</link>
-      <pubDate>Thu, 03 May 2018 20:33:13 +0900</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2018/05/03/smux/</guid>
-      <description>
-
+&lt;/ul&gt;</description></item><item><title>Go言語でTCPやソケット通信を多重化，高速化するsmux(ソケットマルチプレクサ)をつくった</title><link>https://blog.monochromegane.com/blog/2018/05/03/smux/</link><pubDate>Thu, 03 May 2018 20:33:13 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2018/05/03/smux/</guid><description>
 &lt;p&gt;サーバ間で分散処理を行う際の相互通信におけるボトルネックを解消するため，smux(Socket multiplexer)を開発している．&lt;/p&gt;
-
 &lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fsmux&#34; title=&#34;monochromegane/smux&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/smux&#34;&amp;gt;monochromegane/smux&amp;lt;/a&amp;gt;&lt;/iframe&gt;
-
 &lt;h2 id=&#34;サーバ間の相互通信におけるボトルネックとその解決策&#34;&gt;サーバ間の相互通信におけるボトルネックとその解決策&lt;/h2&gt;
-
 &lt;p&gt;一対のサーバ間で多数のリクエストとレスポンスが送受信され，信頼性の高い通信としてTCPを利用する場合，コネクション確立のオーバーヘッドを排除するために接続の再利用が行われる．しかしながら，クライアントは送信に対する受信を待つ必要があるため，レスポンスまでに幾許かの処理時間を要する状況では送信のキューがたまってしまう．そこで複数の接続を利用することでこれを解消する方法が取られるが，追加の接続はリソース使用に関するオーバーヘッドを発生させてしまう．なにより各接続におけるレスポンス待ち時間は依然として解決しておらず，接続の利用面から見て非効率である．そこで，単一の接続において，仮想的に並行送受信を行う方法が提案されている．これは，HTTP/2におけるバイナリフレーミングレイヤの役割であり，コネクション内にストリームと呼ばれる仮想的なチャンネルを設けて双方向の通信を並行して行う．下位レイヤの制約であるリクエスト送信後のブロッキングは，リクエストやレスポンスをフレームと呼ばれる単位に分割することで影響を抑えている．&lt;/p&gt;
-
 &lt;p&gt;このように多数のリクエストとレスポンスが送受信され，レスポンスまでに幾許かの処理時間を要する状況においては，HTTP/2は非常に魅力的であり，はじめに採用を検討すべき価値がある．一方で，HTTP/2を利用する場合，HTTPプロトコルに依存した一定のオーバーヘッドは発生する．もちろんHTTP/2にはバイナリ化やヘッダ圧縮などの多数の対策が組み込まれているため，自身の適用課題において十分な性能が見込めるならば問題ないが，より最適化したパフォーマンスが必要な状況では，これらのオーバーヘッドの除去も検討の余地がある．&lt;/p&gt;
-
 &lt;h2 id=&#34;smux-socket-multiplexer&#34;&gt;smux(Socket multiplexer)&lt;/h2&gt;
-
 &lt;p&gt;smux(Socket multiplexer)はこのような状況において，非常にシンプルなバイナリフレーミングレイヤの振る舞いをアプリケーションに提供する．すなわち，単一コネクションの仮想多重化である．アプリケーションは独自の（そしておそらく簡潔な）プロトコルに則ってストリーム経由でデータを送受信する．複数コネクションのハンドリングが不要になり，複数のリクエストを並行して発行することができるため，アプリケーション実装は簡潔に，通信は高速になることが見込める．&lt;/p&gt;
-
 &lt;p&gt;smuxはGo言語で実装されており，アプリケーションがGo言語であれば，以下のように利用することができる．&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// smux server
 server := smux.Server{
-	Network: &amp;quot;tcp&amp;quot;, // or &amp;quot;unix&amp;quot;
-	Address: &amp;quot;localhost:3000&amp;quot;, // or &amp;quot;sockfile&amp;quot;
-        Handler: smux.HandlerFunc(func(w io.Writer, r io.Reader) {
-                io.Copy(ioutil.Discard, r)
-		fmt.Fprint(w, &amp;quot;Hello, smux client!&amp;quot;)
-        }),
+Network: &amp;quot;tcp&amp;quot;, // or &amp;quot;unix&amp;quot;
+Address: &amp;quot;localhost:3000&amp;quot;, // or &amp;quot;sockfile&amp;quot;
+Handler: smux.HandlerFunc(func(w io.Writer, r io.Reader) {
+io.Copy(ioutil.Discard, r)
+fmt.Fprint(w, &amp;quot;Hello, smux client!&amp;quot;)
+}),
 }
-
 server.ListenAndServe()
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// smux client
 client := smux.Client{
-	Network: &amp;quot;tcp&amp;quot;, // or &amp;quot;unix&amp;quot;
-	Address: &amp;quot;localhost:3000&amp;quot;, // or &amp;quot;sockfile&amp;quot;
+Network: &amp;quot;tcp&amp;quot;, // or &amp;quot;unix&amp;quot;
+Address: &amp;quot;localhost:3000&amp;quot;, // or &amp;quot;sockfile&amp;quot;
 }
-
 body, _ := client.Post([]byte(&amp;quot;Hello, smux server!&amp;quot;))
 fmt.Printf(&amp;quot;%s\n&amp;quot;, body) // &amp;quot;Hello, smux client!&amp;quot;
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;内部的には，streamはReadやWriteのメソッドを持っているため，より最適化したい場合はこれらを自身で利用することもできる．
 また，あくまでソケットインターフェースを経由したやり取りであり，smuxのプロトコルに従えば他の言語での実装も可能である．&lt;/p&gt;
-
 &lt;h2 id=&#34;パフォーマンス&#34;&gt;パフォーマンス&lt;/h2&gt;
-
 &lt;p&gt;以下は，smuxとHTTP/1.1，HTTP/2を対象としたベンチマークである．それぞれ多重度として，コネクション数やストリーム数を増加させながら，一定数のリクエストを捌くまでの時間を計測した．リクエストとレスポンスの内容，サーバサイドでの処理は各手法で統一している．また，サーバーサイドでの処理の代替に数十msのsleepを入れている．&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://user-images.githubusercontent.com/1845486/39556184-79a3e0ba-4eb9-11e8-929d-08a8f3291e04.png&#34; alt=&#34;benchmark&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;今回の条件では多重度を上げた場合に，手法によっては性能が頭打ちになる中で，smuxが特に高い多重度において性能を十分に発揮できた．今回のベンチマークはサーバーとクライアントが同一の環境であり，各手法に適したチューニングや適用時の条件によっても変動はあると考えられるため，利用においては条件に合わせたパフォーマンス計測を行うことが望ましい．ベンチマークのコードは&lt;a href=&#34;https://github.com/monochromegane/smux/blob/master/cmd/bench&#34;&gt;ここ&lt;/a&gt;においている．&lt;/p&gt;
-
 &lt;h2 id=&#34;まとめ&#34;&gt;まとめ&lt;/h2&gt;
-
 &lt;p&gt;サーバ間通信のボトルネックを解決するため，HTTP/2のバイナリフレーミングレイヤを参考に，プロトコルのボトルネックを排除するシンプルなコネクションの仮想多重化を行うsmuxを開発した．手元でのベンチマークでは，できるだけ多くのリクエストを並列に処理したいような状況で効果がありそうであることが確認できた．まだまだ安定性の面などで不安もあるが，引き続き本番運用に向けて開発を継続していきたい．&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;&lt;strong&gt;2018/05/04追記&lt;/strong&gt;&lt;/p&gt;
-
 &lt;p&gt;コメントにて先行実装として，&lt;a href=&#34;https://github.com/hashicorp/yamux&#34;&gt;hashicorp/yamux&lt;/a&gt;と&lt;a href=&#34;https://github.com/xtaci/smux&#34;&gt;xtaci/smux&lt;/a&gt;を教えていただいたので，ベンチマークを再実行した．xtaci/smuxはSimple Stream Multiplexingらしいので，ここではssmuxと呼称する．&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://user-images.githubusercontent.com/1845486/39610904-7695e7da-4f8e-11e8-989c-5a2cfac3a4f9.png&#34; alt=&#34;benchmark_2&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;yamuxに対しては同等以上と言えるが，ssmuxが優秀であるという結果になった．両者とも，ストリームにおけるリクエストに対してレスポンスが発生する場合では，リクエスト側の終了を検知するためにクローズ処理が利用できないため，別途自前でデータサイズを送信する必要があるなど使い勝手に関しては多少の難もありつつも，実装や性能については参考になる部分が多い．まだ改善の余地が残っていること，着眼点自体は良さそうであるという点は喜びたい．並列時の性能に効果があると考えられるフロー制御周りを中心に実装参考しながらパフォーマンスなど改めて見直していく．&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Go言語でオンライン外れ値検出エンジンSmartSifterを実装した</title>
-      <link>https://blog.monochromegane.com/blog/2018/02/25/smartsifter/</link>
-      <pubDate>Sun, 25 Feb 2018 20:43:40 +0900</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2018/02/25/smartsifter/</guid>
-      <description>
-
+&lt;p&gt;yamuxに対しては同等以上と言えるが，ssmuxが優秀であるという結果になった．両者とも，ストリームにおけるリクエストに対してレスポンスが発生する場合では，リクエスト側の終了を検知するためにクローズ処理が利用できないため，別途自前でデータサイズを送信する必要があるなど使い勝手に関しては多少の難もありつつも，実装や性能については参考になる部分が多い．まだ改善の余地が残っていること，着眼点自体は良さそうであるという点は喜びたい．並列時の性能に効果があると考えられるフロー制御周りを中心に実装参考しながらパフォーマンスなど改めて見直していく．&lt;/p&gt;</description></item><item><title>Go言語でオンライン外れ値検出エンジンSmartSifterを実装した</title><link>https://blog.monochromegane.com/blog/2018/02/25/smartsifter/</link><pubDate>Sun, 25 Feb 2018 20:43:40 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2018/02/25/smartsifter/</guid><description>
 &lt;p&gt;推薦システムにおける被推薦者の文脈把握に向けて確率的な手法での行動分析を検討している．そこで，&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4320018826/ref=as_li_qf_asin_il_tl?ie=UTF8&amp;amp;tag=monochromeg03-22&amp;amp;creative=1211&amp;amp;linkCode=as2&amp;amp;creativeASIN=4320018826&amp;amp;linkId=9ef342a0d75794d32bcc7a18b8641e4d&#34;&gt;データマイニングによる異常検知&lt;/a&gt;で紹介されていたオンライン外れ値検出エンジンである&lt;code&gt;SmartSifter&lt;/code&gt;の理解を深めるため実装してみた．&lt;/p&gt;
-
 &lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fsmartsifter&#34; title=&#34;monochromegane/smartsifter&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/smartsifter&#34;&amp;gt;monochromegane/smartsifter&amp;lt;/a&amp;gt;&lt;/iframe&gt;
-
 &lt;h1 id=&#34;smartsifter&#34;&gt;SmartSifter&lt;/h1&gt;
-
 &lt;blockquote&gt;
 &lt;p&gt;On-line Unsupervised Outlier Detection Using Finite Mixtures with Discounting Learning Algorithms. This method is proposed by Yamanishi, K., Takeuchi, J., Williams, G. et al. (2004)&lt;/p&gt;
-
 &lt;p&gt;refs: &lt;a href=&#34;http://cs.fit.edu/~pkc/id/related/yamanishi-kdd00.pdf&#34;&gt;http://cs.fit.edu/~pkc/id/related/yamanishi-kdd00.pdf&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
-
 &lt;p&gt;SmartSifterはデータの発生分布が時間とともに非定常に変化していくことを考慮した外れ値検出の手法である．離散値と連続値のベクトルを入力とし，離散値はヒストグラム型の確率密度関数で，連続値は混合ガウスモデルで表し，これをデータから推定する．実際にはオンライン対応のために忘却型学習アルゴリズムとしてそれぞれ拡張されたSDLEとSDEMと呼ばれるアルゴリズムが利用される．また，パラメトリックなモデルを用いるSDEMアルゴリズムはノンパラメトリックなSPDUアルゴリズムと交換することが可能である．外れ値のスコアリングには対数損失またはヘリンジャースコアを利用することができる．詳細は上記論文を参照されたい．&lt;/p&gt;
-
 &lt;h1 id=&#34;外れ値検出&#34;&gt;外れ値検出&lt;/h1&gt;
-
 &lt;p&gt;&lt;a href=&#34;http://www.stat.cmu.edu/~larry/all-of-statistics/=data/faithful.dat&#34;&gt;Old Faithful Geyser Data&lt;/a&gt;として公開されている間欠泉に関するデータを用いてオンライン外れ値検出を試みる．&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://user-images.githubusercontent.com/1845486/36640826-93e5ab9a-1a69-11e8-8672-7b59116528ad.gif&#34; alt=&#34;smartsifter&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;x軸が&lt;code&gt;eruptions&lt;/code&gt;で，y軸が&lt;code&gt;waiting&lt;/code&gt;．各軸は標準化N(0,1)で標準化済みとする．このデータを順番に入力し，各入力でオンライン学習されたSmartSifterの外れ値スコアを全エリアで確認した．スコアが高い（=外れ値の確率が高い）ほど黄色に近付く．&lt;/p&gt;
-
 &lt;p&gt;入力が進むごとにデータの分布に大まかに沿うようにスコアリングされていることが確認できる．&lt;/p&gt;
-
 &lt;h1 id=&#34;離散値を含んだ外れ値検出&#34;&gt;離散値を含んだ外れ値検出&lt;/h1&gt;
-
 &lt;p&gt;SmartSifterは離散値ベクトルを排反な集合に分類したセルごとに混合ガウスモデルを学習する．標準化後の間欠泉のデータからxが正か負,yが正か負かの4象限をセルとしてオンライン外れ値検出を試みる．&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://user-images.githubusercontent.com/1845486/36641381-247afd9c-1a72-11e8-9fe2-2303e3f67b4a.gif&#34; alt=&#34;smartsifter_2&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;各セルごとにスコアが異なることが見て取れる．実運用ではsource-IPaddressなど，各セルごとに連続値側の振る舞いが異なることが想定されるようなものが与えられるだろう．&lt;/p&gt;
-
 &lt;h1 id=&#34;実装&#34;&gt;実装&lt;/h1&gt;
-
 &lt;p&gt;実装は論文に準じているが，$\overline{\mu}_i^{(t)}$と$\overline{\Lambda}_i^{(t)}$については論文中に初期値が与えられていなかったので，それぞれ$\mu_i^{(t)}$と$\Lambda_i^{(t)}$から求めた．また，$\Lambda_i^{(0)}$は単位行列とした．&lt;/p&gt;
-
 &lt;p&gt;現状，Golangからは以下のように利用することができる．&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;r := 0.1 // Discounting parameter.
 alpha := 1.5 // Hyper parameter for continuous variables.
 beta := 1.0 // Hyper parameter for categorical variables.
 cellNum := 0 // Only continuous variables.
 mixtureNum := 2 // Number of mixtures for GMM.
 dim := 2 // Number of dimentions for GMM.
-
 ss := smartsifter.NewSmartSifter(r, alpha, beta, cellNum, mixtureNum, dim)
 logLoss := ss.Input(nil, []float64{0.1, 0.2}, true)
 fmt.Println(&amp;quot;Score using logLoss: %f\n&amp;quot;, logLoss)
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
-
 &lt;p&gt;こういった確率モデルに従うようなアルゴリズムの勉強のため，今回はSmartSifterを実装した．実運用ではハイパーパラメータの調整が必要になってくると思われるが，今回のような単純なデータであれば想定した結果を得られることがわかった．&lt;/p&gt;
-
 &lt;p&gt;現状，ヘリンジャースコアやノンパラメトリックなアルゴリズム(SPDU)は実装していない．また，CLIも用意していないので今後必要になれば順次実装していく．&lt;/p&gt;
-
-&lt;p&gt;また，今後は独立モデルとしての外れ値検出だけでなく時系列モデルや行動モデルを仮定していく異常検出も試していきたい．&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>『みんなのGo言語【現場で使える実践テクニック】』をいただきました。</title>
-      <link>https://blog.monochromegane.com/blog/2016/09/11/go-for-everyone/</link>
-      <pubDate>Sun, 11 Sep 2016 13:32:45 +0900</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2016/09/11/go-for-everyone/</guid>
-      <description>
-
+&lt;p&gt;また，今後は独立モデルとしての外れ値検出だけでなく時系列モデルや行動モデルを仮定していく異常検出も試していきたい．&lt;/p&gt;</description></item><item><title>『みんなのGo言語【現場で使える実践テクニック】』をいただきました。</title><link>https://blog.monochromegane.com/blog/2016/09/11/go-for-everyone/</link><pubDate>Sun, 11 Sep 2016 13:32:45 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2016/09/11/go-for-everyone/</guid><description>
 &lt;p&gt;著者のお一人、&lt;a href=&#34;https://twitter.com/songmu&#34;&gt;@songmu&lt;/a&gt;さんより、『みんなのGo言語【現場で使える実践テクニック】』をいただきました。ありがとうございます。&lt;/p&gt;
-
-&lt;p&gt;&lt;a  href=&#34;https://www.amazon.co.jp/gp/product/477418392X/ref=as_li_tf_il?ie=UTF8&amp;camp=247&amp;creative=1211&amp;creativeASIN=477418392X&amp;linkCode=as2&amp;tag=monochromeg03-22&#34;&gt;&lt;img border=&#34;0&#34; src=&#34;http://ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;ASIN=477418392X&amp;Format=_SL250_&amp;ID=AsinImage&amp;MarketPlace=JP&amp;ServiceVersion=20070822&amp;WS=1&amp;tag=monochromeg03-22&#34; &gt;&lt;/a&gt;&lt;img src=&#34;http://ir-jp.amazon-adsystem.com/e/ir?t=monochromeg03-22&amp;l=as2&amp;o=9&amp;a=477418392X&#34; width=&#34;1&#34; height=&#34;1&#34; border=&#34;0&#34; alt=&#34;&#34; style=&#34;border:none !important; margin:0px !important;&#34; /&gt;&lt;/p&gt;
-
+&lt;p&gt;&lt;a href=&#34;https://www.amazon.co.jp/gp/product/477418392X/ref=as_li_tf_il?ie=UTF8&amp;camp=247&amp;creative=1211&amp;creativeASIN=477418392X&amp;linkCode=as2&amp;tag=monochromeg03-22&#34;&gt;&lt;img border=&#34;0&#34; src=&#34;http://ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;ASIN=477418392X&amp;Format=_SL250_&amp;ID=AsinImage&amp;MarketPlace=JP&amp;ServiceVersion=20070822&amp;WS=1&amp;tag=monochromeg03-22&#34; &gt;&lt;/a&gt;&lt;img src=&#34;http://ir-jp.amazon-adsystem.com/e/ir?t=monochromeg03-22&amp;l=as2&amp;o=9&amp;a=477418392X&#34; width=&#34;1&#34; height=&#34;1&#34; border=&#34;0&#34; alt=&#34;&#34; style=&#34;border:none !important; margin:0px !important;&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;現場で使える実践テクニックのタイトル通り、Go言語界隈の有名人が様々なテクニックを紹介してくれています。自分もGo言語が好きでよく書いていますが、書き始めた当時に試行錯誤しながら身につけてきた知識、テクニックが簡潔にまとまっており、文法を一通り覚えた初学者にとって学習効率が非常に高い本ではないかと思います。&lt;/p&gt;
-
 &lt;h2 id=&#34;第1章-goによるチーム開発のはじめ方とコードを書く上での心得&#34;&gt;第1章 Goによるチーム開発のはじめ方とコードを書く上での心得&lt;/h2&gt;
-
 &lt;p&gt;Go言語を快適に書くための開発環境の準備から、Goらしいコードを書くまでが簡潔にまとめられています。main.goだけのプロジェクトから卒業するときに悩むところが網羅されており、A Tour Of Goのあとに、みんなのGo言語 1章を読むまでを入門としてよさそうです。&lt;/p&gt;
-
 &lt;p&gt;また、この章で拙作の(&lt;a href=&#34;https://github.com/monochromegane/dragon-imports&#34;&gt;dragon-imports&lt;/a&gt;)を紹介していただきました。ありがとうございます！&lt;/p&gt;
-
 &lt;h2 id=&#34;第2章-マルチプラットフォームで動作する社内ツールのつくり方&#34;&gt;第2章 マルチプラットフォームで動作する社内ツールのつくり方&lt;/h2&gt;
-
 &lt;p&gt;2章ではマルチプラットフォーム対応をするために気をつける点が説明されています。&lt;code&gt;2.5 がんばるよりもまわりのツールに頼る&lt;/code&gt;や、&lt;code&gt;2.8 設定ファイルの取り扱い&lt;/code&gt;など、単一のプラットフォームだけでも役立つテクニックが掲載されています。&lt;/p&gt;
-
 &lt;h2 id=&#34;第3章-実用的なアプリケーションを作るために&#34;&gt;第3章 実用的なアプリケーションを作るために&lt;/h2&gt;
-
 &lt;p&gt;実際に各所のプロダクション環境で動いているツール開発の経験が盛り込まれているまさに実践的な章です。自分自身も、独自シグナルによるメンテナンス性の向上やcontextパッケージなどまだ知らなかった知識を仕入れることができて満足度が高い章でした。&lt;/p&gt;
-
 &lt;h2 id=&#34;第4章-コマンドラインツールを作る&#34;&gt;第4章 コマンドラインツールを作る&lt;/h2&gt;
-
 &lt;p&gt;マルチプラットフォーム、シングルバイナリを実現するGo言語の華形と言えばCLIツールだと思います。CLIツールをつくるにあたり、本章を始め、筆者の方が今までブログや発表の中で一貫して述べてきた、使いやすくメンテナンスしやすいツールにするためのテクニックはとても役立つと思います。&lt;/p&gt;
-
 &lt;p&gt;特に4.5にある終了ステータスコードや入出力をmainとパッケージで分離する手法については自分のプロダクトでも採用させてもらっており、メンテナンスやテストによる堅牢性の向上などにつながっておりオススメです。&lt;/p&gt;
-
 &lt;h2 id=&#34;第5章-the-dark-arts-of-reflection&#34;&gt;第5章 The Dark Arts Of Reflection&lt;/h2&gt;
-
 &lt;p&gt;Go言語のリフレクションで何ができてどのような副作用があるかが説明されています。パフォーマンスについてもまとめられており、利用に関して自分自身で判断できるようになるためにも読んでおくとよいかと思います。&lt;/p&gt;
-
 &lt;p&gt;それにしても動的なSelect文の構築ができるとは思っていませんでした。Go言語初心者を脱した方にとっても新鮮な発見がある章かもしれません。&lt;/p&gt;
-
 &lt;h2 id=&#34;第6章-goのテストに関するツールセット&#34;&gt;第6章 Goのテストに関するツールセット&lt;/h2&gt;
-
 &lt;p&gt;Go言語でのテストの基礎とテクニックを紹介しています。Go言語もテスティングフレームワークが一時期乱立しましたが、最終的には言語標準の機能によるシンプルなテストに落ち着いたのではないかと思っています。この章を読むことでGo言語の提供する仕組みに沿いながらも必要十分なテストを書くための知識を得ることができると思います。&lt;/p&gt;
-
 &lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
-
 &lt;p&gt;全体を読みながら、自分もここでハマったなとか、最終的にこういう風に書いているなと納得しながら読み進めることができました。こういった知見は、普通は自分自身の試行錯誤や他のひとのコードを読んで少しづつためていくものですし、知見がたまったとしてもなかなか網羅的にひとに伝えることは難しいものだと思います。この本にある、現場で培われた実践的なテクニックを本というカタチで学習し、共有できるのは自分自身のスキルアップだけでなく、チームの拠り所として立ち上げや新規参入者を迎えるにあたって心強い一冊となるのではないでしょうか。&lt;/p&gt;
-
-&lt;p&gt;また、紹介されるテクニックについても様々なレベルがあり、自分のレベルややりたいことの変化に応じて、新しい発見のある本ではないかと思います。140ページほどで簡潔にまとめられているので、気軽に読み始めることができます。&lt;a  href=&#34;https://www.amazon.co.jp/gp/product/477418392X/ref=as_li_tf_tl?ie=UTF8&amp;camp=247&amp;creative=1211&amp;creativeASIN=477418392X&amp;linkCode=as2&amp;tag=monochromeg03-22&#34;&gt;みんなのGo言語【現場で使える実践テクニック】&lt;/a&gt;&lt;img src=&#34;http://ir-jp.amazon-adsystem.com/e/ir?t=monochromeg03-22&amp;l=as2&amp;o=9&amp;a=477418392X&#34; width=&#34;1&#34; height=&#34;1&#34; border=&#34;0&#34; alt=&#34;&#34; style=&#34;border:none !important; margin:0px !important;&#34; /&gt;
-オススメです。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>プログラマのための数学勉強会@福岡#5 で「Goによる勾配降下法 -理論と実践-」を発表してきた</title>
-      <link>https://blog.monochromegane.com/blog/2016/08/06/gradient-descent-in-golang/</link>
-      <pubDate>Sat, 06 Aug 2016 12:07:22 +0900</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2016/08/06/gradient-descent-in-golang/</guid>
-      <description>
-
+&lt;p&gt;また、紹介されるテクニックについても様々なレベルがあり、自分のレベルややりたいことの変化に応じて、新しい発見のある本ではないかと思います。140ページほどで簡潔にまとめられているので、気軽に読み始めることができます。&lt;a href=&#34;https://www.amazon.co.jp/gp/product/477418392X/ref=as_li_tf_tl?ie=UTF8&amp;camp=247&amp;creative=1211&amp;creativeASIN=477418392X&amp;linkCode=as2&amp;tag=monochromeg03-22&#34;&gt;みんなのGo言語【現場で使える実践テクニック】&lt;/a&gt;&lt;img src=&#34;http://ir-jp.amazon-adsystem.com/e/ir?t=monochromeg03-22&amp;l=as2&amp;o=9&amp;a=477418392X&#34; width=&#34;1&#34; height=&#34;1&#34; border=&#34;0&#34; alt=&#34;&#34; style=&#34;border:none !important; margin:0px !important;&#34; /&gt;
+オススメです。&lt;/p&gt;</description></item><item><title>プログラマのための数学勉強会@福岡#5 で「Goによる勾配降下法 -理論と実践-」を発表してきた</title><link>https://blog.monochromegane.com/blog/2016/08/06/gradient-descent-in-golang/</link><pubDate>Sat, 06 Aug 2016 12:07:22 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2016/08/06/gradient-descent-in-golang/</guid><description>
 &lt;p&gt;8/6に開催された&lt;a href=&#34;http://maths4pg-fuk.connpass.com/event/34164/&#34;&gt;プログラマのための数学勉強会@福岡#5&lt;/a&gt;で「Goによる勾配降下法 -理論と実践-」を発表してきました。&lt;/p&gt;
-
 &lt;div style=&#34;speakerdeck&#34;&gt;
 &lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;7b6257ea0e4942bcb3d982246f8236a0&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
 &lt;/div&gt;
-
 &lt;p&gt;今回は勾配降下法にフォーカスした内容となっています。機械学習というブラックボックスが実は誤差を最小化するものであり、そのために勾配降下法というアプローチがある、という基本でもあり、数式に抵抗があると最初につまづく箇所でもあります。&lt;/p&gt;
-
 &lt;p&gt;今回は数式と図解に加え、Go言語によるサンプル実装も添えることでプログラマへも理解しやすくなるように資料を作ってみました。&lt;/p&gt;
-
 &lt;p&gt;また、勾配降下法の手法だけではなく収束速度の改善や学習率の自動調整といった最適化の手法も紹介しているので、基本を理解している人もよければ御覧ください。&lt;/p&gt;
-
 &lt;h2 id=&#34;サンプル実装&#34;&gt;サンプル実装&lt;/h2&gt;
-
 &lt;p&gt;発表で使ったサンプル実装はこちらで公開しています。&lt;/p&gt;
-
 &lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fgradient_descent&#34; title=&#34;monochromegane/gradient_descent&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/gradient_descent&#34;&amp;gt;monochromegane/gradient_descent&amp;lt;/a&amp;gt;&lt;/iframe&gt;
-
 &lt;p&gt;正弦関数を元にしたトレーニングセットに対して多項式回帰を行うことができます。&lt;/p&gt;
-
 &lt;p&gt;このような感じで各種勾配降下法や最適化手法、ハイパーパラメーターの調整によってどのように学習が収束していくか、遊んでみてください。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ go run cmd/gradient_descent/main.go -eta 0.075 -m 3 -epoch 40000 -algorithm sgd -momentum 0.9
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;こういうグラフが出力されます。&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2016/08/gradient_descent.png&#34; alt=&#34;gradient_descent&#34; /&gt;&lt;/p&gt;
-
 &lt;h2 id=&#34;プログラマのための数学勉強会-福岡&#34;&gt;プログラマのための数学勉強会@福岡&lt;/h2&gt;
-
 &lt;p&gt;今回は発表に向けて自分で最適化手法について調べて実装して、検証してを繰り返すことで自分自身も理解が深まってよかったです。&lt;/p&gt;
-
 &lt;p&gt;発表内容も多様で、個人的には@hokutsさんの、意識の有無を統合情報量として数式に落としこむ統合情報理論の紹介が面白かったです。高度に複雑化した機械学習のモデルが意識を持つのか。色々妄想が進みそうです。&lt;/p&gt;
-
-&lt;p&gt;福岡で数学に興味ある方、お気軽に。発表者募集中とのことです。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>goimportsを高速化するdragon-importsコマンドをつくった</title>
-      <link>https://blog.monochromegane.com/blog/2015/12/23/dragon-imports/</link>
-      <pubDate>Wed, 23 Dec 2015 22:14:50 +0900</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2015/12/23/dragon-imports/</guid>
-      <description>
-
+&lt;p&gt;福岡で数学に興味ある方、お気軽に。発表者募集中とのことです。&lt;/p&gt;</description></item><item><title>goimportsを高速化するdragon-importsコマンドをつくった</title><link>https://blog.monochromegane.com/blog/2015/12/23/dragon-imports/</link><pubDate>Wed, 23 Dec 2015 22:14:50 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2015/12/23/dragon-imports/</guid><description>
 &lt;p&gt;&lt;code&gt;goimports&lt;/code&gt;はコードのフォーマットに加えてインポート行の追加・削除を行ってくれる便利なコマンドですが、GOPATH配下に大量のリポジトリが存在するとインポートの解決に時間がかかるようになってしまいます。いつでも素早くインポートしたい！ということでdragon-importsというコマンドをつくってみました。&lt;/p&gt;
-
 &lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fdragon-imports&#34; title=&#34;monochromegane/dragon-imports&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/dragon-imports&#34;&amp;gt;monochromegane/dragon-imports&amp;lt;/a&amp;gt;&lt;/iframe&gt;
-
 &lt;h2 id=&#34;使い方&#34;&gt;使い方&lt;/h2&gt;
-
 &lt;p&gt;インストールして&lt;code&gt;dragon-imports&lt;/code&gt;コマンドを実行するだけです。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ go get github.com/monochromegane/dragon-imports/...
 $ dragon-imports
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;コマンド実行後、&lt;code&gt;goimports&lt;/code&gt;コマンドが高速化されます。&lt;code&gt;GOPATH/src&lt;/code&gt;に230リポジトリある環境での実行時間の差は以下の通りです。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;&lt;strong&gt;goimports の実行時間(秒)&lt;/strong&gt;&lt;/p&gt;
-
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
@@ -1601,7 +994,6 @@ $ dragon-imports
 &lt;th align=&#34;right&#34;&gt;after&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
-
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td align=&#34;right&#34;&gt;0.893&lt;/td&gt;
@@ -1609,94 +1001,54 @@ $ dragon-imports
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-
 &lt;p&gt;体感では全く結果を待つ必要がなくなりました！&lt;/p&gt;
-
 &lt;h2 id=&#34;どうやって高速化するのか&#34;&gt;どうやって高速化するのか&lt;/h2&gt;
-
 &lt;h3 id=&#34;goimportsの動作&#34;&gt;goimportsの動作&lt;/h3&gt;
-
 &lt;p&gt;&lt;code&gt;goimports&lt;/code&gt;は標準パッケージのシンボルとインポートパスのマッピングを内部に保持しているため、それらに対するインポートパスの解決は即座に行われます。&lt;/p&gt;
-
 &lt;p&gt;ここで解決できなかった場合は、&lt;code&gt;GOPATH/src&lt;/code&gt;配下に対する探査が発生してしまうため、GOPATH配下に大量にリポジトリがある場合は、時間がかかるようになります（複数回インポートパスを追加する場合でも探査自体は一度しかしないようです）。&lt;/p&gt;
-
 &lt;h3 id=&#34;dragon-importsはどう解決するか&#34;&gt;dragon-importsはどう解決するか&lt;/h3&gt;
-
 &lt;p&gt;&lt;code&gt;dragon-imports&lt;/code&gt;は既存の&lt;code&gt;goimports&lt;/code&gt;コマンドを上書きします。&lt;/p&gt;
-
 &lt;p&gt;&lt;code&gt;dragon-imports&lt;/code&gt;は&lt;code&gt;GOPATH/src&lt;/code&gt;配下にあるエクスポートされた関数や型を上述のマッピングに追加して、時間のかかる探査自体を発生させないようにします。具体的には&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;1. &lt;code&gt;GOROOT/api&lt;/code&gt;配下の定義から標準パッケージのマッピングを取得&lt;/li&gt;
 &lt;li&gt;2. &lt;code&gt;GOPATH/src&lt;/code&gt;配下のパッケージからエクスポートされた関数や型のマッピングを生成&lt;/li&gt;
 &lt;li&gt;3. 上記1.と2.をあわせて&lt;code&gt;goimports&lt;/code&gt;のマッピング定義を上書き(zstdlib.go)&lt;/li&gt;
 &lt;li&gt;4. &lt;code&gt;goimports&lt;/code&gt;を再度インストール(go install -a)&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;を行っています。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;以上、GOPATH爆発問題をちょっと強気に解決するdragon-importsを紹介させていただきました。
 現状使っている分には特に困っていないですが、やり方がやり方なだけにご利用は自己責任でお願いします。&lt;/p&gt;
-
 &lt;p&gt;それでも普段使うGOPATH配下のパッケージがストレスなくインポートされるのはやはり気持ちがよいですね。&lt;/p&gt;
-
 &lt;h3 id=&#34;やっぱりコワいんですけど&#34;&gt;やっぱりコワいんですけど&lt;/h3&gt;
-
 &lt;p&gt;安心してください、戻せますよ。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ cd $GOPATH/src/golang.org/x/tools
 $ git checkout imports/zstdlib.go
 $ cd $GOPATH/src/golang.org/x/tools/cmd/goimports
 $ go install -a .
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h2 id=&#34;todo&#34;&gt;TODO&lt;/h2&gt;
-
 &lt;ul&gt;
 &lt;li&gt;パッケージの変更を検知してdragon-importsをバックグラウンドで実行する仕組み&lt;/li&gt;
 &lt;li&gt;dragon-importsの対象から除外するオプション&lt;/li&gt;
 &lt;li&gt;vim-goの&lt;code&gt;g:go_fmt_command = &amp;quot;goimports&amp;quot;&lt;/code&gt;でもう少し速度向上を実感できるようにする&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>The Platinum Searcherを5倍高速化するためにやったこと</title>
-      <link>https://blog.monochromegane.com/blog/2015/12/15/how-to-speed-up-the-platinum-searcher-v2/</link>
-      <pubDate>Tue, 15 Dec 2015 00:00:00 +0900</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2015/12/15/how-to-speed-up-the-platinum-searcher-v2/</guid>
-      <description>
-
+&lt;/ul&gt;</description></item><item><title>The Platinum Searcherを5倍高速化するためにやったこと</title><link>https://blog.monochromegane.com/blog/2015/12/15/how-to-speed-up-the-platinum-searcher-v2/</link><pubDate>Tue, 15 Dec 2015 00:00:00 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2015/12/15/how-to-speed-up-the-platinum-searcher-v2/</guid><description>
 &lt;p&gt;&lt;strong&gt;この記事は &lt;a href=&#34;http://qiita.com/advent-calendar/2015/go2&#34;&gt;Go Advent Calendar 2015 その2&lt;/a&gt; の 15日目の記事です。&lt;/strong&gt;&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;先日、5倍の高速化を実現した&lt;a href=&#34;https://blog.monochromegane.com/blog/2015/12/08/the-platinum-searcher-v2/&#34;&gt;高速検索ツールThe Platinum SearcherのV2をリリース&lt;/a&gt;しました。&lt;/p&gt;
-
 &lt;p&gt;今回は、高速化にあたり工夫した点をまとめておこうと思います。&lt;/p&gt;
-
 &lt;h2 id=&#34;the-platinum-searcherの基本実装について&#34;&gt;The Platinum Searcherの基本実装について&lt;/h2&gt;
-
 &lt;p&gt;以前、&lt;a href=&#34;https://speakerdeck.com/monochromegane/pt-and-goroutines&#34;&gt;GoConferenceで発表した資料&lt;/a&gt;にまとめてあるので、興味のあるかたはご覧ください。
 基本的にはFind、Grep、PrintのGoroutineがそれぞれの結果をChannelを経由して渡すつくりになっており、それぞれのGoroutine内で並行で処理を行うために更にGoroutineを起動しています。&lt;/p&gt;
-
 &lt;h2 id=&#34;ボトルネックの調査&#34;&gt;ボトルネックの調査&lt;/h2&gt;
-
 &lt;p&gt;今回は完全書き直しだったのでボトルネックを潰していくという手法ではなかったのですが、再実装にあたり、気をつけるべき点を確認する上でも現状のボトルネック箇所を最初に調査しました。&lt;/p&gt;
-
 &lt;p&gt;プロファイリングツールにはpprofを使います。既存のコードに以下を追加し&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;cpuprofile := &amp;quot;mycpu.prof&amp;quot;
 f, _ := os.Create(cpuprofile)
 pprof.StartCPUProfile(f)
 defer pprof.StopCPUProfile()
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;ビルドして、処理（今回は検索）を実行、出力された結果に対して &lt;code&gt;top&lt;/code&gt; や &lt;code&gt;top20&lt;/code&gt; などを使いボトルネックを確認します。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ go build -o pt cmd/pt/main.go
 $ ./pt EXPORT_SYMBOL_GPL ~/src/github.com/torvalds/linux/ &amp;gt; /dev/null
 $ go tool pprof pt mycpu.prof
@@ -1705,480 +1057,294 @@ Entering interactive mode (type &amp;quot;help&amp;quot; for commands)
 16.02s of 16.59s total (96.56%)
 Dropped 102 nodes (cum &amp;lt;= 0.08s)
 Showing top 10 nodes out of 85 (cum &amp;gt;= 0.16s)
-      flat  flat%   sum%        cum   cum%
-    14.67s 88.43% 88.43%     14.67s 88.43%  syscall.Syscall
-     0.70s  4.22% 92.65%      0.70s  4.22%  nanotime
-     0.15s   0.9% 93.55%      0.15s   0.9%  runtime.mach_semaphore_timedwait
-     0.13s  0.78% 94.33%      0.13s  0.78%  runtime.mach_semaphore_wait
-     0.12s  0.72% 95.06%      0.12s  0.72%  runtime.memmove
-     0.11s  0.66% 95.72%      0.11s  0.66%  syscall.Syscall6
-     0.10s   0.6% 96.32%      0.10s   0.6%  runtime.usleep
-     0.02s  0.12% 96.44%      0.19s  1.15%  runtime.findrunnable
-     0.01s  0.06% 96.50%      7.08s 42.68%  bufio.(*Reader).ReadLine
-     0.01s  0.06% 96.56%      0.16s  0.96%  github.com/monochromegane/the_platinum_searcher.patterns.match
+flat flat% sum% cum cum%
+14.67s 88.43% 88.43% 14.67s 88.43% syscall.Syscall
+0.70s 4.22% 92.65% 0.70s 4.22% nanotime
+0.15s 0.9% 93.55% 0.15s 0.9% runtime.mach_semaphore_timedwait
+0.13s 0.78% 94.33% 0.13s 0.78% runtime.mach_semaphore_wait
+0.12s 0.72% 95.06% 0.12s 0.72% runtime.memmove
+0.11s 0.66% 95.72% 0.11s 0.66% syscall.Syscall6
+0.10s 0.6% 96.32% 0.10s 0.6% runtime.usleep
+0.02s 0.12% 96.44% 0.19s 1.15% runtime.findrunnable
+0.01s 0.06% 96.50% 7.08s 42.68% bufio.(*Reader).ReadLine
+0.01s 0.06% 96.56% 0.16s 0.96% github.com/monochromegane/the_platinum_searcher.patterns.match
 (pprof)
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;syscall.Syscallが一番時間がかかっていることは分かりますが、どこから呼ばれたものかをさっと把握は難しいです。&lt;/p&gt;
-
 &lt;p&gt;こういう場合は &lt;code&gt;web&lt;/code&gt; を使うことで呼び出し元含めて図示することができます。 &lt;a href=&#34;https://blog.monochromegane.com/images/2015/12/pprof_pt_v1.7.9.svg&#34;&gt;全体図はこちら&lt;/a&gt;&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2015/12/pprof_pt_web.png&#34; alt=&#34;pprof_pt_web&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;全体図から syscall.Read と syscall.Open が時間がかかっており、それぞれの呼び出し元が Grep時のbufio.ReadLine と Find時の os.Open であることが判明したのでV2ではこれらに注意しながら再実装を進めることにしました。&lt;/p&gt;
-
 &lt;h2 id=&#34;findの高速化&#34;&gt;Findの高速化&lt;/h2&gt;
-
 &lt;p&gt;Findは対象のディレクトリを探索し、gitignore対象を除外した上で、Grepに対象ファイルパスを渡していくのが仕事です。当然、Grepのほうがファイルの読み込みと文字列検索処理が入り、遅くなるのですが、Findが遅いと、主に立ち上がり時にGrepが暇をしてしまうので、ここもある程度高速であることが求められます。&lt;/p&gt;
-
 &lt;p&gt;V1系の実装では、デフォルトで検索対象のディレクトリ直下のディレクトリ数分だけGoroutineを起動していましたが、V2では上限値までは常にGoroutineを起動してFindの多重度を高めています。&lt;/p&gt;
-
 &lt;p&gt;Find時のGoroutine起動部分はこのようになっています。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;wg := &amp;amp;sync.WaitGroup{}
 for _, file := range files {
-	f := newFileInfo(path, file)
-	select {
-	// 同時起動可能であればGoroutineを使う
-	case sem &amp;lt;- struct{}{}:
-		wg.Add(1)
-		go func(path string, file fileInfo, depth int, ignores ignoreMatchers, wg *sync.WaitGroup) {
-			defer wg.Done()
-			defer func() { &amp;lt;-sem }()
-			walk(path, file, depth, ignores, walkFn, sem)
-		}(filepath.Join(path, file.Name()), f, depth, ignores, wg)
-	// 同時起動数の上限に達していれば通常のwalk
-	default:
-		walk(filepath.Join(path, file.Name()), f, depth, ignores, walkFn, sem)
-	}
+f := newFileInfo(path, file)
+select {
+// 同時起動可能であればGoroutineを使う
+case sem &amp;lt;- struct{}{}:
+wg.Add(1)
+go func(path string, file fileInfo, depth int, ignores ignoreMatchers, wg *sync.WaitGroup) {
+defer wg.Done()
+defer func() { &amp;lt;-sem }()
+walk(path, file, depth, ignores, walkFn, sem)
+}(filepath.Join(path, file.Name()), f, depth, ignores, wg)
+// 同時起動数の上限に達していれば通常のwalk
+default:
+walk(filepath.Join(path, file.Name()), f, depth, ignores, walkFn, sem)
+}
 }
 wg.Wait()
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;ここでは、よくある同時起動数の制御を行っていますが、selectを使って同時起動可能でなければGoroutineを使わずに処理を継続するという方法をとっています。&lt;/p&gt;
-
 &lt;h2 id=&#34;grepの高速化&#34;&gt;Grepの高速化&lt;/h2&gt;
-
 &lt;p&gt;受け取ったファイルを読み込み、パターンにマッチする文字列を探す部分です。また、文字コードの判定も行います。&lt;/p&gt;
-
 &lt;p&gt;V1系では素直に1行読んで、パターンにマッチするかどうか判定するという実装で、さらに文字コード判定時に別途同じファイル読み込みを行っていました。これは実装が簡単な反面、IOが多く発生してしまいます。&lt;/p&gt;
-
 &lt;h3 id=&#34;ioの削減&#34;&gt;IOの削減&lt;/h3&gt;
-
 &lt;p&gt;V2系ではこれを見直し、大きめのバッファを用意して読み込み、その中でパターンにマッチするものがあるか、文字コードがなんであるかを判断するようにしてIO(syscall.Read)を減らしています。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// bufferを確保
 buf := make([]byte, 8196)
 for {
-        // 読み込み
-	c, err := f.Read(buf)
-	if err != nil &amp;amp;&amp;amp; err != io.EOF {
-		log.Fatalf(&amp;quot;read: %s\n&amp;quot;, err)
-	}
-
-	if err == io.EOF {
-		break
-	}
-
-	// 文字コードの判定
-	if !identified {
-		limit := c
-		if limit &amp;gt; 512 {
-			limit = 512
-		}
-
-		encoding = detectEncoding(buf[:limit])
-		...
-	}
-
-	// bufferにパターンが含まれるか判定
-	if bytes.Contains(buf[:c], pattern) {
-        ...
+// 読み込み
+c, err := f.Read(buf)
+if err != nil &amp;amp;&amp;amp; err != io.EOF {
+log.Fatalf(&amp;quot;read: %s\n&amp;quot;, err)
+}
+if err == io.EOF {
+break
+}
+// 文字コードの判定
+if !identified {
+limit := c
+if limit &amp;gt; 512 {
+limit = 512
+}
+encoding = detectEncoding(buf[:limit])
+...
+}
+// bufferにパターンが含まれるか判定
+if bytes.Contains(buf[:c], pattern) {
+...
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;固定サイズのバッファだと行の途中で切れてしまう箇所がありますが、途中で切れた部分は一度退避しておいて、次の読み込んだバッファと結合して欠損をリカバリするような処理を書いています。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/the_platinum_searcher/blob/de8fb0707bda5878026afa4fc33783c31bac93c3/fixed_grep.go#L96-L103&#34;&gt;このあたりで退避&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/the_platinum_searcher/blob/de8fb0707bda5878026afa4fc33783c31bac93c3/fixed_grep.go#L64-L83&#34;&gt;このあたりで復元&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;h3 id=&#34;文字コード変換コストの削減&#34;&gt;文字コード変換コストの削減&lt;/h3&gt;
-
 &lt;p&gt;EUCやShiftJISのファイルを検索する際にV1ではファイル側の文字コードをUTF-8に変換して判定していましたが、V2からはパターン文字列側を文字コード変換してファイル側の文字コード変換のコストを削減しています。&lt;/p&gt;
-
 &lt;h3 id=&#34;パターンにマッチしたファイルの処理&#34;&gt;パターンにマッチしたファイルの処理&lt;/h3&gt;
-
 &lt;p&gt;実際はパターンにマッチしたファイルについては行単位でマッチする行を再度探しなおします。これは処理の共通化やPrintまわりの実装を複雑にしないためですが、Grepはマッチするファイルかどうかの判定が一番多く、ここに対しての最適化をまず行ったためです。今後、まだ高速化したい場合はここも含めてチューニングを検討していこうと思っています。&lt;/p&gt;
-
 &lt;h2 id=&#34;printの高速化&#34;&gt;Printの高速化&lt;/h2&gt;
-
 &lt;p&gt;Grepで見つかった文字列を画面に表示する処理です。ファイル単位でグルーピングした結果を出力する必要があるため、出力を排他する必要があります。&lt;/p&gt;
-
 &lt;h3 id=&#34;排他処理&#34;&gt;排他処理&lt;/h3&gt;
-
 &lt;p&gt;V1系では排他処理のためbufferが1のchannelを設け、Print用のGoroutineを起動していましたが、V2ではsync.Mutexを使った排他処理に変更しました。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func (p printer) print(match match) {
-	p.mu.Lock()
-	defer p.mu.Unlock()
-
-	if match.size() == 0 {
-		return
-	}
-
-	p.formatter.print(match)
+p.mu.Lock()
+defer p.mu.Unlock()
+if match.size() == 0 {
+return
+}
+p.formatter.print(match)
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;ここのベンチマークはnaoinaさんの&lt;a href=&#34;http://qiita.com/naoina/items/d71ddfab31f4b29f6693#%E4%BE%8B%E3%81%88%E3%81%B0channel-%E3%82%92%E4%BD%BF%E3%82%8F%E3%81%AA%E3%81%84&#34;&gt;Golang パフォーマンスチューニング - 例えば、channel を使わない&lt;/a&gt;などが参考になると思います。&lt;/p&gt;
-
 &lt;h3 id=&#34;文字列結合を減らす&#34;&gt;文字列結合を減らす&lt;/h3&gt;
-
 &lt;p&gt;また、微々たるものですが、様々な出力形式に対応するため細かい単位でfmt.Printfを使っていた（1行内で複数回使うこともあった）のをできるだけfmt.Printfを使わない、文字列結合をまとめるなどを行っています。&lt;/p&gt;
-
 &lt;h2 id=&#34;gitignore&#34;&gt;Gitignore&lt;/h2&gt;
-
 &lt;p&gt;The Platinum SearcherではGitignoreの判定を自前で実装しています。V1系では素直に全パターンをマッチングしていましたが、パターン数が多い場合にボトルネックとなり得る状態でした。&lt;/p&gt;
-
 &lt;h3 id=&#34;マッチング対象のパターンを減らす&#34;&gt;マッチング対象のパターンを減らす&lt;/h3&gt;
-
 &lt;p&gt;V2系ではマッチング対象のパターンを少なくするために以下のようなシンプルな（原始的な）木構造のインデックスを用意するようにしました。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;.
 ├── accept # 許可リスト(e.g. !hoge)
-│   ├── absolute # 絶対パス
-│   │   └── depth # 階層数
-│   │       ├── initial # 頭文字[a-zA-z0-9]
-│   │       └── other   # その他の頭文字
-│   └── relative
-│       └── depth
-│           ├── initial
-│           └── other
+│ ├── absolute # 絶対パス
+│ │ └── depth # 階層数
+│ │ ├── initial # 頭文字[a-zA-z0-9]
+│ │ └── other # その他の頭文字
+│ └── relative
+│ └── depth
+│ ├── initial
+│ └── other
 └── ignore # 無視リスト
-    ├── absolute
-    │   └── depth
-    │       ├── initial
-    │       └── other
-    └── relative
-        └── depth
-            ├── initial
-            └── other
+├── absolute
+│ └── depth
+│ ├── initial
+│ └── other
+└── relative
+└── depth
+├── initial
+└── other
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;depthはパターンの階層数で、initialはパターンの頭文字です。渡されたファイルパスから必要なパターンのみを取り出して最小限のマッチングを行います。&lt;/p&gt;
-
 &lt;p&gt;木構造の末端に含まれるパターン数は必ずしも均等にはならないですが、単純に全パターンのマッチよりは充分高速に判定可能になりました。&lt;/p&gt;
-
 &lt;p&gt;以下65個のパターンが含まれるlinuxカーネルのgitignoreに対してのマッチングをベンチマークしたものです。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;BenchmarkIndex-4  3000000   397 ns/op  0 B/op  0 allocs/op
-BenchmarkFull-4    200000  5896 ns/op  0 B/op  0 allocs/op
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;BenchmarkIndex-4 3000000 397 ns/op 0 B/op 0 allocs/op
+BenchmarkFull-4 200000 5896 ns/op 0 B/op 0 allocs/op
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h3 id=&#34;go-gitignore&#34;&gt;go-gitignore&lt;/h3&gt;
-
 &lt;p&gt;また、こちらの高速なgitignore判定については、パッケージに切り出したのでもしGitignore判定したいというニッチなニーズをお持ちの方は使ってみてください。&lt;/p&gt;
-
 &lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fgo-gitignore&#34; title=&#34;monochromegane/go-gitignore&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/go-gitignore&#34;&amp;gt;monochromegane/go-gitignore&amp;lt;/a&amp;gt;&lt;/iframe&gt;
-
 &lt;h2 id=&#34;channel-bufferのチューニング&#34;&gt;Channel bufferのチューニング&lt;/h2&gt;
-
 &lt;p&gt;The Platinum SearcherはFindの同時起動数、Grepの同時起動数、FindとGrepをつなぐChannelのBuffer数が主に性能に影響してくるパラメタとなります。&lt;/p&gt;
-
 &lt;p&gt;これらのチューニングですが、今回は実際の値を見ながら数値を変更して最適な値を探っていくというだいぶ泥臭いやり方になりました。何かよい方法があれば教えて下さい。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// GoroutineとChannel bufferの利用数を出力する
 go func() {
-	for {
-		time.Sleep(10 * time.Millisecond)
-		fmt.Printf(&amp;quot;NumGoroutine %d / NumBuffer %d\n&amp;quot;, runtime.NumGoroutine(), len(grepChan))
-	}
+for {
+time.Sleep(10 * time.Millisecond)
+fmt.Printf(&amp;quot;NumGoroutine %d / NumBuffer %d\n&amp;quot;, runtime.NumGoroutine(), len(grepChan))
+}
 }()
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;Findの同時起動数はFind単体で実行した際はもう少し増やすことで性能出るのですが、Grepのほうにリソースが行き渡らなくなるためか、全体としては増やし過ぎると遅くなるという結果になりました。&lt;/p&gt;
-
 &lt;p&gt;またGrepについても同様ですが、OS側のキャッシュが効いていない場合、ファイルを閉じる処理が間に合わずに &lt;code&gt;too many open files&lt;/code&gt; が発生してしまうため現状の値にしています。&lt;/p&gt;
-
 &lt;h3 id=&#34;gomaxprocsについて&#34;&gt;GOMAXPROCSについて&lt;/h3&gt;
-
 &lt;p&gt;GOMAXPROCSはCPUコア数以上を指定しても現状のThe Platinum Searcherの構成では速くはならずむしろ若干遅くなるという結果になりました。IO待ちなどが発生する間、他にやる処理があるようなプログラムの場合は、CPU数以上増やしても効果があるかもしれませんが、&lt;code&gt;runtime.NumCPU()&lt;/code&gt;と同じ(1.5からのデフォルト)が一番バランスがよさそうです。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func init() {
-	if cpu := runtime.NumCPU(); cpu == 1 {
-		runtime.GOMAXPROCS(2)
-	} else {
-		runtime.GOMAXPROCS(cpu)
-	}
+if cpu := runtime.NumCPU(); cpu == 1 {
+runtime.GOMAXPROCS(2)
+} else {
+runtime.GOMAXPROCS(cpu)
+}
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
-
 &lt;p&gt;The Platinum Searcherの高速化について代表的な修正を書き出してみました。単純にGoroutine使ったらこんなに速い〜からもう少し踏み込んだチューニングが今回出来たのではないかなと思います。&lt;/p&gt;
-
 &lt;p&gt;また、今回の高速化はあくまでThe Platinum Searcherで効果があったことであり、上記のことをやれば必ず速くなるわけではないと思います。実際、ミニマムな実装をつくって何か処理を実装する度に処理時間を計測し、パラメタの調整や使う関数のベンチマークをとって処理時間の少ない方、アロケートの少ない方を採用するよう地道に実装を進めました。遅いと言われている処理を使っても使いドコロによっては影響なかったり、逆に意外なところが遅くなったりもします。&lt;/p&gt;
-
 &lt;p&gt;まさに &lt;code&gt;推測するな、計測せよ&lt;/code&gt; ですね。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;最後にV1とV2の差分とプロファイリング結果をおいておきます。なにかの参考になればうれしいです。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/the_platinum_searcher/pull/110&#34;&gt;V1&amp;hellip;V2&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/images/2015/12/pprof_pt_v1.7.9.svg&#34;&gt;V1 Profile&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/images/2015/12/pprof_pt_v2.0.0.svg&#34;&gt;V2 Profile&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;hr /&gt;
-
-&lt;p&gt;明日は &lt;a href=&#34;http://qiita.com/advent-calendar/2015/go2&#34;&gt;Go Advent Calendar 2015 その2&lt;/a&gt; の 16日目です。担当は&lt;a href=&#34;http://qiita.com/hogedigo&#34;&gt;hogedigo&lt;/a&gt;さんです。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>V2! V2! Go言語製 高速検索ツールThe Platinum Searcherのv2をリリースしました</title>
-      <link>https://blog.monochromegane.com/blog/2015/12/08/the-platinum-searcher-v2/</link>
-      <pubDate>Tue, 08 Dec 2015 20:23:40 +0900</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2015/12/08/the-platinum-searcher-v2/</guid>
-      <description>
-
+&lt;p&gt;明日は &lt;a href=&#34;http://qiita.com/advent-calendar/2015/go2&#34;&gt;Go Advent Calendar 2015 その2&lt;/a&gt; の 16日目です。担当は&lt;a href=&#34;http://qiita.com/hogedigo&#34;&gt;hogedigo&lt;/a&gt;さんです。&lt;/p&gt;</description></item><item><title>V2! V2! Go言語製 高速検索ツールThe Platinum Searcherのv2をリリースしました</title><link>https://blog.monochromegane.com/blog/2015/12/08/the-platinum-searcher-v2/</link><pubDate>Tue, 08 Dec 2015 20:23:40 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2015/12/08/the-platinum-searcher-v2/</guid><description>
 &lt;p&gt;&lt;strong&gt;What a lovely day !!!&lt;/strong&gt;&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;本日、Go言語製 高速検索ツール The Platinum Searcher(pt) のバージョン2をリリースしました。今回は検索速度の向上に主軸を置き、旧バージョンと比較して5倍の高速化を実現しています。&lt;/p&gt;
-
 &lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fthe_platinum_searcher&#34; title=&#34;monochromegane/the_platinum_searcher&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/the_platinum_searcher&#34;&amp;gt;monochromegane/the_platinum_searcher&amp;lt;/a&amp;gt;&lt;/iframe&gt;
-
 &lt;h1 id=&#34;v2&#34;&gt;v2&lt;/h1&gt;
-
 &lt;p&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2014/01/16/the-platinum-searcher/&#34;&gt;約2年前にGo言語の勉強のためつくったThe Platinum Searcher(pt)&lt;/a&gt; ですが、おかげ様でたくさんのPRをもらいながら随分と高機能になりました。反面、速度面についてはまだチューニングの余地を残した状態が続いていたため、今回のバージョンアップにあたって全面書き換えを行い高速化を図りました。&lt;/p&gt;
-
 &lt;h2 id=&#34;benchmark&#34;&gt;Benchmark&lt;/h2&gt;
-
 &lt;p&gt;まずはベンチマーク結果をご覧ください。&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2015/12/pt_benchmark.png&#34; alt=&#34;pt_benchmark&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;MacBook Pro (OS X 10.11.1 / CPU: 2.5GHz Core i5, Memory: 8GB) での実行結果。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;&lt;a href=&#34;https://github.com/torvalds/linux&#34;&gt;Linuxカーネルのソースコード&lt;/a&gt; (約1.8GB) を &lt;code&gt;EXPORT_SYMBOL_GPL&lt;/code&gt; という文字列で検索しています。
 青がOSのキャッシュが効いた状態、赤が効いていない状態の実行時間です。&lt;/p&gt;
-
 &lt;p&gt;旧バージョン(&lt;code&gt;pt(old)&lt;/code&gt;)と比較して、キャッシュなしで&lt;strong&gt;2倍&lt;/strong&gt;、キャッシュありの状態では&lt;strong&gt;5倍&lt;/strong&gt;の速度で検索できるようになりました。キャッシュが効いていない初回検索時の速度が向上したのは個人的にもうれしいところです。&lt;/p&gt;
-
 &lt;h2 id=&#34;実装について&#34;&gt;実装について&lt;/h2&gt;
-
 &lt;p&gt;速度改善に向けた実装の主な変更点は&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;Find時の多重度を増やす&lt;/li&gt;
 &lt;li&gt;Grep時のsyscall.Read回数を減らす&lt;/li&gt;
 &lt;li&gt;Print時の不要なchannelをやめる&lt;/li&gt;
 &lt;li&gt;Gitignoreのマッチングアルゴリズムの見直し&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;でした。ここについては &lt;a href=&#34;http://qiita.com/advent-calendar/2015/go2&#34;&gt;Advent Calendar 2015 - Go その2&lt;/a&gt;で担当の12/15にまとめようと思いますのでよければご覧ください。&lt;/p&gt;
-
 &lt;h1 id=&#34;使い方&#34;&gt;使い方&lt;/h1&gt;
-
 &lt;p&gt;使い方などはこれまでと一緒です。&lt;/p&gt;
-
 &lt;h2 id=&#34;インストール&#34;&gt;インストール&lt;/h2&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ go get -u github.com/monochromegane/the_platinum_searcher/...
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;するか、Macの場合はHomebrewでもインストールできます。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ brew tap monochromegane/pt
 $ brew tap-pin monochromegane/pt
 $ brew install pt
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;または&lt;a href=&#34;https://github.com/monochromegane/the_platinum_searcher/releases&#34;&gt;こちら&lt;/a&gt;から各OS用のバイナリをダウンロードしてください。対応OSはWindows、Linux、Macです。&lt;/p&gt;
-
 &lt;h2 id=&#34;検索&#34;&gt;検索&lt;/h2&gt;
-
 &lt;p&gt;インストールした&lt;code&gt;pt&lt;/code&gt;コマンドで検索を行います。対応している文字コードはUTF-8、EUC-JP、Shift-JISです。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;# カレントディレクトリ以下を検索
 $ pt PATTERN
-
 # ディレクトリを指定して検索
 $ pt PATTERN dir1 dir2
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;ディレクトリ内に.gitignoreがあれば記載されたパターンを検索対象から除外します。&lt;/p&gt;
-
 &lt;h2 id=&#34;オプションと設定ファイル&#34;&gt;オプションと設定ファイル&lt;/h2&gt;
-
 &lt;p&gt;ptには様々なオプションがありますが、これらを &lt;code&gt;~/.ptconfig.toml&lt;/code&gt; として定義しておくことでデフォルトの挙動を変更することができるようになっています。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-ini&#34;&gt;color = true
 context = 3
 ignore = [&amp;quot;dir1&amp;quot;, &amp;quot;dir2&amp;quot;]
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;同名のオプションを実行時に指定した場合は、そちらが優先されます。&lt;/p&gt;
-
 &lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
-
 &lt;p&gt;機能の豊富さと性能をバランスよく保ちながらプロダクトを成長させていくのはなかなか難しいですが面白いところです。The Platinum Searcherは色々思い入れのあるツールなので今後も大切に育てていきたいと思います。&lt;/p&gt;
-
-&lt;p&gt;今後はキャッシュが効いている状態での一層の性能向上と正規表現まわりの改善を進めていきたいなあと思っています。v2になって以前と違う動きをしているよ〜等ありましたらIssueやPRで知らせていただけるとうれしいです。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>野良バイナリになっても大丈夫。Goのバイナリにソースコードを添付するツールをつくった。</title>
-      <link>https://blog.monochromegane.com/blog/2015/08/23/go-bincode/</link>
-      <pubDate>Sun, 23 Aug 2015 01:24:07 +0900</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2015/08/23/go-bincode/</guid>
-      <description>
-
+&lt;p&gt;今後はキャッシュが効いている状態での一層の性能向上と正規表現まわりの改善を進めていきたいなあと思っています。v2になって以前と違う動きをしているよ〜等ありましたらIssueやPRで知らせていただけるとうれしいです。&lt;/p&gt;</description></item><item><title>野良バイナリになっても大丈夫。Goのバイナリにソースコードを添付するツールをつくった。</title><link>https://blog.monochromegane.com/blog/2015/08/23/go-bincode/</link><pubDate>Sun, 23 Aug 2015 01:24:07 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2015/08/23/go-bincode/</guid><description>
 &lt;p&gt;サーバーにあるGoのバイナリのバージョン管理は気を使います。どのバージョンで動いているのかわからなくならないよう、バージョンやリビジョンを埋め込む方法がありますが、そもそもリポジトリもわからないバイナリがあったら&amp;hellip;そんなときに備えて、ソースコード自体をバイナリに埋め込んでおくというツールをつくってみました。&lt;/p&gt;
-
 &lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fgo-bincode&#34; title=&#34;monochromegane/go-bincode&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/go-bincode&#34;&amp;gt;monochromegane/go-bincode&amp;lt;/a&amp;gt;&lt;/iframe&gt;
-
 &lt;p&gt;&lt;code&gt;go-bincode&lt;/code&gt;は内部で&lt;code&gt;go-bindata&lt;/code&gt;を使い、goのソースコードをバイナリに埋め込みます。また、埋め込んだソースコードを参照/リストアするための各種オプションを提供します。&lt;/p&gt;
-
 &lt;h2 id=&#34;利用方法&#34;&gt;利用方法&lt;/h2&gt;
-
 &lt;p&gt;以下、様子です。&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://cloud.githubusercontent.com/assets/1845486/9424618/4ada7c6a-492d-11e5-9958-73bc329ac35c.gif&#34; alt=&#34;go-bincode&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;使い方は、ソースコードを埋め込みたい対象のリポジトリで go-bincode コマンドを叩くだけです。必要に応じて&lt;code&gt;pkg&lt;/code&gt;オプションでパッケージ名を指定してください。&lt;/p&gt;
-
 &lt;p&gt;&lt;code&gt;go-bincode.go&lt;/code&gt;と&lt;code&gt;go-bincoder.go&lt;/code&gt;が生成され、ソースコードの参照/リストアを行うためのオプションが使えるようになります。&lt;/p&gt;
-
 &lt;p&gt;あとはいつも通りビルドしたバイナリを配布すればOKです。&lt;/p&gt;
-
 &lt;h3 id=&#34;オプション&#34;&gt;オプション&lt;/h3&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;list-code&lt;/strong&gt;: ソースコード一覧を表示します&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;show-code&lt;/strong&gt;: 指定したソースコードの内容を表示します&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;restore-code&lt;/strong&gt;: ソースコードをリストアします&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;h2 id=&#34;生成したコードの依存関係&#34;&gt;生成したコードの依存関係&lt;/h2&gt;
-
 &lt;p&gt;go-bincodeを使って生成されるコードはコードのアーカイブと参照/リストア用のオプションを提供するだけです。
 生成後、あなたのコードを修正する必要はありません。&lt;/p&gt;
-
 &lt;p&gt;アーカイブされるコードには生成したコードは含まれませんが、上記の通り依存関係が存在しないため、リストア後のコードも問題なくビルドできます。&lt;/p&gt;
-
 &lt;h2 id=&#34;インストール&#34;&gt;インストール&lt;/h2&gt;
-
 &lt;p&gt;go-bindataを内部で使っているのであわせてインストールしてください。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ go get -u github.com/jteeuwen/go-bindata/... # Requirement
 $ go get -u github.com/monochromegane/go-bincode/...
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
-
 &lt;p&gt;CI、バージョン管理、デプロイ自動化や環境のコード化が一般になってきた時代なので、バイナリとリポジトリとの関連も分からない野良バイナリになるというのは正直なかなか考えにくいとは思いますが、いざという時に判断材料が多いのに越したことはないと思います。&lt;/p&gt;
-
-&lt;p&gt;念には念を入れ、数年後の「Goあるある」でバイナリのコードがわからない〜という話が出ないよう、よければ使ってみてください。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Goのデプロイを「もっと」簡単にする。ビルドプロキシCargo。改めTorokko。</title>
-      <link>https://blog.monochromegane.com/blog/2015/08/16/deploy-golang-by-cargo/</link>
-      <pubDate>Sun, 16 Aug 2015 15:05:04 +0900</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2015/08/16/deploy-golang-by-cargo/</guid>
-      <description>
-
+&lt;p&gt;念には念を入れ、数年後の「Goあるある」でバイナリのコードがわからない〜という話が出ないよう、よければ使ってみてください。&lt;/p&gt;</description></item><item><title>Goのデプロイを「もっと」簡単にする。ビルドプロキシCargo。改めTorokko。</title><link>https://blog.monochromegane.com/blog/2015/08/16/deploy-golang-by-cargo/</link><pubDate>Sun, 16 Aug 2015 15:05:04 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2015/08/16/deploy-golang-by-cargo/</guid><description>
 &lt;p&gt;Goアプリのデプロイはバイナリをひとつ配布して完了なのでとても楽なのですが、バイナリ自体をどこで管理するかについては意外と頭を悩ませることになります。
 Goを使うにあたって、コードさえあればあとはバイナリも簡単に配布できる状態というのが望ましいと思い、仕組みを作ってみました。&lt;/p&gt;
-
 &lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Ftorokko&#34; title=&#34;monochromegane/torokko&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/torokko&#34;&amp;gt;monochromegane/torokko&amp;lt;/a&amp;gt;&lt;/iframe&gt;
-
 &lt;p&gt;&lt;strong&gt;2015/08/16追記: CargoはRustのパッケージマネージャーと名前がかぶってたのでTorokko(トロッコ)に改名しました！&lt;/strong&gt;&lt;/p&gt;
-
 &lt;p&gt;TorokkoはGoアプリのビルドと成果物ダウンロード用のAPIを提供するビルドプロキシです。&lt;/p&gt;
-
 &lt;p&gt;リクエストのURLで対象リポジトリ、GOOS、GOARCH、バージョンを指定します。
 ビルドはDockerコンテナを用いて行い、バックエンドストレージに成果物が保存され、ビルドリクエストと同じURLでダウンロードを行うことができます。&lt;/p&gt;
-
 &lt;p&gt;Docker Hub の Automated Builds のGo版と考えてもらうとイメージしやすいかと思います。
 Torokkoは、特にGoの開発環境をつくりたくないサーバー上へのデプロイを簡単にすることを目的としています。&lt;/p&gt;
-
 &lt;h2 id=&#34;クイックスタート&#34;&gt;クイックスタート&lt;/h2&gt;
-
 &lt;ol&gt;
 &lt;li&gt;Torokkoサーバーを起動します&lt;/li&gt;
-&lt;li&gt;ビルド用のエンドポイントにアクセスします&lt;/li&gt;
-&lt;/ol&gt;
-
+&lt;li&gt;&lt;p&gt;ビルド用のエンドポイントにアクセスします&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ curl -X POST http://torokko-server/{remote}/{owner}/{repo}/{GOOS}/{GOARCH}/{version}
 # e.g. http://torokko-server/github.com/monochromegane/torokko/linux/amd64/v0.0.1
-&lt;/code&gt;&lt;/pre&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
 &lt;p&gt;しばらく経つとビルドが完了しているので、ダウンロード用のエンドポイントにアクセスします。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ curl -OJL http://torokko-server/{remote}/{owner}/{repo}/{GOOS}/{GOARCH}/{version}
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;&lt;a href=&#34;http://torokko.monochromegane.com&#34;&gt;こちら&lt;/a&gt;にデモ用のAPIサーバーを用意しているので使ってみてください。&lt;/p&gt;
-
 &lt;h2 id=&#34;torokkoの仕組み&#34;&gt;Torokkoの仕組み&lt;/h2&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://cloud.githubusercontent.com/assets/1845486/9293092/eba8190c-4457-11e5-9176-19d9f7ac3363.jpg&#34; alt=&#34;torokko\_overview&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;基本的な仕組みは前述のとおりです。
 リクエストURLに応じたリポジトリをDockerコンテナでビルドし、ダウンロードできるようにバックエンドのストレージに保存しています。&lt;/p&gt;
-
 &lt;p&gt;ビルドとダウンロードを一元管理することで&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;リポジトリはコードを管理するだけでよい&lt;/li&gt;
 &lt;li&gt;デプロイ元のPCやデプロイ先のサーバーでビルドせずにダウンロードするだけでよい&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;といったメリットがあります。&lt;/p&gt;
-
 &lt;h2 id=&#34;カスタムビルド&#34;&gt;カスタムビルド&lt;/h2&gt;
-
 &lt;p&gt;TorokkoはGoアプリのビルドに&lt;code&gt;make&lt;/code&gt;を使います。
 単純なGoアプリの場合、Torokkoがデフォルトで用意するビルド手順で問題ないですが、Godepsやgo-bindata、go generateなどを使う場合、リポジトリにMakefileを準備してください。&lt;/p&gt;
-
 &lt;p&gt;なお、デフォルトのMakefileは以下のとおりです。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-mak&#34;&gt;build:
-	go get -d ./...
-	go build
+go get -d ./...
+go build
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h2 id=&#34;エンドポイント&#34;&gt;エンドポイント&lt;/h2&gt;
-
 &lt;p&gt;紹介した、ビルド、ダウンロードの他にビルドログを確認するためのエンドポイントがあります。
 詳しくは&lt;a href=&#34;https://github.com/monochromegane/torokko/blob/master/README.md&#34;&gt;README&lt;/a&gt;を参照ください。&lt;/p&gt;
-
 &lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
-
 &lt;p&gt;とりあえずざっと作った感じで、まだプロトタイプに近いので環境つくる手順も整備できていない、かつスケールしやすい構成とはとても言えない状態ですが、&lt;/p&gt;
-
 &lt;p&gt;CIサービスの設定 + GitHub Releaseへの紐付け + デプロイレシピの修正をしながら、&lt;/p&gt;
-
 &lt;p&gt;「オレは！このバイナリを！ひとつ！サーバーに！置きたいだけなの！！」&lt;/p&gt;
-
 &lt;p&gt;そう思ったことがあるひとは使ってみてもよいかもしれません。
-お盆休み明けから社内サーバーに入れてみて少しずつブラッシュアップしていきます。&lt;/p&gt;
-</description>
-    </item>
-    
-  </channel>
-</rss>
+お盆休み明けから社内サーバーに入れてみて少しずつブラッシュアップしていきます。&lt;/p&gt;</description></item></channel></rss>

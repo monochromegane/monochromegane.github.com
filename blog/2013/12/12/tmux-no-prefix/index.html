@@ -1,15 +1,4 @@
-<!DOCTYPE html>
-<html>
-  <head>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="viewport" content="width=device-width">
-  <meta name="author" content="">
-  
-    <title>tmuxのプレフィックスに疲れたらbind -nオプションを使おう &middot; THINKING MEGANE</title>
-  
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:site" content="@monochromegane">
-  <meta property="og:description" content="ターミナルマルチプレクサtmuxはとても便利ですが、操作の際にプレフィックスが必要で、ペインの切り替えなど頻繁に行うのはちょっと面倒です。
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>tmuxのプレフィックスに疲れたらbind -nオプションを使おう &middot; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="ターミナルマルチプレクサtmuxはとても便利ですが、操作の際にプレフィックスが必要で、ペインの切り替えなど頻繁に行うのはちょっと面倒です。
 実はtmuxには、プレフィックスなしで操作できるステキすぎるオプションがあるので紹介しておきます。
 プレフィックス不要ってすばらしい bind-key の -n オプション bind-keyには-nオプションがあり、これをつけることでプレフィックスを使わなくてもよくなります。
 これで単独のキーにコマンドを割り当てることができます。
@@ -20,138 +9,17 @@ bind -n キー コマンド  プレフィックス不要なペイン移動 自�
 # ペインの移動(ローテート) bind -n C-o select-pane -t :.&#43;  ペインの数が少ない場合はこちらのほうが結果的に速く移動できる気がします。
 Tipsなど マニュアル このあたりを参考にまだまだ応用できそう。
  コマンド キーバインド  設定の確認 以下の設定を入れておけば、プレフィックス &#43; r で設定が即時反映されます。
-# 設定リロード bind r source-file ~/.">
-  <meta property="og:title" content="tmuxのプレフィックスに疲れたらbind -nオプションを使おう">
-  <meta property="og:url" content="https://blog.monochromegane.com/blog/2013/12/12/tmux-no-prefix/">
-  <meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-  
-  <link rel="stylesheet" href="/css/reset.css">
-  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Source+Code+Pro' type='text/css'>
-  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Montserrat' type='text/css'>
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css">
-  <link rel="stylesheet" href="/css/text.css">
-  <link rel="stylesheet" href="/css/color.css">
-  <link rel="stylesheet" href="/css/layout.css">
-  <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="/images/apple-touch-icon-57-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="/images/apple-touch-icon-72-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144-precomposed.png">
-  <link rel="shortcut icon" href="/images/favicon.ico">
-  <link rel="canonical" href="https://blog.monochromegane.com/blog/2013/12/12/tmux-no-prefix/">
-  
-  <link href="" rel="alternate" type="application/rss+xml" title="THINKING MEGANE" />
-  
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async>
-    MathJax.Hub.Config({
-        HTML: ["input/TeX","output/HTML-CSS"],
-        TeX: {
-               Macros: {
-                        bm: ["\\boldsymbol{#1}", 1],
-                        argmax: ["\\mathop{\\rm arg\\,max}\\limits"],
-                        argmin: ["\\mathop{\\rm arg\\,min}\\limits"]},
-               extensions: ["AMSmath.js","AMSsymbols.js"],
-               equationNumbers: { autoNumber: "AMS" } },
-        extensions: ["tex2jax.js"],
-        jax: ["input/TeX","output/HTML-CSS"],
-        tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-                   displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-                   processEscapes: true },
-        "HTML-CSS": { availableFonts: ["TeX"],
-                      linebreaks: { automatic: true } }
-    });
-  </script>
-</head>
-
-  <body>
-    <div class="header">
-  <header>
-    <h1 class="logo"><a href="https://blog.monochromegane.com">THINKING MEGANE</a></h1>
-    <nav>
-      <ul class="menu">
-        <li><a href="/self-introduction/">Home</a></li>
-        <li><a href="/post/">Archives</a></li>
-        <li><a href="/diary/">Diary</a></li>
-        <li><a href="http://thinking-megane.blogspot.jp/">Old Blog</a></li>
-      </ul>
-    </nav>
-  </header>
-</div>
-
-    <div class="container">
-      <article>
-  <div class="post">
-    <header>
-      <h1><a href="https://blog.monochromegane.com/blog/2013/12/12/tmux-no-prefix/">tmuxのプレフィックスに疲れたらbind -nオプションを使おう</a></h1>
-      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2013-12-12</div></time>
-    </header>
-    <div class="post-inner">
-      
-
-<p>ターミナルマルチプレクサ<a href="http://tmux.sourceforge.net/">tmux</a>はとても便利ですが、操作の際にプレフィックスが必要で、ペインの切り替えなど頻繁に行うのはちょっと面倒です。</p>
-
-<p>実はtmuxには、プレフィックスなしで操作できるステキすぎるオプションがあるので紹介しておきます。</p>
-
-<hr />
-
-<h1 id="プレフィックス不要ってすばらしい">プレフィックス不要ってすばらしい</h1>
-
-<h2 id="bind-key-の-n-オプション">bind-key の -n オプション</h2>
-
-<p><code>bind-key</code>には<code>-n</code>オプションがあり、これをつけることでプレフィックスを使わなくてもよくなります。</p>
-
-<p>これで単独のキーにコマンドを割り当てることができます。</p>
-
-<h2 id="設定">設定</h2>
-
-<p>通常のキーバインド設定に<code>-n</code>をつけるだけです。</p>
-
-<p><code>tmux.conf</code></p>
-
-<pre><code>bind -n キー コマンド
-</code></pre>
-
-<h2 id="プレフィックス不要なペイン移動">プレフィックス不要なペイン移動</h2>
-
-<p>自分はペインの移動を最もよく使うので以下のような設定をしています</p>
-
-<pre><code class="language-sh"># Shift + 上下左右でペインを移動できるようにする。
+# 設定リロード bind r source-file ~/."><meta property="og:title" content="tmuxのプレフィックスに疲れたらbind -nオプションを使おう"><meta property="og:url" content="https://blog.monochromegane.com/blog/2013/12/12/tmux-no-prefix/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2013/12/12/tmux-no-prefix/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:true},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:true}}});</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2013/12/12/tmux-no-prefix/>tmuxのプレフィックスに疲れたらbind -nオプションを使おう</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2013-12-12</div></time></header><div class=post-inner><p>ターミナルマルチプレクサ<a href=http://tmux.sourceforge.net/>tmux</a>はとても便利ですが、操作の際にプレフィックスが必要で、ペインの切り替えなど頻繁に行うのはちょっと面倒です。</p><p>実はtmuxには、プレフィックスなしで操作できるステキすぎるオプションがあるので紹介しておきます。</p><hr><h1 id=プレフィックス不要ってすばらしい>プレフィックス不要ってすばらしい</h1><h2 id=bind-key-の-n-オプション>bind-key の -n オプション</h2><p><code>bind-key</code>には<code>-n</code>オプションがあり、これをつけることでプレフィックスを使わなくてもよくなります。</p><p>これで単独のキーにコマンドを割り当てることができます。</p><h2 id=設定>設定</h2><p>通常のキーバインド設定に<code>-n</code>をつけるだけです。</p><p><code>tmux.conf</code></p><pre><code>bind -n キー コマンド
+</code></pre><h2 id=プレフィックス不要なペイン移動>プレフィックス不要なペイン移動</h2><p>自分はペインの移動を最もよく使うので以下のような設定をしています</p><pre><code class=language-sh># Shift + 上下左右でペインを移動できるようにする。
 bind -n S-left select-pane -L
 bind -n S-down select-pane -D
 bind -n S-up select-pane -U
 bind -n S-right select-pane -R
-</code></pre>
-
-<p>これでもプレフィックスが不要になるので充分便利だったのですが、矢印キーはホームポジションから遠いので最近はこんな設定を追加して、<code>Ctrl+o</code>でペインを順番に移動するようにしています。</p>
-
-<pre><code class="language-sh"># ペインの移動(ローテート)
+</code></pre><p>これでもプレフィックスが不要になるので充分便利だったのですが、矢印キーはホームポジションから遠いので最近はこんな設定を追加して、<code>Ctrl+o</code>でペインを順番に移動するようにしています。</p><pre><code class=language-sh># ペインの移動(ローテート)
 bind -n C-o select-pane -t :.+
-</code></pre>
-
-<p>ペインの数が少ない場合はこちらのほうが結果的に速く移動できる気がします。</p>
-
-<h1 id="tipsなど">Tipsなど</h1>
-
-<h2 id="マニュアル">マニュアル</h2>
-
-<p>このあたりを参考にまだまだ応用できそう。</p>
-
-<ul>
-<li><a href="https://bytebucket.org/ns9tks/tmux-ja/wiki/tmux-ja.html#id5">コマンド</a></li>
-<li><a href="https://bytebucket.org/ns9tks/tmux-ja/wiki/tmux-ja.html#id11">キーバインド</a></li>
-</ul>
-
-<h2 id="設定の確認">設定の確認</h2>
-
-<p>以下の設定を入れておけば、プレフィックス + r で設定が即時反映されます。</p>
-
-<pre><code class="language-sh"># 設定リロード
+</code></pre><p>ペインの数が少ない場合はこちらのほうが結果的に速く移動できる気がします。</p><h1 id=tipsなど>Tipsなど</h1><h2 id=マニュアル>マニュアル</h2><p>このあたりを参考にまだまだ応用できそう。</p><ul><li><a href=https://bytebucket.org/ns9tks/tmux-ja/wiki/tmux-ja.html#id5>コマンド</a></li><li><a href=https://bytebucket.org/ns9tks/tmux-ja/wiki/tmux-ja.html#id11>キーバインド</a></li></ul><h2 id=設定の確認>設定の確認</h2><p>以下の設定を入れておけば、プレフィックス + r で設定が即時反映されます。</p><pre><code class=language-sh># 設定リロード
 bind r source-file ~/.tmux.conf
-</code></pre>
-
-<p>キーバインドはコンソールから<code>list-keys</code>で確認できます。</p>
-
-<pre><code class="language-sh">$ tmux list-keys
+</code></pre><p>キーバインドはコンソールから<code>list-keys</code>で確認できます。</p><pre><code class=language-sh>$ tmux list-keys
 
 bind-key -n     C-o select-pane -t :.+
 中略
@@ -159,79 +27,5 @@ bind-key -n    S-Up select-pane -U
 bind-key -n  S-Down select-pane -D
 bind-key -n  S-Left select-pane -L
 bind-key -n S-Right select-pane -R
-</code></pre>
-
-<h2 id="参考">参考</h2>
-
-<p>自分のtmux.confも公開してます。コメントもなるべく入れているので分かりやすいと思うので参考にどうぞ。</p>
-
-<p><a href="https://github.com/monochromegane/dotfiles/blob/master/tmux.conf">monochromegane/dotfiles - tmux.conf</a></p>
-
-<hr />
-
-<p>プレフィックス一回の違いですが、エンジニアであれば日に何十、何百と打っていることになるキーが省略できるというのは、かなり気持ち良いものです。</p>
-
-<p>プレフィックスがないので想定しないところでキーバインドが被ったりしますが、よく使う操作だけでも<code>-n</code>オプションをつけてみる価値はあると思います。どうぞお試しあれ。</p>
-
-    </div>
-    <footer class="tag">
-      <i class="fa fa-tags tag-icon"></i>
-      <ul>
-      
-        <li><a class="tag-link" href="/tags/tmux">tmux</a></li>
-      
-      </ul>
-      <div class="clear"></div>
-    </footer>
-  </div>
-</article>
-
-      <div class="social-btn">
-  <div>
-    <a href="http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/12/12/tmux-no-prefix/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="en" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
-  </div>
-  <div>
-    <a href="https://twitter.com/share" class="twitter-share-button" data-via="monochromegane">Tweet</a>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-  </div>
-</div>
-
-    </div>
-    <footer class="footer">
-  <div class="author"></div>
-  <p class="author-name"><a href="https://twitter.com/monochromegane" target="_blank">@monochromegane</a></p>
-  
-    <p>monochromegane (モノクロめがね) と申します。</p>
-  
-    <p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-  
-  <ul class="social">
-    <li><a href="https://twitter.com/monochromegane" target="_blank"><i class="fa fa-twitter"></i></a></li>
-    <li><a href="https://github.com/monochromegane" target="_blank"><i class="fa fa-github"></i></a></li>
-    <li><a href="/index.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
-  </ul>
-  <p class="copyright">
-    <small>&copy;  <span class="">Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>, Designed by <a href="https://twitter.com/keita_kawamoto" target="_blank">&copy;keita_kawamoto</a></span></small>
-  </p>
-</footer>
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
-
-    
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-38374674-1', 'auto');
-  ga('send', 'pageview');
-
-</script>
-
-
-  </body>
-</html>
+</code></pre><h2 id=参考>参考</h2><p>自分のtmux.confも公開してます。コメントもなるべく入れているので分かりやすいと思うので参考にどうぞ。</p><p><a href=https://github.com/monochromegane/dotfiles/blob/master/tmux.conf>monochromegane/dotfiles - tmux.conf</a></p><hr><p>プレフィックス一回の違いですが、エンジニアであれば日に何十、何百と打っていることになるキーが省略できるというのは、かなり気持ち良いものです。</p><p>プレフィックスがないので想定しないところでキーバインドが被ったりしますが、よく使う操作だけでも<code>-n</code>オプションをつけてみる価値はあると思います。どうぞお試しあれ。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/tmux>tmux</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/12/12/tmux-no-prefix/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','twitter-wjs');</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-38374674-1','auto');ga('send','pageview');</script></body></html>

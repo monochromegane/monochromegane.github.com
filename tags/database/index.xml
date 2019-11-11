@@ -1,52 +1,17 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Database on THINKING MEGANE</title>
-    <link>https://blog.monochromegane.com/tags/database/</link>
-    <description>Recent content in Database on THINKING MEGANE</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>ja-jp</language>
-    <lastBuildDate>Sun, 05 Jul 2015 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/database/" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>Go言語のDB接続情報をRailsのdatabase.ymlから借用するライブラリをつくった</title>
-      <link>https://blog.monochromegane.com/blog/2015/07/05/dsn/</link>
-      <pubDate>Sun, 05 Jul 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2015/07/05/dsn/</guid>
-      <description>
-
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>database on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/database/</link><description>Recent content in database on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 05 Jul 2015 00:00:00 +0000</lastBuildDate><atom:link href="/tags/database/" rel="self" type="application/rss+xml"/><item><title>Go言語のDB接続情報をRailsのdatabase.ymlから借用するライブラリをつくった</title><link>https://blog.monochromegane.com/blog/2015/07/05/dsn/</link><pubDate>Sun, 05 Jul 2015 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2015/07/05/dsn/</guid><description>
 &lt;p&gt;最近、Rails資産のあるサーバーでGoツールを動かすことがあったので、DB接続情報を共通で使えるようにしたいと思い小さなライブラリをつくりました。&lt;/p&gt;
-
-&lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fdsn&#34; title=&#34;monochromegane/dsn&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame    border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/dsn&#34;&amp;gt;monochromegane/dsn&amp;lt;/a&amp;gt;&lt;/iframe&gt;
-
+&lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fdsn&#34; title=&#34;monochromegane/dsn&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/dsn&#34;&amp;gt;monochromegane/dsn&amp;lt;/a&amp;gt;&lt;/iframe&gt;
 &lt;p&gt;Railsのdatabase.ymlからGoのsql.Openに渡すDataSourceNameを出力します。&lt;/p&gt;
-
 &lt;h2 id=&#34;使い方&#34;&gt;使い方&lt;/h2&gt;
-
 &lt;p&gt;database.ymlのパスと環境(productionやdevelopment)をパラメタとして渡してあげるだけです。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;name, dsn, _ := dsn.FromRailsConfig(&amp;quot;myapp/config/database.yml&amp;quot;, &amp;quot;production&amp;quot;)
 fmt.Printf(&amp;quot;[%s] %s&amp;quot;, name, dsn)
 // =&amp;gt; [mysql] username:password@tcp(localhost:3306)/dbname
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;DSN、書式覚えるの厳しいので分かりやすいフォーマットの設定ファイルから読み込めるようになるのもうれしい感じです。&lt;/p&gt;
-
 &lt;h2 id=&#34;機能&#34;&gt;機能&lt;/h2&gt;
-
 &lt;p&gt;今のところ、MySQL, PostgreSql, Sqlite に対応しています。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;実装と今後&#34;&gt;実装と今後&lt;/h1&gt;
-
 &lt;p&gt;単純にYAMLを解析しているだけなので、ERBが含まれる項目はうまく動作しません。&lt;/p&gt;
-
-&lt;p&gt;そのうち、環境変数からやフラグからもDSNを生成できるようにするつもりですが、まだ自分の用途では特に必要になってないのでつくってません。よければPRお待ちしております。&lt;/p&gt;
-</description>
-    </item>
-    
-  </channel>
-</rss>
+&lt;p&gt;そのうち、環境変数からやフラグからもDSNを生成できるようにするつもりですが、まだ自分の用途では特に必要になってないのでつくってません。よければPRお待ちしております。&lt;/p&gt;</description></item></channel></rss>

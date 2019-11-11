@@ -1,100 +1,54 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Wercker on THINKING MEGANE</title>
-    <link>https://blog.monochromegane.com/tags/wercker/</link>
-    <description>Recent content in Wercker on THINKING MEGANE</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>ja-jp</language>
-    <lastBuildDate>Sat, 18 Jul 2015 11:07:01 +0900</lastBuildDate>
-    <atom:link href="/tags/wercker/" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>werckerのtriggerBuild APIを使ってビルドパイプラインをつくる</title>
-      <link>https://blog.monochromegane.com/blog/2015/07/18/wercker-build-api/</link>
-      <pubDate>Sat, 18 Jul 2015 11:07:01 +0900</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2015/07/18/wercker-build-api/</guid>
-      <description>
-
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>wercker on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/wercker/</link><description>Recent content in wercker on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sat, 18 Jul 2015 11:07:01 +0900</lastBuildDate><atom:link href="/tags/wercker/" rel="self" type="application/rss+xml"/><item><title>werckerのtriggerBuild APIを使ってビルドパイプラインをつくる</title><link>https://blog.monochromegane.com/blog/2015/07/18/wercker-build-api/</link><pubDate>Sat, 18 Jul 2015 11:07:01 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2015/07/18/wercker-build-api/</guid><description>
 &lt;p&gt;先日、Hugoに移行した際、ブログ本体のリポジトリとテーマのリポジトリを分けるようにしました。ブログ本体のほうはweckerと連携しておりpushすることでGitHubPagesに公開されるようにしましたが、テーマ側を更新したときも同様のことができるようにAPIを使ってビルドパイプラインっぽいのをつくってみました。&lt;/p&gt;
-
 &lt;h1 id=&#34;triggerbuild-api&#34;&gt;triggerBuild API&lt;/h1&gt;
-
 &lt;p&gt;werckerが提供するビルドをキックするためのAPIです。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://blog.wercker.com/2015/06/23/Trigger-builds-with-the-api.html&#34;&gt;Triggering builds with the wercker API&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://devcenter.wercker.com/api/endpoints/builds.html#trigger-a-build&#34;&gt;API Doc&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;&lt;a href=&#34;http://devcenter.wercker.com/api/getting-started/authentication.html&#34;&gt;ここの手順&lt;/a&gt;に従い、トークンを取得して利用します。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;curl -H &#39;Content-Type: application/json&#39; \
-     -H &amp;quot;Authorization: Bearer &amp;lt;token&amp;gt;&amp;quot;  \
-     -X POST -d &#39;{&amp;quot;applicationId&amp;quot;: &amp;quot;&amp;lt;applicationId&amp;gt;&amp;quot;, &amp;quot;branch&amp;quot;:&amp;quot;master&amp;quot;, &amp;quot;message&amp;quot;:&amp;quot;&amp;lt;your custom message&amp;gt;&amp;quot;}&#39; \
-     https://app.wercker.com/api/v3/builds
+-H &amp;quot;Authorization: Bearer &amp;lt;token&amp;gt;&amp;quot; \
+-X POST -d &#39;{&amp;quot;applicationId&amp;quot;: &amp;quot;&amp;lt;applicationId&amp;gt;&amp;quot;, &amp;quot;branch&amp;quot;:&amp;quot;master&amp;quot;, &amp;quot;message&amp;quot;:&amp;quot;&amp;lt;your custom message&amp;gt;&amp;quot;}&#39; \
+https://app.wercker.com/api/v3/builds
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;のようにして使います。&lt;/p&gt;
-
 &lt;p&gt;&lt;code&gt;applicationId&lt;/code&gt;は、ビルドを実行したいアプリケーションのIDです。
 自分の登録しているアプリケーションのURLにIDがついているのでそこで確認できます。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;https://app.wercker.com/#applications/&amp;lt;applicationId&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h1 id=&#34;ビルドパイプライン&#34;&gt;ビルドパイプライン&lt;/h1&gt;
-
 &lt;p&gt;あとは特定のアプリケーションのビルドから、他のアプリケーションのビルドを呼ぶように設定するだけです。&lt;/p&gt;
-
 &lt;h2 id=&#34;wercker-yml&#34;&gt;wercker.yml&lt;/h2&gt;
-
 &lt;p&gt;自分の場合、テーマのリポジトリのほうに以下のようなwercker.ymlをおいています。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;box: debian
 build:
-  steps:
-    - script:
-        name: echo
-        code: |
-          echo &#39;Update theme&#39;
+steps:
+- script:
+name: echo
+code: |
+echo &#39;Update theme&#39;
 deploy:
-  steps:
-    - script:
-      name: install curl
-      code: |
-        apt-get update
-        apt-get -y install curl
-    - script:
-      name: trigger THINKING MEGANE build
-      code: |
-        curl -H &#39;Content-Type: application/json&#39; -H &amp;quot;Authorization: Bearer $WERCKER_TOKEN&amp;quot; -X POST -d &amp;quot;{\&amp;quot;applicationId\&amp;quot;: \&amp;quot;$WERCKER_APP_ID\&amp;quot;, \&amp;quot;branch\&amp;quot;:\&amp;quot;master\&amp;quot;, \&amp;quot;message\&amp;quot;:\&amp;quot;Update theme\&amp;quot;}&amp;quot; https://app.wercker.com/api/v3/builds
+steps:
+- script:
+name: install curl
+code: |
+apt-get update
+apt-get -y install curl
+- script:
+name: trigger THINKING MEGANE build
+code: |
+curl -H &#39;Content-Type: application/json&#39; -H &amp;quot;Authorization: Bearer $WERCKER_TOKEN&amp;quot; -X POST -d &amp;quot;{\&amp;quot;applicationId\&amp;quot;: \&amp;quot;$WERCKER_APP_ID\&amp;quot;, \&amp;quot;branch\&amp;quot;:\&amp;quot;master\&amp;quot;, \&amp;quot;message\&amp;quot;:\&amp;quot;Update theme\&amp;quot;}&amp;quot; https://app.wercker.com/api/v3/builds
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;buildのstepはwerckerで必須のようなのでダミーを入れています。&lt;/p&gt;
-
 &lt;p&gt;（指定しないと &lt;code&gt;Failed step: setup environment - No &#39;build&#39; pipeline definition in wercker.yml&lt;/code&gt; エラーが出ます）&lt;/p&gt;
-
 &lt;h2 id=&#34;wercker&#34;&gt;wercker&lt;/h2&gt;
-
 &lt;p&gt;wercker側では &lt;code&gt;Deploy targets&lt;/code&gt; &amp;gt; &lt;code&gt;Custom Deploy&lt;/code&gt; を選択し、&lt;code&gt;Auto deploy&lt;/code&gt;にチェックを入れておきます。&lt;/p&gt;
-
 &lt;p&gt;wercker.ymlで指定した、WERCKER_TOKENとWERCKER_APP_IDもここの &lt;code&gt;Deploy pipeline&lt;/code&gt; &amp;gt; &lt;code&gt;Add new variable&lt;/code&gt; で追加します。&lt;/p&gt;
-
 &lt;p&gt;少なくともWERCKER_TOKENは&lt;code&gt;protected&lt;/code&gt;にチェックを入れるのを忘れないようにしましょう。&lt;/p&gt;
-
 &lt;h2 id=&#34;ビルド&#34;&gt;ビルド&lt;/h2&gt;
-
 &lt;p&gt;あとは、テーマのリポジトリにpushするとブログのほうで設定したGitHub Pagesへの公開するビルドが実行されます。
 ブログコンテンツ側のビルド設定は、&lt;a href=&#34;https://blog.monochromegane.com/blog/2015/07/12/octopress-to-hugo/&#34;&gt;前回のエントリ&lt;/a&gt;を参考にしてください。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;ビルド起動がAPIでできるとビルドパイプラインだけでなく、いろいろ応用できそう。
-werckerのAPIは最近充実してきているようなのでいいですね。&lt;/p&gt;
-</description>
-    </item>
-    
-  </channel>
-</rss>
+werckerのAPIは最近充実してきているようなのでいいですね。&lt;/p&gt;</description></item></channel></rss>

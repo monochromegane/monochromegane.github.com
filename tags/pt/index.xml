@@ -1,49 +1,20 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Pt on THINKING MEGANE</title>
-    <link>https://blog.monochromegane.com/tags/pt/</link>
-    <description>Recent content in Pt on THINKING MEGANE</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>ja-jp</language>
-    <lastBuildDate>Tue, 15 Dec 2015 00:00:00 +0900</lastBuildDate>
-    <atom:link href="/tags/pt/" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>The Platinum Searcherを5倍高速化するためにやったこと</title>
-      <link>https://blog.monochromegane.com/blog/2015/12/15/how-to-speed-up-the-platinum-searcher-v2/</link>
-      <pubDate>Tue, 15 Dec 2015 00:00:00 +0900</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2015/12/15/how-to-speed-up-the-platinum-searcher-v2/</guid>
-      <description>
-
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>pt on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/pt/</link><description>Recent content in pt on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Tue, 15 Dec 2015 00:00:00 +0900</lastBuildDate><atom:link href="/tags/pt/" rel="self" type="application/rss+xml"/><item><title>The Platinum Searcherを5倍高速化するためにやったこと</title><link>https://blog.monochromegane.com/blog/2015/12/15/how-to-speed-up-the-platinum-searcher-v2/</link><pubDate>Tue, 15 Dec 2015 00:00:00 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2015/12/15/how-to-speed-up-the-platinum-searcher-v2/</guid><description>
 &lt;p&gt;&lt;strong&gt;この記事は &lt;a href=&#34;http://qiita.com/advent-calendar/2015/go2&#34;&gt;Go Advent Calendar 2015 その2&lt;/a&gt; の 15日目の記事です。&lt;/strong&gt;&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;先日、5倍の高速化を実現した&lt;a href=&#34;https://blog.monochromegane.com/blog/2015/12/08/the-platinum-searcher-v2/&#34;&gt;高速検索ツールThe Platinum SearcherのV2をリリース&lt;/a&gt;しました。&lt;/p&gt;
-
 &lt;p&gt;今回は、高速化にあたり工夫した点をまとめておこうと思います。&lt;/p&gt;
-
 &lt;h2 id=&#34;the-platinum-searcherの基本実装について&#34;&gt;The Platinum Searcherの基本実装について&lt;/h2&gt;
-
 &lt;p&gt;以前、&lt;a href=&#34;https://speakerdeck.com/monochromegane/pt-and-goroutines&#34;&gt;GoConferenceで発表した資料&lt;/a&gt;にまとめてあるので、興味のあるかたはご覧ください。
 基本的にはFind、Grep、PrintのGoroutineがそれぞれの結果をChannelを経由して渡すつくりになっており、それぞれのGoroutine内で並行で処理を行うために更にGoroutineを起動しています。&lt;/p&gt;
-
 &lt;h2 id=&#34;ボトルネックの調査&#34;&gt;ボトルネックの調査&lt;/h2&gt;
-
 &lt;p&gt;今回は完全書き直しだったのでボトルネックを潰していくという手法ではなかったのですが、再実装にあたり、気をつけるべき点を確認する上でも現状のボトルネック箇所を最初に調査しました。&lt;/p&gt;
-
 &lt;p&gt;プロファイリングツールにはpprofを使います。既存のコードに以下を追加し&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;cpuprofile := &amp;quot;mycpu.prof&amp;quot;
 f, _ := os.Create(cpuprofile)
 pprof.StartCPUProfile(f)
 defer pprof.StopCPUProfile()
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;ビルドして、処理（今回は検索）を実行、出力された結果に対して &lt;code&gt;top&lt;/code&gt; や &lt;code&gt;top20&lt;/code&gt; などを使いボトルネックを確認します。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ go build -o pt cmd/pt/main.go
 $ ./pt EXPORT_SYMBOL_GPL ~/src/github.com/torvalds/linux/ &amp;gt; /dev/null
 $ go tool pprof pt mycpu.prof
@@ -52,372 +23,233 @@ Entering interactive mode (type &amp;quot;help&amp;quot; for commands)
 16.02s of 16.59s total (96.56%)
 Dropped 102 nodes (cum &amp;lt;= 0.08s)
 Showing top 10 nodes out of 85 (cum &amp;gt;= 0.16s)
-      flat  flat%   sum%        cum   cum%
-    14.67s 88.43% 88.43%     14.67s 88.43%  syscall.Syscall
-     0.70s  4.22% 92.65%      0.70s  4.22%  nanotime
-     0.15s   0.9% 93.55%      0.15s   0.9%  runtime.mach_semaphore_timedwait
-     0.13s  0.78% 94.33%      0.13s  0.78%  runtime.mach_semaphore_wait
-     0.12s  0.72% 95.06%      0.12s  0.72%  runtime.memmove
-     0.11s  0.66% 95.72%      0.11s  0.66%  syscall.Syscall6
-     0.10s   0.6% 96.32%      0.10s   0.6%  runtime.usleep
-     0.02s  0.12% 96.44%      0.19s  1.15%  runtime.findrunnable
-     0.01s  0.06% 96.50%      7.08s 42.68%  bufio.(*Reader).ReadLine
-     0.01s  0.06% 96.56%      0.16s  0.96%  github.com/monochromegane/the_platinum_searcher.patterns.match
+flat flat% sum% cum cum%
+14.67s 88.43% 88.43% 14.67s 88.43% syscall.Syscall
+0.70s 4.22% 92.65% 0.70s 4.22% nanotime
+0.15s 0.9% 93.55% 0.15s 0.9% runtime.mach_semaphore_timedwait
+0.13s 0.78% 94.33% 0.13s 0.78% runtime.mach_semaphore_wait
+0.12s 0.72% 95.06% 0.12s 0.72% runtime.memmove
+0.11s 0.66% 95.72% 0.11s 0.66% syscall.Syscall6
+0.10s 0.6% 96.32% 0.10s 0.6% runtime.usleep
+0.02s 0.12% 96.44% 0.19s 1.15% runtime.findrunnable
+0.01s 0.06% 96.50% 7.08s 42.68% bufio.(*Reader).ReadLine
+0.01s 0.06% 96.56% 0.16s 0.96% github.com/monochromegane/the_platinum_searcher.patterns.match
 (pprof)
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;syscall.Syscallが一番時間がかかっていることは分かりますが、どこから呼ばれたものかをさっと把握は難しいです。&lt;/p&gt;
-
 &lt;p&gt;こういう場合は &lt;code&gt;web&lt;/code&gt; を使うことで呼び出し元含めて図示することができます。 &lt;a href=&#34;https://blog.monochromegane.com/images/2015/12/pprof_pt_v1.7.9.svg&#34;&gt;全体図はこちら&lt;/a&gt;&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2015/12/pprof_pt_web.png&#34; alt=&#34;pprof_pt_web&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;全体図から syscall.Read と syscall.Open が時間がかかっており、それぞれの呼び出し元が Grep時のbufio.ReadLine と Find時の os.Open であることが判明したのでV2ではこれらに注意しながら再実装を進めることにしました。&lt;/p&gt;
-
 &lt;h2 id=&#34;findの高速化&#34;&gt;Findの高速化&lt;/h2&gt;
-
 &lt;p&gt;Findは対象のディレクトリを探索し、gitignore対象を除外した上で、Grepに対象ファイルパスを渡していくのが仕事です。当然、Grepのほうがファイルの読み込みと文字列検索処理が入り、遅くなるのですが、Findが遅いと、主に立ち上がり時にGrepが暇をしてしまうので、ここもある程度高速であることが求められます。&lt;/p&gt;
-
 &lt;p&gt;V1系の実装では、デフォルトで検索対象のディレクトリ直下のディレクトリ数分だけGoroutineを起動していましたが、V2では上限値までは常にGoroutineを起動してFindの多重度を高めています。&lt;/p&gt;
-
 &lt;p&gt;Find時のGoroutine起動部分はこのようになっています。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;wg := &amp;amp;sync.WaitGroup{}
 for _, file := range files {
-	f := newFileInfo(path, file)
-	select {
-	// 同時起動可能であればGoroutineを使う
-	case sem &amp;lt;- struct{}{}:
-		wg.Add(1)
-		go func(path string, file fileInfo, depth int, ignores ignoreMatchers, wg *sync.WaitGroup) {
-			defer wg.Done()
-			defer func() { &amp;lt;-sem }()
-			walk(path, file, depth, ignores, walkFn, sem)
-		}(filepath.Join(path, file.Name()), f, depth, ignores, wg)
-	// 同時起動数の上限に達していれば通常のwalk
-	default:
-		walk(filepath.Join(path, file.Name()), f, depth, ignores, walkFn, sem)
-	}
+f := newFileInfo(path, file)
+select {
+// 同時起動可能であればGoroutineを使う
+case sem &amp;lt;- struct{}{}:
+wg.Add(1)
+go func(path string, file fileInfo, depth int, ignores ignoreMatchers, wg *sync.WaitGroup) {
+defer wg.Done()
+defer func() { &amp;lt;-sem }()
+walk(path, file, depth, ignores, walkFn, sem)
+}(filepath.Join(path, file.Name()), f, depth, ignores, wg)
+// 同時起動数の上限に達していれば通常のwalk
+default:
+walk(filepath.Join(path, file.Name()), f, depth, ignores, walkFn, sem)
+}
 }
 wg.Wait()
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;ここでは、よくある同時起動数の制御を行っていますが、selectを使って同時起動可能でなければGoroutineを使わずに処理を継続するという方法をとっています。&lt;/p&gt;
-
 &lt;h2 id=&#34;grepの高速化&#34;&gt;Grepの高速化&lt;/h2&gt;
-
 &lt;p&gt;受け取ったファイルを読み込み、パターンにマッチする文字列を探す部分です。また、文字コードの判定も行います。&lt;/p&gt;
-
 &lt;p&gt;V1系では素直に1行読んで、パターンにマッチするかどうか判定するという実装で、さらに文字コード判定時に別途同じファイル読み込みを行っていました。これは実装が簡単な反面、IOが多く発生してしまいます。&lt;/p&gt;
-
 &lt;h3 id=&#34;ioの削減&#34;&gt;IOの削減&lt;/h3&gt;
-
 &lt;p&gt;V2系ではこれを見直し、大きめのバッファを用意して読み込み、その中でパターンにマッチするものがあるか、文字コードがなんであるかを判断するようにしてIO(syscall.Read)を減らしています。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// bufferを確保
 buf := make([]byte, 8196)
 for {
-        // 読み込み
-	c, err := f.Read(buf)
-	if err != nil &amp;amp;&amp;amp; err != io.EOF {
-		log.Fatalf(&amp;quot;read: %s\n&amp;quot;, err)
-	}
-
-	if err == io.EOF {
-		break
-	}
-
-	// 文字コードの判定
-	if !identified {
-		limit := c
-		if limit &amp;gt; 512 {
-			limit = 512
-		}
-
-		encoding = detectEncoding(buf[:limit])
-		...
-	}
-
-	// bufferにパターンが含まれるか判定
-	if bytes.Contains(buf[:c], pattern) {
-        ...
+// 読み込み
+c, err := f.Read(buf)
+if err != nil &amp;amp;&amp;amp; err != io.EOF {
+log.Fatalf(&amp;quot;read: %s\n&amp;quot;, err)
+}
+if err == io.EOF {
+break
+}
+// 文字コードの判定
+if !identified {
+limit := c
+if limit &amp;gt; 512 {
+limit = 512
+}
+encoding = detectEncoding(buf[:limit])
+...
+}
+// bufferにパターンが含まれるか判定
+if bytes.Contains(buf[:c], pattern) {
+...
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;固定サイズのバッファだと行の途中で切れてしまう箇所がありますが、途中で切れた部分は一度退避しておいて、次の読み込んだバッファと結合して欠損をリカバリするような処理を書いています。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/the_platinum_searcher/blob/de8fb0707bda5878026afa4fc33783c31bac93c3/fixed_grep.go#L96-L103&#34;&gt;このあたりで退避&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/the_platinum_searcher/blob/de8fb0707bda5878026afa4fc33783c31bac93c3/fixed_grep.go#L64-L83&#34;&gt;このあたりで復元&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;h3 id=&#34;文字コード変換コストの削減&#34;&gt;文字コード変換コストの削減&lt;/h3&gt;
-
 &lt;p&gt;EUCやShiftJISのファイルを検索する際にV1ではファイル側の文字コードをUTF-8に変換して判定していましたが、V2からはパターン文字列側を文字コード変換してファイル側の文字コード変換のコストを削減しています。&lt;/p&gt;
-
 &lt;h3 id=&#34;パターンにマッチしたファイルの処理&#34;&gt;パターンにマッチしたファイルの処理&lt;/h3&gt;
-
 &lt;p&gt;実際はパターンにマッチしたファイルについては行単位でマッチする行を再度探しなおします。これは処理の共通化やPrintまわりの実装を複雑にしないためですが、Grepはマッチするファイルかどうかの判定が一番多く、ここに対しての最適化をまず行ったためです。今後、まだ高速化したい場合はここも含めてチューニングを検討していこうと思っています。&lt;/p&gt;
-
 &lt;h2 id=&#34;printの高速化&#34;&gt;Printの高速化&lt;/h2&gt;
-
 &lt;p&gt;Grepで見つかった文字列を画面に表示する処理です。ファイル単位でグルーピングした結果を出力する必要があるため、出力を排他する必要があります。&lt;/p&gt;
-
 &lt;h3 id=&#34;排他処理&#34;&gt;排他処理&lt;/h3&gt;
-
 &lt;p&gt;V1系では排他処理のためbufferが1のchannelを設け、Print用のGoroutineを起動していましたが、V2ではsync.Mutexを使った排他処理に変更しました。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func (p printer) print(match match) {
-	p.mu.Lock()
-	defer p.mu.Unlock()
-
-	if match.size() == 0 {
-		return
-	}
-
-	p.formatter.print(match)
+p.mu.Lock()
+defer p.mu.Unlock()
+if match.size() == 0 {
+return
+}
+p.formatter.print(match)
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;ここのベンチマークはnaoinaさんの&lt;a href=&#34;http://qiita.com/naoina/items/d71ddfab31f4b29f6693#%E4%BE%8B%E3%81%88%E3%81%B0channel-%E3%82%92%E4%BD%BF%E3%82%8F%E3%81%AA%E3%81%84&#34;&gt;Golang パフォーマンスチューニング - 例えば、channel を使わない&lt;/a&gt;などが参考になると思います。&lt;/p&gt;
-
 &lt;h3 id=&#34;文字列結合を減らす&#34;&gt;文字列結合を減らす&lt;/h3&gt;
-
 &lt;p&gt;また、微々たるものですが、様々な出力形式に対応するため細かい単位でfmt.Printfを使っていた（1行内で複数回使うこともあった）のをできるだけfmt.Printfを使わない、文字列結合をまとめるなどを行っています。&lt;/p&gt;
-
 &lt;h2 id=&#34;gitignore&#34;&gt;Gitignore&lt;/h2&gt;
-
 &lt;p&gt;The Platinum SearcherではGitignoreの判定を自前で実装しています。V1系では素直に全パターンをマッチングしていましたが、パターン数が多い場合にボトルネックとなり得る状態でした。&lt;/p&gt;
-
 &lt;h3 id=&#34;マッチング対象のパターンを減らす&#34;&gt;マッチング対象のパターンを減らす&lt;/h3&gt;
-
 &lt;p&gt;V2系ではマッチング対象のパターンを少なくするために以下のようなシンプルな（原始的な）木構造のインデックスを用意するようにしました。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;.
 ├── accept # 許可リスト(e.g. !hoge)
-│   ├── absolute # 絶対パス
-│   │   └── depth # 階層数
-│   │       ├── initial # 頭文字[a-zA-z0-9]
-│   │       └── other   # その他の頭文字
-│   └── relative
-│       └── depth
-│           ├── initial
-│           └── other
+│ ├── absolute # 絶対パス
+│ │ └── depth # 階層数
+│ │ ├── initial # 頭文字[a-zA-z0-9]
+│ │ └── other # その他の頭文字
+│ └── relative
+│ └── depth
+│ ├── initial
+│ └── other
 └── ignore # 無視リスト
-    ├── absolute
-    │   └── depth
-    │       ├── initial
-    │       └── other
-    └── relative
-        └── depth
-            ├── initial
-            └── other
+├── absolute
+│ └── depth
+│ ├── initial
+│ └── other
+└── relative
+└── depth
+├── initial
+└── other
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;depthはパターンの階層数で、initialはパターンの頭文字です。渡されたファイルパスから必要なパターンのみを取り出して最小限のマッチングを行います。&lt;/p&gt;
-
 &lt;p&gt;木構造の末端に含まれるパターン数は必ずしも均等にはならないですが、単純に全パターンのマッチよりは充分高速に判定可能になりました。&lt;/p&gt;
-
 &lt;p&gt;以下65個のパターンが含まれるlinuxカーネルのgitignoreに対してのマッチングをベンチマークしたものです。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;BenchmarkIndex-4  3000000   397 ns/op  0 B/op  0 allocs/op
-BenchmarkFull-4    200000  5896 ns/op  0 B/op  0 allocs/op
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;BenchmarkIndex-4 3000000 397 ns/op 0 B/op 0 allocs/op
+BenchmarkFull-4 200000 5896 ns/op 0 B/op 0 allocs/op
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h3 id=&#34;go-gitignore&#34;&gt;go-gitignore&lt;/h3&gt;
-
 &lt;p&gt;また、こちらの高速なgitignore判定については、パッケージに切り出したのでもしGitignore判定したいというニッチなニーズをお持ちの方は使ってみてください。&lt;/p&gt;
-
 &lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fgo-gitignore&#34; title=&#34;monochromegane/go-gitignore&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/go-gitignore&#34;&amp;gt;monochromegane/go-gitignore&amp;lt;/a&amp;gt;&lt;/iframe&gt;
-
 &lt;h2 id=&#34;channel-bufferのチューニング&#34;&gt;Channel bufferのチューニング&lt;/h2&gt;
-
 &lt;p&gt;The Platinum SearcherはFindの同時起動数、Grepの同時起動数、FindとGrepをつなぐChannelのBuffer数が主に性能に影響してくるパラメタとなります。&lt;/p&gt;
-
 &lt;p&gt;これらのチューニングですが、今回は実際の値を見ながら数値を変更して最適な値を探っていくというだいぶ泥臭いやり方になりました。何かよい方法があれば教えて下さい。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// GoroutineとChannel bufferの利用数を出力する
 go func() {
-	for {
-		time.Sleep(10 * time.Millisecond)
-		fmt.Printf(&amp;quot;NumGoroutine %d / NumBuffer %d\n&amp;quot;, runtime.NumGoroutine(), len(grepChan))
-	}
+for {
+time.Sleep(10 * time.Millisecond)
+fmt.Printf(&amp;quot;NumGoroutine %d / NumBuffer %d\n&amp;quot;, runtime.NumGoroutine(), len(grepChan))
+}
 }()
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;Findの同時起動数はFind単体で実行した際はもう少し増やすことで性能出るのですが、Grepのほうにリソースが行き渡らなくなるためか、全体としては増やし過ぎると遅くなるという結果になりました。&lt;/p&gt;
-
 &lt;p&gt;またGrepについても同様ですが、OS側のキャッシュが効いていない場合、ファイルを閉じる処理が間に合わずに &lt;code&gt;too many open files&lt;/code&gt; が発生してしまうため現状の値にしています。&lt;/p&gt;
-
 &lt;h3 id=&#34;gomaxprocsについて&#34;&gt;GOMAXPROCSについて&lt;/h3&gt;
-
 &lt;p&gt;GOMAXPROCSはCPUコア数以上を指定しても現状のThe Platinum Searcherの構成では速くはならずむしろ若干遅くなるという結果になりました。IO待ちなどが発生する間、他にやる処理があるようなプログラムの場合は、CPU数以上増やしても効果があるかもしれませんが、&lt;code&gt;runtime.NumCPU()&lt;/code&gt;と同じ(1.5からのデフォルト)が一番バランスがよさそうです。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func init() {
-	if cpu := runtime.NumCPU(); cpu == 1 {
-		runtime.GOMAXPROCS(2)
-	} else {
-		runtime.GOMAXPROCS(cpu)
-	}
+if cpu := runtime.NumCPU(); cpu == 1 {
+runtime.GOMAXPROCS(2)
+} else {
+runtime.GOMAXPROCS(cpu)
+}
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
-
 &lt;p&gt;The Platinum Searcherの高速化について代表的な修正を書き出してみました。単純にGoroutine使ったらこんなに速い〜からもう少し踏み込んだチューニングが今回出来たのではないかなと思います。&lt;/p&gt;
-
 &lt;p&gt;また、今回の高速化はあくまでThe Platinum Searcherで効果があったことであり、上記のことをやれば必ず速くなるわけではないと思います。実際、ミニマムな実装をつくって何か処理を実装する度に処理時間を計測し、パラメタの調整や使う関数のベンチマークをとって処理時間の少ない方、アロケートの少ない方を採用するよう地道に実装を進めました。遅いと言われている処理を使っても使いドコロによっては影響なかったり、逆に意外なところが遅くなったりもします。&lt;/p&gt;
-
 &lt;p&gt;まさに &lt;code&gt;推測するな、計測せよ&lt;/code&gt; ですね。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;最後にV1とV2の差分とプロファイリング結果をおいておきます。なにかの参考になればうれしいです。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/the_platinum_searcher/pull/110&#34;&gt;V1&amp;hellip;V2&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/images/2015/12/pprof_pt_v1.7.9.svg&#34;&gt;V1 Profile&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/images/2015/12/pprof_pt_v2.0.0.svg&#34;&gt;V2 Profile&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;hr /&gt;
-
-&lt;p&gt;明日は &lt;a href=&#34;http://qiita.com/advent-calendar/2015/go2&#34;&gt;Go Advent Calendar 2015 その2&lt;/a&gt; の 16日目です。担当は&lt;a href=&#34;http://qiita.com/hogedigo&#34;&gt;hogedigo&lt;/a&gt;さんです。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>V2! V2! Go言語製 高速検索ツールThe Platinum Searcherのv2をリリースしました</title>
-      <link>https://blog.monochromegane.com/blog/2015/12/08/the-platinum-searcher-v2/</link>
-      <pubDate>Tue, 08 Dec 2015 20:23:40 +0900</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2015/12/08/the-platinum-searcher-v2/</guid>
-      <description>
-
+&lt;p&gt;明日は &lt;a href=&#34;http://qiita.com/advent-calendar/2015/go2&#34;&gt;Go Advent Calendar 2015 その2&lt;/a&gt; の 16日目です。担当は&lt;a href=&#34;http://qiita.com/hogedigo&#34;&gt;hogedigo&lt;/a&gt;さんです。&lt;/p&gt;</description></item><item><title>V2! V2! Go言語製 高速検索ツールThe Platinum Searcherのv2をリリースしました</title><link>https://blog.monochromegane.com/blog/2015/12/08/the-platinum-searcher-v2/</link><pubDate>Tue, 08 Dec 2015 20:23:40 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2015/12/08/the-platinum-searcher-v2/</guid><description>
 &lt;p&gt;&lt;strong&gt;What a lovely day !!!&lt;/strong&gt;&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;本日、Go言語製 高速検索ツール The Platinum Searcher(pt) のバージョン2をリリースしました。今回は検索速度の向上に主軸を置き、旧バージョンと比較して5倍の高速化を実現しています。&lt;/p&gt;
-
 &lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fthe_platinum_searcher&#34; title=&#34;monochromegane/the_platinum_searcher&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/the_platinum_searcher&#34;&amp;gt;monochromegane/the_platinum_searcher&amp;lt;/a&amp;gt;&lt;/iframe&gt;
-
 &lt;h1 id=&#34;v2&#34;&gt;v2&lt;/h1&gt;
-
 &lt;p&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2014/01/16/the-platinum-searcher/&#34;&gt;約2年前にGo言語の勉強のためつくったThe Platinum Searcher(pt)&lt;/a&gt; ですが、おかげ様でたくさんのPRをもらいながら随分と高機能になりました。反面、速度面についてはまだチューニングの余地を残した状態が続いていたため、今回のバージョンアップにあたって全面書き換えを行い高速化を図りました。&lt;/p&gt;
-
 &lt;h2 id=&#34;benchmark&#34;&gt;Benchmark&lt;/h2&gt;
-
 &lt;p&gt;まずはベンチマーク結果をご覧ください。&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2015/12/pt_benchmark.png&#34; alt=&#34;pt_benchmark&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;MacBook Pro (OS X 10.11.1 / CPU: 2.5GHz Core i5, Memory: 8GB) での実行結果。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;&lt;a href=&#34;https://github.com/torvalds/linux&#34;&gt;Linuxカーネルのソースコード&lt;/a&gt; (約1.8GB) を &lt;code&gt;EXPORT_SYMBOL_GPL&lt;/code&gt; という文字列で検索しています。
 青がOSのキャッシュが効いた状態、赤が効いていない状態の実行時間です。&lt;/p&gt;
-
 &lt;p&gt;旧バージョン(&lt;code&gt;pt(old)&lt;/code&gt;)と比較して、キャッシュなしで&lt;strong&gt;2倍&lt;/strong&gt;、キャッシュありの状態では&lt;strong&gt;5倍&lt;/strong&gt;の速度で検索できるようになりました。キャッシュが効いていない初回検索時の速度が向上したのは個人的にもうれしいところです。&lt;/p&gt;
-
 &lt;h2 id=&#34;実装について&#34;&gt;実装について&lt;/h2&gt;
-
 &lt;p&gt;速度改善に向けた実装の主な変更点は&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;Find時の多重度を増やす&lt;/li&gt;
 &lt;li&gt;Grep時のsyscall.Read回数を減らす&lt;/li&gt;
 &lt;li&gt;Print時の不要なchannelをやめる&lt;/li&gt;
 &lt;li&gt;Gitignoreのマッチングアルゴリズムの見直し&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;でした。ここについては &lt;a href=&#34;http://qiita.com/advent-calendar/2015/go2&#34;&gt;Advent Calendar 2015 - Go その2&lt;/a&gt;で担当の12/15にまとめようと思いますのでよければご覧ください。&lt;/p&gt;
-
 &lt;h1 id=&#34;使い方&#34;&gt;使い方&lt;/h1&gt;
-
 &lt;p&gt;使い方などはこれまでと一緒です。&lt;/p&gt;
-
 &lt;h2 id=&#34;インストール&#34;&gt;インストール&lt;/h2&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ go get -u github.com/monochromegane/the_platinum_searcher/...
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;するか、Macの場合はHomebrewでもインストールできます。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ brew tap monochromegane/pt
 $ brew tap-pin monochromegane/pt
 $ brew install pt
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;または&lt;a href=&#34;https://github.com/monochromegane/the_platinum_searcher/releases&#34;&gt;こちら&lt;/a&gt;から各OS用のバイナリをダウンロードしてください。対応OSはWindows、Linux、Macです。&lt;/p&gt;
-
 &lt;h2 id=&#34;検索&#34;&gt;検索&lt;/h2&gt;
-
 &lt;p&gt;インストールした&lt;code&gt;pt&lt;/code&gt;コマンドで検索を行います。対応している文字コードはUTF-8、EUC-JP、Shift-JISです。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;# カレントディレクトリ以下を検索
 $ pt PATTERN
-
 # ディレクトリを指定して検索
 $ pt PATTERN dir1 dir2
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;ディレクトリ内に.gitignoreがあれば記載されたパターンを検索対象から除外します。&lt;/p&gt;
-
 &lt;h2 id=&#34;オプションと設定ファイル&#34;&gt;オプションと設定ファイル&lt;/h2&gt;
-
 &lt;p&gt;ptには様々なオプションがありますが、これらを &lt;code&gt;~/.ptconfig.toml&lt;/code&gt; として定義しておくことでデフォルトの挙動を変更することができるようになっています。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-ini&#34;&gt;color = true
 context = 3
 ignore = [&amp;quot;dir1&amp;quot;, &amp;quot;dir2&amp;quot;]
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;同名のオプションを実行時に指定した場合は、そちらが優先されます。&lt;/p&gt;
-
 &lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
-
 &lt;p&gt;機能の豊富さと性能をバランスよく保ちながらプロダクトを成長させていくのはなかなか難しいですが面白いところです。The Platinum Searcherは色々思い入れのあるツールなので今後も大切に育てていきたいと思います。&lt;/p&gt;
-
-&lt;p&gt;今後はキャッシュが効いている状態での一層の性能向上と正規表現まわりの改善を進めていきたいなあと思っています。v2になって以前と違う動きをしているよ〜等ありましたらIssueやPRで知らせていただけるとうれしいです。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Go Conference 2014 spring で発表してきた</title>
-      <link>https://blog.monochromegane.com/blog/2014/06/08/go-conference-2014-spring/</link>
-      <pubDate>Sun, 08 Jun 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2014/06/08/go-conference-2014-spring/</guid>
-      <description>&lt;p&gt;5月31日に&lt;a href=&#34;http://connpass.com/event/6370/&#34;&gt;GoConference 2014 spring&lt;/a&gt;というイベントで &lt;code&gt;pt &amp;amp; Goroutine&lt;/code&gt; というタイトルの発表をさせてもらいました。&lt;/p&gt;
-
+&lt;p&gt;今後はキャッシュが効いている状態での一層の性能向上と正規表現まわりの改善を進めていきたいなあと思っています。v2になって以前と違う動きをしているよ〜等ありましたらIssueやPRで知らせていただけるとうれしいです。&lt;/p&gt;</description></item><item><title>Go Conference 2014 spring で発表してきた</title><link>https://blog.monochromegane.com/blog/2014/06/08/go-conference-2014-spring/</link><pubDate>Sun, 08 Jun 2014 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2014/06/08/go-conference-2014-spring/</guid><description>&lt;p&gt;5月31日に&lt;a href=&#34;http://connpass.com/event/6370/&#34;&gt;GoConference 2014 spring&lt;/a&gt;というイベントで &lt;code&gt;pt &amp;amp; Goroutine&lt;/code&gt; というタイトルの発表をさせてもらいました。&lt;/p&gt;
 &lt;p&gt;今年に入ってから Go言語をさわるようになって、&lt;a href=&#34;https://blog.monochromegane.com/blog/2014/01/16/the-platinum-searcher/&#34;&gt;pt(The Platinum Seacher)&lt;/a&gt;というGoでつくったagライクな高速検索ツールを公開しており、そこからのつながりで今回の発表となりました。&lt;/p&gt;
-
 &lt;p&gt;内容的には、以下のスライドのとおり、同ツールの高速化の経緯をたどりながらGo言語の並行処理を実現する機構であるGoroutineの使い方を知ってもらうという構成でした。&lt;/p&gt;
-
 &lt;div style=&#34;speakerdeck&#34;&gt;
 &lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;afff27e0cad2013176a162bf191fee83&#34; data-ratio=&#34;1.33333333333333&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
 &lt;/div&gt;
-
 &lt;p&gt;TLの反応などを見ると、需要はあり一定の満足はもらえたんじゃないかなとほっとしています。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;200名ぐらいの参加者がいて、海外からのスピーカー来ているという今回のカンファレンスは、福岡から参加した自分にとってはなかなか本格的なもので、たくさん刺激を受けたし、こういうところで話すことができたのは、とてもよい経験でした。&lt;/p&gt;
-
 &lt;p&gt;個人的に一番うれしかったのは、ptというプロダクトからいろいろつながって、今回の発表ができたことで。&lt;/p&gt;
-
 &lt;p&gt;東京のカンファレンス参加とか全然考えてなかったときに、ptの活動を通して知り合った &lt;a href=&#34;https://twitter.com/_yosssi&#34;&gt;@_yossi&lt;/a&gt; さんから発表してはどうかとDMをもらって、イベント主催の &lt;a href=&#34;https://twitter.com/ymotongpoo&#34;&gt;@ymotongpoo&lt;/a&gt; さんに問い合わせたら快くOKもらって。&lt;/p&gt;
-
 &lt;p&gt;自腹で行く予定だったのに、アウトプットすることは大切だからと会社が交通費を出してくれたり。&lt;/p&gt;
-
 &lt;p&gt;福岡に帰って二次会と称して、&lt;a href=&#34;http://connpass.com/event/6716/&#34;&gt;社外に向けた勉強会&lt;/a&gt;を開いてみたり。&lt;/p&gt;
-
 &lt;p&gt;思いがけず広がった感じだけど、やりますって言ってよかった。&lt;/p&gt;
-
-&lt;p&gt;アウトプット大事。&lt;/p&gt;
-</description>
-    </item>
-    
-  </channel>
-</rss>
+&lt;p&gt;アウトプット大事。&lt;/p&gt;</description></item></channel></rss>

@@ -1,123 +1,18 @@
-<!DOCTYPE html>
-<html>
-  <head>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="viewport" content="width=device-width">
-  <meta name="author" content="">
-  
-    <title>今日のコードリーディング: rakyll/boom &middot; THINKING MEGANE</title>
-  
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:site" content="@monochromegane">
-  <meta property="og:description" content="HTTP(S) load generator, ApacheBench (ab) replacement, written in Go - rakyll/boom
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>今日のコードリーディング: rakyll/boom &middot; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="HTTP(S) load generator, ApacheBench (ab) replacement, written in Go - rakyll/boom
 概要 Goで書かれたのApacheBenchライクな負荷測定ツール。Python製のtarekziade/boomがオリジナル。
 # 合計100リクエストを10並行で実行する $ boom -n 100 -c 10 https://google.com  バージョン 2015/04/29時点のmaster (372ea3b0e6cb084657d1db7eacccdfae929af5b9)
 コード リクエスト実行部分を中心に必要なところだけ抜粋。
 (*Boomer) Run 結果格納用のchannelをつくってrun()
 func (b *Boomer) Run() { b.results = make(chan *result, b.N) b.run() close(b.results) }  (*Boomer) run リクエストの配分を行うところ。N個のリクエストをC個のworkerで処理している。 NをCで割るんじゃなくてCをworker数として個別のworkerが処理できるだけやる。
-func (b *Boomer) run() { // 総リクエスト数をWaitGroupにAdd var wg sync.WaitGroup wg.Add(b.N) // 総リクエスト分のバッファを持ったchannelを作成 jobs := make(chan *http.Request, b.N) for i := 0; i &lt; b.">
-  <meta property="og:title" content="今日のコードリーディング: rakyll/boom">
-  <meta property="og:url" content="https://blog.monochromegane.com/blog/2015/04/30/code-reading-boom/">
-  <meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-  
-  <link rel="stylesheet" href="/css/reset.css">
-  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Source+Code+Pro' type='text/css'>
-  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Montserrat' type='text/css'>
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css">
-  <link rel="stylesheet" href="/css/text.css">
-  <link rel="stylesheet" href="/css/color.css">
-  <link rel="stylesheet" href="/css/layout.css">
-  <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="/images/apple-touch-icon-57-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="/images/apple-touch-icon-72-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144-precomposed.png">
-  <link rel="shortcut icon" href="/images/favicon.ico">
-  <link rel="canonical" href="https://blog.monochromegane.com/blog/2015/04/30/code-reading-boom/">
-  
-  <link href="" rel="alternate" type="application/rss+xml" title="THINKING MEGANE" />
-  
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async>
-    MathJax.Hub.Config({
-        HTML: ["input/TeX","output/HTML-CSS"],
-        TeX: {
-               Macros: {
-                        bm: ["\\boldsymbol{#1}", 1],
-                        argmax: ["\\mathop{\\rm arg\\,max}\\limits"],
-                        argmin: ["\\mathop{\\rm arg\\,min}\\limits"]},
-               extensions: ["AMSmath.js","AMSsymbols.js"],
-               equationNumbers: { autoNumber: "AMS" } },
-        extensions: ["tex2jax.js"],
-        jax: ["input/TeX","output/HTML-CSS"],
-        tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-                   displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-                   processEscapes: true },
-        "HTML-CSS": { availableFonts: ["TeX"],
-                      linebreaks: { automatic: true } }
-    });
-  </script>
-</head>
-
-  <body>
-    <div class="header">
-  <header>
-    <h1 class="logo"><a href="https://blog.monochromegane.com">THINKING MEGANE</a></h1>
-    <nav>
-      <ul class="menu">
-        <li><a href="/self-introduction/">Home</a></li>
-        <li><a href="/post/">Archives</a></li>
-        <li><a href="/diary/">Diary</a></li>
-        <li><a href="http://thinking-megane.blogspot.jp/">Old Blog</a></li>
-      </ul>
-    </nav>
-  </header>
-</div>
-
-    <div class="container">
-      <article>
-  <div class="post">
-    <header>
-      <h1><a href="https://blog.monochromegane.com/blog/2015/04/30/code-reading-boom/">今日のコードリーディング: rakyll/boom</a></h1>
-      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2015-04-30</div></time>
-    </header>
-    <div class="post-inner">
-      
-
-<p><a href="https://github.com/rakyll/boom">HTTP(S) load generator, ApacheBench (ab) replacement, written in Go - rakyll/boom</a></p>
-
-<h2 id="概要">概要</h2>
-
-<p>Goで書かれたのApacheBenchライクな負荷測定ツール。Python製の<a href="https://github.com/tarekziade/boom">tarekziade/boom</a>がオリジナル。</p>
-
-<pre><code># 合計100リクエストを10並行で実行する
+func (b *Boomer) run() { // 総リクエスト数をWaitGroupにAdd var wg sync.WaitGroup wg.Add(b.N) // 総リクエスト分のバッファを持ったchannelを作成 jobs := make(chan *http.Request, b.N) for i := 0; i &lt; b."><meta property="og:title" content="今日のコードリーディング: rakyll/boom"><meta property="og:url" content="https://blog.monochromegane.com/blog/2015/04/30/code-reading-boom/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2015/04/30/code-reading-boom/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:true},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:true}}});</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2015/04/30/code-reading-boom/>今日のコードリーディング: rakyll/boom</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2015-04-30</div></time></header><div class=post-inner><p><a href=https://github.com/rakyll/boom>HTTP(S) load generator, ApacheBench (ab) replacement, written in Go - rakyll/boom</a></p><h2 id=概要>概要</h2><p>Goで書かれたのApacheBenchライクな負荷測定ツール。Python製の<a href=https://github.com/tarekziade/boom>tarekziade/boom</a>がオリジナル。</p><pre><code># 合計100リクエストを10並行で実行する
 $ boom -n 100 -c 10 https://google.com
-</code></pre>
-
-<h2 id="バージョン">バージョン</h2>
-
-<p>2015/04/29時点の<strong>master</strong> (372ea3b0e6cb084657d1db7eacccdfae929af5b9)</p>
-
-<h2 id="コード">コード</h2>
-
-<p>リクエスト実行部分を中心に必要なところだけ抜粋。</p>
-
-<h3 id="boomer-run">(*Boomer) Run</h3>
-
-<p>結果格納用のchannelをつくってrun()</p>
-
-<pre><code class="language-go">func (b *Boomer) Run() {
+</code></pre><h2 id=バージョン>バージョン</h2><p>2015/04/29時点の<strong>master</strong> (372ea3b0e6cb084657d1db7eacccdfae929af5b9)</p><h2 id=コード>コード</h2><p>リクエスト実行部分を中心に必要なところだけ抜粋。</p><h3 id=boomer-run>(*Boomer) Run</h3><p>結果格納用のchannelをつくってrun()</p><pre><code class=language-go>func (b *Boomer) Run() {
 	b.results = make(chan *result, b.N)
 	b.run()
 	close(b.results)
 }
-</code></pre>
-
-<h3 id="boomer-run-1">(*Boomer) run</h3>
-
-<p>リクエストの配分を行うところ。N個のリクエストをC個のworkerで処理している。
-NをCで割るんじゃなくてCをworker数として個別のworkerが処理できるだけやる。</p>
-
-<pre><code class="language-go">func (b *Boomer) run() {
+</code></pre><h3 id=boomer-run-1>(*Boomer) run</h3><p>リクエストの配分を行うところ。N個のリクエストをC個のworkerで処理している。
+NをCで割るんじゃなくてCをworker数として個別のworkerが処理できるだけやる。</p><pre><code class=language-go>func (b *Boomer) run() {
 	// 総リクエスト数をWaitGroupにAdd
 	var wg sync.WaitGroup
 	wg.Add(b.N)
@@ -143,16 +38,8 @@ NをCで割るんじゃなくてCをworker数として個別のworkerが処理�
 	// 全てのリクエストが処理されるまで待つ
 	wg.Wait()
 }
-</code></pre>
-
-<p>WaitGroupを各処理で<code>Add(1)</code>せずに一度に<code>Add(N)</code>しているのはAdd内での排他による待ちを回避したかったからだと思う。
-実行数が分かっているものは一度にAddしておくというのはよさそう。</p>
-
-<h3 id="boomer-worker">(*Boomer) worker</h3>
-
-<p>jobsから受信して実際にリクエスト、結果をb.resultsに送信</p>
-
-<pre><code class="language-go">func (b *Boomer) worker(wg *sync.WaitGroup, ch chan *http.Request) {
+</code></pre><p>WaitGroupを各処理で<code>Add(1)</code>せずに一度に<code>Add(N)</code>しているのはAdd内での排他による待ちを回避したかったからだと思う。
+実行数が分かっているものは一度にAddしておくというのはよさそう。</p><h3 id=boomer-worker>(*Boomer) worker</h3><p>jobsから受信して実際にリクエスト、結果をb.resultsに送信</p><pre><code class=language-go>func (b *Boomer) worker(wg *sync.WaitGroup, ch chan *http.Request) {
 	client := &amp;http.Client{Transport: tr}
 	for req := range ch {
 		resp, err := client.Do(req)
@@ -160,78 +47,5 @@ NをCで割るんじゃなくてCをworker数として個別のworkerが処理�
 		b.results &lt;- &amp;result{}
 	}
 }
-</code></pre>
-
-<h2 id="雑感">雑感</h2>
-
-<ul>
-<li>必要な処理がコンパクトに実装され、非常に読みやすかった</li>
-<li>waitGroupを使ったworkerパターンなどgoroutineの基本的な使い方例として教えるときによさそう</li>
-<li>Add(N)については前述のとおり。</li>
-<li>time.Tickを使ったworkerへのchannel送信の制御(throttleの部分)は覚えておいてよさそう。</li>
-</ul>
-
-    </div>
-    <footer class="tag">
-      <i class="fa fa-tags tag-icon"></i>
-      <ul>
-      
-        <li><a class="tag-link" href="/tags/code-reading">code-reading</a></li>
-      
-        <li><a class="tag-link" href="/tags/golang">golang</a></li>
-      
-      </ul>
-      <div class="clear"></div>
-    </footer>
-  </div>
-</article>
-
-      <div class="social-btn">
-  <div>
-    <a href="http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2015/04/30/code-reading-boom/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="en" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
-  </div>
-  <div>
-    <a href="https://twitter.com/share" class="twitter-share-button" data-via="monochromegane">Tweet</a>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-  </div>
-</div>
-
-    </div>
-    <footer class="footer">
-  <div class="author"></div>
-  <p class="author-name"><a href="https://twitter.com/monochromegane" target="_blank">@monochromegane</a></p>
-  
-    <p>monochromegane (モノクロめがね) と申します。</p>
-  
-    <p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-  
-  <ul class="social">
-    <li><a href="https://twitter.com/monochromegane" target="_blank"><i class="fa fa-twitter"></i></a></li>
-    <li><a href="https://github.com/monochromegane" target="_blank"><i class="fa fa-github"></i></a></li>
-    <li><a href="/index.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
-  </ul>
-  <p class="copyright">
-    <small>&copy;  <span class="">Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>, Designed by <a href="https://twitter.com/keita_kawamoto" target="_blank">&copy;keita_kawamoto</a></span></small>
-  </p>
-</footer>
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
-
-    
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-38374674-1', 'auto');
-  ga('send', 'pageview');
-
-</script>
-
-
-  </body>
-</html>
+</code></pre><h2 id=雑感>雑感</h2><ul><li>必要な処理がコンパクトに実装され、非常に読みやすかった</li><li>waitGroupを使ったworkerパターンなどgoroutineの基本的な使い方例として教えるときによさそう</li><li>Add(N)については前述のとおり。</li><li>time.Tickを使ったworkerへのchannel送信の制御(throttleの部分)は覚えておいてよさそう。</li></ul></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/code-reading>code-reading</a></li><li><a class=tag-link href=/tags/golang>golang</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2015/04/30/code-reading-boom/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','twitter-wjs');</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-38374674-1','auto');ga('send','pageview');</script></body></html>

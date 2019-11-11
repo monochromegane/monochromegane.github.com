@@ -1,140 +1,71 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Automator on THINKING MEGANE</title>
-    <link>https://blog.monochromegane.com/tags/automator/</link>
-    <description>Recent content in Automator on THINKING MEGANE</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>ja-jp</language>
-    <lastBuildDate>Sun, 17 May 2015 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/automator/" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>CSVテキストをMarkdown形式のテーブルに変換するツールをつくった</title>
-      <link>https://blog.monochromegane.com/blog/2015/05/17/csv-to-markdown-table/</link>
-      <pubDate>Sun, 17 May 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2015/05/17/csv-to-markdown-table/</guid>
-      <description>
-
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>automator on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/automator/</link><description>Recent content in automator on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 17 May 2015 00:00:00 +0000</lastBuildDate><atom:link href="/tags/automator/" rel="self" type="application/rss+xml"/><item><title>CSVテキストをMarkdown形式のテーブルに変換するツールをつくった</title><link>https://blog.monochromegane.com/blog/2015/05/17/csv-to-markdown-table/</link><pubDate>Sun, 17 May 2015 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2015/05/17/csv-to-markdown-table/</guid><description>
 &lt;p&gt;Markdown形式のテーブル記法をいつまでたってもうろ覚えで、毎回検索したり、変換サイトにアクセスするのが面倒だったのでツールをつくりました。&lt;strong&gt;嘘です。Go書きたかっただけです。&lt;/strong&gt;&lt;/p&gt;
-
 &lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fmdt&#34; title=&#34;monochromegane/mdt&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/mdt&#34;&amp;gt;monochromegane/mdt&amp;lt;/a&amp;gt;&lt;/iframe&gt;
-
 &lt;h2 id=&#34;使い方&#34;&gt;使い方&lt;/h2&gt;
-
 &lt;p&gt;CSVテキストを標準入力から受け取って整形済みのMarkdown形式テーブルを出力します。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ mdt &amp;lt; hoge.csv
-| headerA | headerB                |
+| headerA | headerB |
 | ------- | ---------------------- |
-| short   | very very long content |
+| short | very very long content |
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h2 id=&#34;連携&#34;&gt;連携&lt;/h2&gt;
-
 &lt;p&gt;コマンドラインツールなので、&lt;code&gt;pbpaste&lt;/code&gt;や&lt;code&gt;Automator&lt;/code&gt;と組み合わせて好きなように使えます。&lt;/p&gt;
-
 &lt;p&gt;以下は、&lt;code&gt;Automator&lt;/code&gt;のサービスとして登録した&lt;code&gt;mdt&lt;/code&gt;をGitHubのIssue作成時に呼び出している様子です。&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://cloud.githubusercontent.com/assets/1845486/7668803/cc0a9178-fc87-11e4-9d0e-9fd32ea3c1fc.gif&#34; alt=&#34;mdt&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;便利っぽい。&lt;/p&gt;
-
 &lt;h2 id=&#34;機能&#34;&gt;機能&lt;/h2&gt;
-
 &lt;h3 id=&#34;csv-tsvに対応&#34;&gt;CSV/TSVに対応&lt;/h3&gt;
-
 &lt;p&gt;タブ区切りにも対応しているのでエクセル表をコピーして&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ pbpaste | mdt
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;のようにしてMarkdown形式テーブルに変換できます。&lt;/p&gt;
-
 &lt;h3 id=&#34;整形&#34;&gt;整形&lt;/h3&gt;
-
 &lt;p&gt;カラムの幅を自動で整えます。日本語文字が入っても大丈夫です。&lt;/p&gt;
-
 &lt;h3 id=&#34;ヘッダでのalign定義&#34;&gt;ヘッダでのalign定義&lt;/h3&gt;
-
 &lt;pre&gt;&lt;code&gt;headerA:, :headerB:
 content, content
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;のようなCSVから&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;| headerA | headerB |
 | -------:|:-------:|
 | content | content |
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;のようなalign定義されたテーブルを出力します。&lt;/p&gt;
-
 &lt;h3 id=&#34;繰り返し&#34;&gt;繰り返し&lt;/h3&gt;
-
 &lt;p&gt;Markdown形式のテーブルを編集するときもCSV形式で編集できるように、テーブルとCSVの混在した状態でも繰り返しコマンドを適用できます。もちろん毎回整形しなおします。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;| headerA | headerB |
 | -------:|:-------:|
 | content | content |
 next content, next content
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;のように行を追加した状態から以下の出力を得ることができます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;| headerA      | headerB      |
+&lt;pre&gt;&lt;code&gt;| headerA | headerB |
 | ------------:|:------------:|
-| content      | content      |
+| content | content |
 | next content | next content |
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;&lt;a href=&#34;https://godoc.org/github.com/monochromegane/mdt#pkg-examples&#34;&gt;Examples&lt;/a&gt;もあわせてどうぞ&lt;/p&gt;
-
 &lt;h2 id=&#34;インストール&#34;&gt;インストール&lt;/h2&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ go get github.com/monochromegane/mdt/...
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;です。&lt;/p&gt;
-
 &lt;h2 id=&#34;automator&#34;&gt;Automator&lt;/h2&gt;
-
 &lt;p&gt;冒頭のGitHubのPR/Issueや他のアプリケーションから使うために&lt;code&gt;mdt&lt;/code&gt;をAutomatorに登録する手順です。&lt;/p&gt;
-
 &lt;h3 id=&#34;設定&#34;&gt;設定&lt;/h3&gt;
-
 &lt;p&gt;Automatorから新規サービスとして登録します。&lt;/p&gt;
-
 &lt;p&gt;アクションは&lt;code&gt;ライブラリ&lt;/code&gt; &amp;gt; &lt;code&gt;Run Shell Script&lt;/code&gt;を選んでください。&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://cloud.githubusercontent.com/assets/1845486/7668851/5d833f84-fc8c-11e4-8787-aa39ce6ab300.png&#34; alt=&#34;mdt\_with\_automator&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;このようにサービスとして登録することで&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;選択したテキストを標準入力としてmdtに渡す&lt;/li&gt;
 &lt;li&gt;選択したテキストを結果で置き換え&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;する動作を全てのアプリケーションから呼び出すことができます。&lt;/p&gt;
-
 &lt;h3 id=&#34;ショートカットキー&#34;&gt;ショートカットキー&lt;/h3&gt;
-
 &lt;p&gt;このままだと&lt;code&gt;メニュー&lt;/code&gt;の&lt;code&gt;サービス&lt;/code&gt;から呼び出す必要があるので、ショートカットキーを定義します。&lt;/p&gt;
-
 &lt;p&gt;&lt;code&gt;システム環境設定&lt;/code&gt; &amp;gt; &lt;code&gt;キーボード&lt;/code&gt; &amp;gt; &lt;code&gt;ショートカット&lt;/code&gt;タブ &amp;gt; &lt;code&gt;サービス&lt;/code&gt; を選択し、登録したサービスにショートカットキーを割り当てます。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
-
 &lt;p&gt;Automatorほとんど使ったことなかったのですが、コマンドラインツールと組み合わせてアプリケーション横断で同じ機能を使うことができるようになるのはいいなあと思いました。
 ブラウザ上でPR/Issue書いているときに整形するためエディタに切り替えなくてよいのは便利です。&lt;/p&gt;
-
-&lt;p&gt;それから、このツールを作ることでMarkdown形式のテーブル記法をやっと覚えることができました。Go言語最高ですね。&lt;/p&gt;
-</description>
-    </item>
-    
-  </channel>
-</rss>
+&lt;p&gt;それから、このツールを作ることでMarkdown形式のテーブル記法をやっと覚えることができました。Go言語最高ですね。&lt;/p&gt;</description></item></channel></rss>

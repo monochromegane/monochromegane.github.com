@@ -1,171 +1,86 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Hoi on THINKING MEGANE</title>
-    <link>https://blog.monochromegane.com/tags/hoi/</link>
-    <description>Recent content in Hoi on THINKING MEGANE</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>ja-jp</language>
-    <lastBuildDate>Sun, 01 Mar 2015 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/hoi/" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>HoiとSlackで内緒話をする</title>
-      <link>https://blog.monochromegane.com/blog/2015/03/01/hoi-and-slack/</link>
-      <pubDate>Sun, 01 Mar 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2015/03/01/hoi-and-slack/</guid>
-      <description>
-
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>hoi on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/hoi/</link><description>Recent content in hoi on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 01 Mar 2015 00:00:00 +0000</lastBuildDate><atom:link href="/tags/hoi/" rel="self" type="application/rss+xml"/><item><title>HoiとSlackで内緒話をする</title><link>https://blog.monochromegane.com/blog/2015/03/01/hoi-and-slack/</link><pubDate>Sun, 01 Mar 2015 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2015/03/01/hoi-and-slack/</guid><description>
 &lt;p&gt;社内のチャットツールをSlackに移行中です。Slack使いやすくて満足度高いのですが、クラウドサービスゆえにこれまで社内IRCサーバ上でやりとりしていた情報の一部を載せてはいけなくなりました。&lt;/p&gt;
-
 &lt;p&gt;以前つくった&lt;a href=&#34;https://blog.monochromegane.com/blog/2014/07/17/hoi/&#34;&gt;「ほい、これ」ってファイルを渡せる Hoi というツール&lt;/a&gt;を使うことで外部から参照できないページのURLをやりとりに使えるのですが、やりとり用にファイルが必要だったり、URLを別途通知するという手番が面倒になってきました。(GH:EのGistでも同様ですね)&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/hoi&#34;&gt;monochromegane/hoi&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;面倒は解決しましょう。以下、Hoiのｿﾘｭｰｼｮﾝです。&lt;/p&gt;
-
 &lt;h2 id=&#34;メッセージをやりとりする&#34;&gt;メッセージをやりとりする&lt;/h2&gt;
-
 &lt;p&gt;今までのファイルやりとりに加え、メッセージにもURLを付与できるようになりました。
 使い方は今までと同じで、引数が存在しないファイルの場合にメッセージと見なします。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ hoi message
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;以下のようなURLが出力されます。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;http://192.168.0.103:8082/uqhrip3fvy71x791s00mj2r24kb8yiwu/message.txt
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;message.txtにメッセージが記載されています。引数を複数にしたり、&lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;で囲んで改行込にしてもOKです。&lt;/p&gt;
-
 &lt;h2 id=&#34;urlを通知する&#34;&gt;URLを通知する&lt;/h2&gt;
-
 &lt;p&gt;最後に&lt;code&gt;@account&lt;/code&gt;をつけるとSlackにURLを通知できるようになりました。便利。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ hoi message @you
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;通知にはSlackAPIもしくは&lt;a href=&#34;https://github.com/kentaro/takosan&#34;&gt;takosan&lt;/a&gt;が使えます。チームで使う場合は takosan があったほうが便利だと思います。たこさん最高。&lt;/p&gt;
-
 &lt;p&gt;こんな感じで通知されます。&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2015/03/hoi-notification.png&#34; alt=&#34;hoi-notification&#34; /&gt;&lt;/p&gt;
-
 &lt;h2 id=&#34;設定&#34;&gt;設定&lt;/h2&gt;
-
 &lt;p&gt;なお、通知先に関する設定は&lt;code&gt;~/.hoi/config.json&lt;/code&gt;で行います。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
-  &amp;quot;notification&amp;quot;: {
-    &amp;quot;from&amp;quot;: &amp;quot;YOUR SLACK ACCOUNT&amp;quot;,
-    &amp;quot;to&amp;quot;:   &amp;quot;takosan&amp;quot;,
-    &amp;quot;host&amp;quot;: &amp;quot;TAKOSAN HOST NAME&amp;quot;,
-    &amp;quot;port&amp;quot;: TAKOSAN PORT NUMBER,
-  }
+&amp;quot;notification&amp;quot;: {
+&amp;quot;from&amp;quot;: &amp;quot;YOUR SLACK ACCOUNT&amp;quot;,
+&amp;quot;to&amp;quot;: &amp;quot;takosan&amp;quot;,
+&amp;quot;host&amp;quot;: &amp;quot;TAKOSAN HOST NAME&amp;quot;,
+&amp;quot;port&amp;quot;: TAKOSAN PORT NUMBER,
+}
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;その他設定はこちらを参考のこと&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/hoi#configuration&#34;&gt;Hoi Configuration&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;これでクラウドサービスに載せたくない情報をさくっとこそっとやりとりできるようになりました。&lt;/p&gt;
-
 &lt;p&gt;インストールもさくっとできるよう各種揃えてます。よければご利用ください。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;go get github.com/monochromegane/hoi/...&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;brew tap monochromegane/hoi &amp;amp;&amp;amp; brew install hoi&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/hoi/releases&#34;&gt;バイナリはこちら。Windows/Linuxあります&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>「ほい、これ」ってファイルを渡せる Hoi というツールをつくった</title>
-      <link>https://blog.monochromegane.com/blog/2014/07/17/hoi/</link>
-      <pubDate>Thu, 17 Jul 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2014/07/17/hoi/</guid>
-      <description>
-
+&lt;/ul&gt;</description></item><item><title>「ほい、これ」ってファイルを渡せる Hoi というツールをつくった</title><link>https://blog.monochromegane.com/blog/2014/07/17/hoi/</link><pubDate>Thu, 17 Jul 2014 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2014/07/17/hoi/</guid><description>
 &lt;p&gt;PC間でのファイル受け渡しのときにファイルサーバを使うことがたまにありますが、OSによってファイルパスやその書式が違ったり、受け渡し用のディレクトリをつくるとか、ファイル渡したいだけなのに、なんだか小さなひっかかりがあってスマートじゃないなあといつも感じてました。&lt;/p&gt;
-
 &lt;p&gt;なので、もっと直感的に「ほい、これ」って渡せるツールをつくってみました。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;hoi&#34;&gt;Hoi&lt;/h1&gt;
-
 &lt;p&gt;&lt;strong&gt;Hoi&lt;/strong&gt;はファイルの受け渡しを簡単に行うためのコマンドラインツールです。Go言語で書かれており、HTTPファイルサーバを利用して機能を提供します。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/hoi&#34;&gt;monochromegane/hoi (An easy file transfer tool using http file server.)&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;h2 id=&#34;ファイルを渡す&#34;&gt;ファイルを渡す&lt;/h2&gt;
-
 &lt;p&gt;使い方は簡単でローカルのファイルパスを&lt;code&gt;hoi&lt;/code&gt;コマンドの引数に渡すだけです。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ hoi ~/Documents/hoge.txt
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;そうすると以下のような、ダウンロード用のURLが出力されます。&lt;/p&gt;
-
 &lt;p&gt;&lt;code&gt;http://192.168.0.100:8081/h6un2x8zx6018xuhhn3bu7twwnf4ol1y/hoge.txt&lt;/code&gt;&lt;/p&gt;
-
 &lt;p&gt;これをIRCなりなんなりで相手に伝えてください。&lt;/p&gt;
-
 &lt;h3 id=&#34;仕組み&#34;&gt;仕組み&lt;/h3&gt;
-
 &lt;p&gt;特に難しいことはしていません。主な処理はこういう感じです。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;ファイルダウンロード用にHTTPサーバを起動する&lt;/li&gt;
 &lt;li&gt;HTTPサーバのDocumentRootに対して引数のファイルのシンボリックリンクをはる&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;見ての通り、シンボリックリンクさえはればどんなファイルでもダウンロード対象になりますし、HTTPSでもないので、&lt;br /&gt;
 &lt;strong&gt;必ず信頼できるネットワーク上で使うようにしてください。&lt;/strong&gt;&lt;/p&gt;
-
 &lt;h2 id=&#34;ファイルを消す&#34;&gt;ファイルを消す&lt;/h2&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ hoi --clear
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;で公開しているファイルのシンボリックリンクを削除します。&lt;/p&gt;
-
 &lt;p&gt;そのうち、定期的に消すような処理を入れようかなと思ってます。&lt;/p&gt;
-
 &lt;h2 id=&#34;デーモン化について&#34;&gt;デーモン化について&lt;/h2&gt;
-
 &lt;p&gt;HTTPサーバのデーモン化、Supervisordとか使わず Hoi 単体だけでできるように、こんな感じのシンプルなやつにしてます。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func runAsDaemon() {
-	cmd := exec.Command(os.Args[0], &amp;quot;--server&amp;quot;)
-	cmd.Start()
+cmd := exec.Command(os.Args[0], &amp;quot;--server&amp;quot;)
+cmd.Start()
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;今のところ、PIDでしかHTTPサーバのプロセスにたどり着く手段がなくて、サーバのstatus/stopとかの実装をどうしようか思案中です。&lt;/p&gt;
-
 &lt;p&gt;Go言語でのデーモン化についてよい案をお持ちのかた、アドバイスお待ちしてます。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;Go言語、HTTPサーバを立てるだけならすぐできてしまって便利ですね。&lt;/p&gt;
-
-&lt;p&gt;ファイルの受け渡しのためにローカルにHTTPサーバを立てるというのはある意味ぜいたくですが、全然負荷もかからないので、こんな風に使ってみるのもありかなとちょっと遊んでみました。&lt;/p&gt;
-</description>
-    </item>
-    
-  </channel>
-</rss>
+&lt;p&gt;ファイルの受け渡しのためにローカルにHTTPサーバを立てるというのはある意味ぜいたくですが、全然負荷もかからないので、こんな風に使ってみるのもありかなとちょっと遊んでみました。&lt;/p&gt;</description></item></channel></rss>

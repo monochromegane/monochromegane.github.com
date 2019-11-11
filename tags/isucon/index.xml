@@ -1,125 +1,81 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Isucon on THINKING MEGANE</title>
-    <link>https://blog.monochromegane.com/tags/isucon/</link>
-    <description>Recent content in Isucon on THINKING MEGANE</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>ja-jp</language>
-    <lastBuildDate>Tue, 29 Sep 2015 01:48:16 +0900</lastBuildDate>
-    <atom:link href="/tags/isucon/" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>ISUCON5、紙一重の差で予選落ちする方法</title>
-      <link>https://blog.monochromegane.com/blog/2015/09/29/isucon5/</link>
-      <pubDate>Tue, 29 Sep 2015 01:48:16 +0900</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2015/09/29/isucon5/</guid>
-      <description>
-
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>isucon on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/isucon/</link><description>Recent content in isucon on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Tue, 29 Sep 2015 01:48:16 +0900</lastBuildDate><atom:link href="/tags/isucon/" rel="self" type="application/rss+xml"/><item><title>ISUCON5、紙一重の差で予選落ちする方法</title><link>https://blog.monochromegane.com/blog/2015/09/29/isucon5/</link><pubDate>Tue, 29 Sep 2015 01:48:16 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2015/09/29/isucon5/</guid><description>
 &lt;p&gt;福岡スレンダーズというチームでISUCONに初参加、そして予選落ちしてきました。
 来年に向けての糧となるよう、良かった点、悪かった点をまとめておきます。
 この通りにやると紙一重の差で予選落ちすることができます。&lt;/p&gt;
-
 &lt;h1 id=&#34;福岡スレンダーズ&#34;&gt;福岡スレンダーズ&lt;/h1&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://twitter.com/ryutaro_mizokam&#34;&gt;@mizoR&lt;/a&gt; &lt;a href=&#34;https://twitter.com/tkengo&#34;&gt;@tkengo&lt;/a&gt; &lt;a href=&#34;https://twitter.com/monochromegane&#34;&gt;@monochromegane&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;Web/モバイルのアプリケーションエンジニア(インフラ専任なし)&lt;/li&gt;
 &lt;li&gt;使用言語は全員が共通して触れるRubyを選択&lt;/li&gt;
 &lt;li&gt;ベストスコアは約14,000。このスコアで終われていれば予選通過していたかも&amp;hellip;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;h1 id=&#34;振り返り&#34;&gt;振り返り&lt;/h1&gt;
-
 &lt;h2 id=&#34;良かった点&#34;&gt;良かった点&lt;/h2&gt;
-
 &lt;h3 id=&#34;事前準備&#34;&gt;事前準備&lt;/h3&gt;
-
 &lt;ul&gt;
 &lt;li&gt;環境構築は30分
-
 &lt;ul&gt;
 &lt;li&gt;チューニングに専念するため、資産をGitHubプライベートリポジトリで管理する、各自の開発環境(エディタ等のdotfiles)を整えるといった環境構築はほぼノンストップでできるように手順化、スクリプト化しておいた。&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;事前に集まって当日の進め方を確認
-
 &lt;ul&gt;
 &lt;li&gt;過去問を解きながら当日どのように作業を進めるか（作業分担やチューニングの方針、ツールの使い方共有）を中心に確認した。&lt;/li&gt;
 &lt;li&gt;過去問を解く事は大事だが、同じ問題は出ないので各自の自習で補う。&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;経験者の話を聞く
-
 &lt;ul&gt;
 &lt;li&gt;全員が見れる大きなディスプレイあると便利、昼飯は事前に買っておくと便利などの情報は一回参加してからじゃないと意外と気付けないので助かった。&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;h3 id=&#34;当日&#34;&gt;当日&lt;/h3&gt;
-
 &lt;ul&gt;
 &lt;li&gt;普段やってることしかしない（できない）
-
 &lt;ul&gt;
 &lt;li&gt;チームのチューニング方針&lt;/li&gt;
 &lt;li&gt;ISUCON過去問を解いても普段の地力で予選突破ラインは出せていたので、本番でも普段からやってないことに手を付ける博打ではなくやれることを確実にやるようにした。&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;推測するな、計測せよ
-
 &lt;ul&gt;
 &lt;li&gt;基本中の基本。時間は有限なので闇雲に手をつけず、アクセスログ(kataribe)、スロークエリログ(pt-query-digest)を根拠に効果の大きいと思われる箇所から対処していった。&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;見える化
-
 &lt;ul&gt;
 &lt;li&gt;作業内容はGitHub+Slack通知で共有&lt;/li&gt;
 &lt;li&gt;ER図をホワイトボードに書き出す&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;声掛け
-
 &lt;ul&gt;
 &lt;li&gt;チームメンバが悩んでたら声を掛けて頭の整理を手伝い合った。&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;h2 id=&#34;悪かった点&#34;&gt;悪かった点&lt;/h2&gt;
-
 &lt;h3 id=&#34;事前準備-1&#34;&gt;事前準備&lt;/h3&gt;
-
 &lt;ul&gt;
 &lt;li&gt;特に無し。強いて言えばローカルベンチマークツールを想定してつくった結果通知の仕組みが無駄になったぐらい。&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;h3 id=&#34;当日-1&#34;&gt;当日&lt;/h3&gt;
-
 &lt;ul&gt;
 &lt;li&gt;司令塔役を決めておくとよかった
-
 &lt;ul&gt;
 &lt;li&gt;良い意味で全員まわりも見えるし実装もできるメンバーだったので前半は自律的に作業分担が進んでしまい、後半も自分で修正箇所を見つけて修正するの流れのまま進んだ。&lt;/li&gt;
 &lt;li&gt;結果的に各自の作業後、次の修正箇所を探すための時間ができ、継続的に修正を投入できなかった。&lt;/li&gt;
 &lt;li&gt;特に後半はベンチマークを実行、結果を元に次の修正箇所を指示する司令塔役を立てるべきだった。&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;ベンチマーク -&amp;gt; ログ解析のリズムが悪かった
-
 &lt;ul&gt;
 &lt;li&gt;昨年までのローカルベンチマークを想定して各自の開発環境でベンチマーク-&amp;gt;ログ解析を回す準備をしていたが、外部からのベンチマークになったことでサーバー上のログをどう共有するかを決めきれずに気づいた誰かがやるということになってしまった。&lt;/li&gt;
 &lt;li&gt;本来なら毎回のベンチマークごとにチューニングポイントが変わってくるはずなのに数回分間が空いたりしてリズムが悪いまま終わってしまった。&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;昼飯をきちんととらなかった
-
 &lt;ul&gt;
 &lt;li&gt;午前中、スコアが伸びず焦っていたこともあり、昼飯はおにぎり片手にひたすらチューニングを続けていた。&lt;/li&gt;
 &lt;li&gt;踏ん張りドコロの夕方頃、15分ぐらい集中力が切れた時間帯があったが今思うとあれはもったいなかった。&lt;/li&gt;
 &lt;li&gt;昼は外にいかないまでもちゃんと食べたほうがリフレッシュして午後望めたと思う。&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;h3 id=&#34;ぐぬぬ案件&#34;&gt;ぐぬぬ案件&lt;/h3&gt;
-
 &lt;ul&gt;
 &lt;li&gt;再起動テストでトラブル
-
 &lt;ul&gt;
 &lt;li&gt;終了1時間前に念のため行った再起動テストで&lt;a href=&#34;http://isucon.net/archives/45532743.html&#34;&gt;ISUCON5 本選出場者決定のお知らせ&lt;/a&gt;にあるように再起動後rootボリュームがReadOnlyでマウントされてしまう現象に出くわしてしまった。&lt;/li&gt;
 &lt;li&gt;このままでは運営側の再起動テストにクリアできないので最終のチューニングタスクを全て止めて原因究明&amp;amp;リカバリに注力。&lt;/li&gt;
@@ -127,15 +83,10 @@
 &lt;li&gt;このインスタンスでのベンチマークが前回より下がるも原因特定には至らず&amp;hellip;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;チューニング一覧&#34;&gt;チューニング一覧&lt;/h1&gt;
-
 &lt;p&gt;チームのチューニング内容は以下の通り。&lt;/p&gt;
-
 &lt;h2 id=&#34;インフラ&#34;&gt;インフラ&lt;/h2&gt;
-
 &lt;ul&gt;
 &lt;li&gt;UnicornをDomain socket接続に変更&lt;/li&gt;
 &lt;li&gt;静的ファイルをNginxで返す&lt;/li&gt;
@@ -145,9 +96,7 @@
 &lt;li&gt;Unicornのworker processを1-&amp;gt;4-&amp;gt;8-&amp;gt;6&lt;/li&gt;
 &lt;li&gt;Nginxのworker processを1-&amp;gt;2&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;h2 id=&#34;アプリケーション&#34;&gt;アプリケーション&lt;/h2&gt;
-
 &lt;ul&gt;
 &lt;li&gt;relations(created_at), footprints(user_id), relations(one), relations(another), comments(user_id) にインデックス&lt;/li&gt;
 &lt;li&gt;ログインページをエラーごとにRuby側でキャッシュする&lt;/li&gt;
@@ -157,30 +106,14 @@
 &lt;li&gt;entries取得後使用されていないデータ整形処理を削除&lt;/li&gt;
 &lt;li&gt;友達のentriesを取得する際に不要なOR条件をクエリから除去&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;以上で13,000後半から14,000程度。&lt;/p&gt;
-
 &lt;p&gt;その他、entriesテーブルのbodyからtitle切り出しは思いついたもののALTERに時間かかりすぎて断念。 &lt;a href=&#34;http://sfujiwara.hatenablog.com/entry/2015/09/28/135717&#34;&gt;こちら&lt;/a&gt;の解決策を見て、さすがすぎる〜と唸る。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
-
 &lt;p&gt;ぐぬぬ案件はあったものの最終的なスコアは予選通過ギリギリだったはずなので方向性としては間違っていなかったかなと思いますが、やはり限られた時間を有効活用するために立ち止まらずチューニング施策を投入し続けるための体制にできたかどうかが紙一重、ただしとても分厚い紙一重の差となって現れたのかなと。&lt;/p&gt;
-
 &lt;p&gt;あとは地力を高めるためチューニングまわりの経験を勘ではなく根拠を元に進める経験をもっと積んでいこうと思います。&lt;/p&gt;
-
 &lt;p&gt;運営の皆様、こんなにも楽しいイベントを開催していただき、本当にありがとうございます！！そして、本当におつかれさまでした！！！&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;最後に、うちのチームが一番輝いていたときのキャプチャを貼っておきますね。&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2015/09/isucon5_fukuoka_slenders.png&#34; alt=&#34;isucon5_fukuoka_slenders&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;いや、ほんと参加してよかった。&lt;/p&gt;
-</description>
-    </item>
-    
-  </channel>
-</rss>
+&lt;p&gt;いや、ほんと参加してよかった。&lt;/p&gt;</description></item></channel></rss>

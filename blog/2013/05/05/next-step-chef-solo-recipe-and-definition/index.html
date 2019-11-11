@@ -1,15 +1,4 @@
-<!DOCTYPE html>
-<html>
-  <head>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="viewport" content="width=device-width">
-  <meta name="author" content="">
-  
-    <title>半歩進むChef-Solo - Cookbookの共通化（recipeとdefinition） &middot; THINKING MEGANE</title>
-  
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:site" content="@monochromegane">
-  <meta property="og:description" content="半歩進むChef-Solo 最近、Vagrant &#43; Chef-Soloによるローカル開発環境Boxイメージ構築自動化に取り組んでいます。 Cookbookをつくるうえでのノウハウがたまってきたので、まとめの意味も込めて「半歩進むChef-Solo」シリーズでエントリ書いていこうと思います。
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>半歩進むChef-Solo - Cookbookの共通化（recipeとdefinition） &middot; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="半歩進むChef-Solo 最近、Vagrant &#43; Chef-Soloによるローカル開発環境Boxイメージ構築自動化に取り組んでいます。 Cookbookをつくるうえでのノウハウがたまってきたので、まとめの意味も込めて「半歩進むChef-Solo」シリーズでエントリ書いていこうと思います。
 今日はChefで行う「共通化」についてです。
  Cookbookの共通化（recipeとdefinition） Vagrant環境でChef-Soloによる構築自動化を行なっていると、複数の環境で似たような処理を行なっている箇所が出てくると思います。 例えば、同じResouceの組み合わせた処理が何箇所も出てきたり、特定のサーバソフトウェアに関連するセットアップをいろんなRecipeの中でやっていたり。
 Chefにはこれらの処理をまとめるために、definitionとrecipeという仕組みがあります。
@@ -17,115 +6,15 @@ definitionとrecipe definitionはリソースを組み合わせた独自のリ�
 recipeはChefに実行させる内容を定義する本体です。 レシピは、外部のレシピからその単位で呼び出すことができるため、大きな範囲で処理を共通化するのに役立ちます。
  definitionによる共通化 definitionを使う 1. definitionを定義する apacheのインストール、初期セットアップを行うdefinitionを定義します。
 cookbooks/apache/definitions/apache_setup.rb
-define :apache_setup do # インストール yum_package &quot;httpd&quot; do action :install end # 初期セットアップ template &quot;/etc/httpd/conf/httpd.conf&quot; do source &quot;httpd.conf.erb&quot; end # 自動起動 service &quot;httpd&quot; do action [:enable] end end  2. definitionを呼び出す（クックブック内） 定義したdefinitionをレシピから呼び出します。
+define :apache_setup do # インストール yum_package &#34;httpd&#34; do action :install end # 初期セットアップ template &#34;/etc/httpd/conf/httpd.conf&#34; do source &#34;httpd.conf.erb&#34; end # 自動起動 service &#34;httpd&#34; do action [:enable] end end  2. definitionを呼び出す（クックブック内） 定義したdefinitionをレシピから呼び出します。
 cookbooks/apache/recipes/default.rb
 apache_setup # definitionで定義した独自リソースを呼び出す  3. definitionを呼び出す（クックブック外） definitionはクックブック外からも呼び出すことができます。
 cookbooks/main/recipes/default.rb
-apache_setup # apacheクックブックでで定義した独自リソースを呼び出す  パラメタによる汎用的なdefinition definitionは以下のようにパラメタを渡すことができます。">
-  <meta property="og:title" content="半歩進むChef-Solo - Cookbookの共通化（recipeとdefinition）">
-  <meta property="og:url" content="https://blog.monochromegane.com/blog/2013/05/05/next-step-chef-solo-recipe-and-definition/">
-  <meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-  
-  <link rel="stylesheet" href="/css/reset.css">
-  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Source+Code+Pro' type='text/css'>
-  <link rel="stylesheet" href='//fonts.googleapis.com/css?family=Montserrat' type='text/css'>
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css">
-  <link rel="stylesheet" href="/css/text.css">
-  <link rel="stylesheet" href="/css/color.css">
-  <link rel="stylesheet" href="/css/layout.css">
-  <link rel="apple-touch-icon-precomposed" sizes="57x57"   href="/images/apple-touch-icon-57-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/apple-touch-icon-114-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="72x72"   href="/images/apple-touch-icon-72-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-144-precomposed.png">
-  <link rel="shortcut icon" href="/images/favicon.ico">
-  <link rel="canonical" href="https://blog.monochromegane.com/blog/2013/05/05/next-step-chef-solo-recipe-and-definition/">
-  
-  <link href="" rel="alternate" type="application/rss+xml" title="THINKING MEGANE" />
-  
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async>
-    MathJax.Hub.Config({
-        HTML: ["input/TeX","output/HTML-CSS"],
-        TeX: {
-               Macros: {
-                        bm: ["\\boldsymbol{#1}", 1],
-                        argmax: ["\\mathop{\\rm arg\\,max}\\limits"],
-                        argmin: ["\\mathop{\\rm arg\\,min}\\limits"]},
-               extensions: ["AMSmath.js","AMSsymbols.js"],
-               equationNumbers: { autoNumber: "AMS" } },
-        extensions: ["tex2jax.js"],
-        jax: ["input/TeX","output/HTML-CSS"],
-        tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-                   displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-                   processEscapes: true },
-        "HTML-CSS": { availableFonts: ["TeX"],
-                      linebreaks: { automatic: true } }
-    });
-  </script>
-</head>
-
-  <body>
-    <div class="header">
-  <header>
-    <h1 class="logo"><a href="https://blog.monochromegane.com">THINKING MEGANE</a></h1>
-    <nav>
-      <ul class="menu">
-        <li><a href="/self-introduction/">Home</a></li>
-        <li><a href="/post/">Archives</a></li>
-        <li><a href="/diary/">Diary</a></li>
-        <li><a href="http://thinking-megane.blogspot.jp/">Old Blog</a></li>
-      </ul>
-    </nav>
-  </header>
-</div>
-
-    <div class="container">
-      <article>
-  <div class="post">
-    <header>
-      <h1><a href="https://blog.monochromegane.com/blog/2013/05/05/next-step-chef-solo-recipe-and-definition/">半歩進むChef-Solo - Cookbookの共通化（recipeとdefinition）</a></h1>
-      <time><div class="day"><i class="fa fa-calendar-o day-icon"></i>2013-05-05</div></time>
-    </header>
-    <div class="post-inner">
-      
-
-<h1 id="半歩進むchef-solo">半歩進むChef-Solo</h1>
-
-<p>最近、Vagrant + Chef-Soloによるローカル開発環境Boxイメージ構築自動化に取り組んでいます。
-Cookbookをつくるうえでのノウハウがたまってきたので、まとめの意味も込めて「半歩進むChef-Solo」シリーズでエントリ書いていこうと思います。</p>
-
-<p>今日はChefで行う「共通化」についてです。</p>
-
-<hr/>
-
-<h1 id="cookbookの共通化-recipeとdefinition">Cookbookの共通化（recipeとdefinition）</h1>
-
-<p>Vagrant環境でChef-Soloによる構築自動化を行なっていると、複数の環境で似たような処理を行なっている箇所が出てくると思います。
-例えば、同じResouceの組み合わせた処理が何箇所も出てきたり、特定のサーバソフトウェアに関連するセットアップをいろんなRecipeの中でやっていたり。</p>
-
-<p>Chefにはこれらの処理をまとめるために、definitionとrecipeという仕組みがあります。</p>
-
-<h2 id="definitionとrecipe">definitionとrecipe</h2>
-
-<p>definitionはリソースを組み合わせた独自のリソースを定義できる仕組みです。
-同じ処理を何箇所も定義している場合、definitionによる共通化が役立ちます。</p>
-
-<p>recipeはChefに実行させる内容を定義する本体です。
-レシピは、外部のレシピからその単位で呼び出すことができるため、大きな範囲で処理を共通化するのに役立ちます。</p>
-
-<hr/>
-
-<h1 id="definitionによる共通化">definitionによる共通化</h1>
-
-<h2 id="definitionを使う">definitionを使う</h2>
-
-<h3 id="1-definitionを定義する">1. definitionを定義する</h3>
-
-<p>apacheのインストール、初期セットアップを行うdefinitionを定義します。</p>
-
-<p><code>cookbooks/apache/definitions/apache_setup.rb</code></p>
-
-<pre><code class="language-ruby">define :apache_setup do
+apache_setup # apacheクックブックでで定義した独自リソースを呼び出す  パラメタによる汎用的なdefinition definitionは以下のようにパラメタを渡すことができます。"><meta property="og:title" content="半歩進むChef-Solo - Cookbookの共通化（recipeとdefinition）"><meta property="og:url" content="https://blog.monochromegane.com/blog/2013/05/05/next-step-chef-solo-recipe-and-definition/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2013/05/05/next-step-chef-solo-recipe-and-definition/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:true},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:true}}});</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2013/05/05/next-step-chef-solo-recipe-and-definition/>半歩進むChef-Solo - Cookbookの共通化（recipeとdefinition）</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2013-05-05</div></time></header><div class=post-inner><h1 id=半歩進むchef-solo>半歩進むChef-Solo</h1><p>最近、Vagrant + Chef-Soloによるローカル開発環境Boxイメージ構築自動化に取り組んでいます。
+Cookbookをつくるうえでのノウハウがたまってきたので、まとめの意味も込めて「半歩進むChef-Solo」シリーズでエントリ書いていこうと思います。</p><p>今日はChefで行う「共通化」についてです。</p><hr><h1 id=cookbookの共通化-recipeとdefinition>Cookbookの共通化（recipeとdefinition）</h1><p>Vagrant環境でChef-Soloによる構築自動化を行なっていると、複数の環境で似たような処理を行なっている箇所が出てくると思います。
+例えば、同じResouceの組み合わせた処理が何箇所も出てきたり、特定のサーバソフトウェアに関連するセットアップをいろんなRecipeの中でやっていたり。</p><p>Chefにはこれらの処理をまとめるために、definitionとrecipeという仕組みがあります。</p><h2 id=definitionとrecipe>definitionとrecipe</h2><p>definitionはリソースを組み合わせた独自のリソースを定義できる仕組みです。
+同じ処理を何箇所も定義している場合、definitionによる共通化が役立ちます。</p><p>recipeはChefに実行させる内容を定義する本体です。
+レシピは、外部のレシピからその単位で呼び出すことができるため、大きな範囲で処理を共通化するのに役立ちます。</p><hr><h1 id=definitionによる共通化>definitionによる共通化</h1><h2 id=definitionを使う>definitionを使う</h2><h3 id=1-definitionを定義する>1. definitionを定義する</h3><p>apacheのインストール、初期セットアップを行うdefinitionを定義します。</p><p><code>cookbooks/apache/definitions/apache_setup.rb</code></p><pre><code class=language-ruby>define :apache_setup do
   # インストール
   yum_package &quot;httpd&quot; do
     action :install
@@ -139,61 +28,17 @@ Cookbookをつくるうえでのノウハウがたまってきたので、まと
     action [:enable]
   end
 end
-</code></pre>
-
-<h3 id="2-definitionを呼び出す-クックブック内">2. definitionを呼び出す（クックブック内）</h3>
-
-<p>定義したdefinitionをレシピから呼び出します。</p>
-
-<p><code>cookbooks/apache/recipes/default.rb</code></p>
-
-<pre><code class="language-ruby">apache_setup # definitionで定義した独自リソースを呼び出す
-</code></pre>
-
-<h3 id="3-definitionを呼び出す-クックブック外">3. definitionを呼び出す（クックブック外）</h3>
-
-<p>definitionはクックブック外からも呼び出すことができます。</p>
-
-<p><code>cookbooks/main/recipes/default.rb</code></p>
-
-<pre><code class="language-ruby">apache_setup # apacheクックブックでで定義した独自リソースを呼び出す
-</code></pre>
-
-<h2 id="パラメタによる汎用的なdefinition">パラメタによる汎用的なdefinition</h2>
-
-<p>definitionは以下のようにパラメタを渡すことができます。</p>
-
-<pre><code class="language-ruby">sample_definition &quot;arg1&quot; do
+</code></pre><h3 id=2-definitionを呼び出す-クックブック内>2. definitionを呼び出す（クックブック内）</h3><p>定義したdefinitionをレシピから呼び出します。</p><p><code>cookbooks/apache/recipes/default.rb</code></p><pre><code class=language-ruby>apache_setup # definitionで定義した独自リソースを呼び出す
+</code></pre><h3 id=3-definitionを呼び出す-クックブック外>3. definitionを呼び出す（クックブック外）</h3><p>definitionはクックブック外からも呼び出すことができます。</p><p><code>cookbooks/main/recipes/default.rb</code></p><pre><code class=language-ruby>apache_setup # apacheクックブックでで定義した独自リソースを呼び出す
+</code></pre><h2 id=パラメタによる汎用的なdefinition>パラメタによる汎用的なdefinition</h2><p>definitionは以下のようにパラメタを渡すことができます。</p><pre><code class=language-ruby>sample_definition &quot;arg1&quot; do
   arg2 &quot;arg2&quot;
 end
-</code></pre>
-
-<p>definition内ではparamsという名前のハッシュで扱うことができます。</p>
-
-<pre><code>define :sample_definition, :arg2 =&gt; &quot;default&quot;, :arg3 =&gt; &quot;default&quot; do
+</code></pre><p>definition内ではparamsという名前のハッシュで扱うことができます。</p><pre><code>define :sample_definition, :arg2 =&gt; &quot;default&quot;, :arg3 =&gt; &quot;default&quot; do
   params[:name] #=&gt; &quot;arg1&quot;
   params[:arg2]   #=&gt; &quot;arg2&quot;
   params[:arg3]   #=&gt; &quot;default&quot;  
 end
-</code></pre>
-
-<p>環境によって変化する箇所をパラメタ化しておくことで汎用的なdefinitionとすることができます。</p>
-
-<p>Apacheの設定を行うdefinitionの場合、サーバ名、ドキュメントルートなどがパラメタ化の対象となるでしょう。</p>
-
-<hr/>
-
-<h1 id="recipeによる共通化">recipeによる共通化</h1>
-
-<h2 id="recipeを使う">recipeを使う</h2>
-
-<h3 id="1-recipeを定義する">1. recipeを定義する</h3>
-
-<p>apacheのインストール、初期セットアップを行うrecipeを定義します。</p>
-
-<p><code>cookbooks/apache/recipes/setup.rb</code></p>
-
-<pre><code class="language-ruby"># インストール
+</code></pre><p>環境によって変化する箇所をパラメタ化しておくことで汎用的なdefinitionとすることができます。</p><p>Apacheの設定を行うdefinitionの場合、サーバ名、ドキュメントルートなどがパラメタ化の対象となるでしょう。</p><hr><h1 id=recipeによる共通化>recipeによる共通化</h1><h2 id=recipeを使う>recipeを使う</h2><h3 id=1-recipeを定義する>1. recipeを定義する</h3><p>apacheのインストール、初期セットアップを行うrecipeを定義します。</p><p><code>cookbooks/apache/recipes/setup.rb</code></p><pre><code class=language-ruby># インストール
 yum_package &quot;httpd&quot; do
   action :install
 end
@@ -205,76 +50,30 @@ end
 service &quot;httpd&quot; do
   action [:enable]
 end
-</code></pre>
-
-<h3 id="2-recipeを呼び出す-レシピ単位での呼び出し">2. recipeを呼び出す（レシピ単位での呼び出し）</h3>
-
-<p>Vagrantfileなどのレシピ呼び出し機構からレシピ単位で呼び出す</p>
-
-<p><code>Vagrantfile</code></p>
-
-<pre><code class="language-ruby">Vagrant::Config.run do |config|
+</code></pre><h3 id=2-recipeを呼び出す-レシピ単位での呼び出し>2. recipeを呼び出す（レシピ単位での呼び出し）</h3><p>Vagrantfileなどのレシピ呼び出し機構からレシピ単位で呼び出す</p><p><code>Vagrantfile</code></p><pre><code class=language-ruby>Vagrant::Config.run do |config|
   config.vm.provision :chef_solo do |chef|
     chef.cookbooks_path = &quot;cookbooks&quot;
     chef.add_recipe &quot;apache::setup&quot; # apacheクックブックのsetupレシピを呼ぶ
   end
 end
-</code></pre>
-
-<p>この場合は、レシピの呼び出しをmainクックブックではなく、Vagrantが行うことになります。
-単純なレシピの組み合わせでよい場合などはこの形式でもよいでしょう。</p>
-
-<h3 id="3-recipeを呼び出す-他のレシピからの呼び出し">3. recipeを呼び出す（他のレシピからの呼び出し）</h3>
-
-<p>他のレシピ（ここではmainクックブックのレシピ）から<code>include_recipe</code>リソースを使って呼び出す</p>
-
-<p><code>cookbooks/main/recipes/default.rb</code></p>
-
-<pre><code class="language-ruby"># apacheクックブックのsetupレシピを呼ぶ 
+</code></pre><p>この場合は、レシピの呼び出しをmainクックブックではなく、Vagrantが行うことになります。
+単純なレシピの組み合わせでよい場合などはこの形式でもよいでしょう。</p><h3 id=3-recipeを呼び出す-他のレシピからの呼び出し>3. recipeを呼び出す（他のレシピからの呼び出し）</h3><p>他のレシピ（ここではmainクックブックのレシピ）から<code>include_recipe</code>リソースを使って呼び出す</p><p><code>cookbooks/main/recipes/default.rb</code></p><pre><code class=language-ruby># apacheクックブックのsetupレシピを呼ぶ 
 include_recipe &quot;apache::setup&quot;
-</code></pre>
-
-<h2 id="パラメタによる汎用的なrecipe">パラメタによる汎用的なrecipe</h2>
-
-<p>レシピに対して直接パラメタを渡すことはできません。
-しかし、attributeという仕組みを用いることでレシピ内で環境ごとの変数を定義することができます。</p>
-
-<h3 id="attributeを利用する">attributeを利用する</h3>
-
-<p>attributeに定義した変数はレシピ内で<code>node[:key]</code>の形式で呼ぶことができます。
+</code></pre><h2 id=パラメタによる汎用的なrecipe>パラメタによる汎用的なrecipe</h2><p>レシピに対して直接パラメタを渡すことはできません。
+しかし、attributeという仕組みを用いることでレシピ内で環境ごとの変数を定義することができます。</p><h3 id=attributeを利用する>attributeを利用する</h3><p>attributeに定義した変数はレシピ内で<code>node[:key]</code>の形式で呼ぶことができます。
 Chef-Soloでは呼び出し時のjsonパラメタを渡すことができます。
-Vagrantの場合、Vagrantfileで上記jsonパラメタを定義します。</p>
-
-<p><code>cookbooks/apache/attributes/default.rb</code></p>
-
-<pre><code class="language-ruby"># apacheクックブックで定義するデフォルトの属性
+Vagrantの場合、Vagrantfileで上記jsonパラメタを定義します。</p><p><code>cookbooks/apache/attributes/default.rb</code></p><pre><code class=language-ruby># apacheクックブックで定義するデフォルトの属性
 default[:apache][:attr1] = &quot;default&quot;
-</code></pre>
-
-<p><code>Vagrantfile</code></p>
-
-<pre><code class="language-ruby">Vagrant::Config.run do |config|
+</code></pre><p><code>Vagrantfile</code></p><pre><code class=language-ruby>Vagrant::Config.run do |config|
   config.vm.provision :chef_solo do |chef|
     chef.cookbooks_path = &quot;cookbooks&quot;
     chef.add_recipe &quot;apache::sample_attribute&quot;
     chef.json = {:apache =&gt; {:attr1 =&gt; &quot;attr1&quot;}} # この環境での属性値を指定
   end
 end
-</code></pre>
-
-<p><code>cookbooks/apache/recipes/sample_attribute.rb</code></p>
-
-<pre><code class="language-ruby">node.apache.attr1 #=&gt; &quot;attr1&quot; jsonパラメタを指定しない場合は&quot;default&quot;
-</code></pre>
-
-<h3 id="参考">参考</h3>
-
-<p>ちなみにVagrant + Chef-SoloではVagrantfileに定義された内容はChef-Solo用のjson形式に変換されます。
-変換後のファイルは仮想マシン上に配置されます。</p>
-
-<p><code>/tmp/vagrant-chef-1/dna.json</code></p>
-
-<pre><code class="language-json">{
+</code></pre><p><code>cookbooks/apache/recipes/sample_attribute.rb</code></p><pre><code class=language-ruby>node.apache.attr1 #=&gt; &quot;attr1&quot; jsonパラメタを指定しない場合は&quot;default&quot;
+</code></pre><h3 id=参考>参考</h3><p>ちなみにVagrant + Chef-SoloではVagrantfileに定義された内容はChef-Solo用のjson形式に変換されます。
+変換後のファイルは仮想マシン上に配置されます。</p><p><code>/tmp/vagrant-chef-1/dna.json</code></p><pre><code class=language-json>{
   &quot;instance_role&quot;: &quot;vagrant&quot;,
   &quot;run_list&quot;: [
     &quot;recipe[apache::sample_attribute]&quot;
@@ -283,88 +82,8 @@ end
     &quot;attr1&quot;: &quot;attr1&quot;
   }
 }
-</code></pre>
-
-<hr/>
-
-<h1 id="definitionとrecipeの使い分け">definitionとrecipeの使い分け</h1>
-
-<p>クックブック内での共通化はもちろんdefinitionを使います。
-クックブックを超えた共通化ではdefinitionとrecipeの両方を用いることができます。</p>
-
-<p>その場合の使い分けは、<strong>パラメタの有無</strong>によると考えています。</p>
-
-<p>前述のようにrecipeではパラメタを渡すためにattributeの仕組みを用いる必要がありますが、これは変数名や、その変数が内部で何に使われているかという内部構造を意識した使い方をする必要があります。
-逆にdefinitionは独自リソースとして、呼び出しパラメタを定義することができるため、公開インターフェースとして適しています。</p>
-
-<p>自分でクックブックを作成するときは、<strong>パラメタが必要ない処理はrecipeとして定義し、パラメタが必要となる処理はdefinitionを用いる</strong>ことにしています。</p>
-
-<hr/>
-
-<p>長くなってきたので今回はこの辺で。
-次回はdefinitionを使う際のtipsなどを書いていこうと思います。</p>
-
-    </div>
-    <footer class="tag">
-      <i class="fa fa-tags tag-icon"></i>
-      <ul>
-      
-        <li><a class="tag-link" href="/tags/vagrant">vagrant</a></li>
-      
-        <li><a class="tag-link" href="/tags/chef">chef</a></li>
-      
-      </ul>
-      <div class="clear"></div>
-    </footer>
-  </div>
-</article>
-
-      <div class="social-btn">
-  <div>
-    <a href="http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/05/05/next-step-chef-solo-recipe-and-definition/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="en" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
-  </div>
-  <div>
-    <a href="https://twitter.com/share" class="twitter-share-button" data-via="monochromegane">Tweet</a>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-  </div>
-</div>
-
-    </div>
-    <footer class="footer">
-  <div class="author"></div>
-  <p class="author-name"><a href="https://twitter.com/monochromegane" target="_blank">@monochromegane</a></p>
-  
-    <p>monochromegane (モノクロめがね) と申します。</p>
-  
-    <p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-  
-  <ul class="social">
-    <li><a href="https://twitter.com/monochromegane" target="_blank"><i class="fa fa-twitter"></i></a></li>
-    <li><a href="https://github.com/monochromegane" target="_blank"><i class="fa fa-github"></i></a></li>
-    <li><a href="/index.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
-  </ul>
-  <p class="copyright">
-    <small>&copy;  <span class="">Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>, Designed by <a href="https://twitter.com/keita_kawamoto" target="_blank">&copy;keita_kawamoto</a></span></small>
-  </p>
-</footer>
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
-
-    
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-38374674-1', 'auto');
-  ga('send', 'pageview');
-
-</script>
-
-
-  </body>
-</html>
+</code></pre><hr><h1 id=definitionとrecipeの使い分け>definitionとrecipeの使い分け</h1><p>クックブック内での共通化はもちろんdefinitionを使います。
+クックブックを超えた共通化ではdefinitionとrecipeの両方を用いることができます。</p><p>その場合の使い分けは、<strong>パラメタの有無</strong>によると考えています。</p><p>前述のようにrecipeではパラメタを渡すためにattributeの仕組みを用いる必要がありますが、これは変数名や、その変数が内部で何に使われているかという内部構造を意識した使い方をする必要があります。
+逆にdefinitionは独自リソースとして、呼び出しパラメタを定義することができるため、公開インターフェースとして適しています。</p><p>自分でクックブックを作成するときは、<strong>パラメタが必要ない処理はrecipeとして定義し、パラメタが必要となる処理はdefinitionを用いる</strong>ことにしています。</p><hr><p>長くなってきたので今回はこの辺で。
+次回はdefinitionを使う際のtipsなどを書いていこうと思います。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/vagrant>vagrant</a></li><li><a class=tag-link href=/tags/chef>chef</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/05/05/next-step-chef-solo-recipe-and-definition/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','twitter-wjs');</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-38374674-1','auto');ga('send','pageview');</script></body></html>

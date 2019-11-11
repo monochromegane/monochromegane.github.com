@@ -1,153 +1,82 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Knife Solo on THINKING MEGANE</title>
-    <link>https://blog.monochromegane.com/tags/knife-solo/</link>
-    <description>Recent content in Knife Solo on THINKING MEGANE</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>ja-jp</language>
-    <lastBuildDate>Tue, 20 Aug 2013 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/knife-solo/" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>Chef-Solo &#43; Knife-Solo &#43; Berkshelf  環境のつくりかた</title>
-      <link>https://blog.monochromegane.com/blog/2013/08/20/chef-solo-knife-solo-berkshelf/</link>
-      <pubDate>Tue, 20 Aug 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2013/08/20/chef-solo-knife-solo-berkshelf/</guid>
-      <description>
-
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>knife-solo on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/knife-solo/</link><description>Recent content in knife-solo on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Tue, 20 Aug 2013 00:00:00 +0000</lastBuildDate><atom:link href="/tags/knife-solo/" rel="self" type="application/rss+xml"/><item><title>Chef-Solo &#43; Knife-Solo &#43; Berkshelf 環境のつくりかた</title><link>https://blog.monochromegane.com/blog/2013/08/20/chef-solo-knife-solo-berkshelf/</link><pubDate>Tue, 20 Aug 2013 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2013/08/20/chef-solo-knife-solo-berkshelf/</guid><description>
 &lt;p&gt;Chef-Solo + Knife-Solo + Berkshelf 環境を構築するときに少しはまったので、まとめておきます。&lt;/p&gt;
-
 &lt;p&gt;ブログ投稿時点（2013/08/20）では knife-solo のバージョンだけ気をつけておけば大丈夫です。
 knife-solo のバージョンが古いと2回目以降の実行時にうまくいかないためです。
 その他の構築自体は難しくありません。&lt;/p&gt;
-
 &lt;p&gt;以下、構築手順です。&lt;/p&gt;
-
 &lt;h1 id=&#34;1-前提&#34;&gt;1. 前提&lt;/h1&gt;
-
 &lt;p&gt;構築対象となるリモート側のサーバへはすでにSSHによるログインが可能であるものとします。&lt;/p&gt;
-
 &lt;h1 id=&#34;2-chef-knife-solo-berkshelf-のインストール&#34;&gt;2. chef, knife-solo, berkshelf のインストール&lt;/h1&gt;
-
 &lt;p&gt;以下のGemfileを用意して&lt;code&gt;bundle install&lt;/code&gt;を行います。&lt;/p&gt;
-
 &lt;p&gt;&lt;code&gt;Gemfile&lt;/code&gt;&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;source &amp;quot;https://rubygems.org&amp;quot;
-
 gem &#39;chef&#39;
 gem &#39;knife-solo&#39;, &#39;&amp;gt;= 0.3.0.pre5&#39;
 gem &#39;berkshelf&#39;
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;** knife-solo のバージョンについて **&lt;/p&gt;
-
 &lt;p&gt;指定しない場合、0.2.0系がインストールされますが、2回目以降の実行時にエラーとなります。
 原因などはこちらが詳しいです。&lt;/p&gt;
-
 &lt;p&gt;&lt;a href=&#34;http://tk0miya.hatenablog.com/entry/2013/04/18/011339&#34;&gt;Hack like a rolling stone - knife-solo 0.2.0 で rsync エラーによって苦しまないためのたったひとつの方法&lt;/a&gt;&lt;/p&gt;
-
 &lt;h1 id=&#34;3-cookbookの準備&#34;&gt;3. cookbookの準備&lt;/h1&gt;
-
 &lt;h2 id=&#34;chefのリポジトリをつくる&#34;&gt;Chefのリポジトリをつくる&lt;/h2&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ knife solo init chef-repo
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;chef-repo内に以下の構成が生成されます。必要に応じてGit管理を行ってください。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt; $ tree chef-repo/
- chef-repo/
- ├── cookbooks
- ├── data_bags
- ├── nodes
- ├── roles
- └── site-cookbooks
+chef-repo/
+├── cookbooks
+├── data_bags
+├── nodes
+├── roles
+└── site-cookbooks
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;** Cookbookを置く場所について **&lt;/p&gt;
-
 &lt;p&gt;自分でつくるCookbookは&lt;code&gt;site-cookbooks&lt;/code&gt;以下に、公開Cookbookは&lt;code&gt;cookbooks&lt;/code&gt;以下に置きます。&lt;/p&gt;
-
 &lt;p&gt;knife-soloでは&lt;code&gt;cookbooks&lt;/code&gt;配下は&lt;code&gt;.gitignore&lt;/code&gt;で除外対象となっており、後述のBerkshelfなどの利用を前提としているようです。&lt;/p&gt;
-
 &lt;p&gt;** knife-solo はsshコマンドのオプションが使えます。証明書の指定などがある場合に便利です。 **&lt;/p&gt;
-
 &lt;h1 id=&#34;4-cookbookの作成&#34;&gt;4. Cookbookの作成&lt;/h1&gt;
-
 &lt;h2 id=&#34;自分でcookbookをつくる場合&#34;&gt;自分でCookbookをつくる場合&lt;/h2&gt;
-
 &lt;p&gt;今回は環境構築をメインにするので、雛形作成の手順のみ。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ knife cookbook create xxx -o site-cookbooks/
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h2 id=&#34;公開cookbookを利用する場合&#34;&gt;公開Cookbookを利用する場合&lt;/h2&gt;
-
 &lt;p&gt;リポジトリ直下に&lt;code&gt;Berksfile&lt;/code&gt;を作成する&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;site :opscode
 cookbook &amp;quot;public_cookbook_name&amp;quot;
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h1 id=&#34;5-リモート側でchef-soloを実行する&#34;&gt;5. リモート側でChef-Soloを実行する&lt;/h1&gt;
-
 &lt;h2 id=&#34;実行するレシピの指定&#34;&gt;実行するレシピの指定&lt;/h2&gt;
-
 &lt;p&gt;&lt;code&gt;nodes&lt;/code&gt;以下に&lt;code&gt;severname.json&lt;/code&gt;が作成されているので、run_list に実行したいレシピを指定する。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
-  &amp;quot;run_list&amp;quot;: [
-    &amp;quot;public_cookbook_name::recipe_name&amp;quot;, &amp;quot;cookbook_name::recipe_name&amp;quot;
-  ]
+&amp;quot;run_list&amp;quot;: [
+&amp;quot;public_cookbook_name::recipe_name&amp;quot;, &amp;quot;cookbook_name::recipe_name&amp;quot;
+]
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;** 公開Cookbookも忘れずに追加しておきます **&lt;/p&gt;
-
 &lt;h2 id=&#34;リモート側でのchef-solo実行準備&#34;&gt;リモート側でのChef-Solo実行準備&lt;/h2&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ knife solo prepare username@servername
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;これにより、リモート側にChefがインストールされます。&lt;/p&gt;
-
 &lt;h2 id=&#34;リモート側でのchef-solo実行&#34;&gt;リモート側でのChef-Solo実行&lt;/h2&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ knife cook username@servername
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;これによりリモート側にCookbookが送信され、run_listで指定したレシピが実行されます。&lt;/p&gt;
-
 &lt;h1 id=&#34;6-tipsなど&#34;&gt;6. Tipsなど&lt;/h1&gt;
-
 &lt;h2 id=&#34;knife-soloでattributesを使う&#34;&gt;knife-soloでattributesを使う&lt;/h2&gt;
-
 &lt;p&gt;nodes/servername.jsonに追加&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
-  &amp;quot;run_list&amp;quot;: [
-    &amp;quot;cookbook_name::recipe_name&amp;quot;
-  ],
-  &amp;quot;hoge&amp;quot;: {
-    &amp;quot;fuga&amp;quot;: &amp;quot;piyo&amp;quot;
-  }
+&amp;quot;run_list&amp;quot;: [
+&amp;quot;cookbook_name::recipe_name&amp;quot;
+],
+&amp;quot;hoge&amp;quot;: {
+&amp;quot;fuga&amp;quot;: &amp;quot;piyo&amp;quot;
+}
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;この例ではrecipe内で&lt;code&gt;node.hoge.fuga&lt;/code&gt;として値を利用できます。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;Vagrant + Chef-Solo の環境構築は手軽にできますが、いざVagrant以外に適用しようとすると意外と面倒です。&lt;/p&gt;
-
 &lt;p&gt;今回のようにknife-soloをかませておくことで、対象のサーバを選ばずにChef-Soloを実行でき、とても便利です。&lt;/p&gt;
-
-&lt;p&gt;環境構築を行うときは、Berkshelfによる公開Cookbookの管理とあわせた今回の構成をおすすめします。&lt;/p&gt;
-</description>
-    </item>
-    
-  </channel>
-</rss>
+&lt;p&gt;環境構築を行うときは、Berkshelfによる公開Cookbookの管理とあわせた今回の構成をおすすめします。&lt;/p&gt;</description></item></channel></rss>

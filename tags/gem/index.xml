@@ -1,127 +1,62 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Gem on THINKING MEGANE</title>
-    <link>https://blog.monochromegane.com/tags/gem/</link>
-    <description>Recent content in Gem on THINKING MEGANE</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>ja-jp</language>
-    <lastBuildDate>Sat, 15 Jun 2013 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/gem/" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>[Ruby] ThorでWebAPIサービスを立ち上げるGem&#34;トールハンマー&#34;をつくった</title>
-      <link>https://blog.monochromegane.com/blog/2013/06/15/thor-hammer/</link>
-      <pubDate>Sat, 15 Jun 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2013/06/15/thor-hammer/</guid>
-      <description>
-
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>gem on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/gem/</link><description>Recent content in gem on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sat, 15 Jun 2013 00:00:00 +0000</lastBuildDate><atom:link href="/tags/gem/" rel="self" type="application/rss+xml"/><item><title>[Ruby] ThorでWebAPIサービスを立ち上げるGem&#34;トールハンマー&#34;をつくった</title><link>https://blog.monochromegane.com/blog/2013/06/15/thor-hammer/</link><pubDate>Sat, 15 Jun 2013 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2013/06/15/thor-hammer/</guid><description>
 &lt;p&gt;コマンドラインツールをつくって、もっと多くのひとに気軽に利用してもらいたいとき、Webアプリとして作りなおすのが面倒だなーと思うことがあります。&lt;/p&gt;
-
 &lt;p&gt;コマンドラインツールをそのままWebアプリとして使えるようにする仕組みが欲しくて、そんな Gem、&lt;code&gt;ThorHammer&lt;/code&gt;トールハンマーをつくりました。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;thorって&#34;&gt;Thorって？&lt;/h1&gt;
-
 &lt;p&gt;&lt;a href=&#34;http://whatisthor.com/&#34;&gt;Thor&lt;/a&gt;（トール、ソー、雷神）はRubyでコマンドラインツールをかんたんにつくるためのGemです。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;thorhammerって&#34;&gt;ThorHammerって？&lt;/h1&gt;
-
 &lt;p&gt;&lt;a href=&#34;https://github.com/monochromegane/thor_hammer&#34;&gt;ThorHammer&lt;/a&gt;はThorでつくったCLIをWebAPIにするGemです。&lt;/p&gt;
-
 &lt;p&gt;マイティー・ソーが武器のハンマーをつかって、雷を広げて攻撃するように、ThorでつくったCLI機能をWebに広げるGemです。※1&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2013/06/thor_hammer.png&#34; alt=&#34;Thor Hammer&#34; /&gt;&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;どう使うの&#34;&gt;どう使うの？&lt;/h1&gt;
-
 &lt;p&gt;ThorHammerは、RailsアプリとしてWebAPIを公開します。&lt;/p&gt;
-
 &lt;h2 id=&#34;インストール&#34;&gt;インストール&lt;/h2&gt;
-
 &lt;p&gt;Railsのプロジェクトを作成して、Gemfileに以下を追記します。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;gem &#39;thor_hammer&#39;
 gem &#39;Your Thor CLI&#39; # WebAPIとして公開するThorのCLI
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;あとは&lt;code&gt;bundle install&lt;/code&gt;でOKです。&lt;/p&gt;
-
 &lt;h2 id=&#34;ジェネレータ&#34;&gt;ジェネレータ&lt;/h2&gt;
-
 &lt;p&gt;ThorHammerは、WebAPIを作成するためのジェネレータを提供します。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ rails g thor_hammer:api ThorCliのクラス名 公開APIのパス
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;引数に指定する値は以下を参考にしてください。&lt;/p&gt;
-
 &lt;h3 id=&#34;thorcliのクラス名&#34;&gt;ThorCliのクラス名&lt;/h3&gt;
-
 &lt;p&gt;第一引数は、Thor CLI の起点となるクラス名を指定します。
 起点となるクラス名は、Thor を継承したクラスとして作成されているはずです。
 また、モジュール名も必要になります。&lt;/p&gt;
-
 &lt;p&gt;以下のような Thor CLI の場合、&lt;code&gt;SampleThorCli::Runner&lt;/code&gt;を指定します。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;module SampleThorCli
-  class Runner &amp;lt; Thor
-    # 中略
-  end
+class Runner &amp;lt; Thor
+# 中略
+end
 end
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h3 id=&#34;公開apiのパス&#34;&gt;公開APIのパス&lt;/h3&gt;
-
 &lt;p&gt;第二引数は、WebAPIの公開時のパスを指定します。
 省略時は、第一引数を&lt;code&gt;underscore&lt;/code&gt;したものが適用されます。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;省略時&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;&lt;code&gt;rails g thor_hammer:api SampleThorCli::Runner&lt;/code&gt; =&amp;gt; &lt;code&gt;http://hostname/sample_thor_cli/runner&lt;/code&gt;&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;指定時&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;&lt;code&gt;rails g thor_hammer:api SampleThorCli::Runner api&lt;/code&gt; =&amp;gt; &lt;code&gt;http://hostname/api&lt;/code&gt;&lt;/p&gt;
-
 &lt;h2 id=&#34;アクセス&#34;&gt;アクセス&lt;/h2&gt;
-
 &lt;p&gt;以上で、あなたのThor CLI がWebAPIとして公開する準備が整いました。
 &lt;code&gt;rails server&lt;/code&gt;でRailsアプリを起動し、アクセスしてください。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ curl http://hostname/api/subcommand/arg1,arg2
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;CLIとして利用した場合と同じ結果をそのまま取得することができます。（JSON, XML形式への対応は今後予定）&lt;/p&gt;
-
 &lt;h3 id=&#34;subcommand&#34;&gt;subcommand&lt;/h3&gt;
-
 &lt;p&gt;サブコマンドは、あなたのThor CLIのサブコマンドを指定します。&lt;/p&gt;
-
 &lt;h3 id=&#34;arg1-arg2&#34;&gt;arg1,arg2&lt;/h3&gt;
-
 &lt;p&gt;サブコマンドに引数があれば、指定することができます。
 引数が複数の場合は、&lt;code&gt;,&lt;/code&gt;を間に挟んで指定します。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;今はThor限定ですが、Rakeタスクなんかもできるようにして、CIと組み合わせると面白くなるかも。&lt;/p&gt;
-
 &lt;hr /&gt;
-
-&lt;p&gt;※1. はい、もちろん後付けです。&lt;/p&gt;
-</description>
-    </item>
-    
-  </channel>
-</rss>
+&lt;p&gt;※1. はい、もちろん後付けです。&lt;/p&gt;</description></item></channel></rss>

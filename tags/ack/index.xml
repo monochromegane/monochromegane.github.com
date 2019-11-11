@@ -1,67 +1,32 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Ack on THINKING MEGANE</title>
-    <link>https://blog.monochromegane.com/tags/ack/</link>
-    <description>Recent content in Ack on THINKING MEGANE</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>ja-jp</language>
-    <lastBuildDate>Thu, 16 Jan 2014 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/ack/" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>Go言語でag(The Silver Searcher)ライクな高速検索ツールをつくった。EUC-JP/Shift-JISも検索できマス。</title>
-      <link>https://blog.monochromegane.com/blog/2014/01/16/the-platinum-searcher/</link>
-      <pubDate>Thu, 16 Jan 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2014/01/16/the-platinum-searcher/</guid>
-      <description>
-
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>ack on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/ack/</link><description>Recent content in ack on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Thu, 16 Jan 2014 00:00:00 +0000</lastBuildDate><atom:link href="/tags/ack/" rel="self" type="application/rss+xml"/><item><title>Go言語でag(The Silver Searcher)ライクな高速検索ツールをつくった。EUC-JP/Shift-JISも検索できマス。</title><link>https://blog.monochromegane.com/blog/2014/01/16/the-platinum-searcher/</link><pubDate>Thu, 16 Jan 2014 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2014/01/16/the-platinum-searcher/</guid><description>
 &lt;p&gt;いまや高速パターン検索といえばag(The Silver Searcher)ですが、検索対象がUTF-8のテキストを前提としているため、EUC-JPやShift-JISといったファイルを検索するのに課題があります。&lt;/p&gt;
-
 &lt;p&gt;これまで、それらの日本語文字セットを検索できるようにするため、色々とagの改造、公開を行っていました。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2013/09/15/the-silver-searcher-detects-japanese-char-set/&#34;&gt;ag(The Silver Searcher)でEUC-JP/Shift-JISのファイルも検索できるようにしてみた&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2013/09/23/sg-spec/&#34;&gt;日本語圏特化型ag -白金- の配備が完了しました&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;しかし、特定の国の文字コードだけに特化した修正というのをmasterに取り込んでもらうわけにもいかず、派生ブランチとして追随するのも、やはり面倒&amp;hellip;&lt;/p&gt;
-
 &lt;p&gt;そこで年始にGo言語を触ったのをきっかけに、Go言語でパターン検索ツールをつくってみました。&lt;/p&gt;
-
 &lt;p&gt;せっかくなのでポストagを目指して、&lt;a href=&#34;https://github.com/monochromegane/the_platinum_searcher&#34;&gt;プラチナサーチャー(The Platinum Searcher)&lt;/a&gt;と名付けてます。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;the-platinum-searcher&#34;&gt;The Platinum Searcher&lt;/h1&gt;
-
 &lt;h2 id=&#34;機能&#34;&gt;機能&lt;/h2&gt;
-
 &lt;ul&gt;
 &lt;li&gt;ag相当の検索速度&lt;/li&gt;
 &lt;li&gt;プロジェクトのgitignore, hgignoreファイルによる検索対象の除外&lt;/li&gt;
 &lt;li&gt;日本語文字セット(UTF-8, EUC-JP, Shift-JIS)ファイルの検索&lt;/li&gt;
 &lt;li&gt;各OS(Mac OS X, Windows, Linux)向けのバイナリ提供&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;h3 id=&#34;ベンチマーク&#34;&gt;ベンチマーク&lt;/h3&gt;
-
 &lt;p&gt;&lt;code&gt;ack&lt;/code&gt;, &lt;code&gt;ag&lt;/code&gt;と比較した結果です。agと同じくらいの速度は出せていると思います。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ack go  6.24s user 1.06s system 99%  cpu 7.304 total
-ag go   0.88s user 1.39s system 221% cpu 1.027 total
-pt go   1.05s user 1.03s system 195% cpu 1.066 total
+&lt;pre&gt;&lt;code&gt;ack go 6.24s user 1.06s system 99% cpu 7.304 total
+ag go 0.88s user 1.39s system 221% cpu 1.027 total
+pt go 1.05s user 1.03s system 195% cpu 1.066 total
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;ディレクトリ検索、Grep処理、結果表示などをゴルーチンを使って並行化したりしていますが、今回のようなシンプルな実装でこれだけの速度を出せているGo言語、なかなかよさそうです。&lt;/p&gt;
-
 &lt;h2 id=&#34;インストール&#34;&gt;インストール&lt;/h2&gt;
-
 &lt;p&gt;各OS向けにビルドしたものを提供しています。&lt;/p&gt;
-
 &lt;p&gt;以下のURLで提供しているバイナリファイルをパスの通ったところに置けばOKです。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://drone.io/github.com/monochromegane/the_platinum_searcher/files/artifacts/bin/darwin_amd64/pt&#34;&gt;Mac OS X(x86 64bit)&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://drone.io/github.com/monochromegane/the_platinum_searcher/files/artifacts/bin/darwin_i386/pt&#34;&gt;Mac OS X(x86 32bit)&lt;/a&gt;&lt;/li&gt;
@@ -70,280 +35,162 @@ pt go   1.05s user 1.03s system 195% cpu 1.066 total
 &lt;li&gt;&lt;a href=&#34;https://drone.io/github.com/monochromegane/the_platinum_searcher/files/artifacts/bin/linux_amd64/pt&#34;&gt;Linux(x86 64bit)&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://drone.io/github.com/monochromegane/the_platinum_searcher/files/artifacts/bin/linux_i386/pt&#34;&gt;Linux(x86 32bit)&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;h2 id=&#34;使い方&#34;&gt;使い方&lt;/h2&gt;
-
 &lt;p&gt;通常の ag コマンドと同様です。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ pt [OPTIONS] PATTERN [PATH]
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;コマンド名は&lt;code&gt;pt&lt;/code&gt;です。プラチナなので。&lt;/p&gt;
-
 &lt;h2 id=&#34;unite-vimとの連携&#34;&gt;Unite.vimとの連携&lt;/h2&gt;
-
 &lt;p&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2013/09/18/ag-and-unite/&#34;&gt;agとUnite.vimで快適高速grep環境を手に入れる&lt;/a&gt; で紹介したのと同じようにプラチナもUnite.vimと連携できます。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-vim&#34;&gt;nnoremap &amp;lt;silent&amp;gt; ,g :&amp;lt;C-u&amp;gt;Unite grep:. -buffer-name=search-buffer&amp;lt;CR&amp;gt;
 if executable(&#39;pt&#39;)
-  let g:unite_source_grep_command = &#39;pt&#39;
-  let g:unite_source_grep_default_opts = &#39;--nogroup --nocolor&#39;
-  let g:unite_source_grep_recursive_opt = &#39;&#39;
+let g:unite_source_grep_command = &#39;pt&#39;
+let g:unite_source_grep_default_opts = &#39;--nogroup --nocolor&#39;
+let g:unite_source_grep_recursive_opt = &#39;&#39;
 endif
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;今後は、ポストag、プラチナの名に恥じないよう、agより速く検索できるようにしていきたいなと思ってます。&lt;/p&gt;
-
-&lt;p&gt;まだGo言語は触り始めたところなので、プルリクでのツッコミもらえたらうれしいです。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>agとUnite.vimで快適高速grep環境を手に入れる</title>
-      <link>https://blog.monochromegane.com/blog/2013/09/18/ag-and-unite/</link>
-      <pubDate>Wed, 18 Sep 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2013/09/18/ag-and-unite/</guid>
-      <description>
-
+&lt;p&gt;まだGo言語は触り始めたところなので、プルリクでのツッコミもらえたらうれしいです。&lt;/p&gt;</description></item><item><title>agとUnite.vimで快適高速grep環境を手に入れる</title><link>https://blog.monochromegane.com/blog/2013/09/18/ag-and-unite/</link><pubDate>Wed, 18 Sep 2013 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2013/09/18/ag-and-unite/</guid><description>
 &lt;p&gt;今までVim内のgrepにはUnite.vimを使っていたんですが、ファイル数が多いときに遅く感じることがあったので、前回導入した &lt;a href=&#34;https://github.com/ggreer/the_silver_searcher&#34;&gt;ag(The Silver Searcher)&lt;/a&gt;と組み合わせて快適高速grep環境をつくりました。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;the-silver-searcher-と-unite-vim&#34;&gt;The Silver Searcher と Unite.vim&lt;/h1&gt;
-
 &lt;p&gt;The Silver Searcherは、grepやackより高速な検索が売りのパターン検索を行うコマンドです。&lt;/p&gt;
-
 &lt;p&gt;また、Unite.vimは、様々なデータソースを共通のインターフェースで操作できるプラグインです。&lt;/p&gt;
-
 &lt;p&gt;ディレクトリのファイル一覧や、バッファ一覧などを同じインターフェースで操作できるので使いはじめると手放せなくなるプラグインです。&lt;/p&gt;
-
 &lt;p&gt;The Silver Searcherについてはこの辺が分かりやすいと思います。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://blog.glidenote.com/blog/2013/02/28/the-silver-searcher-better-than-ack/&#34;&gt;ackを捨てて、より高速なag(The Silver Searcher)に切り替えた&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;インストール&#34;&gt;インストール&lt;/h1&gt;
-
 &lt;h2 id=&#34;the-silver-searcher-のインストール&#34;&gt;The Silver Searcher のインストール&lt;/h2&gt;
-
 &lt;p&gt;Macの場合、homebrewで提供されてます。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ brew install the_silver_searcher
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h2 id=&#34;unite-vim-のインストール&#34;&gt;Unite.vim のインストール&lt;/h2&gt;
-
 &lt;p&gt;BundleやNeoBundleによるインストールがおすすめです。&lt;/p&gt;
-
 &lt;p&gt;Bundleの場合&lt;code&gt;~/.vimrc&lt;/code&gt;に以下を記述してノーマルモードで&lt;code&gt;:BundleInstall&lt;/code&gt;を実行、インストールします。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;Bundle &amp;quot;Shougo/unite.vim&amp;quot;
-Bundle &amp;quot;git://github.com/Shougo/vimproc&amp;quot; 
+Bundle &amp;quot;git://github.com/Shougo/vimproc&amp;quot;
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;インストール後、vimprocをコンパイルします。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ cd ~/.vim/bundle/vimproc
 $ make # Macの場合
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;makeファイルはOSごとに違うので&lt;a href=&#34;https://github.com/Shougo/vimproc.vim&#34;&gt;公式のREADME&lt;/a&gt;を確認してください。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;設定&#34;&gt;設定&lt;/h1&gt;
-
 &lt;p&gt;&lt;code&gt;~/.vimrc&lt;/code&gt;に以下を記述します。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;&amp;quot; insert modeで開始
 let g:unite_enable_start_insert = 1
-
 &amp;quot; 大文字小文字を区別しない
 let g:unite_enable_ignore_case = 1
 let g:unite_enable_smart_case = 1
-
 &amp;quot; grep検索
-nnoremap &amp;lt;silent&amp;gt; ,g  :&amp;lt;C-u&amp;gt;Unite grep:. -buffer-name=search-buffer&amp;lt;CR&amp;gt;
-
+nnoremap &amp;lt;silent&amp;gt; ,g :&amp;lt;C-u&amp;gt;Unite grep:. -buffer-name=search-buffer&amp;lt;CR&amp;gt;
 &amp;quot; カーソル位置の単語をgrep検索
 nnoremap &amp;lt;silent&amp;gt; ,cg :&amp;lt;C-u&amp;gt;Unite grep:. -buffer-name=search-buffer&amp;lt;CR&amp;gt;&amp;lt;C-R&amp;gt;&amp;lt;C-W&amp;gt;
-
 &amp;quot; grep検索結果の再呼出
-nnoremap &amp;lt;silent&amp;gt; ,r  :&amp;lt;C-u&amp;gt;UniteResume search-buffer&amp;lt;CR&amp;gt;
-
+nnoremap &amp;lt;silent&amp;gt; ,r :&amp;lt;C-u&amp;gt;UniteResume search-buffer&amp;lt;CR&amp;gt;
 &amp;quot; unite grep に ag(The Silver Searcher) を使う
 if executable(&#39;ag&#39;)
-  let g:unite_source_grep_command = &#39;ag&#39;
-  let g:unite_source_grep_default_opts = &#39;--nogroup --nocolor --column&#39;
-  let g:unite_source_grep_recursive_opt = &#39;&#39;
+let g:unite_source_grep_command = &#39;ag&#39;
+let g:unite_source_grep_default_opts = &#39;--nogroup --nocolor --column&#39;
+let g:unite_source_grep_recursive_opt = &#39;&#39;
 endif
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;使い方&#34;&gt;使い方&lt;/h1&gt;
-
 &lt;h2 id=&#34;カレントディレクトリ以下をパターン検索&#34;&gt;カレントディレクトリ以下をパターン検索&lt;/h2&gt;
-
 &lt;p&gt;ノーマルモードで&lt;code&gt;,g&lt;/code&gt;を入力するとVimのコマンドラインに&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;Pattern:  
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;Pattern:
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;と表示されるので、検索したいパターンを入力、Enterでカレントディレクトリ以下のファイルに対して再帰的に検索が開始されます。&lt;/p&gt;
-
 &lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2013/09/unite-grep.png&#34; alt=&#34;Unite Grep&#34; /&gt;&lt;/p&gt;
-
 &lt;p&gt;こんな感じで候補が表示されるので、一番上のプロンプトで絞込語句を入力したり、&lt;code&gt;Ctrl+p&lt;/code&gt; or &lt;code&gt;Ctrl+n&lt;/code&gt;でカーソルを移動させることができます。&lt;/p&gt;
-
 &lt;p&gt;Enterで対象のファイルが新しいバッファで開きます。&lt;/p&gt;
-
 &lt;h2 id=&#34;カーソル位置の単語でパターン検索&#34;&gt;カーソル位置の単語でパターン検索&lt;/h2&gt;
-
 &lt;p&gt;開いているファイル内に検索したい語句がある場合は、カーソルをそこまで持っていき、&lt;code&gt;,cg&lt;/code&gt;でOKです。&lt;/p&gt;
-
 &lt;p&gt;さきほどの&lt;code&gt;Pattern:&lt;/code&gt;のところにカーソル位置の単語が入力された状態になります。
 あとの使い方は同じです。&lt;/p&gt;
-
 &lt;h2 id=&#34;検索結果の再呼び出し&#34;&gt;検索結果の再呼び出し&lt;/h2&gt;
-
 &lt;p&gt;候補を選択したあと、再度パターン検索の結果を表示したいときは、&lt;code&gt;,r&lt;/code&gt;を入力します。&lt;/p&gt;
-
 &lt;p&gt;&lt;code&gt;,g&lt;/code&gt;や&lt;code&gt;,cg&lt;/code&gt;で検索した結果は&lt;code&gt;-buffer-name=search-buffer&lt;/code&gt;オプションによりバッファに保存しており、このバッファを&lt;code&gt;UniteResume&lt;/code&gt;で再利用することで再度結果を呼び出すことができます。&lt;/p&gt;
-
 &lt;p&gt;別の検索を実行するとバッファは上書きされます。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;tipsなど&#34;&gt;Tipsなど&lt;/h1&gt;
-
 &lt;h2 id=&#34;パターン検索の起点ディレクトリを指定する&#34;&gt;パターン検索の起点ディレクトリを指定する&lt;/h2&gt;
-
 &lt;p&gt;&lt;code&gt;,g&lt;/code&gt;や&lt;code&gt;,cg&lt;/code&gt;で呼び出すUnite grepはプロジェクトのトップディレクトリで使うことを想定おり、カレントディレクトリ配下をデフォルトで指定するようにしています。&lt;/p&gt;
-
 &lt;p&gt;もしパターン検索の起点ディレクトリを毎回指定するときは、&lt;code&gt;Unite grep:.&lt;/code&gt;の&lt;code&gt;:.&lt;/code&gt;を削除してください。&lt;/p&gt;
-
 &lt;p&gt;&lt;code&gt;Pattern&lt;/code&gt;プロンプトの前に、&lt;code&gt;Target:&lt;/code&gt;が表示されるようになり、ここで起点ディレクトリを指定できるようになります。&lt;/p&gt;
-
 &lt;h2 id=&#34;euc-jp-shift-jisのファイルがパターン検索にひっかからない&#34;&gt;EUC-JP/Shift-JISのファイルがパターン検索にひっかからない&lt;/h2&gt;
-
 &lt;p&gt;The Silver SearcherはEUC-JP/Shift-JISのエンコードがされたファイルをバイナリと見なして検索対象から除外します。
 もしそれらのエンコードのファイルを利用する場合は、EUC-JP/Shift-JISのファイルも検索対象とする修正版を提供しているのでこちらを利用してみてください。&lt;/p&gt;
-
 &lt;p&gt;詳細はこちら&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2013/09/15/the-silver-searcher-detects-japanese-char-set/&#34;&gt;ag(The Silver Searcher)でEUC-JP/Shift-JISのファイルも検索できるようにしてみた&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;homebrewならインストールは簡単です。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;brew install https://gist.github.com/morygonzalez/6588887/raw/b09a904e7ca9dd09abfef88b0e0e98a50a206d3b/the_legacy_searcher.rb
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;既存のコマンドは&lt;code&gt;brew uninstall the_silver_searcher&lt;/code&gt;でアンインストールしておいてください。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;p&gt;Unite.vimは標準でもgrepが同梱されているのですが、agと組み合わせることでより高速な環境を手にいれることができます。
 Unite.vimは他にもたくさんのことができるのでプラグインを探してみてください。&lt;/p&gt;
-
 &lt;p&gt;ちなみに自分のdotfileはこちらに公開しています。参考になればー。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/monochromegane/dotfiles&#34;&gt;GitHub: monochromegane/dotfiles&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>ag(The Silver Searcher)でEUC-JP/Shift-JISのファイルも検索できるようにしてみた</title>
-      <link>https://blog.monochromegane.com/blog/2013/09/15/the-silver-searcher-detects-japanese-char-set/</link>
-      <pubDate>Sun, 15 Sep 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2013/09/15/the-silver-searcher-detects-japanese-char-set/</guid>
-      <description>
-
+&lt;p&gt;&lt;a href=&#34;https://github.com/monochromegane/dotfiles&#34;&gt;GitHub: monochromegane/dotfiles&lt;/a&gt;&lt;/p&gt;</description></item><item><title>ag(The Silver Searcher)でEUC-JP/Shift-JISのファイルも検索できるようにしてみた</title><link>https://blog.monochromegane.com/blog/2013/09/15/the-silver-searcher-detects-japanese-char-set/</link><pubDate>Sun, 15 Sep 2013 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2013/09/15/the-silver-searcher-detects-japanese-char-set/</guid><description>
 &lt;p&gt;&lt;a href=&#34;https://github.com/ggreer/the_silver_searcher&#34;&gt;ag(The Silver Searcher)&lt;/a&gt;は、高速なパターン検索が行えるため、ackから切り替える人も多いと思いますが、日本語文字セット（EUC-JPやShift-JIS）のファイルがバイナリファイルとして判定されて検索対象からスキップされてしまうという問題があります。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://www.naney.org/diki/d/2013-07-17-The-Silver-Searcher.html&#34;&gt;nDiki: ag やめて ack に戻す&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;業務ではまだEUC-JPやShift-JISのファイルを触る機会があるため、ag でEUC-JP/Shift-JISのファイルも検索できるようにしてみました。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;インストール&#34;&gt;インストール&lt;/h1&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ git clone https://github.com/monochromegane/the_silver_searcher
 $ cd the_silver_searcher
 $ git checkout detect-japanese-char-set
 $ ./build.sh
 $ make install
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;ul&gt;
 &lt;li&gt;** 既にhomebrewなどでインストール済みの agコマンド がある場合はアンインストールしておいてください **&lt;/li&gt;
 &lt;li&gt;** コンパイル前に&lt;code&gt;automake&lt;/code&gt;とか&lt;code&gt;pcre-devel&lt;/code&gt;を適宜インストールおねがいします **&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;利用方法&#34;&gt;利用方法&lt;/h1&gt;
-
 &lt;p&gt;通常の ag コマンドと同様です。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ ag [options] PATTERN [PATH]
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;修正点など&#34;&gt;修正点など&lt;/h1&gt;
-
 &lt;p&gt;&lt;code&gt;src/util.c&lt;/code&gt;の&lt;code&gt;is_binary&lt;/code&gt;内に EUC-JPとShift-JISの判定を追加しています。&lt;/p&gt;
-
 &lt;p&gt;( なぜか10進数になっているのは既存のUTF-8を検出しているとこにあわせてるからです。16進数のほうがいいかな&amp;hellip; )&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-c&#34;&gt;/* EUC-JP detection */
 if (buf_c[i] == 142) {
-    i++;
-    if (buf_c[i] &amp;gt; 160 &amp;amp;&amp;amp; buf_c[i] &amp;lt; 224) {
-      continue;
-    }
+i++;
+if (buf_c[i] &amp;gt; 160 &amp;amp;&amp;amp; buf_c[i] &amp;lt; 224) {
+continue;
+}
 } else if (buf_c[i] &amp;gt; 160 &amp;amp;&amp;amp; buf_c[i] &amp;lt; 255) {
-  i++;
-  if(buf_c[i] &amp;gt; 160 &amp;amp;&amp;amp; buf_c[i] &amp;lt; 255) {
-    continue;
-  }
+i++;
+if(buf_c[i] &amp;gt; 160 &amp;amp;&amp;amp; buf_c[i] &amp;lt; 255) {
+continue;
+}
 }
 /* Shift-JIS detection */
 if (buf_c[i] &amp;gt; 160 &amp;amp;&amp;amp; buf_c[i] &amp;lt; 224) {
-  continue;
+continue;
 } else if ((buf_c[i] &amp;gt; 128 &amp;amp;&amp;amp; buf_c[i] &amp;lt; 160) || (buf_c[i] &amp;gt; 223 &amp;amp;&amp;amp; buf_c[i] &amp;lt; 240)) {
-  i++;
-  if ((buf_c[i] &amp;gt; 63 &amp;amp;&amp;amp; buf_c[i] &amp;lt; 127) || (buf_c[i] &amp;gt; 127 &amp;amp;&amp;amp; buf_c[i] &amp;lt; 253)) {
-    continue;
-  }
+i++;
+if ((buf_c[i] &amp;gt; 63 &amp;amp;&amp;amp; buf_c[i] &amp;lt; 127) || (buf_c[i] &amp;gt; 127 &amp;amp;&amp;amp; buf_c[i] &amp;lt; 253)) {
+continue;
+}
 }
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;性能に関しても特に劣化していないと思います。
 不具合などあれば、プルリクください。&lt;/p&gt;
-
 &lt;hr /&gt;
-
 &lt;h1 id=&#34;今後&#34;&gt;今後&lt;/h1&gt;
-
 &lt;p&gt;日本語圏に限定された修正なので、プルリクだしても本家側には取り込まれない気がする…&lt;/p&gt;
-
-&lt;p&gt;このForkしたブランチでも本家masterの修正に追随していく予定なので、EUC-JPやShift-JISの資産をさわる方々、しばらくはこちらを使ってみてください。&lt;/p&gt;
-</description>
-    </item>
-    
-  </channel>
-</rss>
+&lt;p&gt;このForkしたブランチでも本家masterの修正に追随していく予定なので、EUC-JPやShift-JISの資産をさわる方々、しばらくはこちらを使ってみてください。&lt;/p&gt;</description></item></channel></rss>

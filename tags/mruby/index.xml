@@ -1,111 +1,54 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Mruby on THINKING MEGANE</title>
-    <link>https://blog.monochromegane.com/tags/mruby/</link>
-    <description>Recent content in Mruby on THINKING MEGANE</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>ja-jp</language>
-    <lastBuildDate>Sun, 31 Jan 2016 14:44:11 +0900</lastBuildDate>
-    <atom:link href="/tags/mruby/" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>mrubyからSidekiqに非同期ジョブを登録するmrbgemをつくった</title>
-      <link>https://blog.monochromegane.com/blog/2016/01/31/mruby-sidekiq-client/</link>
-      <pubDate>Sun, 31 Jan 2016 14:44:11 +0900</pubDate>
-      
-      <guid>https://blog.monochromegane.com/blog/2016/01/31/mruby-sidekiq-client/</guid>
-      <description>
-
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mruby on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/mruby/</link><description>Recent content in mruby on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 31 Jan 2016 14:44:11 +0900</lastBuildDate><atom:link href="/tags/mruby/" rel="self" type="application/rss+xml"/><item><title>mrubyからSidekiqに非同期ジョブを登録するmrbgemをつくった</title><link>https://blog.monochromegane.com/blog/2016/01/31/mruby-sidekiq-client/</link><pubDate>Sun, 31 Jan 2016 14:44:11 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2016/01/31/mruby-sidekiq-client/</guid><description>
 &lt;p&gt;ngx_mrubyでHTTPリクエストに対して非同期処理をしたかったので、&lt;code&gt;mruby-sidekiq-client&lt;/code&gt;という mrbgem をつくりました。&lt;/p&gt;
-
 &lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fmruby-sidekiq-client&#34; title=&#34;monochromegane/mruby-sidekiq-client&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/mruby-sidekiq-client&#34;&amp;gt;monochromegane/mruby-sidekiq-client&amp;lt;/a&amp;gt;&lt;/iframe&gt;
-
 &lt;p&gt;mrubyからSidekiqのジョブ形式でRedisに非同期ジョブを登録し、別途用意したSidekiqのサーバーが登録されたジョブを捌いていくという方式です。これにより、非同期処理は通常のRailsやCRubyのコードで書くことができ、mruby側の処理はシンプルに保つことができます。&lt;/p&gt;
-
 &lt;h2 id=&#34;使い方&#34;&gt;使い方&lt;/h2&gt;
-
 &lt;p&gt;RailsなどでSidekiqを使っている方にはお馴染みのやり方です。&lt;/p&gt;
-
 &lt;h3 id=&#34;1-非同期ジョブにしたいworkerクラスを定義します&#34;&gt;1. 非同期ジョブにしたいWorkerクラスを定義します&lt;/h3&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-rb&#34;&gt;class HardWorker
-  include Sidekiq::Worker
+include Sidekiq::Worker
 end
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;※ &lt;code&gt;perform&lt;/code&gt;メソッドはmruby側では実装する必要はありません。Sidekiqサーバー側のRubyコードに実装してください。&lt;/p&gt;
-
 &lt;h3 id=&#34;2-非同期ジョブを登録する処理を定義します&#34;&gt;2. 非同期ジョブを登録する処理を定義します。&lt;/h3&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-rb&#34;&gt;HardWorker.perform_async(&#39;bob&#39;, 5)
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;指定時間後に実行するジョブも登録できます&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-rb&#34;&gt;HardWorker.perform_in(300, &#39;bob&#39;, 5) # 300秒後に実行
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;mruby側はこれだけです。あとは先ほどのWorkerクラスと同じクラスをSidekiqサーバー側に追加し、performメソッドに非同期ジョブの内容を記述します。&lt;/p&gt;
-
 &lt;h2 id=&#34;ngx-mrubyで使う&#34;&gt;ngx_mrubyで使う&lt;/h2&gt;
-
 &lt;p&gt;mruby_userdataを使って、リクエストごとにRedis再接続しないようにしておきます。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code&gt;http {
-
-    (snip)
-
-    mruby_init_code &#39;
-        userdata = Userdata.new &amp;quot;redis_data_key&amp;quot;
-        userdata.redis = Redis.new &amp;quot;localhost&amp;quot;, 6379
-    &#39;;
-
-    server {
-
-        (snip)
-
-        location /hello {
-             mruby_content_handler_code &#39;
-                 userdata = Userdata.new &amp;quot;redis_data_key&amp;quot;
-                 Sidekiq.redis = userdata.redis
-
-                 class MyWorker; include Sidekiq::Worker; end
-
-                 (snip)
-
-                 MyWorker.perform_async(args)
-             &#39;;
-        }
-
+(snip)
+mruby_init_code &#39;
+userdata = Userdata.new &amp;quot;redis_data_key&amp;quot;
+userdata.redis = Redis.new &amp;quot;localhost&amp;quot;, 6379
+&#39;;
+server {
+(snip)
+location /hello {
+mruby_content_handler_code &#39;
+userdata = Userdata.new &amp;quot;redis_data_key&amp;quot;
+Sidekiq.redis = userdata.redis
+class MyWorker; include Sidekiq::Worker; end
+(snip)
+MyWorker.perform_async(args)
+&#39;;
+}
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h2 id=&#34;sidekiqサーバー&#34;&gt;Sidekiqサーバー&lt;/h2&gt;
-
 &lt;p&gt;SidekiqサーバーはPlain Rubyの環境でも動作するため、ngx_mrubyとRedis、Rubyだけでシンプルなジョブキューをつくることができます。
 手順はこちらを参考にしてください。&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/mperham/sidekiq/blob/master/examples/por.rb&#34;&gt;Sidekiq example - Plain old ruby&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;h2 id=&#34;インストール&#34;&gt;インストール&lt;/h2&gt;
-
 &lt;p&gt;&lt;code&gt;build_config.rb&lt;/code&gt; に以下を記述してください。&lt;/p&gt;
-
 &lt;pre&gt;&lt;code class=&#34;language-rb&#34;&gt;conf.gem :github =&amp;gt; &#39;monochromegane/mruby-secure-random&#39;
 conf.gem :github =&amp;gt; &#39;monochromegane/mruby-sidekiq-client&#39;
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;&lt;a href=&#34;https://github.com/monochromegane/mruby-secure-random&#34;&gt;mruby-secure-random&lt;/a&gt;は&lt;code&gt;SecureRandom&lt;/code&gt;をmrubyで使えるようにするためにつくったmrbgemです。SidekiqのJIDを算出するために利用しています。ランダムデバイスとして &lt;code&gt;/dev/urandom&lt;/code&gt; しか対応していないため Windows環境だと動きません。PullRequestお待ちしております。&lt;/p&gt;
-
 &lt;h2 id=&#34;まとめ&#34;&gt;まとめ&lt;/h2&gt;
-
 &lt;p&gt;こんな感じでmrubyからSidekiqと連携できるようにしてみました。シンプルなジョブキューであればRails使わずにngx_mrubyとRedis、Rubyだけでつくれてしまうので便利では〜と個人的には思っています。&lt;/p&gt;
-
-&lt;p&gt;あわせて、今後、mruby使った動的なフロントサーバーがサービスのどの要件までを担当すべきかといった構成は常に考えていかなければいけないだろうなあとも感じています。適材適所それぞれの利点を最大限に活かせる構成を検討したいところ。&lt;/p&gt;
-</description>
-    </item>
-    
-  </channel>
-</rss>
+&lt;p&gt;あわせて、今後、mruby使った動的なフロントサーバーがサービスのどの要件までを担当すべきかといった構成は常に考えていかなければいけないだろうなあとも感じています。適材適所それぞれの利点を最大限に活かせる構成を検討したいところ。&lt;/p&gt;</description></item></channel></rss>
