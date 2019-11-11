@@ -1,4 +1,21 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>THINKING MEGANE</title><link>https://blog.monochromegane.com/diary/</link><description>Recent content on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 10 Nov 2019 23:50:53 +0900</lastBuildDate><atom:link href="/diary/" rel="self" type="application/rss+xml"/><item><title>2019年11月10日</title><link>https://blog.monochromegane.com/diary/20191110/</link><pubDate>Sun, 10 Nov 2019 23:50:53 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191110/</guid><description>&lt;p&gt;午前中は髪を切りに天神へ。
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>THINKING MEGANE</title><link>https://blog.monochromegane.com/diary/</link><description>Recent content on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Mon, 11 Nov 2019 23:21:16 +0900</lastBuildDate><atom:link href="/diary/" rel="self" type="application/rss+xml"/><item><title>2019年11月11日</title><link>https://blog.monochromegane.com/diary/20191111/</link><pubDate>Mon, 11 Nov 2019 23:21:16 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191111/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の共著者レビューを終えて提出。
+順調なのでこのままポスターも作ってしまいたいがフォーマットやサイズなどがまだ公開されていない。うーむ。&lt;/p&gt;
+&lt;p&gt;午後は、年末の福岡エンジニアコミュニティの集まりの主催についてガッと進めた。
+方針は決まったのであとは登壇者が順調に集まってくれるのを祈るのみ。&lt;/p&gt;
+&lt;p&gt;帰宅後はこのブログをGitHub Actionsでデプロイできるようにするなど。
+HugoのSetup、GitHub Pagesへのデプロイはこの辺りを使った&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/peaceiris/actions-hugo&#34;&gt;https://github.com/peaceiris/actions-hugo&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/peaceiris/actions-gh-pages&#34;&gt;https://github.com/peaceiris/actions-gh-pages&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;最終的なWorkflowはこんな感じ。
+コンテンツの管理とGitHub Pagesのリポジトリを分けているが、その辺りもオプションでよしなにできて便利だった。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/thinking-megane/blob/master/.github/workflows/gh-pages.yml&#34;&gt;https://github.com/monochromegane/thinking-megane/blob/master/.github/workflows/gh-pages.yml&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;GitHub Actions、トークンやらキーやらの管理がGitHubの中で完結するので便利。
+キューのつまりも特に感じないし難しいことしなければ少なくとも現時点ではこれでいいのではという感じ。
+ボチボチ移行していくつもり。&lt;/p&gt;</description></item><item><title>2019年11月10日</title><link>https://blog.monochromegane.com/diary/20191110/</link><pubDate>Sun, 10 Nov 2019 23:50:53 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191110/</guid><description>&lt;p&gt;午前中は髪を切りに天神へ。
 さっぱりした後、本格的に寒くなるまでのつなぎになりそうなアウターを購入したりお茶したり散策して過ごす。
 帰宅後は、鍋と頂き物のかしわご飯を美味しくいただく。
 やっと鍋の似合う季節になってきた。&lt;/p&gt;
@@ -105,7 +122,4 @@ iPad Proまだ開けれてない。とほほ。&lt;/p&gt;</description></item><i
 一方で、手法自体をどう高めるかについてはサーベイかなあというところ。&lt;/p&gt;
 &lt;p&gt;論文管理のデバイスとしてiPad Proを検討中なので帰りにApple storeで持ち比べしてきた。
 据え置き機として割り切るので12.9インチと考えていたけど、手に馴染むのは11インチだったなあ。
-そろそろ決めないと。&lt;/p&gt;</description></item><item><title>2019年10月27日</title><link>https://blog.monochromegane.com/diary/20191027/</link><pubDate>Sun, 27 Oct 2019 22:45:58 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191027/</guid><description>&lt;p&gt;体調が芳しくないので今日もゆっくりさせてもらった。&lt;/p&gt;
-&lt;p&gt;夕方、喫茶店で今後のことなどボチボチと話す。
-生産性が高いと感じる午前中を研究の入出力に当てて、午後は実験を含む試行錯誤的な感じが良さそう。
-着実に進めつつ土日に疲れが出ないスケジューリングで来週からやっていきたい。&lt;/p&gt;</description></item></channel></rss>
+そろそろ決めないと。&lt;/p&gt;</description></item></channel></rss>
