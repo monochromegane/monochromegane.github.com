@@ -1,292 +1,123 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>fukuoka.go on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/fukuoka.go/</link><description>Recent content in fukuoka.go on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sat, 25 Apr 2015 00:00:00 +0000</lastBuildDate><atom:link href="/tags/fukuoka.go/" rel="self" type="application/rss+xml"/><item><title>Fukuoka.go#7 ソースコードリーディングvol.1を開催しました</title><link>https://blog.monochromegane.com/blog/2015/04/25/fukuoka-go-7/</link><pubDate>Sat, 25 Apr 2015 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2015/04/25/fukuoka-go-7/</guid><description>
-&lt;p&gt;今年入ってちょっと休憩していたFukuoka.goなんですが、&lt;a href=&#34;https://twitter.com/nobkz&#34;&gt;@nobkz&lt;/a&gt;さんがソースコードリーディングやろうという企画を持ちかけてくれたので久々に開催しました。&lt;/p&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>fukuoka.go on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/fukuoka.go/</link><description>Recent content in fukuoka.go on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sat, 25 Apr 2015 00:00:00 +0000</lastBuildDate><atom:link href="/tags/fukuoka.go/" rel="self" type="application/rss+xml"/><item><title>2019年11月12日</title><link>https://blog.monochromegane.com/diary/20191112/</link><pubDate>Tue, 12 Nov 2019 22:10:53 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191112/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;、原稿出し終えたのでジャーナル執筆と並行しなくて良いように先にポスター書いてしまう。&lt;/p&gt;
+&lt;p&gt;Fukuoka.LTという去年から始まった福岡のいろいろなコミュニティの合同忘年会があるのだけど、今年の運営をFukuoka.goが任されることになったので、先週ぐらいから準備していた。&lt;/p&gt;
+&lt;p&gt;今年は、Fukuoka.goらしく技術を肴に酒を飲もうという感じに、言語や技術を横断した登壇と忘年会とした。
+今日は登壇者募集の告知。
+集まるといいなあ。
+これぐらいのイベントだと大規模カンファレンスやったあとなので比較的楽に進めることができる。
+コミュニティ運営力のレベルアップだ。&lt;/p&gt;</description></item><item><title>2019年11月11日</title><link>https://blog.monochromegane.com/diary/20191111/</link><pubDate>Mon, 11 Nov 2019 23:21:16 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191111/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の共著者レビューを終えて提出。
+順調なのでこのままポスターも作ってしまいたいがフォーマットやサイズなどがまだ公開されていない。うーむ。&lt;/p&gt;
+&lt;p&gt;午後は、年末の福岡エンジニアコミュニティの集まりの主催についてガッと進めた。
+方針は決まったのであとは登壇者が順調に集まってくれるのを祈るのみ。&lt;/p&gt;
+&lt;p&gt;帰宅後はこのブログをGitHub Actionsでデプロイできるようにするなど。
+HugoのSetup、GitHub Pagesへのデプロイはこの辺りを使った&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://fukuokago.doorkeeper.jp/events/23212&#34;&gt;Fukuoka.go#7 ソースコードリーディングの会vol.1&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/peaceiris/actions-hugo&#34;&gt;https://github.com/peaceiris/actions-hugo&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/peaceiris/actions-gh-pages&#34;&gt;https://github.com/peaceiris/actions-gh-pages&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;今回は発表はしましたが、会場準備などの裏方だったので参加者としても勉強会を楽しむことができたのが個人的にはうれしかったです。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;発表&#34;&gt;発表&lt;/h1&gt;
-&lt;h2 id=&#34;ダウンタイム-ゼロを支える技術-in-go&#34;&gt;ダウンタイム・ゼロを支える技術 in Go&lt;/h2&gt;
-&lt;p&gt;Goでアプリをダウンタイムなしで運用するための方法あれこれを発表しました。&lt;/p&gt;
-&lt;iframe src=&#34;http://www.storyboards.jp/widget/7xay4r&#34; width=&#34;640&#34; height=&#34;480&#34;&gt;&lt;/iframe&gt;
-&lt;p&gt;アプリでがんばるところとインフラでがんばるところのバランスは難しいですね。
-ベストなやり方を取れるように検討することは大事だと思います。&lt;/p&gt;
-&lt;h2 id=&#34;並列とgo&#34;&gt;並列とGo&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://twitter.com/nobkz&#34;&gt;@nobkz&lt;/a&gt;さんの発表です。&lt;/p&gt;
-&lt;iframe src=&#34;//slides.com/nobukazuhanada/go/embed&#34; width=&#34;640&#34; height=&#34;480&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; webkitallowfullscreen mozallowfullscreen allowfullscreen&gt;&lt;/iframe&gt;
-&lt;p&gt;Go初学者向けにコードリーティングやりやすくなるようにgoroutineまわりなどを解説してくれました。&lt;/p&gt;
-&lt;h2 id=&#34;lexer実装について-keizo-bookman&#34;&gt;lexer実装について (@keizo_bookman)&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://twitter.com/keizo_bookman&#34;&gt;@keizo_bookman&lt;/a&gt;さんの発表。&lt;/p&gt;
-&lt;p&gt;資料まだアップしていないとのこと。goroutineとchannelを使ったきれいなlexer実装のお話でした。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;ソースコードリーディング-vol-1&#34;&gt;ソースコードリーディング vol.1&lt;/h1&gt;
-&lt;p&gt;ソースコードリーディングは3〜4人のチームに分かれて Go製のApacheBenchを読みました。&lt;/p&gt;
+&lt;p&gt;最終的なWorkflowはこんな感じ。
+コンテンツの管理とGitHub Pagesのリポジトリを分けているが、その辺りもオプションでよしなにできて便利だった。&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/rakyll/boom&#34;&gt;rakyll/boom - HTTP(S) load generator, ApacheBench (ab) replacement, written in Go&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/thinking-megane/blob/master/.github/workflows/gh-pages.yml&#34;&gt;https://github.com/monochromegane/thinking-megane/blob/master/.github/workflows/gh-pages.yml&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;30分ぐらいでざっと読んでそのあとチームごとにプロダクトの概要や気になった点、よいと思った点などを発表していく流れ。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;チームで読むことで自分の考えを言葉に出して伝えるので理解が深まる&lt;/li&gt;
-&lt;li&gt;時間制限があるので全体を把握するため最短で読む方法を模索する&lt;/li&gt;
-&lt;li&gt;なぜそうなっているのかなど有識者の意見を聞ける&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;などなど。チームで読むというのはとてもおもしろいのでまたやっていきたい。&lt;/p&gt;
-&lt;p&gt;大きなプロダクトだと機能や範囲を絞らないと読みきれないと思うのでお題のチョイスは重要。
-今回のboomは初回としてはgoroutine扱いながらもコンパクトなプロダクトだったので&lt;a href=&#34;https://twitter.com/nobkz&#34;&gt;@nobkz&lt;/a&gt;さん良いチョイスだったと思います。&lt;/p&gt;
-&lt;h2 id=&#34;様子です&#34;&gt;様子です&lt;/h2&gt;
-&lt;p&gt;雰囲気など感じてもらえれば。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://togetter.com/li/812438&#34;&gt;Fukuoka.go#7 ソースコードリーディングの会vol.1 - Togetterまとめ&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;所感&#34;&gt;所感&lt;/h1&gt;
-&lt;p&gt;勉強会やコミュニティを続けていくのはひとりでは息切れしてしまうので、今回みたいに別の勉強会とかで知り合った人から企画あげてもらえたのはうれしかったです。
-また、今回は集客を積極的にやってくれた仲間もいて、つくづく繋がりなのだなあと思えたFukuoka.goでした。&lt;/p&gt;
-&lt;p&gt;またFukuoka.goぼちぼち続けていきます。福岡でGoに興味がある方気軽にご参加ください〜。
-ソースコードリーディングだけではなくてLT大会、もくもく会もまたやっていこうと思います。&lt;/p&gt;
-&lt;p&gt;ʕ◔ϖ◔ʔ &amp;lt; Go!&lt;/p&gt;</description></item><item><title>Fukuoka.go#3を開催しました。</title><link>https://blog.monochromegane.com/blog/2014/09/20/fukuoka-go-3/</link><pubDate>Sat, 20 Sep 2014 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2014/09/20/fukuoka-go-3/</guid><description>
-&lt;p&gt;&lt;strong&gt;Fukuoka.go&lt;/strong&gt;の第三回を9/16に開催しました。&lt;/p&gt;
-&lt;p&gt;Fukuoka.goは福岡でGo言語に興味のあるひとが集まる場所を目指して開催する会です。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://fukuokago.doorkeeper.jp/events/14905&#34;&gt;Fukuoka.go#3&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;今回の内容をまとめておきます。&lt;/p&gt;
-&lt;h2 id=&#34;タイムテーブル&#34;&gt;タイムテーブル&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;19:30 - 20:15 LT&lt;/li&gt;
-&lt;li&gt;20:15 - 21:00 もくもく会&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;前回がLT大会だったのでもくもく多めで予定してましたが、結果的に半々ぐらいになりました。&lt;br /&gt;
-また、今回の参加者は7名でした。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;lt&#34;&gt;LT&lt;/h1&gt;
-&lt;h2 id=&#34;hcl-toml便利-linyows&#34;&gt;HCL/TOML便利 (@linyows)&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://twitter.com/linyows&#34;&gt;@linyows&lt;/a&gt;さんによるLT。&lt;/p&gt;
-&lt;p&gt;Go言語で設定ファイルを扱うのに便利なHCL/TOMLの紹介でした。&lt;/p&gt;
-&lt;div style=&#34;speakerdeck&#34;&gt;
-&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;1e83ca80210d01328c621a1ab62a9337&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
-&lt;/div&gt;
-&lt;p&gt;HCL/TOMLはそれぞれJSONやYAMLライクですが、よりユーザフレンドリーな書き方ができるとのことで試してみようかなと思います。&lt;/p&gt;
-&lt;h2 id=&#34;twelve-go-best-practices-の解説-monochromegane&#34;&gt;Twelve Go Best Practices の解説 (@monochromegane)&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://twitter.com/monochromegane&#34;&gt;@monochromegane&lt;/a&gt;のLT。&lt;/p&gt;
-&lt;p&gt;今回は&lt;a href=&#34;https://talks.golang.org/2013/bestpractices.slide#1&#34;&gt;Twelve Go Best Practices&lt;/a&gt;を解説しました。&lt;/p&gt;
-&lt;p&gt;ベストプラクティスとしてはGo言語に限らないものも含まれますが、FunctionAdapterやパッケージ構成などGoっぽく書くにはどうするかみたいなものをいろいろ話してみました。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;もくもく会&#34;&gt;もくもく会&lt;/h1&gt;
-&lt;p&gt;後半は各々で作業を持ちよった、もくもく会でした。実際に環境つくったり、&lt;a href=&#34;http://go-tour-jp.appspot.com/#1&#34;&gt;A Tour of Go&lt;/a&gt;や&lt;a href=&#34;https://gist.github.com/monochromegane/8bb73390f2ebd9d325f4&#34;&gt;速習Go&lt;/a&gt;を進めたりされていたようです。&lt;/p&gt;
-&lt;p&gt;また、Daisuke Makiさんによる&lt;a href=&#34;http://go-talks.appspot.com/github.com/lestrrat/go-slides/2014-yapcasia-go-for-perl-mongers/main.slide#1&#34;&gt;Go For Perl Mongers&lt;/a&gt;を見ながら、Goの構造体設計、インターフェース設計について話したりもしました。&lt;/p&gt;
-&lt;p&gt;前回に比べ少人数だったこともあり、わいわいしながら楽しくもくもくできたと思います。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;様子&#34;&gt;様子&lt;/h1&gt;
-&lt;p&gt;つぶやきはこちら。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://togetter.com/li/720886&#34;&gt;Fukuoka.go#3 - Togetterまとめ&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;所感&#34;&gt;所感&lt;/h1&gt;
-&lt;p&gt;今回は入門用LTなどを用意せず、もくもく会を多めにとってみましたが、参加者の反応も思ったよりよく、今後の参考になりました。&lt;/p&gt;
-&lt;p&gt;福岡のGo言語人口はまだ少ないので、知り合う、質問しあう場所をつくる意味でもどんどん続けていきたいなと思っています。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;楽しくも学びのある Fukuoka.go は月一回を目安に定期的に開催しています。&lt;br /&gt;
-Goに興味がある方も、Go談義がしたい方も、どなたでもお気軽にご参加ください。&lt;/p&gt;
-&lt;p&gt;LTも絶賛募集しています！&lt;br /&gt;
-Go言語でこんなのやってみたというのがあればぜひぜひ教えてください。&lt;/p&gt;</description></item><item><title>Fukuoka.go#2&#43;Fukuoka.rbを開催しました。</title><link>https://blog.monochromegane.com/blog/2014/08/23/fukuoka-go-2/</link><pubDate>Sat, 23 Aug 2014 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2014/08/23/fukuoka-go-2/</guid><description>
-&lt;p&gt;8月21日に &lt;strong&gt;Fukuoka.go#2+Fukuoka.rb&lt;/strong&gt; を開催しました。&lt;/p&gt;
-&lt;p&gt;Fukuoka.goは福岡でGo言語に興味のあるひとが集まる場所を目指して開催する会です。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://connpass.com/event/7559/&#34;&gt;Fukuoka.go#2+Fukuoka.rb&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;今回はFukuoka.rbと合同開催になったこともあり、参加者26名（キャンセル含めると申込自体は35名）と前回より多くの方に来ていただきました。福岡のGo熱は衰えず！です！&lt;/p&gt;
-&lt;p&gt;今回の内容をまとめておきます。&lt;/p&gt;
-&lt;h2 id=&#34;タイムテーブル&#34;&gt;タイムテーブル&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;19:30 - 21:30 LT大会&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;当初もくもく会も予定していましたが、LT希望者が多く、最終的にはオールLTのLT大会になってしまいました。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;lt&#34;&gt;LT&lt;/h1&gt;
-&lt;h2 id=&#34;ルビーストのためのgo-linyows&#34;&gt;ルビーストのためのGo (@linyows)&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://twitter.com/linyows&#34;&gt;@linyows&lt;/a&gt;さんによるLT。&lt;/p&gt;
-&lt;p&gt;RubyとGoを比較しながらGoを学ぶ。&lt;/p&gt;
-&lt;div style=&#34;speakerdeck&#34;&gt;
-&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;244385d00bc4013224d21eb14f30e1c6&#34; data-ratio=&#34;1.33333333333333&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
-&lt;/div&gt;
-&lt;p&gt;自分の知っている言語(知識)と比較していくと知識がメタ化、抽象化されて応用力がついていってよいですよね。&lt;/p&gt;
-&lt;p&gt;GoのBDD形式のテスティングフレームワーク、&lt;code&gt;onsi/ginkgo&lt;/code&gt;以外はまだ使ったことがないものもあったので調べてみようと思いました。&lt;/p&gt;
-&lt;h2 id=&#34;hello-godoc-laco0416&#34;&gt;Hello GoDoc! (@laco0416)&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://twitter.com/laco0416&#34;&gt;@laco0416&lt;/a&gt;さんによるLT。&lt;/p&gt;
-&lt;p&gt;GoのドキュメントホスティングサービスとしてのGoDocとコメントの書式について紹介。&lt;/p&gt;
-&lt;p&gt;&lt;iframe src=&#34;//www.slideshare.net/slideshow/embed_code/38209599?rel=0&#34; width=&#34;512&#34; height=&#34;421&#34; frameborder=&#34;0&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; style=&#34;border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;&#34; allowfullscreen&gt; &lt;/iframe&gt; &lt;div style=&#34;margin-bottom:5px&#34;&gt; &lt;strong&gt; &lt;a href=&#34;https://www.slideshare.net/laco0416/hello-godoc-38209599&#34; title=&#34;Hello GoDoc!&#34; target=&#34;_blank&#34;&gt;Hello GoDoc!&lt;/a&gt; &lt;/strong&gt; from &lt;strong&gt;&lt;a href=&#34;http://www.slideshare.net/laco0416&#34; target=&#34;_blank&#34;&gt;laco0416&lt;/a&gt;&lt;/strong&gt; &lt;/div&gt;&lt;/p&gt;
-&lt;p&gt;GoDocサービスがあることで、開発者はコメント記載して、リポジトリのURLを叩くだけで自動でドキュメントを公開できて非常に便利。&lt;/p&gt;
-&lt;p&gt;Exampleも書けるのはいいですね。
-バッジやLintも用意されているのでどんどん使っていきましょう（参加者中GoDoc利用者はゼロでした）。&lt;/p&gt;
-&lt;h2 id=&#34;最近やっていること-udzura&#34;&gt;最近やっていること (@udzura)&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://twitter.com/udzura&#34;&gt;@udzura&lt;/a&gt;さんによるLT。&lt;/p&gt;
-&lt;p&gt;DockerでPuppet/Chefのテストをするにあたって頑張ったお話。&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;http://www.storyboards.jp/viewer/64t76r&#34;&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2014/08/udzura_saikin.png&#34; alt=&#34;udzura\_saikin&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;現場で得られたノウハウが盛り込まれた便利情報でした。失敗したイメージはタグをつけてコミットしておくの使えそう。&lt;/p&gt;
-&lt;p&gt;そのうち、Fukuoka.goでもDockerのソースコードリーディングとかもやってみたいなあと考えてます。&lt;/p&gt;
-&lt;h2 id=&#34;実践go-ツールの作成から配布まで-monochromegane&#34;&gt;実践Go - ツールの作成から配布まで (@monochromegane)&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://twitter.com/monochromegane&#34;&gt;@monochromegane&lt;/a&gt;によるLT。&lt;/p&gt;
-&lt;p&gt;Fukuoka.goで毎回やっているGo入門用LTです。&lt;/p&gt;
-&lt;p&gt;前回は構文を学ぶ&lt;a href=&#34;https://gist.github.com/monochromegane/8bb73390f2ebd9d325f4&#34;&gt;速習Go&lt;/a&gt;をやったので今回は実践Goとして、簡単なツールをつくって配布する部分を紹介しました。&lt;/p&gt;
-&lt;div style=&#34;speakerdeck&#34;&gt;
-&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;943c17900bbf013224d21eb14f30e1c6&#34; data-ratio=&#34;1.33333333333333&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
-&lt;/div&gt;
-&lt;p&gt;ライブコーディングしながらGOPATHまわりの話やツールつくる上でのTipsなど話してみました。&lt;/p&gt;
-&lt;p&gt;Go書いたことない方にも雰囲気が伝わっていればうれしいです。&lt;/p&gt;
-&lt;p&gt;入門用LT、次回はHTTPサーバの実装を通して型とか構造体とか紹介するようなのを考えてます。お楽しみに。&lt;/p&gt;
-&lt;h2 id=&#34;gyowitter-の-ご紹介-morygonzalez&#34;&gt;gyowitter の ご紹介 (@morygonzalez)&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://twitter.com/morygonzalez&#34;&gt;@morygonzalez&lt;/a&gt;さんによるLT。&lt;/p&gt;
-&lt;p&gt;gyowitterというGo製のYo/Twitter連携サービスの紹介。&lt;/p&gt;
-&lt;div style=&#34;speakerdeck&#34;&gt;
-&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;ccf4a2000bc7013260fd7e2d2d4e67ff&#34; data-ratio=&#34;1.33333333333333&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
-&lt;/div&gt;
-&lt;p&gt;圧倒的なLT力で会場を沸かせてくれました。&lt;/p&gt;
-&lt;p&gt;GoのHTTPサーバを利用しているとのことですが、全然落ちてないとのこと。すばらしい〜。&lt;/p&gt;
-&lt;h2 id=&#34;togetter&#34;&gt;Togetter&lt;/h2&gt;
-&lt;p&gt;今回、つぶやきも盛り上がっていたので、まとめてみました。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://togetter.com/li/710020&#34;&gt;Fukuoka.go#2+Fukuoka.rb - Togetterまとめ&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;所感など&#34;&gt;所感など&lt;/h1&gt;
-&lt;p&gt;参加していただいた方々、LTしていただいた方々、会場設営手伝っていただいた方々、&lt;strong&gt;ありがとうございます！&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;今回はLT大会でしたが、参加した方のお話やつぶやきを見る限りでは、Goに対して興味を持ってもらえたり、情報を得られたりしたようなので、Go言語についてわいわいするという目的は今回も達成できたんじゃないかなと思ってます。&lt;/p&gt;
-&lt;p&gt;それから、Fukuoka.rbとの合同だったのでお互いの言語、コミュニティに対して興味を持つことができたのもよかったですね。&lt;/p&gt;
-&lt;p&gt;次回は、要望の多かったもくもく会も時間とってやろうと思います。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;&lt;strong&gt;楽しくも学びのある Fukuoka.go&lt;/strong&gt; は月一回を目安に定期的に開催しています。&lt;br /&gt;
-Goに興味がある方も、Go談義がしたい方も、どなたでもお気軽にご参加ください。&lt;/p&gt;
-&lt;p&gt;LTも絶賛募集しています！&lt;br /&gt;
-Go言語でこんなのやってみたというのがあればぜひぜひ教えてください。&lt;/p&gt;</description></item><item><title>Fukuoka.go#1を開催しました。</title><link>https://blog.monochromegane.com/blog/2014/07/06/fukuoka-go-1/</link><pubDate>Sun, 06 Jul 2014 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2014/07/06/fukuoka-go-1/</guid><description>
-&lt;p&gt;7月4日に &lt;strong&gt;Fukuoka.go#1&lt;/strong&gt; を開催しました。&lt;/p&gt;
-&lt;p&gt;Fukuoka.goは福岡でGo言語に興味のあるひとが集まる場所を目指して開催する会です。&lt;/p&gt;
-&lt;p&gt;今回が初開催でしたが、参加者18名（キャンセル含めると申込自体は28名）で、福岡にも着実にGo熱が来てるなと感じています。&lt;/p&gt;
-&lt;p&gt;ということで、今回の開催した内容をまとめておこうと思います。&lt;/p&gt;
-&lt;h2 id=&#34;タイムテーブル&#34;&gt;タイムテーブル&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;http://connpass.com/event/6887/&#34;&gt;イベント概要&lt;/a&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;19:35 - 19:45 自己紹介タイム(Go歴を教えてください)&lt;/li&gt;
-&lt;li&gt;19:45 - 20:20 LT: 速習Go (&lt;a href=&#34;https://twitter.com/monochromegane&#34;&gt;@monochromegane&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;20:20 - 20:40 LT: GAE/Goの始め方 (&lt;a href=&#34;https://twitter.com/laco0416&#34;&gt;@laco0416&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;20:40 - 21:40 もくもく会&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;自己紹介タイム-go歴を教えてください&#34;&gt;自己紹介タイム(Go歴を教えてください)&lt;/h2&gt;
-&lt;p&gt;今回の参加者は18名で、Go歴は長くて半年、大半がGoのチュートリアルである、&lt;a href=&#34;http://go-tour-jp.appspot.com/#1&#34;&gt;A Tour of Go&lt;/a&gt;をやり終えた（または途中までやった）ぐらいの経験の方が多かったです。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;lt&#34;&gt;LT&lt;/h1&gt;
-&lt;h2 id=&#34;速習go-monochromegane-https-twitter-com-monochromegane&#34;&gt;速習Go (&lt;a href=&#34;https://twitter.com/monochromegane&#34;&gt;@monochromegane&lt;/a&gt;)&lt;/h2&gt;
-&lt;p&gt;自分のほうから、速習Goというタイトルで、Go環境の作り方から基本的な文法規則と注意したほうがよい点、ハマることが多い点などを説明させてもらいました。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://gist.github.com/monochromegane/8bb73390f2ebd9d325f4&#34;&gt;LT資料: 速習Go&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;GoのPlaygroundもつけてGo環境がない人でも試せるようにした点はよかったですが、足りない分はもくもく会でカバーする、という方針だったのでかなり駆け足になってしまいました。&lt;/p&gt;
-&lt;p&gt;もう少し、ライブコーディング的なものもやったほうが興味ひけたかなあと思いますが、次回に活かそうと思います。&lt;/p&gt;
-&lt;h2 id=&#34;gae-goの始め方-laco0416-https-twitter-com-laco0416&#34;&gt;GAE/Goの始め方 (&lt;a href=&#34;https://twitter.com/laco0416&#34;&gt;@laco0416&lt;/a&gt;)&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://twitter.com/laco0416&#34;&gt;@laco0416&lt;/a&gt;さんによるLTは、「GAE/Goの始め方」でした。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://docs.google.com/presentation/d/1jz4h1-V4CCL0emQjxl-3BL12lGonol1A0dZrEc96oTw/pub?start=false&amp;amp;loop=false&amp;amp;delayms=3000#slide=id.p&#34;&gt;LT資料: GAE/Goの始め方&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;統合開発環境での開発のノウハウや、GAE/Goで気をつける点などをLTしていただきました。
-Go言語はシンプルなHTTPサーバを立てるのは非常に簡単なのでGAEと組み合わせることで簡易なAPIサーバであればさくっとつくってしまえるみたいです。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;もくもく会&#34;&gt;もくもく会&lt;/h1&gt;
-&lt;p&gt;各々で作業を持ちよって、もくもくする会をしました。今回はLTでわからなかったことを調べたり話しあったりする方々が多かったようです。&lt;/p&gt;
-&lt;p&gt;こんな感じのことを話しました。&lt;/p&gt;
-&lt;h2 id=&#34;メソッドのレシーバ変数に-self-を使わないほうがよい理由とは&#34;&gt;メソッドのレシーバ変数に self を使わないほうがよい理由とは&lt;/h2&gt;
-&lt;p&gt;速習GoのLTのときに話はしたけど、明確な根拠が出せなかったので調べなおしました。&lt;/p&gt;
-&lt;p&gt;当初は、selfだとレシーバとして何を指しているのかわからないということだと考えていたのですが、まあ定義には型名もきちんとあるわけで&amp;hellip;&lt;/p&gt;
-&lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34; data-cards=&#34;hidden&#34; lang=&#34;ja&#34;&gt;&lt;p&gt;&lt;a href=&#34;https://twitter.com/monochromegane&#34;&gt;@monochromegane&lt;/a&gt; 以前Qiitaに記事書きましたのでよかったらどうぞ。元ネタは go-nuts MLの &lt;a href=&#34;https://t.co/UGabHgGUSV&#34;&gt;https://t.co/UGabHgGUSV&lt;/a&gt; です / &amp;quot;Goのメソッドレシーバの命名慣習 - Qiita&amp;quot; &lt;a href=&#34;http://t.co/xMncnSKmXv&#34;&gt;http://t.co/xMncnSKmXv&lt;/a&gt;&lt;/p&gt;&amp;mdash; Hiroaki Nakamura (@hnakamur2) &lt;a href=&#34;https://twitter.com/hnakamur2/statuses/485056364033499138&#34;&gt;2014, 7月 4&lt;/a&gt;&lt;/blockquote&gt;
-&lt;script async src=&#34;//platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
-&lt;p&gt;いつもありがとうございます！&lt;/p&gt;
-&lt;p&gt;自分なりに整理してみました。&lt;/p&gt;
-&lt;h3 id=&#34;1-レシーバ変数はメソッド内で不変ではない&#34;&gt;1. レシーバ変数はメソッド内で不変ではない&lt;/h3&gt;
-&lt;p&gt;レシーバ変数に同じ型の別の値を設定することができてしまうので、意味的に整合性がとれるのは&lt;code&gt;self&lt;/code&gt;ではなくて 型名をもとにした名前になります。&lt;br /&gt;
-自分の中ではこれが一番納得できる理由でした。&lt;/p&gt;
-&lt;h3 id=&#34;2-goの標準ライブラリではレシーバ変数には-self-ではなく型名の先頭または二文字程度を使っている&#34;&gt;2. Goの標準ライブラリではレシーバ変数には self ではなく型名の先頭または二文字程度を使っている&lt;/h3&gt;
-&lt;p&gt;理由といか命名慣習がなぜそうなっているのかですが、上述のとおり型名をもとにした名前なので、Client型であれば&lt;code&gt;c&lt;/code&gt;とか&lt;code&gt;cl&lt;/code&gt;とかにするようです。&lt;br /&gt;
-型名をそのまま小文字(&lt;code&gt;client&lt;/code&gt;)にしないのはエクスポートしない小文字で始まる型を使う場合に同じになってしまうから、かなと思ってます。&lt;/p&gt;
-&lt;h3 id=&#34;3-メソッドは関数として呼ぶことができる&#34;&gt;3. メソッドは関数として呼ぶことができる&lt;/h3&gt;
-&lt;p&gt;これも知らなかったのですが、型のメソッドは型を引数に渡して関数として実行することができるようです。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;type Foo int
-func (f Foo) Bar() {
-fmt.Printf(&amp;quot;My receiver is %v\n&amp;quot;, f)
-}
-func main() {
-a := Foo(46)
-a.Bar()
-b := Foo(51)
-Foo.Bar(b)
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;であれば、レシーバ変数は引数ともみなすことができるわけで、selfとつけるのは少し違うのかなとも思えます。&lt;/p&gt;
-&lt;h2 id=&#34;構造体定義の型名のあとの文字列にはどうやってアクセスするんだろう&#34;&gt;構造体定義の型名のあとの文字列にはどうやってアクセスするんだろう&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://twitter.com/laco0416&#34;&gt;@laco0416&lt;/a&gt;さんのLTで JSON文字列を構造体に変換する際に、JSONのキーと構造体のフィールド名をマッピングするため、このような定義をしていました。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;type Person struct {
-Name string `json:&amp;quot;name&amp;quot;`
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;型名のあとに&lt;code&gt;json:&amp;quot;name&amp;quot;&lt;/code&gt;という文字列があります。プログラムからこの値にアクセスするやり方がわからなかったので調べました。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;この定義は&lt;code&gt;タグ&lt;/code&gt;というようです。&lt;/li&gt;
-&lt;li&gt;reflectパッケージを使って型情報からアクセスします。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;先ほどの構造体定義であれば以下のようにアクセスできるようです。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;person := Person{&amp;quot;hoge&amp;quot;}
-// リフレクションを使って型情報を取得する
-t := reflect.TypeOf(person)
-// フィールド情報を取得する
-f, _ := t.FieldByName(&amp;quot;Name&amp;quot;)
-// フィールドからタグ情報を取得する
-tag := f.Tag
-// タグ文字列全体
-fmt.Println(tag) // json:&amp;quot;name&amp;quot;
-// key:&amp;quot;value&amp;quot;形式で定義した場合、key名を指定して取得できる
-fmt.Println(tag.Get(&amp;quot;json&amp;quot;)) // name
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;key1:&amp;quot;value1&amp;quot; key2:&amp;quot;value2&amp;quot;&lt;/code&gt;のように複数の情報を持たせることもできるのでうまく使えば面白いかもしれません。&lt;/p&gt;
-&lt;p&gt;ただし、定義自体は文字列であり、リフレクションを使ってアクセスされるため静的型チェックが効かず、実行時エラーになるため乱用は避けたほうがよさそうです。&lt;/p&gt;
-&lt;h2 id=&#34;go言語の日付フォーマットが独特&#34;&gt;Go言語の日付フォーマットが独特&lt;/h2&gt;
-&lt;p&gt;Go言語の日付や時刻のフォーマットに使う書式はよくある%Y%m%dとかではなく、2006とか01とかを使います。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;fmt.Println(time.Now().Format(&amp;quot;2006/01/02 15:04:05 MST&amp;quot;))
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;最初は戸惑いますが、以下の様な順番になっているというのがわかれば、意外とわかりやすいかもしれません。&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;月 01 or Jan&lt;/li&gt;
-&lt;li&gt;日 02&lt;/li&gt;
-&lt;li&gt;時 3 or 15&lt;/li&gt;
-&lt;li&gt;分 04&lt;/li&gt;
-&lt;li&gt;秒 05&lt;/li&gt;
-&lt;li&gt;年 2006&lt;/li&gt;
-&lt;li&gt;標準時 -0700 or MST&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;timeパッケージに定数も用意されているようです。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;const (
-ANSIC = &amp;quot;Mon Jan _2 15:04:05 2006&amp;quot;
-UnixDate = &amp;quot;Mon Jan _2 15:04:05 MST 2006&amp;quot;
-RubyDate = &amp;quot;Mon Jan 02 15:04:05 -0700 2006&amp;quot;
-RFC822 = &amp;quot;02 Jan 06 15:04 MST&amp;quot;
-RFC822Z = &amp;quot;02 Jan 06 15:04 -0700&amp;quot; // RFC822 with numeric zone
-RFC850 = &amp;quot;Monday, 02-Jan-06 15:04:05 MST&amp;quot;
-RFC1123 = &amp;quot;Mon, 02 Jan 2006 15:04:05 MST&amp;quot;
-RFC1123Z = &amp;quot;Mon, 02 Jan 2006 15:04:05 -0700&amp;quot; // RFC1123 with numeric zone
-RFC3339 = &amp;quot;2006-01-02T15:04:05Z07:00&amp;quot;
-RFC3339Nano = &amp;quot;2006-01-02T15:04:05.999999999Z07:00&amp;quot;
-Kitchen = &amp;quot;3:04PM&amp;quot;
-// Handy time stamps.
-Stamp = &amp;quot;Jan _2 15:04:05&amp;quot;
-StampMilli = &amp;quot;Jan _2 15:04:05.000&amp;quot;
-StampMicro = &amp;quot;Jan _2 15:04:05.000000&amp;quot;
-StampNano = &amp;quot;Jan _2 15:04:05.000000000&amp;quot;
-)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;KitchenとかRubyDateとかあっておもしろいですね。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;所感など&#34;&gt;所感など&lt;/h1&gt;
-&lt;p&gt;LTでGo言語の情報を教え合ったり、もくもく会で気軽に質問とかできたので、Go言語についてわいわいするという今回の目的は達成できたんじゃなかろうかと勝手に思っています。&lt;/p&gt;
-&lt;p&gt;わいわいする中でも、ちゃんと学びがあるのもよかったですね。&lt;/p&gt;
-&lt;p&gt;そんな、&lt;strong&gt;楽しくも学びのある Fukuoka.go&lt;/strong&gt; は月一回を目安に定期的に開催していきます。&lt;br /&gt;
-Goに興味がある方も、Go談義がしたい方も、どなたでもお気軽にご参加ください&lt;/p&gt;
-&lt;p&gt;LTも絶賛募集しています！&lt;br /&gt;
-Go言語でこんなのやってみたというのがあればぜひぜひ教えてください。&lt;/p&gt;</description></item></channel></rss>
+&lt;p&gt;GitHub Actions、トークンやらキーやらの管理がGitHubの中で完結するので便利。
+キューのつまりも特に感じないし難しいことしなければ少なくとも現時点ではこれでいいのではという感じ。
+ボチボチ移行していくつもり。&lt;/p&gt;</description></item><item><title>2019年11月10日</title><link>https://blog.monochromegane.com/diary/20191110/</link><pubDate>Sun, 10 Nov 2019 23:50:53 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191110/</guid><description>&lt;p&gt;午前中は髪を切りに天神へ。
+さっぱりした後、本格的に寒くなるまでのつなぎになりそうなアウターを購入したりお茶したり散策して過ごす。
+帰宅後は、鍋と頂き物のかしわご飯を美味しくいただく。
+やっと鍋の似合う季節になってきた。&lt;/p&gt;
+&lt;p&gt;就寝前はブログのCIをGitHub Actionsに移行がてら触っていた。
+静的サイトとしてのコンテンツ出力に必要な箇所はできたので来週どこかでデプロイ部分をWerckerから切り替えよう。
+pushしてからCIが開始されるまでと実際のビルドもとにかく速いのでストレスなく使えそう。&lt;/p&gt;</description></item><item><title>2019年11月9日</title><link>https://blog.monochromegane.com/diary/20191109/</link><pubDate>Sat, 09 Nov 2019 22:25:38 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191109/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の査読結果の反映、最終確認。
+午前中にひとまず終えたものの、査読結果へのコメントに個別に答えるとまだ修正必要な気がして終われなかった。&lt;/p&gt;
+&lt;p&gt;昼寝の後、夕方までになんとか仕上げた。
+共著者へレビューを依頼。
+色々忙しかったとはいえ、時間が立つほどに記憶も薄れるので査読対応はさっさとやってしまった方が良さそう。
+ポスターも来週早々に終わらせてしまいたいが、まだフォーマットなど情報がないのでどうしたものか。&lt;/p&gt;
+&lt;p&gt;夕方、年末調整の提出が終わったので一安心。
+明日は、年末の福岡エンジニアコミュニティの集まりの主催についてボチボチ進めよう。&lt;/p&gt;</description></item><item><title>2019年11月8日</title><link>https://blog.monochromegane.com/diary/20191108/</link><pubDate>Sat, 09 Nov 2019 22:15:01 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191108/</guid><description>&lt;p&gt;終日&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の査読結果の反映。
+おおよそできたと思うので明日最終確認する。
+査読、丁寧に見てもらえていて本当に良い。
+これだとわからないですね〜という言い方の向こうにきちんと考えればより分かりやすくなる道が見える気がする。&lt;/p&gt;
+&lt;p&gt;時間を見つけて、&lt;a href=&#34;https://efc.fukuoka.jp/award&#34;&gt;エンジニアフレンドリーシティ福岡アワード&lt;/a&gt;のコミュニティ部門へのエントリーを仕上げた。
+Fukuoka.go、活動を振り返ると改めて着実に進んでいて我ながらエラいなあと思った。
+もちろん共同主催者に恵まれていることに感謝したい。&lt;/p&gt;
+&lt;p&gt;夜は『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/479071733X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479071733X&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=632f660a2f794586c0155153916e0aaa&#34;&gt;文化人類学の思考法&lt;/a&gt;』を少し読み進める。
+バイアスをどう認識するかという問題は突き詰めていくと人類であることすらバイアスであり、文化人類学はそのようなレイヤから比較し続けているのだなあととても面白い。
+一つ一つのネタは実際難しいけれどもまだ読み進めてどこかでまとめたい。&lt;/p&gt;</description></item><item><title>2019年11月7日</title><link>https://blog.monochromegane.com/diary/20191107/</link><pubDate>Thu, 07 Nov 2019 21:34:34 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191107/</guid><description>&lt;p&gt;深夜寝れなかったためリズムが悪く感じた。&lt;/p&gt;
+&lt;p&gt;PC移行で環境構築がうまくいってなかった箇所にハマってしまい、共同研究のデータ抽出に時間がかかってしまった。反省。&lt;/p&gt;
+&lt;p&gt;午後は研究会。
+共著論文で提案する手法にまつわるサーベイ論文のサーベイ結果などを共有してもらう。
+定義や定式化されている前例をもとにした議論になったことで手法の方針検討が整理された。&lt;/p&gt;
+&lt;p&gt;年内においてもどんどん研究が進む予感で楽しみになってきた。
+自分自身もポスターとジャーナルをしっかりやる。&lt;/p&gt;
+&lt;p&gt;今週末ぐらいから一気に集中して確率系の勉強をやったのが、継続系のインプット・アウトプット、ひいては生活リズムを崩してしまっている気がするので、やりすぎないというのもうまく制御していかないといけないなあ。&lt;/p&gt;</description></item><item><title>2019年11月6日</title><link>https://blog.monochromegane.com/diary/20191106/</link><pubDate>Thu, 07 Nov 2019 21:27:43 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191106/</guid><description>&lt;p&gt;朝から九大へ。
+論文のジャーナル投稿に向けて作戦を立てる。
+議論の中でやるべきことが明確になってきた。
+今年中に投稿は済ませるぞ。&lt;/p&gt;
+&lt;p&gt;また、今後についても相談。
+自分の中では大きな決断であるけれども、そろそろ動いていく時期であると判断した。
+あとは自分の頑張り次第。やるしかない。&lt;/p&gt;
+&lt;p&gt;とはいえ、朝が早かったこともあり、午後はなんだかふんわりしてしまったので研究以外のことをざっと進めた。
+コミュニティ活動まわりで直近のイベント方針を決めたりアワードエントリの準備であっという間で合った。&lt;/p&gt;
+&lt;p&gt;帰り際に研究チームでもう一つの共著論文に向けた方針を話す。
+明日の研究会で聞きたいことを伝え帰宅。
+早めに寝てしまったが、逆に深夜に起きてしまい翌朝の動き出しがイマイチだった。
+無限にはなかなか寝れなくなってきたのでやはり規則正しくが一番みたいだ。
+今週は乱れがちなのでペースを取り戻さねば。&lt;/p&gt;</description></item><item><title>2019年11月5日</title><link>https://blog.monochromegane.com/diary/20191105/</link><pubDate>Thu, 07 Nov 2019 21:24:22 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191105/</guid><description>&lt;p&gt;所属する研究所で共著論文のため研究計画を改めて一緒に練るなどした。
+チームであることを活かしてどんどん並列で進めつつ大きなビジョンを達成していく。&lt;/p&gt;
+&lt;p&gt;午後は引き続きバンディットのポリシーの実装に向けた下調べなど。
+自身のメイン研究もバーンとやっていきたい。&lt;/p&gt;</description></item><item><title>2019年11月4日</title><link>https://blog.monochromegane.com/diary/20191104/</link><pubDate>Mon, 04 Nov 2019 22:27:48 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191104/</guid><description>&lt;p&gt;午前中は引き続きベイズ統計の勉強。
+仮定やデータが連続値になった場合についても得心が行ったと思う。
+勉強の見積もりがイマイチあっておらず予定より時間かかっているがバンディットの確率的な方策についてはこれで実装できるだろう。
+ベイズ統計を直接使うわけではないが、推論まわりは応用効きそうなので『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4061538322/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4061538322&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=624549ce46217ec9cd619e8b038b9865&#34;&gt;機械学習スタートアップシリーズ ベイズ推論による機械学習入門 (KS情報科学専門書)&lt;/a&gt;』を自習していこう。&lt;/p&gt;
+&lt;p&gt;午後は先日購入していた『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/479071733X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479071733X&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=632f660a2f794586c0155153916e0aaa&#34;&gt;文化人類学の思考法&lt;/a&gt;』を少し読む。
+新しいモノの見方を知ることができてしばらく楽しめそう。
+そのまま読みながら昼寝。&lt;/p&gt;
+&lt;p&gt;来週からは研究、ポスター、共同研究など忙しくなるけど一歩づつ進めていきたい。&lt;/p&gt;</description></item><item><title>2019年11月3日</title><link>https://blog.monochromegane.com/diary/20191103/</link><pubDate>Mon, 04 Nov 2019 00:47:07 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191103/</guid><description>&lt;p&gt;午前中ベイズの勉強。
+昨日に引き続き『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4797366575/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4797366575&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=df00ddc50d7fa4565615ab69d2bf54c9&#34;&gt;図解・ベイズ統計「超」入門 あいまいなデータから未来を予測する技術 (サイエンス・アイ新書)&lt;/a&gt;』を読み終えて『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4478013322/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4478013322&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=7dd44714a769c09e93745f716cda1b23&#34;&gt;完全独習 ベイズ統計学入門&lt;/a&gt;』と『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/B07HG42534/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B07HG42534&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=d178b6c02684603444f6a910c51f79a4&#34;&gt;まずはこの一冊から 意味がわかるベイズ統計学&lt;/a&gt;』を読む。
+仮定とデータがかなり自由に設定できるので柔軟な一方で難しい場合もある。
+特に確率分布まわりを使う時の整理がまだかなあという感じ。
+いったん、元の動機付けのところに戻りつつ必要な部分について整理を進めよう。&lt;/p&gt;
+&lt;p&gt;午後はiPad Proを触るなど。
+Face IDを使えるデバイスは初めてだったけどかなり快適。
+セットアップもiPhoneを隣におけばほぼ設定いらずで、ハードウェア含めて提供できているとこの辺強いなあという感想。
+論文管理も明日やっていこう。&lt;/p&gt;</description></item><item><title>2019年11月2日</title><link>https://blog.monochromegane.com/diary/20191102/</link><pubDate>Mon, 04 Nov 2019 00:40:34 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191102/</guid><description>&lt;p&gt;午前中はベイズ統計の勉強。
+ベイズの定理はだいぶ馴染んできたが、連続値の場合にまだ理解が不十分な気がするので引き続き明日も進める。&lt;/p&gt;
+&lt;p&gt;午後は本屋によって、『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4274067750/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4274067750&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=29048146b631aa17e79995b374c806ec&#34;&gt;プログラミングのための確率統計&lt;/a&gt;』と『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/479071733X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479071733X&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=632f660a2f794586c0155153916e0aaa&#34;&gt;文化人類学の思考法&lt;/a&gt;』を購入。
+夕食後、購入した本を読んでいたら寝てしまった感じ。&lt;/p&gt;</description></item><item><title>2019年11月1日</title><link>https://blog.monochromegane.com/diary/20191101/</link><pubDate>Sat, 02 Nov 2019 00:27:04 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191101/</guid><description>
+&lt;h2 id=&#34;健康診断&#34;&gt;健康診断&lt;/h2&gt;
+&lt;p&gt;午前中、健康診断。
+午後はベイズ推定関連の基礎知識をつけていた。
+バリウムは健康診断の後も終日大変なのであまり生産性は高くなかったかもしれない。
+来年は胃カメラ、鼻からでやってみるかなあ。&lt;/p&gt;
+&lt;h2 id=&#34;喩えと例え&#34;&gt;喩えと例え&lt;/h2&gt;
+&lt;p&gt;自分の場合、ベイズ推定なり数式を含む新しい概念を獲得するには身の丈にあった入門書を複数こなすことで、違った角度から見比べてその概念を掴んでいく。
+ただ、入門書は結構当たり外れがあるのが悩ましい。&lt;/p&gt;
+&lt;p&gt;良い本を見つけるため最近は、説明の「喩え」よりも「例え（ば）」を重視している。
+手元の辞書によると「喩え」は「たとえること。たとえとして引かれた事柄」とあり、「例えば」は「前文に述べた主旨を客観的に証明するに足る例をあげることを表す。」とある。
+学びたい概念を「喩え」る入門書は、読者の知る身近な事柄でこれを説明する。
+一方、「例えば」の入門書は、その概念の構成要素やそれらが成立する仕組みを裏付ける例を通して理解を助ける。&lt;/p&gt;
+&lt;p&gt;「喩え」に頼りすぎてしまってると感じた本の読後は、分かったような分からないような感じが多い。
+対して、簡潔な「例えば」が十分な量で用意されていた本は、なるほどそういう理由・仕組みだったのかと理解が深まったと感じる。
+この辺を区分できるようになって、ハズレはつかまなくなったかなあと思う。
+もちろん、適切な「喩え」が理解を助けることもあるのであくまでも重視する方という意味合いで。&lt;/p&gt;
+&lt;p&gt;ところで、簡潔に概念を説明できる「例えば」を作るためにはその概念に対する深い理解が必要である。
+論文であっても手法であっても、ある概念を相手に説明する際に「喩え」が出るか、複雑な「例えば」が出るか、簡潔な「例えば」を出せるかで自分の理解を問うていきたい。&lt;/p&gt;</description></item><item><title>2019年10月31日</title><link>https://blog.monochromegane.com/diary/20191031/</link><pubDate>Thu, 31 Oct 2019 21:58:58 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191031/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の採録通知。
+とても嬉しい。
+査読結果もなるほど納得なしっかり読み込んでくれた内容であったので将来のジャーナル化に向けてもありがたいアドバイスになった。&lt;/p&gt;
+&lt;p&gt;研究の手法を改善するためにベイズ推定まわりを押さえておかないと厳しい感じになってきたので、入門系の書物を数冊購入して帰宅。
+ちょうど最近、&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/10/11/random_number_gen_using_go/&#34;&gt;確率分布などをおさらいした&lt;/a&gt;のもあり、以前より理解できるのではないかと考えている。
+この辺、一足飛びには理解できないので、ひとつづつ理解を進めていく。
+専門力の向上が次のステップなのでやっていきたい。&lt;/p&gt;
+&lt;p&gt;昨年から始まった&lt;a href=&#34;https://fukuokaphp.connpass.com/event/109317/&#34;&gt;Fukuoka.LT&lt;/a&gt;だが、運営をコミュニティの持ち回りにしたので、今年はFukuoka.goでやることにした。
+普段のコミュニティで登壇してる内容を話してもらうことで一層コミュニティの雰囲気を知れるのではないかとなったのでそんな感じに進める。
+連絡周りは省力で進められるといいな。&lt;/p&gt;</description></item><item><title>2019年10月30日</title><link>https://blog.monochromegane.com/diary/20191030/</link><pubDate>Thu, 31 Oct 2019 21:56:23 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191030/</guid><description>&lt;p&gt;午前中Research I/O。
+論文の骨子などを検討していくのを午前中に進んでいるという状態はとても気分的に良い。
+午後はデータ分析など。&lt;/p&gt;
+&lt;p&gt;週途中ながらに疲れが出てきたので夜は早めに就寝した。
+iPad Proまだ開けれてない。とほほ。&lt;/p&gt;</description></item><item><title>2019年10月29日</title><link>https://blog.monochromegane.com/diary/20191029/</link><pubDate>Tue, 29 Oct 2019 23:51:16 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191029/</guid><description>&lt;p&gt;午前中、Research I/Oの時間。提案手法の新規性と有用性を論じるためのあれこれを考える。
+午後は、研究周りのデータ抽出や解析など。
+午前中に必ず研究系が進んでいるという状況は良いので引き続きやっていく。&lt;/p&gt;
+&lt;p&gt;帰り際にApple storeによって、その場で「&lt;a href=&#34;https://www.amazon.co.jp/gp/product/B07K7MBNZ2/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B07K7MBNZ2&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=5012f106ddfdeb7467c8a02d523f6ad0&#34;&gt;Apple iPad Pro (11インチ, Wi-Fi, 512GB) - スペースグレイ (最新モデル)&lt;/a&gt;」と「&lt;a href=&#34;https://www.amazon.co.jp/gp/product/B07KR69HH9/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B07KR69HH9&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=256d1dc837b0ae029969e0ea28e6603f&#34;&gt;Apple Pencil（第2世代）&lt;/a&gt;」を購入。
+最後まで12.9インチと悩んだけど、論文読むのは等倍でなくても大丈夫だと判断して普段の取り回しの良さの面から11インチにした。
+論文管理の仕組みを構築していかねば。&lt;/p&gt;</description></item></channel></rss>

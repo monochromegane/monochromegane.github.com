@@ -1,357 +1,123 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>ruby on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/ruby/</link><description>Recent content in ruby on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Tue, 22 Mar 2016 20:46:48 +0900</lastBuildDate><atom:link href="/tags/ruby/" rel="self" type="application/rss+xml"/><item><title>静的データを扱うActiveHashでページングとライク検索するgem達をつくった</title><link>https://blog.monochromegane.com/blog/2016/03/22/active-hash-kaminari-and-like/</link><pubDate>Tue, 22 Mar 2016 20:46:48 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2016/03/22/active-hash-kaminari-and-like/</guid><description>
-&lt;p&gt;静的データをActiveRecord的に扱えて便利な&lt;a href=&#34;https://github.com/zilkey/active_hash&#34;&gt;ActiveHash&lt;/a&gt;ですが、ページングとライク検索が必要になったのでgemをつくりました。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;ページングを行えるようにする &lt;code&gt;active_hash-kaminari&lt;/code&gt; と、&lt;/p&gt;
-&lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https://github.com/monochromegane/active_hash-kaminari&#34; title=&#34;monochromegane/active_hash-kaminari&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&lt;a href=&#34;https://github.com/monochromegane/active_hash-kaminari&#34;&gt;monochromegane/active_hash-kaminari&lt;/a&gt;&lt;/iframe&gt;
-&lt;p&gt;ライク検索を行えるようにする &lt;code&gt;active_hash-like&lt;/code&gt; です。&lt;/p&gt;
-&lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https://github.com/monochromegane/active_hash-like&#34; title=&#34;monochromegane/active_hash-like&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&lt;a href=&#34;https://github.com/monochromegane/active_hash-like&#34;&gt;monochromegane/active_hash-like&lt;/a&gt;&lt;/iframe&gt;
-&lt;h1 id=&#34;active-hash-kaminari&#34;&gt;active_hash-kaminari&lt;/h1&gt;
-&lt;p&gt;ページングを行いたいActiveHashのクラスに&lt;code&gt;Paginatable&lt;/code&gt;モジュールを&lt;code&gt;prepend&lt;/code&gt;します。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-rb&#34;&gt;class Country &amp;lt; ActiveHash::Base
-prepend ActiveHash::Paginatable
-...
-end
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;ページングには&lt;a href=&#34;https://github.com/amatsuda/kaminari&#34;&gt;Kaminari&lt;/a&gt;を使っています。モジュールをprependすることにより、検索結果が &lt;code&gt;Kaminari::PaginatableArray&lt;/code&gt; でラップされるようになり、ページングが可能になります。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-rb&#34;&gt;Country.all.page(1).per(10)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;もちろんViewでも使えます。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-rb&#34;&gt;&amp;lt;%= paginate @counties %&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h1 id=&#34;active-hash-like&#34;&gt;active_hash-like&lt;/h1&gt;
-&lt;p&gt;gemをインストールすると、ActiveHashで&lt;code&gt;like&lt;/code&gt;が使えるようになります。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-rb&#34;&gt;class Country &amp;lt; ActiveHash::Base; end
-Country.like(name: &#39;Cana%&#39;)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;複数条件のうち、ひとつをlikeで検索する場合はwhere内&lt;code&gt;ActiveHash::Match::Like&lt;/code&gt; マッチャーを使います。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-rb&#34;&gt;Country.where(name: ActiveHash::Match::Like.new(&#39;Cana%&#39;))
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;custom-matcher&#34;&gt;Custom Matcher&lt;/h2&gt;
-&lt;p&gt;&lt;code&gt;ActiveHash::Match::Like&lt;/code&gt;はカスタムマッチャーのひとつで、マッチャーは独自でつくることが可能です。&lt;/p&gt;
-&lt;p&gt;マッチャーは&lt;code&gt;call&lt;/code&gt;メソッドを持つ必要があります。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-rb&#34;&gt;class MyCustomMatcher
-attr_accessor :pattern
-def initialize(pattern)
-self.pattern = pattern
-end
-def call(value)
-# Case ignore matcher
-value.upcase == pattern.upcase
-end
-end
-Country.where(name: MyCustomMatcher.new(&#39;pattern&#39;))
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;call&lt;/code&gt;メソッドを持つ&lt;code&gt;Proc&lt;/code&gt;オブジェクトも使うことができます。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-rb&#34;&gt;Country.where(name: -&amp;gt;(value){value == &#39;some value&#39;})
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;or-条件&#34;&gt;OR 条件&lt;/h2&gt;
-&lt;p&gt;あいまい検索という括りで&lt;code&gt;OR&lt;/code&gt;検索も行うことができるようになります。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-rb&#34;&gt;Country.where(name: &#39;Canada&#39;, or: {field1: &#39;foo&#39;, field2: &#39;bar&#39;})
-#=&amp;gt; name = &#39;Canada&#39; and (field1 = &#39;foo&#39; or field2 = &#39;bar&#39;)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;OR条件の対象のカラムが同じ場合（IN相当）はまだ未実装なのでカスタムマッチャーを使ってください。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-rb&#34;&gt;Country.where(name: -&amp;gt;(val){val == &#39;Canada&#39; || val == &#39;US&#39;})
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
-&lt;p&gt;ActiveHash、静的データを扱うのにとても便利なので、active_hash-kaminariとactive_hash-likeと組み合わせて更に便利に使ってみてはどうでしょうか。&lt;/p&gt;</description></item><item><title>Treasure Dataのスケジュールジョブをコードで管理するPendulumというgemをつくった</title><link>https://blog.monochromegane.com/blog/2016/03/21/pendulum/</link><pubDate>Mon, 21 Mar 2016 18:29:18 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2016/03/21/pendulum/</guid><description>
-&lt;p&gt;Treasure Dataに収集したデータを集計・出力するためにジョブをスケジュール登録するにあたり、ブラウザコンソールやAPIから直接行うと履歴管理やレビューができないといった課題を解決するために &lt;code&gt;Pendulum&lt;/code&gt; というgemをつくりました。&lt;/p&gt;
-&lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https://github.com/monochromegane/pendulum&#34; title=&#34;monochromegane/pendulum&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&lt;a href=&#34;https://github.com/monochromegane/pendulum&#34;&gt;monochromegane/pendulum&lt;/a&gt;&lt;/iframe&gt;
-&lt;p&gt;PendulumはDSLで記述された定義に従い、Treasure Dataのスケジュールジョブを管理します。
-定義ファイルをGit管理することで、履歴管理やGitHubと連携したコードレビューが可能になります。&lt;/p&gt;
-&lt;p&gt;余談ですが、Pendulumは振り子という意味で、定期的な実行という意味と宝探しのダウジング的な意味から連想しています。ペンデュラム。響きがカッコイイ。&lt;/p&gt;
-&lt;h2 id=&#34;使い方&#34;&gt;使い方&lt;/h2&gt;
-&lt;p&gt;&lt;code&gt;Schedfile&lt;/code&gt;という名前で定義ファイルを用意して、&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-rb&#34;&gt;schedule &#39;my-schedule-job&#39; do
-database &#39;db_name&#39;
-query &#39;select count(time) from access;&#39;
-cron &#39;30 0 * * *&#39;
-result &#39;td://@/db_name/count&#39;
-end
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;pendulum&lt;/code&gt;コマンドを実行するだけです。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;# dry-run で 適用内容を確認
-$ pendulum --apikey=&#39;...&#39; -a --dry-run
-# 適用
-$ pendulum --apikey=&#39;...&#39; -a
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;AWSのRoute53に対するRoadworker的なものを想像してもらえるとよいかと思います。&lt;/p&gt;
-&lt;h3 id=&#34;エクスポート&#34;&gt;エクスポート&lt;/h3&gt;
-&lt;p&gt;既存のスケジュールジョブがある場合はエクスポートもできます。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ pendulum --apikey=&#39;...&#39; -e
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;実行ディレクトリに &lt;code&gt;Schedfile&lt;/code&gt; と &lt;code&gt;queries&lt;/code&gt; ディレクトリが生成されジョブの定義とクエリが出力されています。&lt;/p&gt;
-&lt;p&gt;修正後、dry-runによるapplyを行ってみると、差分が検出されていることがわかります。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ pendulum --apikey=&#39;...&#39; -a --dry-run
-Update schedule: my-scheduled-job (dry-run)
-set cron=@hourly
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;schedfile&#34;&gt;Schedfile&lt;/h3&gt;
-&lt;p&gt;APIで利用する名称と同じものが使えます。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-rb&#34;&gt;schedule &#39;test-scheduled-job&#39; do
-database &#39;db_name&#39;
-query &#39;select count(time) from access;&#39;
-retry_limit 0
-priority :normal
-cron &#39;30 0 * * *&#39;
-timezone &#39;Asia/Tokyo&#39;
-delay 0
-result_url &#39;td://@/db_name/count&#39;
-end
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;priority&lt;/code&gt;は&lt;code&gt;:very_high&lt;/code&gt;など、&lt;code&gt;cron&lt;/code&gt;は&lt;code&gt;:daily&lt;/code&gt;といった読みやすい値も使えます。&lt;/p&gt;
-&lt;h4 id=&#34;query-file&#34;&gt;query_file&lt;/h4&gt;
-&lt;p&gt;クエリは&lt;code&gt;query_file&lt;/code&gt;を使って別ファイルのクエリを読み込めます。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-rb&#34;&gt;query_file &#39;queries/test-scheduled-job.hql&#39;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;集計用のクエリは長くなることが多いと思うので、こちらを使っていくことになるでしょう。&lt;/p&gt;
-&lt;h4 id=&#34;result&#34;&gt;result&lt;/h4&gt;
-&lt;p&gt;Result Exportの先を定義する、&lt;code&gt;result_url&lt;/code&gt; をわかりやすくするための &lt;code&gt;result&lt;/code&gt; もあります。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-rb&#34;&gt;schedule &#39;test-scheduled-job&#39; do
-database &#39;db_name&#39;
-...
-result :td do
-database &#39;db_name&#39;
-table &#39;table_name&#39;
-end
-end
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;現時点では出力先として&lt;code&gt;Treasure Data&lt;/code&gt;と&lt;code&gt;PostgreSQL&lt;/code&gt;、カスタムのresultをサポートしています。他の出力先をresult記法で書きたいときはPullRequestをお待ちしております。&lt;/p&gt;
-&lt;h3 id=&#34;force&#34;&gt;force&lt;/h3&gt;
-&lt;p&gt;&lt;code&gt;Schedfile&lt;/code&gt;に定義されていないスケジュールジョブは通常は&lt;code&gt;Undefined schedule&lt;/code&gt;となり削除対象とはなりません。削除が必要な場合は&lt;code&gt;--force&lt;/code&gt;オプションを使ってください。&lt;/p&gt;
-&lt;p&gt;また、Treasure DataのAPI都合上、result_url内のパスワードは&lt;code&gt;***&lt;/code&gt;とマスキングされており差分が比較できません。もしパスワードを変更した場合も同様に&lt;code&gt;--force&lt;/code&gt;オプションを使って適用してください。&lt;/p&gt;
-&lt;h3 id=&#34;config&#34;&gt;config&lt;/h3&gt;
-&lt;p&gt;&lt;code&gt;environments/default.yml&lt;/code&gt;などを用意することで、DSL内で&lt;code&gt;settings&lt;/code&gt;経由で取得することができます。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-rb&#34;&gt;...
-result :postgresql do
-...
-password settings.password
-end
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;また、&lt;code&gt;-E&lt;/code&gt; オプションによる環境ごとの設定ファイルにも対応しています。&lt;/p&gt;
-&lt;h2 id=&#34;まとめ&#34;&gt;まとめ&lt;/h2&gt;
-&lt;p&gt;コード管理により履歴管理やレビューといったフローに乗せることができるので大変便利になりました。そのあたりの運用で困っているかたは使ってみてはどうでしょうか。&lt;/p&gt;</description></item><item><title>MySQLのslow_logテーブルをサマライズするGemをつくった</title><link>https://blog.monochromegane.com/blog/2015/07/20/mysql-dump-slow/</link><pubDate>Mon, 20 Jul 2015 21:15:28 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2015/07/20/mysql-dump-slow/</guid><description>
-&lt;p&gt;MySQLにはログファイルに出力したスロークエリをサマライズする&lt;code&gt;mysqldumpslow&lt;/code&gt;コマンドがあって重宝していたのですが、出力先をテーブルに変更すると使えなくなってしまったので、同じことができるmysql_dump_slowというGemをつくりました。&lt;/p&gt;
-&lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fmysql_dump_slow&#34; title=&#34;monochromegane/mysql_dump_slow&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/mysql_dump_slow&#34;&amp;gt;monochromegane/mysql_dump_slow&amp;lt;/a&amp;gt;&lt;/iframe&gt;
-&lt;h1 id=&#34;使い方&#34;&gt;使い方&lt;/h1&gt;
-&lt;p&gt;ActiveRecordで取得したスローログを渡して使います。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;# ActiveRecordでmysql.slow_logテーブルのレコードを取得します
-logs = SlowLog.all
-# スローログをサマライズします
-summary = MysqlDumpSlow.summarize(logs)
-summary.each do |counter|
-# mysqldumpslowコマンド形式で出力することができます
-counter.to_mysqldumpslow
-# =&amp;gt; Count: 2 Time=100s (200s) Lock=200s (400s) Rows=300 (600), 2hosts
-# SELECT * FROM T
-end
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;to_mysqldump&lt;/code&gt;を使って、サマリした結果ごとに&lt;code&gt;mysqldumpslow&lt;/code&gt;コマンドの形式で出力することができます。&lt;/p&gt;
-&lt;p&gt;社内ではこんな感じで前日分のスロークエリをSlackに通知するrakeタスクに組み込んで使っています。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2015/07/mysql_dump_slow.png&#34; alt=&#34;mysql\_dump\_slow&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;このように某清貧会会長に煽られるので緊張感もってスロークエリの撲滅に取り組んでいます。&lt;/p&gt;
-&lt;h2 id=&#34;getter&#34;&gt;getter&lt;/h2&gt;
-&lt;p&gt;自分で結果を整形して使いたい場合は、それぞれの total, average の値を取得できます。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;counter.total_query_time # =&amp;gt; 100000
-counter.average_query_time # =&amp;gt; 100000
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;以下の値を取得可能です。&lt;/p&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>ruby on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/ruby/</link><description>Recent content in ruby on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Tue, 22 Mar 2016 20:46:48 +0900</lastBuildDate><atom:link href="/tags/ruby/" rel="self" type="application/rss+xml"/><item><title>2019年11月12日</title><link>https://blog.monochromegane.com/diary/20191112/</link><pubDate>Tue, 12 Nov 2019 22:10:53 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191112/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;、原稿出し終えたのでジャーナル執筆と並行しなくて良いように先にポスター書いてしまう。&lt;/p&gt;
+&lt;p&gt;Fukuoka.LTという去年から始まった福岡のいろいろなコミュニティの合同忘年会があるのだけど、今年の運営をFukuoka.goが任されることになったので、先週ぐらいから準備していた。&lt;/p&gt;
+&lt;p&gt;今年は、Fukuoka.goらしく技術を肴に酒を飲もうという感じに、言語や技術を横断した登壇と忘年会とした。
+今日は登壇者募集の告知。
+集まるといいなあ。
+これぐらいのイベントだと大規模カンファレンスやったあとなので比較的楽に進めることができる。
+コミュニティ運営力のレベルアップだ。&lt;/p&gt;</description></item><item><title>2019年11月11日</title><link>https://blog.monochromegane.com/diary/20191111/</link><pubDate>Mon, 11 Nov 2019 23:21:16 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191111/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の共著者レビューを終えて提出。
+順調なのでこのままポスターも作ってしまいたいがフォーマットやサイズなどがまだ公開されていない。うーむ。&lt;/p&gt;
+&lt;p&gt;午後は、年末の福岡エンジニアコミュニティの集まりの主催についてガッと進めた。
+方針は決まったのであとは登壇者が順調に集まってくれるのを祈るのみ。&lt;/p&gt;
+&lt;p&gt;帰宅後はこのブログをGitHub Actionsでデプロイできるようにするなど。
+HugoのSetup、GitHub Pagesへのデプロイはこの辺りを使った&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;total_count&lt;/li&gt;
-&lt;li&gt;[ total | average ]_query_time&lt;/li&gt;
-&lt;li&gt;[ total | average ]_lock_time&lt;/li&gt;
-&lt;li&gt;[ total | average ]_rows_set&lt;/li&gt;
-&lt;li&gt;user_hosts&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/peaceiris/actions-hugo&#34;&gt;https://github.com/peaceiris/actions-hugo&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/peaceiris/actions-gh-pages&#34;&gt;https://github.com/peaceiris/actions-gh-pages&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&#34;サマリについて&#34;&gt;サマリについて&lt;/h2&gt;
-&lt;p&gt;&lt;code&gt;mysqldumpslow&lt;/code&gt;と同じ方式でサマライズします。&lt;/p&gt;
-&lt;p&gt;具体的には、同じクエリに対してそれぞれの実行時間、ロック時間、取得行数を集計し、合計、平均を求めます。&lt;/p&gt;
-&lt;p&gt;また、クエリについてはパラメタを抽象化しており、条件の値が違うだけのクエリであれば同じクエリと見なします。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT * FROM `users` WHERE `users`.`name` = &#39;hoge&#39; AND `users`.`age` &amp;gt; 20
-&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT * FROM `users` WHERE `users`.`name` = &#39;fuga&#39; AND `users`.`age` &amp;gt; 30
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;のようなクエリは&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;SELECT * FROM `users` WHERE `users`.`name` = &#39;S&#39; AND `users`.`age` &amp;gt; N
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;のように抽象化され、同じクエリと見なします。&lt;/p&gt;
-&lt;h1 id=&#34;インストール&#34;&gt;インストール&lt;/h1&gt;
-&lt;p&gt;RubyGemsに公開しているのでGemfileに書いてbundle installすればOKです。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;gem &#39;mysql_dump_slow&#39;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
-&lt;p&gt;ログファイルの場合、解析するためにファイルを取得する必要があって少し手間がかかっていたのが、テーブルに出力することでクエリで取得できるようになって取り扱いしやすくなりました。&lt;/p&gt;
-&lt;p&gt;実装にあたっては同僚の&lt;a href=&#34;https://github.com/mizoR&#34;&gt;@mizoR&lt;/a&gt;にいろいろアドバイスもらえて助かりました。Thanks!&lt;/p&gt;
-&lt;p&gt;スロークエリが常に通知される状態になったことで、どんどん撲滅していくぞという空気が生まれるんじゃないかなと思ってます。よければ使ってみてください。&lt;/p&gt;</description></item><item><title>Fukuoka.go#2&#43;Fukuoka.rbを開催しました。</title><link>https://blog.monochromegane.com/blog/2014/08/23/fukuoka-go-2/</link><pubDate>Sat, 23 Aug 2014 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2014/08/23/fukuoka-go-2/</guid><description>
-&lt;p&gt;8月21日に &lt;strong&gt;Fukuoka.go#2+Fukuoka.rb&lt;/strong&gt; を開催しました。&lt;/p&gt;
-&lt;p&gt;Fukuoka.goは福岡でGo言語に興味のあるひとが集まる場所を目指して開催する会です。&lt;/p&gt;
+&lt;p&gt;最終的なWorkflowはこんな感じ。
+コンテンツの管理とGitHub Pagesのリポジトリを分けているが、その辺りもオプションでよしなにできて便利だった。&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://connpass.com/event/7559/&#34;&gt;Fukuoka.go#2+Fukuoka.rb&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/thinking-megane/blob/master/.github/workflows/gh-pages.yml&#34;&gt;https://github.com/monochromegane/thinking-megane/blob/master/.github/workflows/gh-pages.yml&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;今回はFukuoka.rbと合同開催になったこともあり、参加者26名（キャンセル含めると申込自体は35名）と前回より多くの方に来ていただきました。福岡のGo熱は衰えず！です！&lt;/p&gt;
-&lt;p&gt;今回の内容をまとめておきます。&lt;/p&gt;
-&lt;h2 id=&#34;タイムテーブル&#34;&gt;タイムテーブル&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;19:30 - 21:30 LT大会&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;当初もくもく会も予定していましたが、LT希望者が多く、最終的にはオールLTのLT大会になってしまいました。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;lt&#34;&gt;LT&lt;/h1&gt;
-&lt;h2 id=&#34;ルビーストのためのgo-linyows&#34;&gt;ルビーストのためのGo (@linyows)&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://twitter.com/linyows&#34;&gt;@linyows&lt;/a&gt;さんによるLT。&lt;/p&gt;
-&lt;p&gt;RubyとGoを比較しながらGoを学ぶ。&lt;/p&gt;
-&lt;div style=&#34;speakerdeck&#34;&gt;
-&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;244385d00bc4013224d21eb14f30e1c6&#34; data-ratio=&#34;1.33333333333333&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
-&lt;/div&gt;
-&lt;p&gt;自分の知っている言語(知識)と比較していくと知識がメタ化、抽象化されて応用力がついていってよいですよね。&lt;/p&gt;
-&lt;p&gt;GoのBDD形式のテスティングフレームワーク、&lt;code&gt;onsi/ginkgo&lt;/code&gt;以外はまだ使ったことがないものもあったので調べてみようと思いました。&lt;/p&gt;
-&lt;h2 id=&#34;hello-godoc-laco0416&#34;&gt;Hello GoDoc! (@laco0416)&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://twitter.com/laco0416&#34;&gt;@laco0416&lt;/a&gt;さんによるLT。&lt;/p&gt;
-&lt;p&gt;GoのドキュメントホスティングサービスとしてのGoDocとコメントの書式について紹介。&lt;/p&gt;
-&lt;p&gt;&lt;iframe src=&#34;//www.slideshare.net/slideshow/embed_code/38209599?rel=0&#34; width=&#34;512&#34; height=&#34;421&#34; frameborder=&#34;0&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; style=&#34;border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;&#34; allowfullscreen&gt; &lt;/iframe&gt; &lt;div style=&#34;margin-bottom:5px&#34;&gt; &lt;strong&gt; &lt;a href=&#34;https://www.slideshare.net/laco0416/hello-godoc-38209599&#34; title=&#34;Hello GoDoc!&#34; target=&#34;_blank&#34;&gt;Hello GoDoc!&lt;/a&gt; &lt;/strong&gt; from &lt;strong&gt;&lt;a href=&#34;http://www.slideshare.net/laco0416&#34; target=&#34;_blank&#34;&gt;laco0416&lt;/a&gt;&lt;/strong&gt; &lt;/div&gt;&lt;/p&gt;
-&lt;p&gt;GoDocサービスがあることで、開発者はコメント記載して、リポジトリのURLを叩くだけで自動でドキュメントを公開できて非常に便利。&lt;/p&gt;
-&lt;p&gt;Exampleも書けるのはいいですね。
-バッジやLintも用意されているのでどんどん使っていきましょう（参加者中GoDoc利用者はゼロでした）。&lt;/p&gt;
-&lt;h2 id=&#34;最近やっていること-udzura&#34;&gt;最近やっていること (@udzura)&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://twitter.com/udzura&#34;&gt;@udzura&lt;/a&gt;さんによるLT。&lt;/p&gt;
-&lt;p&gt;DockerでPuppet/Chefのテストをするにあたって頑張ったお話。&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;http://www.storyboards.jp/viewer/64t76r&#34;&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2014/08/udzura_saikin.png&#34; alt=&#34;udzura\_saikin&#34; /&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;現場で得られたノウハウが盛り込まれた便利情報でした。失敗したイメージはタグをつけてコミットしておくの使えそう。&lt;/p&gt;
-&lt;p&gt;そのうち、Fukuoka.goでもDockerのソースコードリーディングとかもやってみたいなあと考えてます。&lt;/p&gt;
-&lt;h2 id=&#34;実践go-ツールの作成から配布まで-monochromegane&#34;&gt;実践Go - ツールの作成から配布まで (@monochromegane)&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://twitter.com/monochromegane&#34;&gt;@monochromegane&lt;/a&gt;によるLT。&lt;/p&gt;
-&lt;p&gt;Fukuoka.goで毎回やっているGo入門用LTです。&lt;/p&gt;
-&lt;p&gt;前回は構文を学ぶ&lt;a href=&#34;https://gist.github.com/monochromegane/8bb73390f2ebd9d325f4&#34;&gt;速習Go&lt;/a&gt;をやったので今回は実践Goとして、簡単なツールをつくって配布する部分を紹介しました。&lt;/p&gt;
-&lt;div style=&#34;speakerdeck&#34;&gt;
-&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;943c17900bbf013224d21eb14f30e1c6&#34; data-ratio=&#34;1.33333333333333&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
-&lt;/div&gt;
-&lt;p&gt;ライブコーディングしながらGOPATHまわりの話やツールつくる上でのTipsなど話してみました。&lt;/p&gt;
-&lt;p&gt;Go書いたことない方にも雰囲気が伝わっていればうれしいです。&lt;/p&gt;
-&lt;p&gt;入門用LT、次回はHTTPサーバの実装を通して型とか構造体とか紹介するようなのを考えてます。お楽しみに。&lt;/p&gt;
-&lt;h2 id=&#34;gyowitter-の-ご紹介-morygonzalez&#34;&gt;gyowitter の ご紹介 (@morygonzalez)&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://twitter.com/morygonzalez&#34;&gt;@morygonzalez&lt;/a&gt;さんによるLT。&lt;/p&gt;
-&lt;p&gt;gyowitterというGo製のYo/Twitter連携サービスの紹介。&lt;/p&gt;
-&lt;div style=&#34;speakerdeck&#34;&gt;
-&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;ccf4a2000bc7013260fd7e2d2d4e67ff&#34; data-ratio=&#34;1.33333333333333&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
-&lt;/div&gt;
-&lt;p&gt;圧倒的なLT力で会場を沸かせてくれました。&lt;/p&gt;
-&lt;p&gt;GoのHTTPサーバを利用しているとのことですが、全然落ちてないとのこと。すばらしい〜。&lt;/p&gt;
-&lt;h2 id=&#34;togetter&#34;&gt;Togetter&lt;/h2&gt;
-&lt;p&gt;今回、つぶやきも盛り上がっていたので、まとめてみました。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://togetter.com/li/710020&#34;&gt;Fukuoka.go#2+Fukuoka.rb - Togetterまとめ&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;所感など&#34;&gt;所感など&lt;/h1&gt;
-&lt;p&gt;参加していただいた方々、LTしていただいた方々、会場設営手伝っていただいた方々、&lt;strong&gt;ありがとうございます！&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;今回はLT大会でしたが、参加した方のお話やつぶやきを見る限りでは、Goに対して興味を持ってもらえたり、情報を得られたりしたようなので、Go言語についてわいわいするという目的は今回も達成できたんじゃないかなと思ってます。&lt;/p&gt;
-&lt;p&gt;それから、Fukuoka.rbとの合同だったのでお互いの言語、コミュニティに対して興味を持つことができたのもよかったですね。&lt;/p&gt;
-&lt;p&gt;次回は、要望の多かったもくもく会も時間とってやろうと思います。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;&lt;strong&gt;楽しくも学びのある Fukuoka.go&lt;/strong&gt; は月一回を目安に定期的に開催しています。&lt;br /&gt;
-Goに興味がある方も、Go談義がしたい方も、どなたでもお気軽にご参加ください。&lt;/p&gt;
-&lt;p&gt;LTも絶賛募集しています！&lt;br /&gt;
-Go言語でこんなのやってみたというのがあればぜひぜひ教えてください。&lt;/p&gt;</description></item><item><title>Rails4でGemの資産がAssets Precomplieに含まれないときは</title><link>https://blog.monochromegane.com/blog/2013/09/07/rails4-only-compile-under-app-assets/</link><pubDate>Sat, 07 Sep 2013 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2013/09/07/rails4-only-compile-under-app-assets/</guid><description>
-&lt;p&gt;Rails4プロジェクトでGem内の画像ファイルやフォントファイルといった資産がprecompile対象に含まれない原因と対策をまとめておきます。&lt;/p&gt;
-&lt;p&gt;原因は、assets precompileのデフォルトの対象変更です。対策としては以下の方法をとる必要があります。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;assets precompile に含まれるよう資産を移動する&lt;/li&gt;
-&lt;li&gt;assets precompile に含めたい資産を明示する&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;原因&#34;&gt;原因&lt;/h1&gt;
-&lt;h2 id=&#34;precompile対象ディレクトリの変更&#34;&gt;precompile対象ディレクトリの変更&lt;/h2&gt;
-&lt;p&gt;Rails4では、パスにapp/assetsを含む資産のみをデフォルトのprecompile対象とするように変更されました。&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://github.com/rails/rails/pull/7968&#34;&gt;rails/rails - Only compile non-js/css under app/assets by default&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;precompileのパスに置かれているREADME.mdのような&amp;rdquo;loose&amp;rdquo;なファイルを対象から外すこと、&lt;code&gt;app/&lt;/code&gt;以下をオートロードするRailsの方針と合わせることなどが理由として挙げられています。(※1)&lt;/p&gt;
-&lt;h2 id=&#34;対象ディレクトリはどうなったか&#34;&gt;対象ディレクトリはどうなったか&lt;/h2&gt;
-&lt;p&gt;このプルリクでは以下のような修正が取り込まれています。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;railties/lib/rails/application/configuration.rb&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;@assets.precompile = [ Proc.new { |path, fn| fn =~ /app\/assets/ &amp;amp;&amp;amp; !%w(.js .css).include?(File.extname(path)) },
-/(?:\/|\\|\A)application\.(css|js)$/ ]
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;これにより、&lt;code&gt;Rails.application.config.assets.paths&lt;/code&gt;に定義されているディレクトリのうち、&lt;code&gt;app/assets&lt;/code&gt;というパスを含む、js, css 以外の資産とapplication.(js|css)が対象となり、&lt;code&gt;lib/assets&lt;/code&gt;や&lt;code&gt;vendor/assets&lt;/code&gt;にある画像やフォントといった資産はprecompileの対象外となりました。&lt;/p&gt;
-&lt;p&gt;もし、プロジェクトで利用しているGemが上記のディレクトリに js, css 以外のファイル（imageなど）をおいていた場合、本番配布時に頭を抱えることになります(※2)。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;対策&#34;&gt;対策&lt;/h1&gt;
-&lt;h2 id=&#34;assets-precompile-に含まれるよう資産を移動する&#34;&gt;assets precompile に含まれるよう資産を移動する&lt;/h2&gt;
-&lt;p&gt;これがベストな解決案だと思います。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;lib/assets&lt;/code&gt;や&lt;code&gt;vendor/assets&lt;/code&gt;を&lt;code&gt;app/assets&lt;/code&gt;に移動することで、Railsは配下の資産をprecompile対象として認識してくれます。&lt;/p&gt;
-&lt;p&gt;手元で試したところ、Rails3でも問題なく動作しました。&lt;/p&gt;
-&lt;p&gt;** 使っているGemが対応していなかったので こんな感じでPullRequest を出しました **&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://github.com/pkurek/flatui-rails/pull/27&#34;&gt;pkurek/flatui-rails - Move assets to app/assets for Rails 4&lt;/a&gt;&lt;/p&gt;
-&lt;h2 id=&#34;assets-precompile-に含めたい資産を明示する&#34;&gt;assets precompile に含めたい資産を明示する&lt;/h2&gt;
-&lt;p&gt;Gemを触りたくない場合の対策です。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;config/application.rb&lt;/code&gt;に以下のような記述を追加します。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;読み込ませたい資産にあわせて配列内の拡張子を変更してください。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;&lt;code&gt;Rails.application.config.assets.paths&lt;/code&gt;に含まれているのにPrecomplieされない点で大いにハマりましたが、GithubのPullRequestやIssueで経緯や理由を把握できました。&lt;/p&gt;
-&lt;p&gt;Githubほんと便利。&lt;/p&gt;
-&lt;p&gt;日本語の情報がまだ少ないのでまとめてみました。お役に立てばうれしいです。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;※1&lt;/code&gt;. Issue内容を見るとこの変更に困惑している意見も一部ありますが、DHHは、&lt;code&gt;This makes sense to me :+1:&lt;/code&gt;な感じ&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;※2&lt;/code&gt;. 抱えました。&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>[Ruby] ThorでWebAPIサービスを立ち上げるGem&#34;トールハンマー&#34;をつくった</title><link>https://blog.monochromegane.com/blog/2013/06/15/thor-hammer/</link><pubDate>Sat, 15 Jun 2013 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2013/06/15/thor-hammer/</guid><description>
-&lt;p&gt;コマンドラインツールをつくって、もっと多くのひとに気軽に利用してもらいたいとき、Webアプリとして作りなおすのが面倒だなーと思うことがあります。&lt;/p&gt;
-&lt;p&gt;コマンドラインツールをそのままWebアプリとして使えるようにする仕組みが欲しくて、そんな Gem、&lt;code&gt;ThorHammer&lt;/code&gt;トールハンマーをつくりました。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;thorって&#34;&gt;Thorって？&lt;/h1&gt;
-&lt;p&gt;&lt;a href=&#34;http://whatisthor.com/&#34;&gt;Thor&lt;/a&gt;（トール、ソー、雷神）はRubyでコマンドラインツールをかんたんにつくるためのGemです。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;thorhammerって&#34;&gt;ThorHammerって？&lt;/h1&gt;
-&lt;p&gt;&lt;a href=&#34;https://github.com/monochromegane/thor_hammer&#34;&gt;ThorHammer&lt;/a&gt;はThorでつくったCLIをWebAPIにするGemです。&lt;/p&gt;
-&lt;p&gt;マイティー・ソーが武器のハンマーをつかって、雷を広げて攻撃するように、ThorでつくったCLI機能をWebに広げるGemです。※1&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2013/06/thor_hammer.png&#34; alt=&#34;Thor Hammer&#34; /&gt;&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;どう使うの&#34;&gt;どう使うの？&lt;/h1&gt;
-&lt;p&gt;ThorHammerは、RailsアプリとしてWebAPIを公開します。&lt;/p&gt;
-&lt;h2 id=&#34;インストール&#34;&gt;インストール&lt;/h2&gt;
-&lt;p&gt;Railsのプロジェクトを作成して、Gemfileに以下を追記します。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;gem &#39;thor_hammer&#39;
-gem &#39;Your Thor CLI&#39; # WebAPIとして公開するThorのCLI
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;あとは&lt;code&gt;bundle install&lt;/code&gt;でOKです。&lt;/p&gt;
-&lt;h2 id=&#34;ジェネレータ&#34;&gt;ジェネレータ&lt;/h2&gt;
-&lt;p&gt;ThorHammerは、WebAPIを作成するためのジェネレータを提供します。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ rails g thor_hammer:api ThorCliのクラス名 公開APIのパス
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;引数に指定する値は以下を参考にしてください。&lt;/p&gt;
-&lt;h3 id=&#34;thorcliのクラス名&#34;&gt;ThorCliのクラス名&lt;/h3&gt;
-&lt;p&gt;第一引数は、Thor CLI の起点となるクラス名を指定します。
-起点となるクラス名は、Thor を継承したクラスとして作成されているはずです。
-また、モジュール名も必要になります。&lt;/p&gt;
-&lt;p&gt;以下のような Thor CLI の場合、&lt;code&gt;SampleThorCli::Runner&lt;/code&gt;を指定します。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;module SampleThorCli
-class Runner &amp;lt; Thor
-# 中略
-end
-end
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;公開apiのパス&#34;&gt;公開APIのパス&lt;/h3&gt;
-&lt;p&gt;第二引数は、WebAPIの公開時のパスを指定します。
-省略時は、第一引数を&lt;code&gt;underscore&lt;/code&gt;したものが適用されます。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;省略時&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;code&gt;rails g thor_hammer:api SampleThorCli::Runner&lt;/code&gt; =&amp;gt; &lt;code&gt;http://hostname/sample_thor_cli/runner&lt;/code&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;指定時&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;code&gt;rails g thor_hammer:api SampleThorCli::Runner api&lt;/code&gt; =&amp;gt; &lt;code&gt;http://hostname/api&lt;/code&gt;&lt;/p&gt;
-&lt;h2 id=&#34;アクセス&#34;&gt;アクセス&lt;/h2&gt;
-&lt;p&gt;以上で、あなたのThor CLI がWebAPIとして公開する準備が整いました。
-&lt;code&gt;rails server&lt;/code&gt;でRailsアプリを起動し、アクセスしてください。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ curl http://hostname/api/subcommand/arg1,arg2
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;CLIとして利用した場合と同じ結果をそのまま取得することができます。（JSON, XML形式への対応は今後予定）&lt;/p&gt;
-&lt;h3 id=&#34;subcommand&#34;&gt;subcommand&lt;/h3&gt;
-&lt;p&gt;サブコマンドは、あなたのThor CLIのサブコマンドを指定します。&lt;/p&gt;
-&lt;h3 id=&#34;arg1-arg2&#34;&gt;arg1,arg2&lt;/h3&gt;
-&lt;p&gt;サブコマンドに引数があれば、指定することができます。
-引数が複数の場合は、&lt;code&gt;,&lt;/code&gt;を間に挟んで指定します。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;今はThor限定ですが、Rakeタスクなんかもできるようにして、CIと組み合わせると面白くなるかも。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;※1. はい、もちろん後付けです。&lt;/p&gt;</description></item></channel></rss>
+&lt;p&gt;GitHub Actions、トークンやらキーやらの管理がGitHubの中で完結するので便利。
+キューのつまりも特に感じないし難しいことしなければ少なくとも現時点ではこれでいいのではという感じ。
+ボチボチ移行していくつもり。&lt;/p&gt;</description></item><item><title>2019年11月10日</title><link>https://blog.monochromegane.com/diary/20191110/</link><pubDate>Sun, 10 Nov 2019 23:50:53 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191110/</guid><description>&lt;p&gt;午前中は髪を切りに天神へ。
+さっぱりした後、本格的に寒くなるまでのつなぎになりそうなアウターを購入したりお茶したり散策して過ごす。
+帰宅後は、鍋と頂き物のかしわご飯を美味しくいただく。
+やっと鍋の似合う季節になってきた。&lt;/p&gt;
+&lt;p&gt;就寝前はブログのCIをGitHub Actionsに移行がてら触っていた。
+静的サイトとしてのコンテンツ出力に必要な箇所はできたので来週どこかでデプロイ部分をWerckerから切り替えよう。
+pushしてからCIが開始されるまでと実際のビルドもとにかく速いのでストレスなく使えそう。&lt;/p&gt;</description></item><item><title>2019年11月9日</title><link>https://blog.monochromegane.com/diary/20191109/</link><pubDate>Sat, 09 Nov 2019 22:25:38 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191109/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の査読結果の反映、最終確認。
+午前中にひとまず終えたものの、査読結果へのコメントに個別に答えるとまだ修正必要な気がして終われなかった。&lt;/p&gt;
+&lt;p&gt;昼寝の後、夕方までになんとか仕上げた。
+共著者へレビューを依頼。
+色々忙しかったとはいえ、時間が立つほどに記憶も薄れるので査読対応はさっさとやってしまった方が良さそう。
+ポスターも来週早々に終わらせてしまいたいが、まだフォーマットなど情報がないのでどうしたものか。&lt;/p&gt;
+&lt;p&gt;夕方、年末調整の提出が終わったので一安心。
+明日は、年末の福岡エンジニアコミュニティの集まりの主催についてボチボチ進めよう。&lt;/p&gt;</description></item><item><title>2019年11月8日</title><link>https://blog.monochromegane.com/diary/20191108/</link><pubDate>Sat, 09 Nov 2019 22:15:01 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191108/</guid><description>&lt;p&gt;終日&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の査読結果の反映。
+おおよそできたと思うので明日最終確認する。
+査読、丁寧に見てもらえていて本当に良い。
+これだとわからないですね〜という言い方の向こうにきちんと考えればより分かりやすくなる道が見える気がする。&lt;/p&gt;
+&lt;p&gt;時間を見つけて、&lt;a href=&#34;https://efc.fukuoka.jp/award&#34;&gt;エンジニアフレンドリーシティ福岡アワード&lt;/a&gt;のコミュニティ部門へのエントリーを仕上げた。
+Fukuoka.go、活動を振り返ると改めて着実に進んでいて我ながらエラいなあと思った。
+もちろん共同主催者に恵まれていることに感謝したい。&lt;/p&gt;
+&lt;p&gt;夜は『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/479071733X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479071733X&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=632f660a2f794586c0155153916e0aaa&#34;&gt;文化人類学の思考法&lt;/a&gt;』を少し読み進める。
+バイアスをどう認識するかという問題は突き詰めていくと人類であることすらバイアスであり、文化人類学はそのようなレイヤから比較し続けているのだなあととても面白い。
+一つ一つのネタは実際難しいけれどもまだ読み進めてどこかでまとめたい。&lt;/p&gt;</description></item><item><title>2019年11月7日</title><link>https://blog.monochromegane.com/diary/20191107/</link><pubDate>Thu, 07 Nov 2019 21:34:34 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191107/</guid><description>&lt;p&gt;深夜寝れなかったためリズムが悪く感じた。&lt;/p&gt;
+&lt;p&gt;PC移行で環境構築がうまくいってなかった箇所にハマってしまい、共同研究のデータ抽出に時間がかかってしまった。反省。&lt;/p&gt;
+&lt;p&gt;午後は研究会。
+共著論文で提案する手法にまつわるサーベイ論文のサーベイ結果などを共有してもらう。
+定義や定式化されている前例をもとにした議論になったことで手法の方針検討が整理された。&lt;/p&gt;
+&lt;p&gt;年内においてもどんどん研究が進む予感で楽しみになってきた。
+自分自身もポスターとジャーナルをしっかりやる。&lt;/p&gt;
+&lt;p&gt;今週末ぐらいから一気に集中して確率系の勉強をやったのが、継続系のインプット・アウトプット、ひいては生活リズムを崩してしまっている気がするので、やりすぎないというのもうまく制御していかないといけないなあ。&lt;/p&gt;</description></item><item><title>2019年11月6日</title><link>https://blog.monochromegane.com/diary/20191106/</link><pubDate>Thu, 07 Nov 2019 21:27:43 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191106/</guid><description>&lt;p&gt;朝から九大へ。
+論文のジャーナル投稿に向けて作戦を立てる。
+議論の中でやるべきことが明確になってきた。
+今年中に投稿は済ませるぞ。&lt;/p&gt;
+&lt;p&gt;また、今後についても相談。
+自分の中では大きな決断であるけれども、そろそろ動いていく時期であると判断した。
+あとは自分の頑張り次第。やるしかない。&lt;/p&gt;
+&lt;p&gt;とはいえ、朝が早かったこともあり、午後はなんだかふんわりしてしまったので研究以外のことをざっと進めた。
+コミュニティ活動まわりで直近のイベント方針を決めたりアワードエントリの準備であっという間で合った。&lt;/p&gt;
+&lt;p&gt;帰り際に研究チームでもう一つの共著論文に向けた方針を話す。
+明日の研究会で聞きたいことを伝え帰宅。
+早めに寝てしまったが、逆に深夜に起きてしまい翌朝の動き出しがイマイチだった。
+無限にはなかなか寝れなくなってきたのでやはり規則正しくが一番みたいだ。
+今週は乱れがちなのでペースを取り戻さねば。&lt;/p&gt;</description></item><item><title>2019年11月5日</title><link>https://blog.monochromegane.com/diary/20191105/</link><pubDate>Thu, 07 Nov 2019 21:24:22 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191105/</guid><description>&lt;p&gt;所属する研究所で共著論文のため研究計画を改めて一緒に練るなどした。
+チームであることを活かしてどんどん並列で進めつつ大きなビジョンを達成していく。&lt;/p&gt;
+&lt;p&gt;午後は引き続きバンディットのポリシーの実装に向けた下調べなど。
+自身のメイン研究もバーンとやっていきたい。&lt;/p&gt;</description></item><item><title>2019年11月4日</title><link>https://blog.monochromegane.com/diary/20191104/</link><pubDate>Mon, 04 Nov 2019 22:27:48 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191104/</guid><description>&lt;p&gt;午前中は引き続きベイズ統計の勉強。
+仮定やデータが連続値になった場合についても得心が行ったと思う。
+勉強の見積もりがイマイチあっておらず予定より時間かかっているがバンディットの確率的な方策についてはこれで実装できるだろう。
+ベイズ統計を直接使うわけではないが、推論まわりは応用効きそうなので『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4061538322/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4061538322&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=624549ce46217ec9cd619e8b038b9865&#34;&gt;機械学習スタートアップシリーズ ベイズ推論による機械学習入門 (KS情報科学専門書)&lt;/a&gt;』を自習していこう。&lt;/p&gt;
+&lt;p&gt;午後は先日購入していた『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/479071733X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479071733X&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=632f660a2f794586c0155153916e0aaa&#34;&gt;文化人類学の思考法&lt;/a&gt;』を少し読む。
+新しいモノの見方を知ることができてしばらく楽しめそう。
+そのまま読みながら昼寝。&lt;/p&gt;
+&lt;p&gt;来週からは研究、ポスター、共同研究など忙しくなるけど一歩づつ進めていきたい。&lt;/p&gt;</description></item><item><title>2019年11月3日</title><link>https://blog.monochromegane.com/diary/20191103/</link><pubDate>Mon, 04 Nov 2019 00:47:07 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191103/</guid><description>&lt;p&gt;午前中ベイズの勉強。
+昨日に引き続き『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4797366575/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4797366575&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=df00ddc50d7fa4565615ab69d2bf54c9&#34;&gt;図解・ベイズ統計「超」入門 あいまいなデータから未来を予測する技術 (サイエンス・アイ新書)&lt;/a&gt;』を読み終えて『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4478013322/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4478013322&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=7dd44714a769c09e93745f716cda1b23&#34;&gt;完全独習 ベイズ統計学入門&lt;/a&gt;』と『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/B07HG42534/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B07HG42534&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=d178b6c02684603444f6a910c51f79a4&#34;&gt;まずはこの一冊から 意味がわかるベイズ統計学&lt;/a&gt;』を読む。
+仮定とデータがかなり自由に設定できるので柔軟な一方で難しい場合もある。
+特に確率分布まわりを使う時の整理がまだかなあという感じ。
+いったん、元の動機付けのところに戻りつつ必要な部分について整理を進めよう。&lt;/p&gt;
+&lt;p&gt;午後はiPad Proを触るなど。
+Face IDを使えるデバイスは初めてだったけどかなり快適。
+セットアップもiPhoneを隣におけばほぼ設定いらずで、ハードウェア含めて提供できているとこの辺強いなあという感想。
+論文管理も明日やっていこう。&lt;/p&gt;</description></item><item><title>2019年11月2日</title><link>https://blog.monochromegane.com/diary/20191102/</link><pubDate>Mon, 04 Nov 2019 00:40:34 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191102/</guid><description>&lt;p&gt;午前中はベイズ統計の勉強。
+ベイズの定理はだいぶ馴染んできたが、連続値の場合にまだ理解が不十分な気がするので引き続き明日も進める。&lt;/p&gt;
+&lt;p&gt;午後は本屋によって、『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4274067750/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4274067750&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=29048146b631aa17e79995b374c806ec&#34;&gt;プログラミングのための確率統計&lt;/a&gt;』と『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/479071733X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479071733X&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=632f660a2f794586c0155153916e0aaa&#34;&gt;文化人類学の思考法&lt;/a&gt;』を購入。
+夕食後、購入した本を読んでいたら寝てしまった感じ。&lt;/p&gt;</description></item><item><title>2019年11月1日</title><link>https://blog.monochromegane.com/diary/20191101/</link><pubDate>Sat, 02 Nov 2019 00:27:04 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191101/</guid><description>
+&lt;h2 id=&#34;健康診断&#34;&gt;健康診断&lt;/h2&gt;
+&lt;p&gt;午前中、健康診断。
+午後はベイズ推定関連の基礎知識をつけていた。
+バリウムは健康診断の後も終日大変なのであまり生産性は高くなかったかもしれない。
+来年は胃カメラ、鼻からでやってみるかなあ。&lt;/p&gt;
+&lt;h2 id=&#34;喩えと例え&#34;&gt;喩えと例え&lt;/h2&gt;
+&lt;p&gt;自分の場合、ベイズ推定なり数式を含む新しい概念を獲得するには身の丈にあった入門書を複数こなすことで、違った角度から見比べてその概念を掴んでいく。
+ただ、入門書は結構当たり外れがあるのが悩ましい。&lt;/p&gt;
+&lt;p&gt;良い本を見つけるため最近は、説明の「喩え」よりも「例え（ば）」を重視している。
+手元の辞書によると「喩え」は「たとえること。たとえとして引かれた事柄」とあり、「例えば」は「前文に述べた主旨を客観的に証明するに足る例をあげることを表す。」とある。
+学びたい概念を「喩え」る入門書は、読者の知る身近な事柄でこれを説明する。
+一方、「例えば」の入門書は、その概念の構成要素やそれらが成立する仕組みを裏付ける例を通して理解を助ける。&lt;/p&gt;
+&lt;p&gt;「喩え」に頼りすぎてしまってると感じた本の読後は、分かったような分からないような感じが多い。
+対して、簡潔な「例えば」が十分な量で用意されていた本は、なるほどそういう理由・仕組みだったのかと理解が深まったと感じる。
+この辺を区分できるようになって、ハズレはつかまなくなったかなあと思う。
+もちろん、適切な「喩え」が理解を助けることもあるのであくまでも重視する方という意味合いで。&lt;/p&gt;
+&lt;p&gt;ところで、簡潔に概念を説明できる「例えば」を作るためにはその概念に対する深い理解が必要である。
+論文であっても手法であっても、ある概念を相手に説明する際に「喩え」が出るか、複雑な「例えば」が出るか、簡潔な「例えば」を出せるかで自分の理解を問うていきたい。&lt;/p&gt;</description></item><item><title>2019年10月31日</title><link>https://blog.monochromegane.com/diary/20191031/</link><pubDate>Thu, 31 Oct 2019 21:58:58 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191031/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の採録通知。
+とても嬉しい。
+査読結果もなるほど納得なしっかり読み込んでくれた内容であったので将来のジャーナル化に向けてもありがたいアドバイスになった。&lt;/p&gt;
+&lt;p&gt;研究の手法を改善するためにベイズ推定まわりを押さえておかないと厳しい感じになってきたので、入門系の書物を数冊購入して帰宅。
+ちょうど最近、&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/10/11/random_number_gen_using_go/&#34;&gt;確率分布などをおさらいした&lt;/a&gt;のもあり、以前より理解できるのではないかと考えている。
+この辺、一足飛びには理解できないので、ひとつづつ理解を進めていく。
+専門力の向上が次のステップなのでやっていきたい。&lt;/p&gt;
+&lt;p&gt;昨年から始まった&lt;a href=&#34;https://fukuokaphp.connpass.com/event/109317/&#34;&gt;Fukuoka.LT&lt;/a&gt;だが、運営をコミュニティの持ち回りにしたので、今年はFukuoka.goでやることにした。
+普段のコミュニティで登壇してる内容を話してもらうことで一層コミュニティの雰囲気を知れるのではないかとなったのでそんな感じに進める。
+連絡周りは省力で進められるといいな。&lt;/p&gt;</description></item><item><title>2019年10月30日</title><link>https://blog.monochromegane.com/diary/20191030/</link><pubDate>Thu, 31 Oct 2019 21:56:23 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191030/</guid><description>&lt;p&gt;午前中Research I/O。
+論文の骨子などを検討していくのを午前中に進んでいるという状態はとても気分的に良い。
+午後はデータ分析など。&lt;/p&gt;
+&lt;p&gt;週途中ながらに疲れが出てきたので夜は早めに就寝した。
+iPad Proまだ開けれてない。とほほ。&lt;/p&gt;</description></item><item><title>2019年10月29日</title><link>https://blog.monochromegane.com/diary/20191029/</link><pubDate>Tue, 29 Oct 2019 23:51:16 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191029/</guid><description>&lt;p&gt;午前中、Research I/Oの時間。提案手法の新規性と有用性を論じるためのあれこれを考える。
+午後は、研究周りのデータ抽出や解析など。
+午前中に必ず研究系が進んでいるという状況は良いので引き続きやっていく。&lt;/p&gt;
+&lt;p&gt;帰り際にApple storeによって、その場で「&lt;a href=&#34;https://www.amazon.co.jp/gp/product/B07K7MBNZ2/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B07K7MBNZ2&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=5012f106ddfdeb7467c8a02d523f6ad0&#34;&gt;Apple iPad Pro (11インチ, Wi-Fi, 512GB) - スペースグレイ (最新モデル)&lt;/a&gt;」と「&lt;a href=&#34;https://www.amazon.co.jp/gp/product/B07KR69HH9/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B07KR69HH9&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=256d1dc837b0ae029969e0ea28e6603f&#34;&gt;Apple Pencil（第2世代）&lt;/a&gt;」を購入。
+最後まで12.9インチと悩んだけど、論文読むのは等倍でなくても大丈夫だと判断して普段の取り回しの良さの面から11インチにした。
+論文管理の仕組みを構築していかねば。&lt;/p&gt;</description></item></channel></rss>

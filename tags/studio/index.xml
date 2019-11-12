@@ -1,65 +1,123 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>studio on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/studio/</link><description>Recent content in studio on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Mon, 08 Jul 2013 00:00:00 +0000</lastBuildDate><atom:link href="/tags/studio/" rel="self" type="application/rss+xml"/><item><title>Android Studioを使うときに調べたこと、いくつか</title><link>https://blog.monochromegane.com/blog/2013/07/08/android-studio-tips/</link><pubDate>Mon, 08 Jul 2013 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2013/07/08/android-studio-tips/</guid><description>
-&lt;p&gt;ひさびさにAndroidアプリをつくるのに、せっかくなので公開された&lt;a href=&#34;http://developer.android.com/sdk/installing/studio.html&#34;&gt;Android Studio&lt;/a&gt;を使ってみました。&lt;/p&gt;
-&lt;p&gt;Eclipseでの開発環境と違いなど、調べたことがいくつかあったのでまとめておきます。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2013/07/android_studio.png&#34; alt=&#34;Android Studio&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;今回調べたのは以下の4つです。&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;assetsディレクトリが作成されない&lt;/li&gt;
-&lt;li&gt;エミュレータでプロキシを使いたい&lt;/li&gt;
-&lt;li&gt;日本語コメントを入れるとコンパイルできない&lt;/li&gt;
-&lt;li&gt;ライブラリ(jar)追加でコンパイルできない&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;なお、環境は2013/07/08時点での最新版、&lt;code&gt;Android Studio (I/O Preview) AI-130.729444&lt;/code&gt;です。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;1-assetsディレクトリが作成されない&#34;&gt;1. assetsディレクトリが作成されない&lt;/h1&gt;
-&lt;p&gt;Android Studioではプロジェクト作成時にassetsディレクトリが作成されませんでした。&lt;/p&gt;
-&lt;p&gt;また、assetsディレクトリを作成する場合、&lt;code&gt;src/main&lt;/code&gt;の下に作成しないといけませんでした。&lt;/p&gt;
-&lt;h3 id=&#34;どこで定義されている&#34;&gt;どこで定義されている？&lt;/h3&gt;
-&lt;p&gt;Eclipseでの開発時はassetsディレクトリはプロジェクト直下にありますが、Android Studioではそこにディレクトリを作成してもアプリから認識されません。&lt;/p&gt;
-&lt;p&gt;これは、モジュール定義ファイル(.iml)に以下のように定義されているためです。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;&amp;lt;sourceFolder url=&amp;quot;file://$MODULE_DIR$/src/main/assets&amp;quot; isTestSource=&amp;quot;false&amp;quot; /&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;2-エミュレータでプロキシを使いたい&#34;&gt;2. エミュレータでプロキシを使いたい&lt;/h1&gt;
-&lt;p&gt;[Run]メニュー &amp;gt; [Edit Configurations&amp;hellip;]を選択し、開いたウィンドウから[Emulator]タブを選択します。&lt;/p&gt;
-&lt;p&gt;[Additional command line options:]にチェックを入れ、以下のコマンドラインオプションを追加します。&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;-http-proxy http://hostname:port
-&lt;/code&gt;&lt;/pre&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;3-日本語コメントを入れるとコンパイルできない&#34;&gt;3. 日本語コメントを入れるとコンパイルできない&lt;/h1&gt;
-&lt;p&gt;Android Studioで、Javaソース内に日本語でコメントを入れると以下のエラーが出てコンパイルに失敗します。&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;この文字は、エンコーディングsjisにマップできません。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;VMのオプションを設定ファイルに追記する必要があるようです。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;/Applications/Android Studio.app/Contents/Info.plist&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;lt;key&amp;gt;VMOptions&amp;lt;/key&amp;gt;
-&amp;lt;string&amp;gt;-ea -Dsun.io.useCanonCaches=false -XX:+HeapDumpOnOutOfMemoryError -Xverify:none -Xbootclasspath/a:../lib/boot.jar -Dgroovy.source.encoding=UTF-8 -Dfile.encoding=UTF-8&amp;lt;/string&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;-Dgroovy.source.encoding=UTF-8 -Dfile.encoding=UTF-8&lt;/code&gt;を追加しています。
-追加後にAndroid Studioを再起動すればOKです。&lt;/p&gt;
-&lt;p&gt;*こちらを参考にさせていただきました。&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;http://takatoshimaeda.github.io/blog/2013/05/20/android-studio-character-code-build-error/&#34;&gt;takatoshi blog / [AndroidStudio]この文字は、エンコーディングsjisにマップできません。コンパイルエラーへの対処&lt;/a&gt;&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;4-ライブラリ-jar-追加でコンパイルできない&#34;&gt;4. ライブラリ(jar)追加でコンパイルできない&lt;/h1&gt;
-&lt;p&gt;ライブラリを追加した場合、以下の2つの設定を行なう必要がありました。&lt;/p&gt;
-&lt;p&gt;特に&lt;code&gt;実行時の設定&lt;/code&gt;がない場合、実行時に以下のエラーが発生します。&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;パッケージ xxx は存在しません
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;コンパイルのための設定&#34;&gt;コンパイルのための設定&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;プロジェクト直下のlibsディレクトリにjarファイルを配置する。&lt;/li&gt;
-&lt;li&gt;Android Studioで該当のjarファイルを右クリック &amp;gt; Add as Library&amp;hellip; を行う&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;実行時の設定&#34;&gt;実行時の設定&lt;/h3&gt;
-&lt;p&gt;&lt;code&gt;build.gradle&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;dependencies {
-compile files(&#39;libs/android-support-v4.jar&#39;)
-compile files(&#39;libs/your-library.jar&#39;)
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;dependencies&lt;/code&gt;内にjarファイル名を追加します。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;以上、いくつか調べることはありましたがAndroid Studio、なかなか快適です。&lt;/p&gt;
-&lt;p&gt;Eclipseで開発している方であれば、比較的すんなり移行できると思います。&lt;/p&gt;
-&lt;p&gt;設定ファイルまわりの編集作業はAndroid Studioのバージョンが上がれば不要になってくる作業と思いますが、現時点ではこういう設定もあるということを覚えておいてもいいかもしれません。&lt;/p&gt;
-&lt;p&gt;以上です。&lt;/p&gt;</description></item></channel></rss>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>studio on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/studio/</link><description>Recent content in studio on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Mon, 08 Jul 2013 00:00:00 +0000</lastBuildDate><atom:link href="/tags/studio/" rel="self" type="application/rss+xml"/><item><title>2019年11月12日</title><link>https://blog.monochromegane.com/diary/20191112/</link><pubDate>Tue, 12 Nov 2019 22:10:53 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191112/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;、原稿出し終えたのでジャーナル執筆と並行しなくて良いように先にポスター書いてしまう。&lt;/p&gt;
+&lt;p&gt;Fukuoka.LTという去年から始まった福岡のいろいろなコミュニティの合同忘年会があるのだけど、今年の運営をFukuoka.goが任されることになったので、先週ぐらいから準備していた。&lt;/p&gt;
+&lt;p&gt;今年は、Fukuoka.goらしく技術を肴に酒を飲もうという感じに、言語や技術を横断した登壇と忘年会とした。
+今日は登壇者募集の告知。
+集まるといいなあ。
+これぐらいのイベントだと大規模カンファレンスやったあとなので比較的楽に進めることができる。
+コミュニティ運営力のレベルアップだ。&lt;/p&gt;</description></item><item><title>2019年11月11日</title><link>https://blog.monochromegane.com/diary/20191111/</link><pubDate>Mon, 11 Nov 2019 23:21:16 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191111/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の共著者レビューを終えて提出。
+順調なのでこのままポスターも作ってしまいたいがフォーマットやサイズなどがまだ公開されていない。うーむ。&lt;/p&gt;
+&lt;p&gt;午後は、年末の福岡エンジニアコミュニティの集まりの主催についてガッと進めた。
+方針は決まったのであとは登壇者が順調に集まってくれるのを祈るのみ。&lt;/p&gt;
+&lt;p&gt;帰宅後はこのブログをGitHub Actionsでデプロイできるようにするなど。
+HugoのSetup、GitHub Pagesへのデプロイはこの辺りを使った&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/peaceiris/actions-hugo&#34;&gt;https://github.com/peaceiris/actions-hugo&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/peaceiris/actions-gh-pages&#34;&gt;https://github.com/peaceiris/actions-gh-pages&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;最終的なWorkflowはこんな感じ。
+コンテンツの管理とGitHub Pagesのリポジトリを分けているが、その辺りもオプションでよしなにできて便利だった。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/thinking-megane/blob/master/.github/workflows/gh-pages.yml&#34;&gt;https://github.com/monochromegane/thinking-megane/blob/master/.github/workflows/gh-pages.yml&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;GitHub Actions、トークンやらキーやらの管理がGitHubの中で完結するので便利。
+キューのつまりも特に感じないし難しいことしなければ少なくとも現時点ではこれでいいのではという感じ。
+ボチボチ移行していくつもり。&lt;/p&gt;</description></item><item><title>2019年11月10日</title><link>https://blog.monochromegane.com/diary/20191110/</link><pubDate>Sun, 10 Nov 2019 23:50:53 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191110/</guid><description>&lt;p&gt;午前中は髪を切りに天神へ。
+さっぱりした後、本格的に寒くなるまでのつなぎになりそうなアウターを購入したりお茶したり散策して過ごす。
+帰宅後は、鍋と頂き物のかしわご飯を美味しくいただく。
+やっと鍋の似合う季節になってきた。&lt;/p&gt;
+&lt;p&gt;就寝前はブログのCIをGitHub Actionsに移行がてら触っていた。
+静的サイトとしてのコンテンツ出力に必要な箇所はできたので来週どこかでデプロイ部分をWerckerから切り替えよう。
+pushしてからCIが開始されるまでと実際のビルドもとにかく速いのでストレスなく使えそう。&lt;/p&gt;</description></item><item><title>2019年11月9日</title><link>https://blog.monochromegane.com/diary/20191109/</link><pubDate>Sat, 09 Nov 2019 22:25:38 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191109/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の査読結果の反映、最終確認。
+午前中にひとまず終えたものの、査読結果へのコメントに個別に答えるとまだ修正必要な気がして終われなかった。&lt;/p&gt;
+&lt;p&gt;昼寝の後、夕方までになんとか仕上げた。
+共著者へレビューを依頼。
+色々忙しかったとはいえ、時間が立つほどに記憶も薄れるので査読対応はさっさとやってしまった方が良さそう。
+ポスターも来週早々に終わらせてしまいたいが、まだフォーマットなど情報がないのでどうしたものか。&lt;/p&gt;
+&lt;p&gt;夕方、年末調整の提出が終わったので一安心。
+明日は、年末の福岡エンジニアコミュニティの集まりの主催についてボチボチ進めよう。&lt;/p&gt;</description></item><item><title>2019年11月8日</title><link>https://blog.monochromegane.com/diary/20191108/</link><pubDate>Sat, 09 Nov 2019 22:15:01 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191108/</guid><description>&lt;p&gt;終日&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の査読結果の反映。
+おおよそできたと思うので明日最終確認する。
+査読、丁寧に見てもらえていて本当に良い。
+これだとわからないですね〜という言い方の向こうにきちんと考えればより分かりやすくなる道が見える気がする。&lt;/p&gt;
+&lt;p&gt;時間を見つけて、&lt;a href=&#34;https://efc.fukuoka.jp/award&#34;&gt;エンジニアフレンドリーシティ福岡アワード&lt;/a&gt;のコミュニティ部門へのエントリーを仕上げた。
+Fukuoka.go、活動を振り返ると改めて着実に進んでいて我ながらエラいなあと思った。
+もちろん共同主催者に恵まれていることに感謝したい。&lt;/p&gt;
+&lt;p&gt;夜は『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/479071733X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479071733X&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=632f660a2f794586c0155153916e0aaa&#34;&gt;文化人類学の思考法&lt;/a&gt;』を少し読み進める。
+バイアスをどう認識するかという問題は突き詰めていくと人類であることすらバイアスであり、文化人類学はそのようなレイヤから比較し続けているのだなあととても面白い。
+一つ一つのネタは実際難しいけれどもまだ読み進めてどこかでまとめたい。&lt;/p&gt;</description></item><item><title>2019年11月7日</title><link>https://blog.monochromegane.com/diary/20191107/</link><pubDate>Thu, 07 Nov 2019 21:34:34 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191107/</guid><description>&lt;p&gt;深夜寝れなかったためリズムが悪く感じた。&lt;/p&gt;
+&lt;p&gt;PC移行で環境構築がうまくいってなかった箇所にハマってしまい、共同研究のデータ抽出に時間がかかってしまった。反省。&lt;/p&gt;
+&lt;p&gt;午後は研究会。
+共著論文で提案する手法にまつわるサーベイ論文のサーベイ結果などを共有してもらう。
+定義や定式化されている前例をもとにした議論になったことで手法の方針検討が整理された。&lt;/p&gt;
+&lt;p&gt;年内においてもどんどん研究が進む予感で楽しみになってきた。
+自分自身もポスターとジャーナルをしっかりやる。&lt;/p&gt;
+&lt;p&gt;今週末ぐらいから一気に集中して確率系の勉強をやったのが、継続系のインプット・アウトプット、ひいては生活リズムを崩してしまっている気がするので、やりすぎないというのもうまく制御していかないといけないなあ。&lt;/p&gt;</description></item><item><title>2019年11月6日</title><link>https://blog.monochromegane.com/diary/20191106/</link><pubDate>Thu, 07 Nov 2019 21:27:43 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191106/</guid><description>&lt;p&gt;朝から九大へ。
+論文のジャーナル投稿に向けて作戦を立てる。
+議論の中でやるべきことが明確になってきた。
+今年中に投稿は済ませるぞ。&lt;/p&gt;
+&lt;p&gt;また、今後についても相談。
+自分の中では大きな決断であるけれども、そろそろ動いていく時期であると判断した。
+あとは自分の頑張り次第。やるしかない。&lt;/p&gt;
+&lt;p&gt;とはいえ、朝が早かったこともあり、午後はなんだかふんわりしてしまったので研究以外のことをざっと進めた。
+コミュニティ活動まわりで直近のイベント方針を決めたりアワードエントリの準備であっという間で合った。&lt;/p&gt;
+&lt;p&gt;帰り際に研究チームでもう一つの共著論文に向けた方針を話す。
+明日の研究会で聞きたいことを伝え帰宅。
+早めに寝てしまったが、逆に深夜に起きてしまい翌朝の動き出しがイマイチだった。
+無限にはなかなか寝れなくなってきたのでやはり規則正しくが一番みたいだ。
+今週は乱れがちなのでペースを取り戻さねば。&lt;/p&gt;</description></item><item><title>2019年11月5日</title><link>https://blog.monochromegane.com/diary/20191105/</link><pubDate>Thu, 07 Nov 2019 21:24:22 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191105/</guid><description>&lt;p&gt;所属する研究所で共著論文のため研究計画を改めて一緒に練るなどした。
+チームであることを活かしてどんどん並列で進めつつ大きなビジョンを達成していく。&lt;/p&gt;
+&lt;p&gt;午後は引き続きバンディットのポリシーの実装に向けた下調べなど。
+自身のメイン研究もバーンとやっていきたい。&lt;/p&gt;</description></item><item><title>2019年11月4日</title><link>https://blog.monochromegane.com/diary/20191104/</link><pubDate>Mon, 04 Nov 2019 22:27:48 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191104/</guid><description>&lt;p&gt;午前中は引き続きベイズ統計の勉強。
+仮定やデータが連続値になった場合についても得心が行ったと思う。
+勉強の見積もりがイマイチあっておらず予定より時間かかっているがバンディットの確率的な方策についてはこれで実装できるだろう。
+ベイズ統計を直接使うわけではないが、推論まわりは応用効きそうなので『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4061538322/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4061538322&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=624549ce46217ec9cd619e8b038b9865&#34;&gt;機械学習スタートアップシリーズ ベイズ推論による機械学習入門 (KS情報科学専門書)&lt;/a&gt;』を自習していこう。&lt;/p&gt;
+&lt;p&gt;午後は先日購入していた『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/479071733X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479071733X&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=632f660a2f794586c0155153916e0aaa&#34;&gt;文化人類学の思考法&lt;/a&gt;』を少し読む。
+新しいモノの見方を知ることができてしばらく楽しめそう。
+そのまま読みながら昼寝。&lt;/p&gt;
+&lt;p&gt;来週からは研究、ポスター、共同研究など忙しくなるけど一歩づつ進めていきたい。&lt;/p&gt;</description></item><item><title>2019年11月3日</title><link>https://blog.monochromegane.com/diary/20191103/</link><pubDate>Mon, 04 Nov 2019 00:47:07 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191103/</guid><description>&lt;p&gt;午前中ベイズの勉強。
+昨日に引き続き『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4797366575/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4797366575&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=df00ddc50d7fa4565615ab69d2bf54c9&#34;&gt;図解・ベイズ統計「超」入門 あいまいなデータから未来を予測する技術 (サイエンス・アイ新書)&lt;/a&gt;』を読み終えて『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4478013322/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4478013322&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=7dd44714a769c09e93745f716cda1b23&#34;&gt;完全独習 ベイズ統計学入門&lt;/a&gt;』と『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/B07HG42534/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B07HG42534&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=d178b6c02684603444f6a910c51f79a4&#34;&gt;まずはこの一冊から 意味がわかるベイズ統計学&lt;/a&gt;』を読む。
+仮定とデータがかなり自由に設定できるので柔軟な一方で難しい場合もある。
+特に確率分布まわりを使う時の整理がまだかなあという感じ。
+いったん、元の動機付けのところに戻りつつ必要な部分について整理を進めよう。&lt;/p&gt;
+&lt;p&gt;午後はiPad Proを触るなど。
+Face IDを使えるデバイスは初めてだったけどかなり快適。
+セットアップもiPhoneを隣におけばほぼ設定いらずで、ハードウェア含めて提供できているとこの辺強いなあという感想。
+論文管理も明日やっていこう。&lt;/p&gt;</description></item><item><title>2019年11月2日</title><link>https://blog.monochromegane.com/diary/20191102/</link><pubDate>Mon, 04 Nov 2019 00:40:34 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191102/</guid><description>&lt;p&gt;午前中はベイズ統計の勉強。
+ベイズの定理はだいぶ馴染んできたが、連続値の場合にまだ理解が不十分な気がするので引き続き明日も進める。&lt;/p&gt;
+&lt;p&gt;午後は本屋によって、『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4274067750/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4274067750&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=29048146b631aa17e79995b374c806ec&#34;&gt;プログラミングのための確率統計&lt;/a&gt;』と『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/479071733X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479071733X&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=632f660a2f794586c0155153916e0aaa&#34;&gt;文化人類学の思考法&lt;/a&gt;』を購入。
+夕食後、購入した本を読んでいたら寝てしまった感じ。&lt;/p&gt;</description></item><item><title>2019年11月1日</title><link>https://blog.monochromegane.com/diary/20191101/</link><pubDate>Sat, 02 Nov 2019 00:27:04 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191101/</guid><description>
+&lt;h2 id=&#34;健康診断&#34;&gt;健康診断&lt;/h2&gt;
+&lt;p&gt;午前中、健康診断。
+午後はベイズ推定関連の基礎知識をつけていた。
+バリウムは健康診断の後も終日大変なのであまり生産性は高くなかったかもしれない。
+来年は胃カメラ、鼻からでやってみるかなあ。&lt;/p&gt;
+&lt;h2 id=&#34;喩えと例え&#34;&gt;喩えと例え&lt;/h2&gt;
+&lt;p&gt;自分の場合、ベイズ推定なり数式を含む新しい概念を獲得するには身の丈にあった入門書を複数こなすことで、違った角度から見比べてその概念を掴んでいく。
+ただ、入門書は結構当たり外れがあるのが悩ましい。&lt;/p&gt;
+&lt;p&gt;良い本を見つけるため最近は、説明の「喩え」よりも「例え（ば）」を重視している。
+手元の辞書によると「喩え」は「たとえること。たとえとして引かれた事柄」とあり、「例えば」は「前文に述べた主旨を客観的に証明するに足る例をあげることを表す。」とある。
+学びたい概念を「喩え」る入門書は、読者の知る身近な事柄でこれを説明する。
+一方、「例えば」の入門書は、その概念の構成要素やそれらが成立する仕組みを裏付ける例を通して理解を助ける。&lt;/p&gt;
+&lt;p&gt;「喩え」に頼りすぎてしまってると感じた本の読後は、分かったような分からないような感じが多い。
+対して、簡潔な「例えば」が十分な量で用意されていた本は、なるほどそういう理由・仕組みだったのかと理解が深まったと感じる。
+この辺を区分できるようになって、ハズレはつかまなくなったかなあと思う。
+もちろん、適切な「喩え」が理解を助けることもあるのであくまでも重視する方という意味合いで。&lt;/p&gt;
+&lt;p&gt;ところで、簡潔に概念を説明できる「例えば」を作るためにはその概念に対する深い理解が必要である。
+論文であっても手法であっても、ある概念を相手に説明する際に「喩え」が出るか、複雑な「例えば」が出るか、簡潔な「例えば」を出せるかで自分の理解を問うていきたい。&lt;/p&gt;</description></item><item><title>2019年10月31日</title><link>https://blog.monochromegane.com/diary/20191031/</link><pubDate>Thu, 31 Oct 2019 21:58:58 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191031/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の採録通知。
+とても嬉しい。
+査読結果もなるほど納得なしっかり読み込んでくれた内容であったので将来のジャーナル化に向けてもありがたいアドバイスになった。&lt;/p&gt;
+&lt;p&gt;研究の手法を改善するためにベイズ推定まわりを押さえておかないと厳しい感じになってきたので、入門系の書物を数冊購入して帰宅。
+ちょうど最近、&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/10/11/random_number_gen_using_go/&#34;&gt;確率分布などをおさらいした&lt;/a&gt;のもあり、以前より理解できるのではないかと考えている。
+この辺、一足飛びには理解できないので、ひとつづつ理解を進めていく。
+専門力の向上が次のステップなのでやっていきたい。&lt;/p&gt;
+&lt;p&gt;昨年から始まった&lt;a href=&#34;https://fukuokaphp.connpass.com/event/109317/&#34;&gt;Fukuoka.LT&lt;/a&gt;だが、運営をコミュニティの持ち回りにしたので、今年はFukuoka.goでやることにした。
+普段のコミュニティで登壇してる内容を話してもらうことで一層コミュニティの雰囲気を知れるのではないかとなったのでそんな感じに進める。
+連絡周りは省力で進められるといいな。&lt;/p&gt;</description></item><item><title>2019年10月30日</title><link>https://blog.monochromegane.com/diary/20191030/</link><pubDate>Thu, 31 Oct 2019 21:56:23 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191030/</guid><description>&lt;p&gt;午前中Research I/O。
+論文の骨子などを検討していくのを午前中に進んでいるという状態はとても気分的に良い。
+午後はデータ分析など。&lt;/p&gt;
+&lt;p&gt;週途中ながらに疲れが出てきたので夜は早めに就寝した。
+iPad Proまだ開けれてない。とほほ。&lt;/p&gt;</description></item><item><title>2019年10月29日</title><link>https://blog.monochromegane.com/diary/20191029/</link><pubDate>Tue, 29 Oct 2019 23:51:16 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191029/</guid><description>&lt;p&gt;午前中、Research I/Oの時間。提案手法の新規性と有用性を論じるためのあれこれを考える。
+午後は、研究周りのデータ抽出や解析など。
+午前中に必ず研究系が進んでいるという状況は良いので引き続きやっていく。&lt;/p&gt;
+&lt;p&gt;帰り際にApple storeによって、その場で「&lt;a href=&#34;https://www.amazon.co.jp/gp/product/B07K7MBNZ2/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B07K7MBNZ2&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=5012f106ddfdeb7467c8a02d523f6ad0&#34;&gt;Apple iPad Pro (11インチ, Wi-Fi, 512GB) - スペースグレイ (最新モデル)&lt;/a&gt;」と「&lt;a href=&#34;https://www.amazon.co.jp/gp/product/B07KR69HH9/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B07KR69HH9&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=256d1dc837b0ae029969e0ea28e6603f&#34;&gt;Apple Pencil（第2世代）&lt;/a&gt;」を購入。
+最後まで12.9インチと悩んだけど、論文読むのは等倍でなくても大丈夫だと判断して普段の取り回しの良さの面から11インチにした。
+論文管理の仕組みを構築していかねば。&lt;/p&gt;</description></item></channel></rss>

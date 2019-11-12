@@ -1,430 +1,123 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>vagrant on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/vagrant/</link><description>Recent content in vagrant on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Mon, 08 Sep 2014 00:00:00 +0000</lastBuildDate><atom:link href="/tags/vagrant/" rel="self" type="application/rss+xml"/><item><title>pecoでVagrant操作を便利にする</title><link>https://blog.monochromegane.com/blog/2014/09/08/vagrant-peco/</link><pubDate>Mon, 08 Sep 2014 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2014/09/08/vagrant-peco/</guid><description>
-&lt;p&gt;開発環境で利用するVagrantのVMの数が増えてきたのでpecoでVM選んで起動や停止をできるようにしてみました。&lt;/p&gt;
-&lt;h1 id=&#34;vagrant-peco&#34;&gt;vagrant-peco&lt;/h1&gt;
-&lt;p&gt;こんな感じで利用します。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ vagrant-peco up
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/monochromegane/vagrant-peco/master/images/vagrant-peco-up.gif&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-&lt;h2 id=&#34;うれしさ&#34;&gt;うれしさ&lt;/h2&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>vagrant on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/vagrant/</link><description>Recent content in vagrant on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Mon, 08 Sep 2014 00:00:00 +0000</lastBuildDate><atom:link href="/tags/vagrant/" rel="self" type="application/rss+xml"/><item><title>2019年11月12日</title><link>https://blog.monochromegane.com/diary/20191112/</link><pubDate>Tue, 12 Nov 2019 22:10:53 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191112/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;、原稿出し終えたのでジャーナル執筆と並行しなくて良いように先にポスター書いてしまう。&lt;/p&gt;
+&lt;p&gt;Fukuoka.LTという去年から始まった福岡のいろいろなコミュニティの合同忘年会があるのだけど、今年の運営をFukuoka.goが任されることになったので、先週ぐらいから準備していた。&lt;/p&gt;
+&lt;p&gt;今年は、Fukuoka.goらしく技術を肴に酒を飲もうという感じに、言語や技術を横断した登壇と忘年会とした。
+今日は登壇者募集の告知。
+集まるといいなあ。
+これぐらいのイベントだと大規模カンファレンスやったあとなので比較的楽に進めることができる。
+コミュニティ運営力のレベルアップだ。&lt;/p&gt;</description></item><item><title>2019年11月11日</title><link>https://blog.monochromegane.com/diary/20191111/</link><pubDate>Mon, 11 Nov 2019 23:21:16 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191111/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の共著者レビューを終えて提出。
+順調なのでこのままポスターも作ってしまいたいがフォーマットやサイズなどがまだ公開されていない。うーむ。&lt;/p&gt;
+&lt;p&gt;午後は、年末の福岡エンジニアコミュニティの集まりの主催についてガッと進めた。
+方針は決まったのであとは登壇者が順調に集まってくれるのを祈るのみ。&lt;/p&gt;
+&lt;p&gt;帰宅後はこのブログをGitHub Actionsでデプロイできるようにするなど。
+HugoのSetup、GitHub Pagesへのデプロイはこの辺りを使った&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;pecoでVMを選択できる。Vagrantfileのあるディレクトリに移動しなくてよい&lt;/li&gt;
-&lt;li&gt;VMを複数選択して一括で起動・停止できる&lt;/li&gt;
-&lt;li&gt;通常のvagrant global-statusよりも高速に表示&lt;/li&gt;
-&lt;li&gt;direnvとの連携&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/peaceiris/actions-hugo&#34;&gt;https://github.com/peaceiris/actions-hugo&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/peaceiris/actions-gh-pages&#34;&gt;https://github.com/peaceiris/actions-gh-pages&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&#34;インストール&#34;&gt;インストール&lt;/h2&gt;
-&lt;p&gt;Vagrant1.6以降でつくったVMと&lt;code&gt;vagrant-peco&lt;/code&gt;、&lt;code&gt;vagrant-global-status&lt;/code&gt;が必要です。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;# vagrant-global-statusをインストール
-$ go get github.com/monochromegane/vagrant-global-status/...
-# vagrant-pecoをインストール
-$ cd [PATH] # PATHの通ったディレクトリ
-$ curl -O https://raw.githubusercontent.com/monochromegane/vagrant-peco/master/vagrant-peco
-$ chmod +x ./vagrant-peco
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h1 id=&#34;仕組み&#34;&gt;仕組み&lt;/h1&gt;
-&lt;h2 id=&#34;vagrant-global-status&#34;&gt;vagrant global-status&lt;/h2&gt;
-&lt;p&gt;Vagrantの1.6からglobal-statusプラグインが取り込まれ、一度起動したVMにIDが割り振られるようになりました。&lt;/p&gt;
-&lt;p&gt;IDは&lt;code&gt;vagrant global-status&lt;/code&gt;コマンドで確認します。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ vagrant global-status
-id name provider state directory
--------------------------------------------------------------------------------
-14c9626 cross_compile virtualbox poweroff /Users/miyakey/Documents/vm/golang
-dffc2a5 develop virtualbox poweroff /Users/miyakey/Documents/vm/golang
-ae3968b web1 virtualbox poweroff /Users/miyakey/Documents/vm/dev
-825680e web2 virtualbox poweroff /Users/miyakey/Documents/vm/dev
-e0aa5e9 db virtualbox poweroff /Users/miyakey/Documents/vm/dev
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;このIDを使うことでVagrantfileのあるディレクトリに移動することなく任意のVMを操作できます。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ vagrant up 14c9626
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;pecoと連携する&#34;&gt;pecoと連携する&lt;/h2&gt;
-&lt;p&gt;毎度、IDを選ぶのは面倒なので peco で選べるようにします。&lt;/p&gt;
-&lt;p&gt;先に公開されている@gongoさんの&lt;a href=&#34;https://github.com/gongo/pecrant&#34;&gt;pecrant&lt;/a&gt;でほぼばっちりです。&lt;/p&gt;
-&lt;p&gt;ただ、自分の環境だと&lt;code&gt;vagrant global-status&lt;/code&gt;の起動が少し遅く感じたのと、Vagarntディレクトリごとの&lt;code&gt;direnv&lt;/code&gt;定義を使いたかったので、以下のようにして解決しています。&lt;/p&gt;
-&lt;h3 id=&#34;vagrant-global-status-1&#34;&gt;vagrant-global-status&lt;/h3&gt;
+&lt;p&gt;最終的なWorkflowはこんな感じ。
+コンテンツの管理とGitHub Pagesのリポジトリを分けているが、その辺りもオプションでよしなにできて便利だった。&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/vagrant-global-status&#34;&gt;vagrant-global-status&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/thinking-megane/blob/master/.github/workflows/gh-pages.yml&#34;&gt;https://github.com/monochromegane/thinking-megane/blob/master/.github/workflows/gh-pages.yml&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;code&gt;vagrant global-status&lt;/code&gt;の起動が遅い問題を解決するためにつくりました。&lt;br /&gt;
-同コマンドが参照するファイルを直接解析して結果を出力しています。ちょっとお行儀が悪いです。&lt;/p&gt;
-&lt;p&gt;自分の環境だと、1秒弱短縮できました。さくさく起動します。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ time vagrant global-status
-vagrant global-status 0.97s user 0.09s system 99% cpu 1.072 total
-$ time vagrant-global-status
-vagrant-global-status 0.00s user 0.00s system 68% cpu 0.007 total # fast!!
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;vagrant-peco-1&#34;&gt;vagrant-peco&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/vagrant-peco&#34;&gt;vagrant-peco&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Vagrant起動時に&lt;code&gt;direnv&lt;/code&gt;を適用したかったのでつくりました。&lt;br /&gt;
-&lt;code&gt;vagrant-global-status&lt;/code&gt;で選択したIDで操作する前に、該当ディレクトリの&lt;code&gt;.envrc&lt;/code&gt;を読み込みます。&lt;/p&gt;
-&lt;p&gt;Vagrantfileはプロジェクト共通でマウントするソースファイルのディレクトリは個人ごとに環境変数で指定するような場合に都合がよいです。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;vagrant-pecoは、だいぶ自分の環境にあわせた感じになってしまいましたが、VagrantのVMが増えてきた方、pecrant含めて、使ってみてはどうでしょうか。&lt;/p&gt;
-&lt;p&gt;いや〜、peco、便利。&lt;/p&gt;</description></item><item><title>Vagrantで起動時のネットワークインターフェースを指定するには</title><link>https://blog.monochromegane.com/blog/2013/05/22/vagrant-specify-network-interface/</link><pubDate>Wed, 22 May 2013 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2013/05/22/vagrant-specify-network-interface/</guid><description>
-&lt;p&gt;VagrantのPublicNetwork(Bridged)ネットワーク構成のときに、ホストマシンのネットワークインターフェースが複数あると毎回の起動時に選択するのが面倒です。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ vagrant up
--- 中略 --
-[default] Available bridged network interfaces:
-1) en1: Thunderbolt Ethernet
-2) en0: Wi-Fi (AirPort)
-What interface should the network bridge to? 1
-[default] Preparing network interfaces based on configuration...
--- 後略 --
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Vagrantfileに設定を行うことで、これを回避することができます。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h3 id=&#34;ネットワークインターフェースの指定&#34;&gt;ネットワークインターフェースの指定&lt;/h3&gt;
-&lt;p&gt;Vagrantfileの&lt;code&gt;config.vm.network&lt;/code&gt;に&lt;code&gt;bridge&lt;/code&gt;オプションを加える。&lt;/p&gt;
-&lt;p&gt;configuration version が 2の場合&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;config.vm.network :public_network, :bridge =&amp;gt; &amp;quot;en1: Thunderbolt Ethernet&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;configuration version が 1の場合&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;config.vm.network :bridged, :bridge =&amp;gt; &amp;quot;en1: Thunderbolt Ethernet&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;bridge&lt;/code&gt;オプションには、起動時に表示されるネットワークインターフェース名をそのまま記述すること。&lt;/p&gt;
-&lt;p&gt;** 注：** &lt;code&gt;en1:&lt;/code&gt;から必要&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;これで起動時の手間をちょっとだけ省くことができました。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;bride&lt;/code&gt;オプションはVagrantのドキュメント(V1)には記載がありましたが、ドキュメントがV2になってからはなぜか記載されていません。なぜだろう&amp;hellip;&lt;/p&gt;</description></item><item><title>ちょっと便利なvagrant sshのコマンドオプション</title><link>https://blog.monochromegane.com/blog/2013/05/13/vagrant-ssh-command/</link><pubDate>Mon, 13 May 2013 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2013/05/13/vagrant-ssh-command/</guid><description>
-&lt;p&gt;&lt;code&gt;vagrant ssh&lt;/code&gt;にはコマンドオプションがあり、sshで仮想マシンにログインしなくても実行結果を取得することができます。&lt;/p&gt;
-&lt;h3 id=&#34;コマンドオプション&#34;&gt;コマンドオプション&lt;/h3&gt;
-&lt;p&gt;vagrant ssh のコマンドオプションは&lt;code&gt;-c command&lt;/code&gt;です。
-&lt;code&gt;-c&lt;/code&gt;オプションを使うことで、SSHコマンドを直接実行することができます。&lt;/p&gt;
-&lt;p&gt;例えば、こんな使い方。
-&lt;hr/&gt;&lt;/p&gt;
-&lt;h3 id=&#34;dhcpな仮想マシンのipアドレスを知る&#34;&gt;DHCPな仮想マシンのIPアドレスを知る&lt;/h3&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ vagrant ssh -c ifconfig
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;grepなりで取得結果を整形すれば、仮想マシンのWebサーバへのブラウザアクセスなどに利用できます。&lt;/p&gt;
-&lt;hr/&gt;
-&lt;h3 id=&#34;chef-soloのレシピを個別に実行する&#34;&gt;Chef-Soloのレシピを個別に実行する&lt;/h3&gt;
-&lt;p&gt;Vagrant + Chef-Solo環境であれば、以下のコマンドで個別にレシピを実行することができます&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;# Vagrantfileで定義したレシピを全て実行
-$ vagrant ssh -c &amp;quot;cd /tmp/vagrant-chef-1 &amp;amp;&amp;amp; sudo chef-solo -c solo.rb -j dna.json&amp;quot;
-# レシピを指定して実行
-$ vagrant ssh -c &amp;quot;cd /tmp/vagrant-chef-1 &amp;amp;&amp;amp; sudo chef-solo -c solo.rb -o cookbookName::recipeName&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;hr/&gt;
-&lt;p&gt;ログインの手間を省けるので、ちょっとした確認などに便利ではないでしょうか。&lt;/p&gt;</description></item><item><title>Vagrant起動時にChef-Soloの実行を省く</title><link>https://blog.monochromegane.com/blog/2013/05/11/vagrant-no-provision/</link><pubDate>Sat, 11 May 2013 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2013/05/11/vagrant-no-provision/</guid><description>
-&lt;p&gt;Vagrantの起動時にはChef-Soloが実行されますが、きちんと冪等性をもたせたレシピでもChef-Soloの実行には多少の待ちが発生してしまいます。&lt;/p&gt;
-&lt;p&gt;そこで今回は起動時間を短縮させるためのオプションを紹介します。&lt;/p&gt;
-&lt;hr/&gt;
-&lt;h2 id=&#34;no-provision-オプションを使う&#34;&gt;&amp;ndash;no-provision オプションを使う&lt;/h2&gt;
-&lt;p&gt;Vagrant起動時にChef-Soloの実行を省くには &lt;code&gt;vagrant up&lt;/code&gt;時に&lt;code&gt;--no-provision&lt;/code&gt;オプションをつけます&lt;/p&gt;
-&lt;p&gt;もちろん&lt;code&gt;vagrant reload&lt;/code&gt;時にも使えます&lt;/p&gt;
-&lt;hr/&gt;
-&lt;h2 id=&#34;provision-with-オプションを使う&#34;&gt;&amp;ndash;provision-with オプションを使う&lt;/h2&gt;
-&lt;p&gt;&lt;code&gt;--no-provision&lt;/code&gt;はすべてのprovisionの実行を省いてしまうため、&lt;code&gt;config.vm.provision :shell&lt;/code&gt;など別のprovisionも実行されなくなってしまいます。&lt;/p&gt;
-&lt;p&gt;特定のprovisionを実行させたい場合は、&lt;code&gt;vagrant up&lt;/code&gt;時に&lt;code&gt;--provision-with x,y,z&lt;/code&gt;として実行したいprovisionを指定するとよいです。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ vagrant up --no-provision # すべてのprovisionが実行されない
-$ vagrant up --provision-with shell # :shell provisionだけが実行される
-&lt;/code&gt;&lt;/pre&gt;
-&lt;hr/&gt;
-&lt;p&gt;頻繁にChef-Soloを実行する必要がない開発用VMでは、上記のオプションをデフォルトにしてもいいかも。&lt;/p&gt;</description></item><item><title>半歩進むChef-Solo - Cookbookの共通化（library）</title><link>https://blog.monochromegane.com/blog/2013/05/06/next-step-chef-solo-library/</link><pubDate>Mon, 06 May 2013 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2013/05/06/next-step-chef-solo-library/</guid><description>
-&lt;h1 id=&#34;cookbookの共通化-library&#34;&gt;Cookbookの共通化（library）&lt;/h1&gt;
-&lt;p&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2013/05/05/next-step-chef-solo-recipe-and-definition/&#34;&gt;前回エントリ&lt;/a&gt;ではrecipeとdefinitionを用いたCookbookの共通化の手順を紹介しました。
-今回はChefのもうひとつの共通化の仕組みである&lt;strong&gt;library&lt;/strong&gt;を紹介します。&lt;/p&gt;
-&lt;hr/&gt;
-&lt;h1 id=&#34;libraryって&#34;&gt;libraryって&lt;/h1&gt;
-&lt;p&gt;libraryはRubyコードを用いて、Chefに新しいクラスやメソッドを追加することができる仕組みです。&lt;/p&gt;
-&lt;p&gt;libraryはクックブック内のlibraries/library_name.rbに定義することで自動で読み込まれ、recipes, attributes, file, definitions, providers, definitionsで利用することができます。&lt;/p&gt;
-&lt;p&gt;libraryの用途は以下の様なものがあります。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;ファイルに格納されている属性値へのアクセス&lt;/li&gt;
-&lt;li&gt;ループのようなプログラムテクニックの利用&lt;/li&gt;
-&lt;li&gt;Chefのレシピから直接呼び出せるような独自名前空間の作成（Chef::Recipeの名前空間をきれいな状態に保つ）&lt;/li&gt;
-&lt;li&gt;データベースへの接続&lt;/li&gt;
-&lt;li&gt;LDAPプロバイダとの接続&lt;/li&gt;
-&lt;li&gt;その他、Rubyでできることはなんでも&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr/&gt;
-&lt;h1 id=&#34;libraryを使う&#34;&gt;libraryを使う&lt;/h1&gt;
-&lt;h2 id=&#34;基本&#34;&gt;基本&lt;/h2&gt;
-&lt;h3 id=&#34;1-libraryを定義する&#34;&gt;1. libraryを定義する&lt;/h3&gt;
-&lt;p&gt;一番かんたんな利用法は、Chef::Recipeクラスにメソッドを追加する方法です。
-例としてChefのキャッシュディレクトリを取得するメソッドを定義してみます。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;libraries/cache.rb&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;def cache_path
-Chef::Config[:file_cache_path]
-end
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;マニュアルではChef::Recipeクラスに明示的に定義するようになっていますが、上記の記法でもChef::Recipeクラスに定義されるようです。&lt;/p&gt;
-&lt;h3 id=&#34;2-libraryを使う&#34;&gt;2. libraryを使う&lt;/h3&gt;
-&lt;p&gt;レシピ内などで呼び出すことができます。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;recipes/default.rb&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;remote_file &amp;quot;#{cache_path}/sample.tar.gz&amp;quot; do
-# 省略
-end
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;名前空間&#34;&gt;名前空間&lt;/h2&gt;
-&lt;p&gt;libraryが大きくなるようであれば、名前空間の分割を考える必要があります。
-以下のようにChef::Recipe::XXXのように名前空間を分けて定義するか、後述のmodule化を検討してください。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;libraries/cache.rb&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;class Chef::Recipe::Cache
-def self.path
-Chef::Config[:file_cache_path]
-end
-end
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;recipes/default.rb&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;remote_file &amp;quot;#{Cache.path}/sample.tar.gz&amp;quot; do
-# 省略
-end
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;module構成&#34;&gt;module構成&lt;/h2&gt;
-&lt;p&gt;名前空間の分割にはmoduleを利用することもできます。
-opscodeでの利用例はmodule構成にして、helperとして定義する例が多いようです。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;libraries/helper.rb&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;module Helper
-def cache_path
-Chef::Config[:file_cache_path]
-end
-end
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;recipes/default.rb&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;# moduleのinclude
-::Chef::Recipe.send(:include, Helpers)
-# メソッドを利用する
-remote_file &amp;quot;#{cache_path}/sample.tar.gz&amp;quot; do
-# 省略
-end
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;attirubuteへのアクセス&#34;&gt;attirubuteへのアクセス&lt;/h2&gt;
-&lt;p&gt;マニュアルにはChef::Recipeクラスの@node変数経由で取得する記述になっていますが、通常通り&lt;code&gt;node.attr&lt;/code&gt;もしくは&lt;code&gt;node[attr]&lt;/code&gt;の取得方法で取得することができます。&lt;/p&gt;
-&lt;h2 id=&#34;resourceの利用&#34;&gt;resourceの利用&lt;/h2&gt;
-&lt;p&gt;library内でもresource類を使うことができます。&lt;/p&gt;
-&lt;hr/&gt;
-&lt;p&gt;前回のrecipe, definitionに続き、共通化という観点でlibraryを紹介しました。&lt;/p&gt;
-&lt;p&gt;次回はdefinition利用時のtipsを紹介する予定です。&lt;/p&gt;</description></item><item><title>半歩進むChef-Solo - Cookbookの共通化（recipeとdefinition）</title><link>https://blog.monochromegane.com/blog/2013/05/05/next-step-chef-solo-recipe-and-definition/</link><pubDate>Sun, 05 May 2013 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2013/05/05/next-step-chef-solo-recipe-and-definition/</guid><description>
-&lt;h1 id=&#34;半歩進むchef-solo&#34;&gt;半歩進むChef-Solo&lt;/h1&gt;
-&lt;p&gt;最近、Vagrant + Chef-Soloによるローカル開発環境Boxイメージ構築自動化に取り組んでいます。
-Cookbookをつくるうえでのノウハウがたまってきたので、まとめの意味も込めて「半歩進むChef-Solo」シリーズでエントリ書いていこうと思います。&lt;/p&gt;
-&lt;p&gt;今日はChefで行う「共通化」についてです。&lt;/p&gt;
-&lt;hr/&gt;
-&lt;h1 id=&#34;cookbookの共通化-recipeとdefinition&#34;&gt;Cookbookの共通化（recipeとdefinition）&lt;/h1&gt;
-&lt;p&gt;Vagrant環境でChef-Soloによる構築自動化を行なっていると、複数の環境で似たような処理を行なっている箇所が出てくると思います。
-例えば、同じResouceの組み合わせた処理が何箇所も出てきたり、特定のサーバソフトウェアに関連するセットアップをいろんなRecipeの中でやっていたり。&lt;/p&gt;
-&lt;p&gt;Chefにはこれらの処理をまとめるために、definitionとrecipeという仕組みがあります。&lt;/p&gt;
-&lt;h2 id=&#34;definitionとrecipe&#34;&gt;definitionとrecipe&lt;/h2&gt;
-&lt;p&gt;definitionはリソースを組み合わせた独自のリソースを定義できる仕組みです。
-同じ処理を何箇所も定義している場合、definitionによる共通化が役立ちます。&lt;/p&gt;
-&lt;p&gt;recipeはChefに実行させる内容を定義する本体です。
-レシピは、外部のレシピからその単位で呼び出すことができるため、大きな範囲で処理を共通化するのに役立ちます。&lt;/p&gt;
-&lt;hr/&gt;
-&lt;h1 id=&#34;definitionによる共通化&#34;&gt;definitionによる共通化&lt;/h1&gt;
-&lt;h2 id=&#34;definitionを使う&#34;&gt;definitionを使う&lt;/h2&gt;
-&lt;h3 id=&#34;1-definitionを定義する&#34;&gt;1. definitionを定義する&lt;/h3&gt;
-&lt;p&gt;apacheのインストール、初期セットアップを行うdefinitionを定義します。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;cookbooks/apache/definitions/apache_setup.rb&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;define :apache_setup do
-# インストール
-yum_package &amp;quot;httpd&amp;quot; do
-action :install
-end
-# 初期セットアップ
-template &amp;quot;/etc/httpd/conf/httpd.conf&amp;quot; do
-source &amp;quot;httpd.conf.erb&amp;quot;
-end
-# 自動起動
-service &amp;quot;httpd&amp;quot; do
-action [:enable]
-end
-end
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;2-definitionを呼び出す-クックブック内&#34;&gt;2. definitionを呼び出す（クックブック内）&lt;/h3&gt;
-&lt;p&gt;定義したdefinitionをレシピから呼び出します。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;cookbooks/apache/recipes/default.rb&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;apache_setup # definitionで定義した独自リソースを呼び出す
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;3-definitionを呼び出す-クックブック外&#34;&gt;3. definitionを呼び出す（クックブック外）&lt;/h3&gt;
-&lt;p&gt;definitionはクックブック外からも呼び出すことができます。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;cookbooks/main/recipes/default.rb&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;apache_setup # apacheクックブックでで定義した独自リソースを呼び出す
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;パラメタによる汎用的なdefinition&#34;&gt;パラメタによる汎用的なdefinition&lt;/h2&gt;
-&lt;p&gt;definitionは以下のようにパラメタを渡すことができます。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;sample_definition &amp;quot;arg1&amp;quot; do
-arg2 &amp;quot;arg2&amp;quot;
-end
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;definition内ではparamsという名前のハッシュで扱うことができます。&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;define :sample_definition, :arg2 =&amp;gt; &amp;quot;default&amp;quot;, :arg3 =&amp;gt; &amp;quot;default&amp;quot; do
-params[:name] #=&amp;gt; &amp;quot;arg1&amp;quot;
-params[:arg2] #=&amp;gt; &amp;quot;arg2&amp;quot;
-params[:arg3] #=&amp;gt; &amp;quot;default&amp;quot;
-end
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;環境によって変化する箇所をパラメタ化しておくことで汎用的なdefinitionとすることができます。&lt;/p&gt;
-&lt;p&gt;Apacheの設定を行うdefinitionの場合、サーバ名、ドキュメントルートなどがパラメタ化の対象となるでしょう。&lt;/p&gt;
-&lt;hr/&gt;
-&lt;h1 id=&#34;recipeによる共通化&#34;&gt;recipeによる共通化&lt;/h1&gt;
-&lt;h2 id=&#34;recipeを使う&#34;&gt;recipeを使う&lt;/h2&gt;
-&lt;h3 id=&#34;1-recipeを定義する&#34;&gt;1. recipeを定義する&lt;/h3&gt;
-&lt;p&gt;apacheのインストール、初期セットアップを行うrecipeを定義します。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;cookbooks/apache/recipes/setup.rb&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;# インストール
-yum_package &amp;quot;httpd&amp;quot; do
-action :install
-end
-# 初期セットアップ
-template &amp;quot;/etc/httpd/conf/httpd.conf&amp;quot; do
-source &amp;quot;httpd.conf.erb&amp;quot;
-end
-# 自動起動
-service &amp;quot;httpd&amp;quot; do
-action [:enable]
-end
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;2-recipeを呼び出す-レシピ単位での呼び出し&#34;&gt;2. recipeを呼び出す（レシピ単位での呼び出し）&lt;/h3&gt;
-&lt;p&gt;Vagrantfileなどのレシピ呼び出し機構からレシピ単位で呼び出す&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;Vagrantfile&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;Vagrant::Config.run do |config|
-config.vm.provision :chef_solo do |chef|
-chef.cookbooks_path = &amp;quot;cookbooks&amp;quot;
-chef.add_recipe &amp;quot;apache::setup&amp;quot; # apacheクックブックのsetupレシピを呼ぶ
-end
-end
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;この場合は、レシピの呼び出しをmainクックブックではなく、Vagrantが行うことになります。
-単純なレシピの組み合わせでよい場合などはこの形式でもよいでしょう。&lt;/p&gt;
-&lt;h3 id=&#34;3-recipeを呼び出す-他のレシピからの呼び出し&#34;&gt;3. recipeを呼び出す（他のレシピからの呼び出し）&lt;/h3&gt;
-&lt;p&gt;他のレシピ（ここではmainクックブックのレシピ）から&lt;code&gt;include_recipe&lt;/code&gt;リソースを使って呼び出す&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;cookbooks/main/recipes/default.rb&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;# apacheクックブックのsetupレシピを呼ぶ
-include_recipe &amp;quot;apache::setup&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;パラメタによる汎用的なrecipe&#34;&gt;パラメタによる汎用的なrecipe&lt;/h2&gt;
-&lt;p&gt;レシピに対して直接パラメタを渡すことはできません。
-しかし、attributeという仕組みを用いることでレシピ内で環境ごとの変数を定義することができます。&lt;/p&gt;
-&lt;h3 id=&#34;attributeを利用する&#34;&gt;attributeを利用する&lt;/h3&gt;
-&lt;p&gt;attributeに定義した変数はレシピ内で&lt;code&gt;node[:key]&lt;/code&gt;の形式で呼ぶことができます。
-Chef-Soloでは呼び出し時のjsonパラメタを渡すことができます。
-Vagrantの場合、Vagrantfileで上記jsonパラメタを定義します。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;cookbooks/apache/attributes/default.rb&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;# apacheクックブックで定義するデフォルトの属性
-default[:apache][:attr1] = &amp;quot;default&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;Vagrantfile&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;Vagrant::Config.run do |config|
-config.vm.provision :chef_solo do |chef|
-chef.cookbooks_path = &amp;quot;cookbooks&amp;quot;
-chef.add_recipe &amp;quot;apache::sample_attribute&amp;quot;
-chef.json = {:apache =&amp;gt; {:attr1 =&amp;gt; &amp;quot;attr1&amp;quot;}} # この環境での属性値を指定
-end
-end
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;cookbooks/apache/recipes/sample_attribute.rb&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;node.apache.attr1 #=&amp;gt; &amp;quot;attr1&amp;quot; jsonパラメタを指定しない場合は&amp;quot;default&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;参考&#34;&gt;参考&lt;/h3&gt;
-&lt;p&gt;ちなみにVagrant + Chef-SoloではVagrantfileに定義された内容はChef-Solo用のjson形式に変換されます。
-変換後のファイルは仮想マシン上に配置されます。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;/tmp/vagrant-chef-1/dna.json&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
-&amp;quot;instance_role&amp;quot;: &amp;quot;vagrant&amp;quot;,
-&amp;quot;run_list&amp;quot;: [
-&amp;quot;recipe[apache::sample_attribute]&amp;quot;
-],
-&amp;quot;apache&amp;quot;: {
-&amp;quot;attr1&amp;quot;: &amp;quot;attr1&amp;quot;
-}
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;hr/&gt;
-&lt;h1 id=&#34;definitionとrecipeの使い分け&#34;&gt;definitionとrecipeの使い分け&lt;/h1&gt;
-&lt;p&gt;クックブック内での共通化はもちろんdefinitionを使います。
-クックブックを超えた共通化ではdefinitionとrecipeの両方を用いることができます。&lt;/p&gt;
-&lt;p&gt;その場合の使い分けは、&lt;strong&gt;パラメタの有無&lt;/strong&gt;によると考えています。&lt;/p&gt;
-&lt;p&gt;前述のようにrecipeではパラメタを渡すためにattributeの仕組みを用いる必要がありますが、これは変数名や、その変数が内部で何に使われているかという内部構造を意識した使い方をする必要があります。
-逆にdefinitionは独自リソースとして、呼び出しパラメタを定義することができるため、公開インターフェースとして適しています。&lt;/p&gt;
-&lt;p&gt;自分でクックブックを作成するときは、&lt;strong&gt;パラメタが必要ない処理はrecipeとして定義し、パラメタが必要となる処理はdefinitionを用いる&lt;/strong&gt;ことにしています。&lt;/p&gt;
-&lt;hr/&gt;
-&lt;p&gt;長くなってきたので今回はこの辺で。
-次回はdefinitionを使う際のtipsなどを書いていこうと思います。&lt;/p&gt;</description></item><item><title>Vagrantのネットワークが起動しないときは</title><link>https://blog.monochromegane.com/blog/2013/04/06/vagrant-network-error/</link><pubDate>Sat, 06 Apr 2013 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2013/04/06/vagrant-network-error/</guid><description>
-&lt;p&gt;Vagrantでネットワーク構成を変更した場合など、こういうエラーが出てネットワークが起動しないことがあります。&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;[default] Configuring and enabling network interfaces...
-The following SSH command responded with a non-zero exit status.
-Vagrant assumes that this means the command failed!
-/sbin/ifup eth1 2&amp;gt; /dev/null
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;このエラーが出ると後続のマウント処理もキャンセルされて不便したので、対策をまとめておきます。&lt;/p&gt;
-&lt;h1 id=&#34;調査した環境&#34;&gt;調査した環境&lt;/h1&gt;
-&lt;ul&gt;
-&lt;li&gt;Mac&lt;/li&gt;
-&lt;li&gt;Vagrant 1.1.5&lt;/li&gt;
-&lt;li&gt;VirtualBox&lt;/li&gt;
-&lt;li&gt;CentOS 6.4&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&#34;ブリッジネットワークの場合&#34;&gt;ブリッジネットワークの場合&lt;/h1&gt;
-&lt;p&gt;ブリッジネットワーク構成にした場合、2回目以降の起動時にエラーが発生します。&lt;/p&gt;
-&lt;h2 id=&#34;原因&#34;&gt;原因&lt;/h2&gt;
-&lt;p&gt;Vagrantはブリッジ構成にした場合に以下の処理を行います。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;ネットワークインターフェース設定ファイルの作成(/etc/sysconfig/network-script/ifcfg-eth1)&lt;/li&gt;
-&lt;li&gt;ネットワークインターフェースの起動(DHCP取得)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;2回目以降の起動時、作成された設定ファイルをもとにOS側でネットワークインターフェースが起動(DHCP起動)、その後、さらにVagrant側での起動処理が走るためDHCP取得済みエラーとなってしまっています。&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;[vagrant@localhost ~]$ sudo ifup eth1
-eth1 のIP情報を検出中...dhclient(1040) is already running - exiting.
-This version of ISC DHCP is based on the release available
-on ftp.isc.org. Features have been added and other changes
-have been made to the base software release in order to make
-it work better with this distribution.
-Please report for this software via the Red Hat Bugzilla site:
-http://bugzilla.redhat.com
-exiting.
-失敗
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;対策&#34;&gt;対策&lt;/h2&gt;
-&lt;p&gt;対策方法は2つです。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Vagrant側でネットワークインターフェース起動時のエラーを無視する&lt;/li&gt;
-&lt;li&gt;OS側でネットワークインターフェース(DHCP取得)を自動起動しない&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;どちらもVagrantのソースを修正して対応します。&lt;/p&gt;
-&lt;h3 id=&#34;vagrant側でネットワークインターフェース起動時のエラーを無視する&#34;&gt;Vagrant側でネットワークインターフェース起動時のエラーを無視する&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;/Applications/Vagrant/embedded/gems/gems/vagrant-1.1.5/plugins/guests/redhat/guest.rb&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;以下の記述を&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;vm.communicate.sudo(&amp;quot;/sbin/ifup eth#{interface} 2&amp;gt; /dev/null&amp;quot;)&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;以下のように変更&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;vm.communicate.sudo(&amp;quot;/sbin/ifup eth#{interface} 2&amp;gt; /dev/null&amp;quot;, :error_check =&amp;gt; false)&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;この場合、DHCP取得処理を2回試みることには変わりないため、もうひとつの対策のほうがいいかと思います。&lt;/p&gt;
-&lt;h3 id=&#34;os側でネットワークインターフェース-dhcp取得-を自動起動しない&#34;&gt;OS側でネットワークインターフェース(DHCP取得)を自動起動しない&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;/Applications/Vagrant/embedded/gems/gems/vagrant-1.1.5/templates/guests/redhat/network_dhcp.erb&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;以下の記述を&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;ONBOOT=yes&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;以下のように変更&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;ONBOOT=no&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;手動でOS側のネットワークインターフェース設定ファイル内の該当箇所の記載を変更しても起動のたびにこのテンプレートファイルで上書きされてしまうので注意してください。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;ブリッジ-もしくはホストオンリーネットワークでパッケージングした場合&#34;&gt;ブリッジ、もしくはホストオンリーネットワークでパッケージングした場合&lt;/h1&gt;
-&lt;p&gt;ブリッジ、もしくはホストオンリーネットワーク構成で&lt;code&gt;vagrant package&lt;/code&gt;した場合、作成したボックスで、ブリッジ、もしくはホストオンリーネットワークを利用する場合もやはりエラーが発生します。&lt;/p&gt;
-&lt;h2 id=&#34;原因-1&#34;&gt;原因&lt;/h2&gt;
-&lt;p&gt;この現象はVagrantというよりも、仮想マシン作成時にMACアドレスが変更されることが原因となっています。&lt;/p&gt;
-&lt;p&gt;ブリッジ、もしくはホストオンリーネットワーク構成で起動すると、ネットワークインターフェース設定ファイルがVagrantにより作成されるのは前述しましたが、OS側ではネットワークインターフェースが追加された際に、ネットワークインターフェースとMACアドレスをマッピングしています。&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;[vagrant@localhost ~]$ cat /etc/udev/rules.d/70-persistent-net.rules
-# This file was automatically generated by the /lib/udev/write_net_rules
-# program, run by the persistent-net-generator.rules rules file.
-#
-# You can modify it, as long as you keep each rule on a single
-# line, and change only the value of the NAME= key.
-# PCI device 0x8086:0x100e (e1000)
-SUBSYSTEM==&amp;quot;net&amp;quot;, ACTION==&amp;quot;add&amp;quot;, DRIVERS==&amp;quot;?*&amp;quot;, ATTR{address}==&amp;quot;08:00:27:f7:f0:48&amp;quot;, ATTR{type}==&amp;quot;1&amp;quot;, KERNEL==&amp;quot;eth*&amp;quot;, NAME=&amp;quot;eth0&amp;quot;
-# PCI device 0x8086:0x100e (e1000)
-SUBSYSTEM==&amp;quot;net&amp;quot;, ACTION==&amp;quot;add&amp;quot;, DRIVERS==&amp;quot;?*&amp;quot;, ATTR{address}==&amp;quot;08:00:27:b8:8a:d9&amp;quot;, ATTR{type}==&amp;quot;1&amp;quot;, KERNEL==&amp;quot;eth*&amp;quot;, NAME=&amp;quot;eth1&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;パッケージングしたボックスで新しく仮想マシンを起動すると別のMACアドレスが割り振られるため、OS側は新しいネットワークインターフェースeth2としてマッピングしてしまうようです。
-にもかかわらず、ネットワークインターフェース設定ファイルはeth1用しか準備されておらず、eth1はOS側ではすでに存在しないMACアドレスのため、起動に失敗します。&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;[vagrant@localhost ~]$ sudo ifup eth1
-デバイス eth1 は存在しないようですので、初期化を遅らせます。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;対策-1&#34;&gt;対策&lt;/h2&gt;
-&lt;p&gt;パッケージングする前のゲストOS側でMACアドレスとのマッピングを無効にしておきます。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;[vagrant@localhost ~]$ sudo ln -s -f /dev/null /etc/udev/rules.d/70-persistent-net.rules&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;この対策後は、パッケージングしたボックスで新しい仮想マシンを作成してMACアドレスが変更されてもエラーにならず起動することができます。&lt;/p&gt;
-&lt;p&gt;開発環境などの用途であれば、上記の対策で十分と思われます。&lt;/p&gt;
-&lt;p&gt;機能を無効にしたくない場合は、該当ファイルを削除してネットワークを再起動することで再度マッピングされますので、用途に応じて対策を行なってみてください。&lt;/p&gt;
-&lt;p&gt;VagrantとChef-Soloを使って開発環境のローカル化を進めていますが、とても快適です。&lt;/p&gt;
-&lt;p&gt;今後は、Chef-SoloのCookbooksなども紹介していきたいなーと思ってます。&lt;/p&gt;</description></item></channel></rss>
+&lt;p&gt;GitHub Actions、トークンやらキーやらの管理がGitHubの中で完結するので便利。
+キューのつまりも特に感じないし難しいことしなければ少なくとも現時点ではこれでいいのではという感じ。
+ボチボチ移行していくつもり。&lt;/p&gt;</description></item><item><title>2019年11月10日</title><link>https://blog.monochromegane.com/diary/20191110/</link><pubDate>Sun, 10 Nov 2019 23:50:53 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191110/</guid><description>&lt;p&gt;午前中は髪を切りに天神へ。
+さっぱりした後、本格的に寒くなるまでのつなぎになりそうなアウターを購入したりお茶したり散策して過ごす。
+帰宅後は、鍋と頂き物のかしわご飯を美味しくいただく。
+やっと鍋の似合う季節になってきた。&lt;/p&gt;
+&lt;p&gt;就寝前はブログのCIをGitHub Actionsに移行がてら触っていた。
+静的サイトとしてのコンテンツ出力に必要な箇所はできたので来週どこかでデプロイ部分をWerckerから切り替えよう。
+pushしてからCIが開始されるまでと実際のビルドもとにかく速いのでストレスなく使えそう。&lt;/p&gt;</description></item><item><title>2019年11月9日</title><link>https://blog.monochromegane.com/diary/20191109/</link><pubDate>Sat, 09 Nov 2019 22:25:38 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191109/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の査読結果の反映、最終確認。
+午前中にひとまず終えたものの、査読結果へのコメントに個別に答えるとまだ修正必要な気がして終われなかった。&lt;/p&gt;
+&lt;p&gt;昼寝の後、夕方までになんとか仕上げた。
+共著者へレビューを依頼。
+色々忙しかったとはいえ、時間が立つほどに記憶も薄れるので査読対応はさっさとやってしまった方が良さそう。
+ポスターも来週早々に終わらせてしまいたいが、まだフォーマットなど情報がないのでどうしたものか。&lt;/p&gt;
+&lt;p&gt;夕方、年末調整の提出が終わったので一安心。
+明日は、年末の福岡エンジニアコミュニティの集まりの主催についてボチボチ進めよう。&lt;/p&gt;</description></item><item><title>2019年11月8日</title><link>https://blog.monochromegane.com/diary/20191108/</link><pubDate>Sat, 09 Nov 2019 22:15:01 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191108/</guid><description>&lt;p&gt;終日&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の査読結果の反映。
+おおよそできたと思うので明日最終確認する。
+査読、丁寧に見てもらえていて本当に良い。
+これだとわからないですね〜という言い方の向こうにきちんと考えればより分かりやすくなる道が見える気がする。&lt;/p&gt;
+&lt;p&gt;時間を見つけて、&lt;a href=&#34;https://efc.fukuoka.jp/award&#34;&gt;エンジニアフレンドリーシティ福岡アワード&lt;/a&gt;のコミュニティ部門へのエントリーを仕上げた。
+Fukuoka.go、活動を振り返ると改めて着実に進んでいて我ながらエラいなあと思った。
+もちろん共同主催者に恵まれていることに感謝したい。&lt;/p&gt;
+&lt;p&gt;夜は『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/479071733X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479071733X&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=632f660a2f794586c0155153916e0aaa&#34;&gt;文化人類学の思考法&lt;/a&gt;』を少し読み進める。
+バイアスをどう認識するかという問題は突き詰めていくと人類であることすらバイアスであり、文化人類学はそのようなレイヤから比較し続けているのだなあととても面白い。
+一つ一つのネタは実際難しいけれどもまだ読み進めてどこかでまとめたい。&lt;/p&gt;</description></item><item><title>2019年11月7日</title><link>https://blog.monochromegane.com/diary/20191107/</link><pubDate>Thu, 07 Nov 2019 21:34:34 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191107/</guid><description>&lt;p&gt;深夜寝れなかったためリズムが悪く感じた。&lt;/p&gt;
+&lt;p&gt;PC移行で環境構築がうまくいってなかった箇所にハマってしまい、共同研究のデータ抽出に時間がかかってしまった。反省。&lt;/p&gt;
+&lt;p&gt;午後は研究会。
+共著論文で提案する手法にまつわるサーベイ論文のサーベイ結果などを共有してもらう。
+定義や定式化されている前例をもとにした議論になったことで手法の方針検討が整理された。&lt;/p&gt;
+&lt;p&gt;年内においてもどんどん研究が進む予感で楽しみになってきた。
+自分自身もポスターとジャーナルをしっかりやる。&lt;/p&gt;
+&lt;p&gt;今週末ぐらいから一気に集中して確率系の勉強をやったのが、継続系のインプット・アウトプット、ひいては生活リズムを崩してしまっている気がするので、やりすぎないというのもうまく制御していかないといけないなあ。&lt;/p&gt;</description></item><item><title>2019年11月6日</title><link>https://blog.monochromegane.com/diary/20191106/</link><pubDate>Thu, 07 Nov 2019 21:27:43 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191106/</guid><description>&lt;p&gt;朝から九大へ。
+論文のジャーナル投稿に向けて作戦を立てる。
+議論の中でやるべきことが明確になってきた。
+今年中に投稿は済ませるぞ。&lt;/p&gt;
+&lt;p&gt;また、今後についても相談。
+自分の中では大きな決断であるけれども、そろそろ動いていく時期であると判断した。
+あとは自分の頑張り次第。やるしかない。&lt;/p&gt;
+&lt;p&gt;とはいえ、朝が早かったこともあり、午後はなんだかふんわりしてしまったので研究以外のことをざっと進めた。
+コミュニティ活動まわりで直近のイベント方針を決めたりアワードエントリの準備であっという間で合った。&lt;/p&gt;
+&lt;p&gt;帰り際に研究チームでもう一つの共著論文に向けた方針を話す。
+明日の研究会で聞きたいことを伝え帰宅。
+早めに寝てしまったが、逆に深夜に起きてしまい翌朝の動き出しがイマイチだった。
+無限にはなかなか寝れなくなってきたのでやはり規則正しくが一番みたいだ。
+今週は乱れがちなのでペースを取り戻さねば。&lt;/p&gt;</description></item><item><title>2019年11月5日</title><link>https://blog.monochromegane.com/diary/20191105/</link><pubDate>Thu, 07 Nov 2019 21:24:22 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191105/</guid><description>&lt;p&gt;所属する研究所で共著論文のため研究計画を改めて一緒に練るなどした。
+チームであることを活かしてどんどん並列で進めつつ大きなビジョンを達成していく。&lt;/p&gt;
+&lt;p&gt;午後は引き続きバンディットのポリシーの実装に向けた下調べなど。
+自身のメイン研究もバーンとやっていきたい。&lt;/p&gt;</description></item><item><title>2019年11月4日</title><link>https://blog.monochromegane.com/diary/20191104/</link><pubDate>Mon, 04 Nov 2019 22:27:48 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191104/</guid><description>&lt;p&gt;午前中は引き続きベイズ統計の勉強。
+仮定やデータが連続値になった場合についても得心が行ったと思う。
+勉強の見積もりがイマイチあっておらず予定より時間かかっているがバンディットの確率的な方策についてはこれで実装できるだろう。
+ベイズ統計を直接使うわけではないが、推論まわりは応用効きそうなので『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4061538322/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4061538322&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=624549ce46217ec9cd619e8b038b9865&#34;&gt;機械学習スタートアップシリーズ ベイズ推論による機械学習入門 (KS情報科学専門書)&lt;/a&gt;』を自習していこう。&lt;/p&gt;
+&lt;p&gt;午後は先日購入していた『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/479071733X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479071733X&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=632f660a2f794586c0155153916e0aaa&#34;&gt;文化人類学の思考法&lt;/a&gt;』を少し読む。
+新しいモノの見方を知ることができてしばらく楽しめそう。
+そのまま読みながら昼寝。&lt;/p&gt;
+&lt;p&gt;来週からは研究、ポスター、共同研究など忙しくなるけど一歩づつ進めていきたい。&lt;/p&gt;</description></item><item><title>2019年11月3日</title><link>https://blog.monochromegane.com/diary/20191103/</link><pubDate>Mon, 04 Nov 2019 00:47:07 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191103/</guid><description>&lt;p&gt;午前中ベイズの勉強。
+昨日に引き続き『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4797366575/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4797366575&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=df00ddc50d7fa4565615ab69d2bf54c9&#34;&gt;図解・ベイズ統計「超」入門 あいまいなデータから未来を予測する技術 (サイエンス・アイ新書)&lt;/a&gt;』を読み終えて『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4478013322/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4478013322&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=7dd44714a769c09e93745f716cda1b23&#34;&gt;完全独習 ベイズ統計学入門&lt;/a&gt;』と『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/B07HG42534/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B07HG42534&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=d178b6c02684603444f6a910c51f79a4&#34;&gt;まずはこの一冊から 意味がわかるベイズ統計学&lt;/a&gt;』を読む。
+仮定とデータがかなり自由に設定できるので柔軟な一方で難しい場合もある。
+特に確率分布まわりを使う時の整理がまだかなあという感じ。
+いったん、元の動機付けのところに戻りつつ必要な部分について整理を進めよう。&lt;/p&gt;
+&lt;p&gt;午後はiPad Proを触るなど。
+Face IDを使えるデバイスは初めてだったけどかなり快適。
+セットアップもiPhoneを隣におけばほぼ設定いらずで、ハードウェア含めて提供できているとこの辺強いなあという感想。
+論文管理も明日やっていこう。&lt;/p&gt;</description></item><item><title>2019年11月2日</title><link>https://blog.monochromegane.com/diary/20191102/</link><pubDate>Mon, 04 Nov 2019 00:40:34 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191102/</guid><description>&lt;p&gt;午前中はベイズ統計の勉強。
+ベイズの定理はだいぶ馴染んできたが、連続値の場合にまだ理解が不十分な気がするので引き続き明日も進める。&lt;/p&gt;
+&lt;p&gt;午後は本屋によって、『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4274067750/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4274067750&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=29048146b631aa17e79995b374c806ec&#34;&gt;プログラミングのための確率統計&lt;/a&gt;』と『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/479071733X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479071733X&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=632f660a2f794586c0155153916e0aaa&#34;&gt;文化人類学の思考法&lt;/a&gt;』を購入。
+夕食後、購入した本を読んでいたら寝てしまった感じ。&lt;/p&gt;</description></item><item><title>2019年11月1日</title><link>https://blog.monochromegane.com/diary/20191101/</link><pubDate>Sat, 02 Nov 2019 00:27:04 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191101/</guid><description>
+&lt;h2 id=&#34;健康診断&#34;&gt;健康診断&lt;/h2&gt;
+&lt;p&gt;午前中、健康診断。
+午後はベイズ推定関連の基礎知識をつけていた。
+バリウムは健康診断の後も終日大変なのであまり生産性は高くなかったかもしれない。
+来年は胃カメラ、鼻からでやってみるかなあ。&lt;/p&gt;
+&lt;h2 id=&#34;喩えと例え&#34;&gt;喩えと例え&lt;/h2&gt;
+&lt;p&gt;自分の場合、ベイズ推定なり数式を含む新しい概念を獲得するには身の丈にあった入門書を複数こなすことで、違った角度から見比べてその概念を掴んでいく。
+ただ、入門書は結構当たり外れがあるのが悩ましい。&lt;/p&gt;
+&lt;p&gt;良い本を見つけるため最近は、説明の「喩え」よりも「例え（ば）」を重視している。
+手元の辞書によると「喩え」は「たとえること。たとえとして引かれた事柄」とあり、「例えば」は「前文に述べた主旨を客観的に証明するに足る例をあげることを表す。」とある。
+学びたい概念を「喩え」る入門書は、読者の知る身近な事柄でこれを説明する。
+一方、「例えば」の入門書は、その概念の構成要素やそれらが成立する仕組みを裏付ける例を通して理解を助ける。&lt;/p&gt;
+&lt;p&gt;「喩え」に頼りすぎてしまってると感じた本の読後は、分かったような分からないような感じが多い。
+対して、簡潔な「例えば」が十分な量で用意されていた本は、なるほどそういう理由・仕組みだったのかと理解が深まったと感じる。
+この辺を区分できるようになって、ハズレはつかまなくなったかなあと思う。
+もちろん、適切な「喩え」が理解を助けることもあるのであくまでも重視する方という意味合いで。&lt;/p&gt;
+&lt;p&gt;ところで、簡潔に概念を説明できる「例えば」を作るためにはその概念に対する深い理解が必要である。
+論文であっても手法であっても、ある概念を相手に説明する際に「喩え」が出るか、複雑な「例えば」が出るか、簡潔な「例えば」を出せるかで自分の理解を問うていきたい。&lt;/p&gt;</description></item><item><title>2019年10月31日</title><link>https://blog.monochromegane.com/diary/20191031/</link><pubDate>Thu, 31 Oct 2019 21:58:58 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191031/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の採録通知。
+とても嬉しい。
+査読結果もなるほど納得なしっかり読み込んでくれた内容であったので将来のジャーナル化に向けてもありがたいアドバイスになった。&lt;/p&gt;
+&lt;p&gt;研究の手法を改善するためにベイズ推定まわりを押さえておかないと厳しい感じになってきたので、入門系の書物を数冊購入して帰宅。
+ちょうど最近、&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/10/11/random_number_gen_using_go/&#34;&gt;確率分布などをおさらいした&lt;/a&gt;のもあり、以前より理解できるのではないかと考えている。
+この辺、一足飛びには理解できないので、ひとつづつ理解を進めていく。
+専門力の向上が次のステップなのでやっていきたい。&lt;/p&gt;
+&lt;p&gt;昨年から始まった&lt;a href=&#34;https://fukuokaphp.connpass.com/event/109317/&#34;&gt;Fukuoka.LT&lt;/a&gt;だが、運営をコミュニティの持ち回りにしたので、今年はFukuoka.goでやることにした。
+普段のコミュニティで登壇してる内容を話してもらうことで一層コミュニティの雰囲気を知れるのではないかとなったのでそんな感じに進める。
+連絡周りは省力で進められるといいな。&lt;/p&gt;</description></item><item><title>2019年10月30日</title><link>https://blog.monochromegane.com/diary/20191030/</link><pubDate>Thu, 31 Oct 2019 21:56:23 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191030/</guid><description>&lt;p&gt;午前中Research I/O。
+論文の骨子などを検討していくのを午前中に進んでいるという状態はとても気分的に良い。
+午後はデータ分析など。&lt;/p&gt;
+&lt;p&gt;週途中ながらに疲れが出てきたので夜は早めに就寝した。
+iPad Proまだ開けれてない。とほほ。&lt;/p&gt;</description></item><item><title>2019年10月29日</title><link>https://blog.monochromegane.com/diary/20191029/</link><pubDate>Tue, 29 Oct 2019 23:51:16 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191029/</guid><description>&lt;p&gt;午前中、Research I/Oの時間。提案手法の新規性と有用性を論じるためのあれこれを考える。
+午後は、研究周りのデータ抽出や解析など。
+午前中に必ず研究系が進んでいるという状況は良いので引き続きやっていく。&lt;/p&gt;
+&lt;p&gt;帰り際にApple storeによって、その場で「&lt;a href=&#34;https://www.amazon.co.jp/gp/product/B07K7MBNZ2/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B07K7MBNZ2&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=5012f106ddfdeb7467c8a02d523f6ad0&#34;&gt;Apple iPad Pro (11インチ, Wi-Fi, 512GB) - スペースグレイ (最新モデル)&lt;/a&gt;」と「&lt;a href=&#34;https://www.amazon.co.jp/gp/product/B07KR69HH9/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B07KR69HH9&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=256d1dc837b0ae029969e0ea28e6603f&#34;&gt;Apple Pencil（第2世代）&lt;/a&gt;」を購入。
+最後まで12.9インチと悩んだけど、論文読むのは等倍でなくても大丈夫だと判断して普段の取り回しの良さの面から11インチにした。
+論文管理の仕組みを構築していかねば。&lt;/p&gt;</description></item></channel></rss>

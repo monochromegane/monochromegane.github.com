@@ -1,137 +1,123 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>ふりかえり on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/%E3%81%B5%E3%82%8A%E3%81%8B%E3%81%88%E3%82%8A/</link><description>Recent content in ふりかえり on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Mon, 25 Feb 2019 23:41:04 +0900</lastBuildDate><atom:link href="/tags/%E3%81%B5%E3%82%8A%E3%81%8B%E3%81%88%E3%82%8A/" rel="self" type="application/rss+xml"/><item><title>わかるとわからないの間</title><link>https://blog.monochromegane.com/blog/2019/02/25/entrance-of-research/</link><pubDate>Mon, 25 Feb 2019 23:41:04 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2019/02/25/entrance-of-research/</guid><description>&lt;p&gt;元来が完璧主義である．理解できない場合にはレイヤが異なっていたとしても大部分がソースコードやプロトコルとして定義されていて掘り下げて調べていくことで挙動が把握できるようになるソフトウェアエンジニアは性に合っていた．
-ところがここ数年は推薦システムに興味を持ち，あまつさえ研究として取り組もうとしたものだから，人間の認知プロセス解釈の果てしない旅に途方に暮れてしまった．
-理解できていない状態が自信の無さを招き，自説を守りきれずに論文を落とした．&lt;/p&gt;
-&lt;p&gt;それでも対象の推薦システムの実装やKaburayaの構想を進める中で，現状把握できる部分的な情報や結果を元に適応していくアプローチが十分有効になり得るのではないかと思え始めた．
-このようにある意味「わからない」を取り扱うアプローチは，工学的な方法だと一般的なのかもしれないが，多くの部分を把握できる可能性があるソフトウェア分野の経験からは新鮮であった．&lt;/p&gt;
-&lt;p&gt;今は，とにかく提案システムの有用性を示していく段階ではある．ただ，「わからないから進めない」を脱することができたことが素直に嬉しい．
-さらには，起点を作れたことで「わからない」分野に対して挑む方針も固まってきた．「わかるために進む」のは気持ちが良いものだ．&lt;/p&gt;
-&lt;p&gt;わからない場所に踏み込む．本当にいつも遠回りばかりしている気がするが，ようやっと研究の入り口に立てたのかもしれない．&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;もちろんソフトウェアだからわかる，人間だからわからないというのはいささか短絡的である．
-単純なものから複雑なものへの発展の経過を追うことが可能であるがゆえに理解ができているのであって，ソフトウェアであっても巨大で変化の激しいシステムは経緯を含めた全容の理解は困難になる．
-反対に人間の認知であっても高次の抽象レベルのみで正確な疎通が可能な概念であれば相互理解は可能であろう．&lt;/p&gt;</description></item><item><title>First Half of 2018</title><link>https://blog.monochromegane.com/blog/2018/06/30/first-half-2018/</link><pubDate>Sat, 30 Jun 2018 11:30:12 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2018/06/30/first-half-2018/</guid><description>
-&lt;p&gt;上期も昨年度から引き続き研究開発に従事した．これまでやってきたいくつかの研究が繋がり始めて&amp;rdquo;なめらかなマッチング&amp;rdquo;というおぼろげながら大きな研究テーマが見えてきたように思う．
-推薦システムに代表されるような要望と提案のマッチングをなめらかにするためには，マッチング観点からの研究と，それをサービスとして的確かつ即時に提供できるような実装や導入の観点からの両方が必要であり，マッチングを支える仕組み全体に対する研究を進めていきたいと考えるようになった．&lt;/p&gt;
-&lt;p&gt;また，上期はこのテーマに基づく各研究内容を実装するにあたって技術的な深堀りを進めることができたこと，継続してアウトプットを続けることができたのも良かった．
-マッチング観点からは消費者行動や情報探索プロセスも考慮しながら検討している．実装面からは，近似近傍探索を高速かつ高精度に提供するためにSannyやSmux，go-avxなどこれまでよりレイヤを掘り下げながら目的を達成するための最適な実装を検討することができるようになった．
-アウトプットについても，これらの内容を元に継続的にブログや登壇を行った．
-技術的な必要性などをきちんと記述することで反響が大きくなるものもあり論理的な思考やそれを用いて人に伝えることの重要性も感じた．&lt;/p&gt;
-&lt;p&gt;それでも，特に論文のような専門的なアウトプット過程において，力不足は常に感じていた．
-論文執筆において，初稿はなんとか書き上げられるようになったものの，共著者や査読からの指摘点を踏まえてより良いものにするための議論が上手くできず，徐々にこれがストレスとなってしまっていった．
-技術的な背景による新規性についてはサーベイの積み重ねで少しづつでも回答できるが，研究として新規性や有用性を謳う部分，これらを論述する部分の議論において，そもそも前提となる能力が足りないようにも思えた．
-論文執筆を続けていく中でこれらの能力が上がるようコツがつかめてくるのかもしれないが，自分としては一旦この足りない能力についてきちんと向き合った上で，今後の研究開発へ取り組んでいきたいと思っている．
-そのため下期はこれまでの研究開発成果を導入・課題発見の部分に力を注ぎながら，論文執筆に向けたスキルを高めていきたい．&lt;/p&gt;
-&lt;h1 id=&#34;実績&#34;&gt;実績&lt;/h1&gt;
-&lt;p&gt;以下，上期実績を列挙する．&lt;/p&gt;
-&lt;h2 id=&#34;論文&#34;&gt;論文&lt;/h2&gt;
-&lt;p&gt;3本，ジャーナルについては事前査読制度への投稿のみで終わったこともあり，上述した対策を進めた上で再度挑戦したい．&lt;/p&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>ふりかえり on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/%E3%81%B5%E3%82%8A%E3%81%8B%E3%81%88%E3%82%8A/</link><description>Recent content in ふりかえり on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Mon, 25 Feb 2019 23:41:04 +0900</lastBuildDate><atom:link href="/tags/%E3%81%B5%E3%82%8A%E3%81%8B%E3%81%88%E3%82%8A/" rel="self" type="application/rss+xml"/><item><title>2019年11月12日</title><link>https://blog.monochromegane.com/diary/20191112/</link><pubDate>Tue, 12 Nov 2019 22:10:53 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191112/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;、原稿出し終えたのでジャーナル執筆と並行しなくて良いように先にポスター書いてしまう。&lt;/p&gt;
+&lt;p&gt;Fukuoka.LTという去年から始まった福岡のいろいろなコミュニティの合同忘年会があるのだけど、今年の運営をFukuoka.goが任されることになったので、先週ぐらいから準備していた。&lt;/p&gt;
+&lt;p&gt;今年は、Fukuoka.goらしく技術を肴に酒を飲もうという感じに、言語や技術を横断した登壇と忘年会とした。
+今日は登壇者募集の告知。
+集まるといいなあ。
+これぐらいのイベントだと大規模カンファレンスやったあとなので比較的楽に進めることができる。
+コミュニティ運営力のレベルアップだ。&lt;/p&gt;</description></item><item><title>2019年11月11日</title><link>https://blog.monochromegane.com/diary/20191111/</link><pubDate>Mon, 11 Nov 2019 23:21:16 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191111/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の共著者レビューを終えて提出。
+順調なのでこのままポスターも作ってしまいたいがフォーマットやサイズなどがまだ公開されていない。うーむ。&lt;/p&gt;
+&lt;p&gt;午後は、年末の福岡エンジニアコミュニティの集まりの主催についてガッと進めた。
+方針は決まったのであとは登壇者が順調に集まってくれるのを祈るのみ。&lt;/p&gt;
+&lt;p&gt;帰宅後はこのブログをGitHub Actionsでデプロイできるようにするなど。
+HugoのSetup、GitHub Pagesへのデプロイはこの辺りを使った&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://id.nii.ac.jp/1001/00190207/&#34;&gt;三宅 悠介, 松本 亮介, Sanny: 大規模ECサイトのための精度と速度を両立した分散可能な近似近傍探索エンジン, 研究報告インターネットと運用技術（IOT）,2018-IOT-42(2),1-7 (2018-06-21) , 2188-8787&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;フォーラム投稿1本&lt;/li&gt;
-&lt;li&gt;ジャーナル論文執筆1本（事前査読のみ）&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/peaceiris/actions-hugo&#34;&gt;https://github.com/peaceiris/actions-hugo&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/peaceiris/actions-gh-pages&#34;&gt;https://github.com/peaceiris/actions-gh-pages&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&#34;発表&#34;&gt;発表&lt;/h2&gt;
-&lt;p&gt;技術イベントでの発表の他，研究会での発表，大学での登壇など計6回．&lt;/p&gt;
+&lt;p&gt;最終的なWorkflowはこんな感じ。
+コンテンツの管理とGitHub Pagesのリポジトリを分けているが、その辺りもオプションでよしなにできて便利だった。&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://speakerdeck.com/monochromegane/think-about-research-and-development&#34;&gt;ペパボにおける研究所の役割 - 研究と開発の相乗効果 -&lt;/a&gt; @香川大学&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://speakerdeck.com/monochromegane/smartsifter-in-golang&#34;&gt;Go言語でオンライン外れ値検出エンジンSmartSifterを実装した&lt;/a&gt; @Fukuoka.go#10&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://speakerdeck.com/monochromegane/wsa-2-sanny&#34;&gt;Sanny: 大規模ECサイトのための精度と速度を両立した分散可能な近似近傍探索エンジン&lt;/a&gt; @WSA研#2&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://speakerdeck.com/monochromegane/wsa-1-kaleidoscope&#34;&gt;分散アプリケーションにおける複数端末利用を考慮したプライベートデータの管理&lt;/a&gt; @Hi-Ether Meetup #4 Fukuoka&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://speakerdeck.com/monochromegane/sanny-inside&#34;&gt;近似近傍探索エンジン Sannyを支える技術&lt;/a&gt; @Fukuoka.go#11&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://speakerdeck.com/monochromegane/iot42-sanny&#34;&gt;Sanny: 大規模ECサイトのための精度と速度を両立した分散可能な近似近傍探索エンジン&lt;/a&gt; @IOT42&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/thinking-megane/blob/master/.github/workflows/gh-pages.yml&#34;&gt;https://github.com/monochromegane/thinking-megane/blob/master/.github/workflows/gh-pages.yml&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&#34;oss&#34;&gt;OSS&lt;/h2&gt;
-&lt;p&gt;なめらかなマッチングの実装面の観点から高速かつ高精度，かつ拡張性も備えた近似近傍探索の実装とそれらの要素技術の検討を行っていった．
-Smuxやgo-avxなどこれまで扱ってこなかったレイヤで課題に対処できるようになってきたと思う．&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/sanny&#34;&gt;Sanny&lt;/a&gt;: Scalable Approximate Nearest Neighbors in Golang optimized for embedding vectors.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/go-avx&#34;&gt;go-avx&lt;/a&gt;: AVX(Advanced Vector Extensions) binding for golang.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/smux&#34;&gt;Smux&lt;/a&gt;: smux is a socket multiplexer written in Golang. It provides fast communication by efficiently a single connection.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/smartsifter&#34;&gt;SmartSifter&lt;/a&gt;: SmartSifter (On-line outlier detection) by Golang.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/guardian&#34;&gt;Guardian&lt;/a&gt;: Monitor file changes and execute custom commands for each event.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/gannoy/tree/ngt&#34;&gt;Gannoy(NGT ver.)&lt;/a&gt;: Approximate nearest neighbor search server and dynamic index written in Golang.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;コミュニティ活動&#34;&gt;コミュニティ活動&lt;/h2&gt;
-&lt;p&gt;福岡のGo言語コミュニティ主催として継続的なイベント開催を進めた．
-研究開発とはまた別の技術の付き合い方ができる活動であり，大切な活動となっている．
-また，分散アプリケーションも興味があるため仮想通貨コミュニティの地方開催もお手伝いさせていただいた．&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://fukuokago.connpass.com/event/81056/&#34;&gt;Fukuoka.go#10&lt;/a&gt; 主催&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://fukuokago.connpass.com/event/87684/&#34;&gt;Fukuoka.go#11&lt;/a&gt; 主催&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://techplay.jp/event/668228?pw=HplUa3Vs&#34;&gt;Hi-Ether Meetup #4 Fukuoka&lt;/a&gt; 運営協力&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;ブログ&#34;&gt;ブログ&lt;/h2&gt;
-&lt;p&gt;実装紹介を主に7本．もう少し気軽に考えをまとめてアウトプットするようにしたい．&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2018/01/01/2018-the-turn/&#34;&gt;2018, 認知的転回&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2018/01/07/information-retrieval-process-model/&#34;&gt;情報探索プロセスのモデルについて: 「情報検索のためのユーザインタフェース」を読んで&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2018/01/10/information-need-association-chart/&#34;&gt;情報要求を取り巻く技術とプロセスモデル&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2018/02/20/generate-paper-model/&#34;&gt;論文生成モデルの検討を通して論文執筆を進めてみる&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2018/02/25/smartsifter/&#34;&gt;Go言語でオンライン外れ値検出エンジンSmartSifterを実装した&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2018/05/03/smux/&#34;&gt;Go言語でTCPやソケット通信を多重化，高速化するsmux(ソケットマルチプレクサ)をつくった&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2018/05/16/wsa_2_sanny/&#34;&gt;Sanny: 大規模ECサイトのための精度と速度を両立した分散可能な近似近傍探索エンジン&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;読書&#34;&gt;読書&lt;/h2&gt;
-&lt;p&gt;半期で購入した本と読み直した本を重ねてみた．物理本が54冊．電子書籍を含めるともう少しなりそう．
-ベイズは相変わらず分からない．
-これだけ学んだのだという自信が半分，本当に自分の知識として議論へ活かせるようにせねばなという反省が半分．&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2018/06/books.jpg&#34; alt=&#34;books&#34; /&gt;&lt;/p&gt;
-&lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
-&lt;p&gt;上期はとにかく濃くて長い半年だった．
-論文執筆など自分が上手くできないことに対してストレスと感情の起伏が大きくなってしまって相変わらず未熟だなあと反省しきりであったが，こうして客観的に実績としてまとめてみると進んでいるところももちろんあって，適切に都度自分を認めてあげなくてはなあと思えたのはよかった．&lt;/p&gt;
-&lt;p&gt;もちろん力不足で悔しい思いをしているのは事実であるので，下期は研究開発への付き合い方も見直しながら，まわりも見る余裕を持って，どんどん影響を与えていけるよう成長できればなあと思う．&lt;/p&gt;</description></item><item><title>2017年, 12月のライオン</title><link>https://blog.monochromegane.com/blog/2017/12/31/2017/</link><pubDate>Sun, 31 Dec 2017 15:21:02 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2017/12/31/2017/</guid><description>&lt;p&gt;2017年が終わる。今年は大いに迷った年だったと思う。&lt;/p&gt;
-&lt;p&gt;これまで携わってきたサービス運用開発から念願の研究所に移動になった僕はとにかく意気込んでいた。最初の半年間は、研究と開発が一体となって事業を差別化する技術を作り出すという研究所のミッションに従い、サービス開発の経験を生かして、現場の課題を解決する技術を習得し、導入することで実際に成果を上げていった。研究報告という形で査読なしではあるものの論文を2本書いた。&lt;a href=&#34;https://rand.pepabo.com/article/2017/06/19/iot37-miyakey/&#34;&gt;&lt;sup&gt;2017&lt;/sup&gt;&amp;frasl;&lt;sub&gt;05&lt;/sub&gt;&lt;/a&gt;,&lt;a href=&#34;https://rand.pepabo.com/article/2017/06/28/iot38-miyakey/&#34;&gt;&lt;sup&gt;2017&lt;/sup&gt;&amp;frasl;&lt;sub&gt;06&lt;/sub&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;研究員になって一番変わったことは、結果を論文をまとめる工程が発生したことだ。これまで技術ブログやOSSという形で成果物を発表してきたが、論文にまとめるのは難易度が違った。&lt;a href=&#34;https://ja.wikipedia.org/wiki/%E7%A0%94%E7%A9%B6&#34;&gt;Wikipediaによれば&lt;/a&gt;研究の目的とは &lt;code&gt;突き詰めれば新しい事実や解釈の発見&lt;/code&gt; であり、それゆえ、成果に対して、新規性、有用性を論文という形で示す必要がある。僕の場合、この新規性の部分に苦しんだ。新規性を証明するためには、その手法にまつわる既存の多くの研究についての知識の収集と、それらを自身の手法を導いた思考の構造のうちに組み込み体系化した上で理論的に差分を導く理詰めの作業が求められる。少なくとも自分自身のアウトプットに対してそのような訓練は積んでいなかったため、論文の研究所内でのレビューではその辺りを徹底的に指摘された。&lt;/p&gt;
-&lt;p&gt;それでも上期2本はなんとか勢いだけで書けた。サービス時代に抱えていた課題と自分の習得した技術がうまくマッチしたことで、両方とも成果が出ており、有用性の部分を主としつつ、自分なりに導いた新規性も指摘盛りだくさんながら書き上げた。&lt;/p&gt;
-&lt;p&gt;問題は下期である。いうても30代後半のそれなりに技術に対してプライドを持ってやってきた自分である。下期こそは、サービスとしての成果と論文としての成果が両立するようなバリューを出してやろうと臨んだのが勇み足の始まりだった。当時、僕の課題解決アプローチは既知の機械学習手法とサービスを連携させることであったため、サービス適用における知見はありつつも新規性としては示しにくいと考えていた。考えていたというのはその知見でも十分に既存の研究と比較した上で新規性を導くことができれば問題ないのではある。しかしながら、上期の指摘と自身への評価を挽回するため、自意識の肥大した僕は、もっと革命的な、もっと同僚も上司もが納得するようなバリューを追い求め出していた。&lt;/p&gt;
-&lt;p&gt;ある種、歪んだ動機は、固執を呼び、本来の目標を忘れさせ、堂々巡りを繰り返させる。下期をかけて新しいこと、今まで取り組んでなかったことを盲目的に探し、試し、そして撃沈していった。指針なく手当たり次第やるものだから、体系的な知識は蓄えられず、案に固執しているので客観的な評価もできず、それにより、納得する議論もできない。時間だけが過ぎていくから、より短時間で効果が出るものを求め、悪循環が始まる。次第に意固地になり、相手の意見も聞かず、独りよがりの自称研究として、本を読み、意図もないOSSを書く。それをやっている時だけは後ろめたさから解放された気がした。&lt;/p&gt;
-&lt;p&gt;ある日、迷走する近況報告のやりとりの中の冷静な指摘に対し、僕は、もうどうしたらいいのか分からないのだと伝え、周りを困らせた。僕の研究がなぜうまくいかないのか話す機会が設けられ、客観的に上記の状態を認識し、サーベイ、考察、評価を短いサイクルで繰り返す環境を整える必要性などを指摘された。これらは冷静になりさえすれば分かったことだとは思うのだが、最も効いたことが、研究に向けてのサーベイや基礎文献の調査量の違いを見せつけられたことである。下期の迷走期は別にして上期などは自分なりにサーベイしたつもりだったが、新規性にたどり着くための知識の土台は生半可なものでは太刀打ちできないということを痛感した。「巨人の肩に乗る」だけでも大変だからこそ、そこに積み上げた小石が大きな意味を持つ、当たり前のことではあるが、結局はそこから逃げていたのだと思い至り、自分を恥じた。&lt;/p&gt;
-&lt;p&gt;同じ頃行われた&lt;a href=&#34;http://websystemarchitecture.hatenablog.jp/entry/2017/12/17/133301&#34;&gt;WSA研&lt;/a&gt;も研究に対する取り組み方を見直す良い機会となった。WSA研は、&lt;code&gt;Webを中心とした様々な技術要素および要素のつながりを含む系全体のアーキテクチャを議論&lt;/code&gt; をする意欲的な場であり、参加者は皆自分の思い描く最高の世界に向けて、それを実現するためのアーキテクチャを語っていた。自身は色々手を出したものの一つを発表したので、やはり満足いく発表とはならなかったが、この会で、tomomiiさんから「道をつくる」という、研究やコミュニティのあり方を東洋思想的な道という概念を使って考察する話があって感銘を受けたのを覚えている。&lt;/p&gt;
-&lt;p&gt;これらを通して、僕は研究を目的でも手段でもなく、「過程」なのだと漠然と考えるようになった。自分の思い描く世界に至るための過程。その理想はこれまで存在しないものであるだろうし、もし理想像が朧げに見えたとしてもそこに至る方法もまた未知のものであるだろう。それは、これまでの研究や知識を着実に学んで、意味のある構造で組み直し、未知の道の敷石をつなぐことで見えるものであって、そこは新規性や有用性を逃げずに練ることだけでしか辿り着けない。論文にまとめるということはそのための最適な訓練であり道中に標石を設置することなのだろう。&lt;/p&gt;
-&lt;p&gt;そんなことは最初から言ってたよと研究所の人たちから怒られそうではある。今になって思えば、研究所の面々は常に僕に「つまりこういう世界が来るということですね、いいじゃないすか〜」「サーベイはこれだけですか」「無理をしないよう」と一貫して、目標を作ること、巨人の肩に乗ること、道半ばで倒れるなと変わらぬ態度で研究の在りようを示してくれていた。が、挑み、努力する対象を見誤ませるほどに虚栄心が自分に根を張っているとは思わなかった。自分の現状を納得いく形で理解した上で次に進むためにやることが見えたのは今年唯一の収穫である。半年間、本当に辛くて家で泣いたりしたのだが、変わらぬ態度で接してくれた研究所の面々、そして支えてくれた家族には感謝の気持ちしかない。&lt;/p&gt;
-&lt;p&gt;2018年は、専門知識を深め、そこに見えた新しき世界へ向けてただ一歩づつ進んでいければと思う。成果は自ずとついて来るだろう。来年もどうぞよろしくお願いいたします。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;3月のライオンという将棋を題材にした漫画は、弱さを受け入れ、迷いながらもただひたすらに自分の道を信じて進んでいく棋士たちの物語で、もちろんフィクションなのだが、自分と向き合う大切さというのは今年かけて学んだことに近いなあと思ってタイトルに入れた。&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>ふりかえりファシリテーターあんちょこを作ってみた</title><link>https://blog.monochromegane.com/blog/2013/10/14/retrospective-anchoco/</link><pubDate>Mon, 14 Oct 2013 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2013/10/14/retrospective-anchoco/</guid><description>
-&lt;h1 id=&#34;ふりかえり-やっていますか&#34;&gt;ふりかえり、やっていますか？&lt;/h1&gt;
-&lt;p&gt;最近、プロジェクトやチームのふりかえりのファシリテーターをやる機会があるのですが、いざやると時間配分だったり、会のコントロールだったり結構難しいです。&lt;/p&gt;
-&lt;p&gt;特に、ファシリテーター役を回すとなると、みんなが初めてのファシリテーターだったりして、ふりかえりのレベルが向上するまでちょっと時間がかかってしまうというのも悩みだったりします。&lt;/p&gt;
-&lt;p&gt;なので、今回、ファシリテーター役が各工程で行うこと、気をつけることを箇条書きでまとめた、「ふりかえりファシリテーターあんちょこ」を作ってみました。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/retrospective-anchoco/retrospective-anchoco.html&#34;&gt;ふりかえりファシリテーターあんちょこ&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/retrospective-anchoco&#34;&gt;GitHub: monochromegane/retrospective-anchoco&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;ふりかえりファシリテーターあんちょこ&#34;&gt;ふりかえりファシリテーターあんちょこ&lt;/h1&gt;
-&lt;p&gt;&lt;a href=&#34;https://blog.monochromegane.com/retrospective-anchoco/retrospective-anchoco.html&#34;&gt;ふりかえりファシリテーターあんちょこ&lt;/a&gt;は、ふりかえりのファシリテーターを行うときに使える&amp;rdquo;あんちょこ&amp;rdquo;です。&lt;/p&gt;
-&lt;p&gt;各工程のタイムテーブルと工程ごとに行うこと、気をつけることを箇条書きでまとめてみました。&lt;/p&gt;
-&lt;p&gt;また、ファシリテーターとしてのナレッジの共有も目的としているので、MarkdownをGithubで管理するような構成をとっています。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;スライドショー形式の見やすい箇条書き。ファシリテーターしながらさっと目が通せる&lt;/li&gt;
-&lt;li&gt;Markdownでだれでも編集。あんちょこ自体を改善し、ナレッジを共有&lt;/li&gt;
-&lt;li&gt;GitHubで管理。Forkしてチーム向けにカスタマイズ&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;あんちょこ-でできること-できないこと&#34;&gt;&amp;ldquo;あんちょこ&amp;rdquo;でできること、できないこと&lt;/h2&gt;
-&lt;p&gt;この&amp;rdquo;あんちょこ&amp;rdquo;は、ふりかえりの開始から終了までに行うことを、各工程が1ページになるようにまとめています。&lt;/p&gt;
-&lt;p&gt;ファシリテーターはこの資料を印刷もしくはスライドショーを表示するなどして、次の工程に移る前に最低限行わなければならないことを確認することができます。&lt;/p&gt;
-&lt;p&gt;反対に、ふりかえりを導入するための資料ではありません。ふりかえりの意義や効果を知りたい人、もっと突っ込んだふりかえりの手法が知りたい人は、各種参考文献を読むことをお勧めします。&lt;/p&gt;
-&lt;h2 id=&#34;あんちょこ-の更新&#34;&gt;&amp;ldquo;あんちょこ&amp;rdquo;の更新&lt;/h2&gt;
-&lt;p&gt;ふりかえりファシリテーターあんちょこは、Markdown記法で書かれたファイルを&lt;a href=&#34;http://jdan.github.io/cleaver/&#34;&gt;cleaver&lt;/a&gt;を使って印刷用のスライドショー形式に変換しています。&lt;/p&gt;
-&lt;p&gt;cleaverが入っていない場合は、NPMでインストールしてください。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ npm install -g cleaver
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;あんちょこのMarkdownファイルは&lt;code&gt;retrospective-anchoco.md&lt;/code&gt;です。修正後、以下のコマンドにより&lt;code&gt;retrospective-anchoco.html&lt;/code&gt;が作成されます。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ cleaver retrospective-anchoco.md
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;できあがったhtmlファイルをブラウザで開き、必要に応じて印刷して利用してください。&lt;/p&gt;
-&lt;h2 id=&#34;テンプレートの変更&#34;&gt;テンプレートの変更&lt;/h2&gt;
-&lt;p&gt;この&amp;rdquo;あんちょこ&amp;rdquo;は、印刷用のテンプレートを使っています。&lt;/p&gt;
-&lt;p&gt;PCでスライドショー形式で表示しておきたいひとは、&lt;code&gt;retrospective-anchoco.md&lt;/code&gt;の&lt;code&gt;template&lt;/code&gt;行を削除してcleaverを実行してください。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;参考&#34;&gt;参考&lt;/h1&gt;
-&lt;p&gt;ふりかえりの意義や効果を知りたい人、もっと突っ込んだふりかえりの手法が知りたい人向け。&lt;br /&gt;
-ふりかえりも回を重ねるごとに、課題が出てきますが、そのあたりの指針や分析方法などが詳しく書かれています。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.objectclub.jp/download/files/pf/RetrospectiveMeetingGuide.pdf&#34;&gt;プロジェクトファシリテーション 実践編 ふりかえりガイド&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.amazon.co.jp/%E3%81%93%E3%82%8C%E3%81%A0%E3%81%91-KPT-%E5%A4%A9%E9%87%8E-%E5%8B%9D/dp/4799102753&#34;&gt;これだけ! KPT&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item></channel></rss>
+&lt;p&gt;GitHub Actions、トークンやらキーやらの管理がGitHubの中で完結するので便利。
+キューのつまりも特に感じないし難しいことしなければ少なくとも現時点ではこれでいいのではという感じ。
+ボチボチ移行していくつもり。&lt;/p&gt;</description></item><item><title>2019年11月10日</title><link>https://blog.monochromegane.com/diary/20191110/</link><pubDate>Sun, 10 Nov 2019 23:50:53 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191110/</guid><description>&lt;p&gt;午前中は髪を切りに天神へ。
+さっぱりした後、本格的に寒くなるまでのつなぎになりそうなアウターを購入したりお茶したり散策して過ごす。
+帰宅後は、鍋と頂き物のかしわご飯を美味しくいただく。
+やっと鍋の似合う季節になってきた。&lt;/p&gt;
+&lt;p&gt;就寝前はブログのCIをGitHub Actionsに移行がてら触っていた。
+静的サイトとしてのコンテンツ出力に必要な箇所はできたので来週どこかでデプロイ部分をWerckerから切り替えよう。
+pushしてからCIが開始されるまでと実際のビルドもとにかく速いのでストレスなく使えそう。&lt;/p&gt;</description></item><item><title>2019年11月9日</title><link>https://blog.monochromegane.com/diary/20191109/</link><pubDate>Sat, 09 Nov 2019 22:25:38 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191109/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の査読結果の反映、最終確認。
+午前中にひとまず終えたものの、査読結果へのコメントに個別に答えるとまだ修正必要な気がして終われなかった。&lt;/p&gt;
+&lt;p&gt;昼寝の後、夕方までになんとか仕上げた。
+共著者へレビューを依頼。
+色々忙しかったとはいえ、時間が立つほどに記憶も薄れるので査読対応はさっさとやってしまった方が良さそう。
+ポスターも来週早々に終わらせてしまいたいが、まだフォーマットなど情報がないのでどうしたものか。&lt;/p&gt;
+&lt;p&gt;夕方、年末調整の提出が終わったので一安心。
+明日は、年末の福岡エンジニアコミュニティの集まりの主催についてボチボチ進めよう。&lt;/p&gt;</description></item><item><title>2019年11月8日</title><link>https://blog.monochromegane.com/diary/20191108/</link><pubDate>Sat, 09 Nov 2019 22:15:01 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191108/</guid><description>&lt;p&gt;終日&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の査読結果の反映。
+おおよそできたと思うので明日最終確認する。
+査読、丁寧に見てもらえていて本当に良い。
+これだとわからないですね〜という言い方の向こうにきちんと考えればより分かりやすくなる道が見える気がする。&lt;/p&gt;
+&lt;p&gt;時間を見つけて、&lt;a href=&#34;https://efc.fukuoka.jp/award&#34;&gt;エンジニアフレンドリーシティ福岡アワード&lt;/a&gt;のコミュニティ部門へのエントリーを仕上げた。
+Fukuoka.go、活動を振り返ると改めて着実に進んでいて我ながらエラいなあと思った。
+もちろん共同主催者に恵まれていることに感謝したい。&lt;/p&gt;
+&lt;p&gt;夜は『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/479071733X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479071733X&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=632f660a2f794586c0155153916e0aaa&#34;&gt;文化人類学の思考法&lt;/a&gt;』を少し読み進める。
+バイアスをどう認識するかという問題は突き詰めていくと人類であることすらバイアスであり、文化人類学はそのようなレイヤから比較し続けているのだなあととても面白い。
+一つ一つのネタは実際難しいけれどもまだ読み進めてどこかでまとめたい。&lt;/p&gt;</description></item><item><title>2019年11月7日</title><link>https://blog.monochromegane.com/diary/20191107/</link><pubDate>Thu, 07 Nov 2019 21:34:34 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191107/</guid><description>&lt;p&gt;深夜寝れなかったためリズムが悪く感じた。&lt;/p&gt;
+&lt;p&gt;PC移行で環境構築がうまくいってなかった箇所にハマってしまい、共同研究のデータ抽出に時間がかかってしまった。反省。&lt;/p&gt;
+&lt;p&gt;午後は研究会。
+共著論文で提案する手法にまつわるサーベイ論文のサーベイ結果などを共有してもらう。
+定義や定式化されている前例をもとにした議論になったことで手法の方針検討が整理された。&lt;/p&gt;
+&lt;p&gt;年内においてもどんどん研究が進む予感で楽しみになってきた。
+自分自身もポスターとジャーナルをしっかりやる。&lt;/p&gt;
+&lt;p&gt;今週末ぐらいから一気に集中して確率系の勉強をやったのが、継続系のインプット・アウトプット、ひいては生活リズムを崩してしまっている気がするので、やりすぎないというのもうまく制御していかないといけないなあ。&lt;/p&gt;</description></item><item><title>2019年11月6日</title><link>https://blog.monochromegane.com/diary/20191106/</link><pubDate>Thu, 07 Nov 2019 21:27:43 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191106/</guid><description>&lt;p&gt;朝から九大へ。
+論文のジャーナル投稿に向けて作戦を立てる。
+議論の中でやるべきことが明確になってきた。
+今年中に投稿は済ませるぞ。&lt;/p&gt;
+&lt;p&gt;また、今後についても相談。
+自分の中では大きな決断であるけれども、そろそろ動いていく時期であると判断した。
+あとは自分の頑張り次第。やるしかない。&lt;/p&gt;
+&lt;p&gt;とはいえ、朝が早かったこともあり、午後はなんだかふんわりしてしまったので研究以外のことをざっと進めた。
+コミュニティ活動まわりで直近のイベント方針を決めたりアワードエントリの準備であっという間で合った。&lt;/p&gt;
+&lt;p&gt;帰り際に研究チームでもう一つの共著論文に向けた方針を話す。
+明日の研究会で聞きたいことを伝え帰宅。
+早めに寝てしまったが、逆に深夜に起きてしまい翌朝の動き出しがイマイチだった。
+無限にはなかなか寝れなくなってきたのでやはり規則正しくが一番みたいだ。
+今週は乱れがちなのでペースを取り戻さねば。&lt;/p&gt;</description></item><item><title>2019年11月5日</title><link>https://blog.monochromegane.com/diary/20191105/</link><pubDate>Thu, 07 Nov 2019 21:24:22 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191105/</guid><description>&lt;p&gt;所属する研究所で共著論文のため研究計画を改めて一緒に練るなどした。
+チームであることを活かしてどんどん並列で進めつつ大きなビジョンを達成していく。&lt;/p&gt;
+&lt;p&gt;午後は引き続きバンディットのポリシーの実装に向けた下調べなど。
+自身のメイン研究もバーンとやっていきたい。&lt;/p&gt;</description></item><item><title>2019年11月4日</title><link>https://blog.monochromegane.com/diary/20191104/</link><pubDate>Mon, 04 Nov 2019 22:27:48 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191104/</guid><description>&lt;p&gt;午前中は引き続きベイズ統計の勉強。
+仮定やデータが連続値になった場合についても得心が行ったと思う。
+勉強の見積もりがイマイチあっておらず予定より時間かかっているがバンディットの確率的な方策についてはこれで実装できるだろう。
+ベイズ統計を直接使うわけではないが、推論まわりは応用効きそうなので『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4061538322/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4061538322&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=624549ce46217ec9cd619e8b038b9865&#34;&gt;機械学習スタートアップシリーズ ベイズ推論による機械学習入門 (KS情報科学専門書)&lt;/a&gt;』を自習していこう。&lt;/p&gt;
+&lt;p&gt;午後は先日購入していた『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/479071733X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479071733X&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=632f660a2f794586c0155153916e0aaa&#34;&gt;文化人類学の思考法&lt;/a&gt;』を少し読む。
+新しいモノの見方を知ることができてしばらく楽しめそう。
+そのまま読みながら昼寝。&lt;/p&gt;
+&lt;p&gt;来週からは研究、ポスター、共同研究など忙しくなるけど一歩づつ進めていきたい。&lt;/p&gt;</description></item><item><title>2019年11月3日</title><link>https://blog.monochromegane.com/diary/20191103/</link><pubDate>Mon, 04 Nov 2019 00:47:07 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191103/</guid><description>&lt;p&gt;午前中ベイズの勉強。
+昨日に引き続き『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4797366575/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4797366575&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=df00ddc50d7fa4565615ab69d2bf54c9&#34;&gt;図解・ベイズ統計「超」入門 あいまいなデータから未来を予測する技術 (サイエンス・アイ新書)&lt;/a&gt;』を読み終えて『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4478013322/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4478013322&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=7dd44714a769c09e93745f716cda1b23&#34;&gt;完全独習 ベイズ統計学入門&lt;/a&gt;』と『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/B07HG42534/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B07HG42534&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=d178b6c02684603444f6a910c51f79a4&#34;&gt;まずはこの一冊から 意味がわかるベイズ統計学&lt;/a&gt;』を読む。
+仮定とデータがかなり自由に設定できるので柔軟な一方で難しい場合もある。
+特に確率分布まわりを使う時の整理がまだかなあという感じ。
+いったん、元の動機付けのところに戻りつつ必要な部分について整理を進めよう。&lt;/p&gt;
+&lt;p&gt;午後はiPad Proを触るなど。
+Face IDを使えるデバイスは初めてだったけどかなり快適。
+セットアップもiPhoneを隣におけばほぼ設定いらずで、ハードウェア含めて提供できているとこの辺強いなあという感想。
+論文管理も明日やっていこう。&lt;/p&gt;</description></item><item><title>2019年11月2日</title><link>https://blog.monochromegane.com/diary/20191102/</link><pubDate>Mon, 04 Nov 2019 00:40:34 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191102/</guid><description>&lt;p&gt;午前中はベイズ統計の勉強。
+ベイズの定理はだいぶ馴染んできたが、連続値の場合にまだ理解が不十分な気がするので引き続き明日も進める。&lt;/p&gt;
+&lt;p&gt;午後は本屋によって、『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4274067750/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4274067750&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=29048146b631aa17e79995b374c806ec&#34;&gt;プログラミングのための確率統計&lt;/a&gt;』と『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/479071733X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479071733X&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=632f660a2f794586c0155153916e0aaa&#34;&gt;文化人類学の思考法&lt;/a&gt;』を購入。
+夕食後、購入した本を読んでいたら寝てしまった感じ。&lt;/p&gt;</description></item><item><title>2019年11月1日</title><link>https://blog.monochromegane.com/diary/20191101/</link><pubDate>Sat, 02 Nov 2019 00:27:04 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191101/</guid><description>
+&lt;h2 id=&#34;健康診断&#34;&gt;健康診断&lt;/h2&gt;
+&lt;p&gt;午前中、健康診断。
+午後はベイズ推定関連の基礎知識をつけていた。
+バリウムは健康診断の後も終日大変なのであまり生産性は高くなかったかもしれない。
+来年は胃カメラ、鼻からでやってみるかなあ。&lt;/p&gt;
+&lt;h2 id=&#34;喩えと例え&#34;&gt;喩えと例え&lt;/h2&gt;
+&lt;p&gt;自分の場合、ベイズ推定なり数式を含む新しい概念を獲得するには身の丈にあった入門書を複数こなすことで、違った角度から見比べてその概念を掴んでいく。
+ただ、入門書は結構当たり外れがあるのが悩ましい。&lt;/p&gt;
+&lt;p&gt;良い本を見つけるため最近は、説明の「喩え」よりも「例え（ば）」を重視している。
+手元の辞書によると「喩え」は「たとえること。たとえとして引かれた事柄」とあり、「例えば」は「前文に述べた主旨を客観的に証明するに足る例をあげることを表す。」とある。
+学びたい概念を「喩え」る入門書は、読者の知る身近な事柄でこれを説明する。
+一方、「例えば」の入門書は、その概念の構成要素やそれらが成立する仕組みを裏付ける例を通して理解を助ける。&lt;/p&gt;
+&lt;p&gt;「喩え」に頼りすぎてしまってると感じた本の読後は、分かったような分からないような感じが多い。
+対して、簡潔な「例えば」が十分な量で用意されていた本は、なるほどそういう理由・仕組みだったのかと理解が深まったと感じる。
+この辺を区分できるようになって、ハズレはつかまなくなったかなあと思う。
+もちろん、適切な「喩え」が理解を助けることもあるのであくまでも重視する方という意味合いで。&lt;/p&gt;
+&lt;p&gt;ところで、簡潔に概念を説明できる「例えば」を作るためにはその概念に対する深い理解が必要である。
+論文であっても手法であっても、ある概念を相手に説明する際に「喩え」が出るか、複雑な「例えば」が出るか、簡潔な「例えば」を出せるかで自分の理解を問うていきたい。&lt;/p&gt;</description></item><item><title>2019年10月31日</title><link>https://blog.monochromegane.com/diary/20191031/</link><pubDate>Thu, 31 Oct 2019 21:58:58 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191031/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の採録通知。
+とても嬉しい。
+査読結果もなるほど納得なしっかり読み込んでくれた内容であったので将来のジャーナル化に向けてもありがたいアドバイスになった。&lt;/p&gt;
+&lt;p&gt;研究の手法を改善するためにベイズ推定まわりを押さえておかないと厳しい感じになってきたので、入門系の書物を数冊購入して帰宅。
+ちょうど最近、&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/10/11/random_number_gen_using_go/&#34;&gt;確率分布などをおさらいした&lt;/a&gt;のもあり、以前より理解できるのではないかと考えている。
+この辺、一足飛びには理解できないので、ひとつづつ理解を進めていく。
+専門力の向上が次のステップなのでやっていきたい。&lt;/p&gt;
+&lt;p&gt;昨年から始まった&lt;a href=&#34;https://fukuokaphp.connpass.com/event/109317/&#34;&gt;Fukuoka.LT&lt;/a&gt;だが、運営をコミュニティの持ち回りにしたので、今年はFukuoka.goでやることにした。
+普段のコミュニティで登壇してる内容を話してもらうことで一層コミュニティの雰囲気を知れるのではないかとなったのでそんな感じに進める。
+連絡周りは省力で進められるといいな。&lt;/p&gt;</description></item><item><title>2019年10月30日</title><link>https://blog.monochromegane.com/diary/20191030/</link><pubDate>Thu, 31 Oct 2019 21:56:23 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191030/</guid><description>&lt;p&gt;午前中Research I/O。
+論文の骨子などを検討していくのを午前中に進んでいるという状態はとても気分的に良い。
+午後はデータ分析など。&lt;/p&gt;
+&lt;p&gt;週途中ながらに疲れが出てきたので夜は早めに就寝した。
+iPad Proまだ開けれてない。とほほ。&lt;/p&gt;</description></item><item><title>2019年10月29日</title><link>https://blog.monochromegane.com/diary/20191029/</link><pubDate>Tue, 29 Oct 2019 23:51:16 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191029/</guid><description>&lt;p&gt;午前中、Research I/Oの時間。提案手法の新規性と有用性を論じるためのあれこれを考える。
+午後は、研究周りのデータ抽出や解析など。
+午前中に必ず研究系が進んでいるという状況は良いので引き続きやっていく。&lt;/p&gt;
+&lt;p&gt;帰り際にApple storeによって、その場で「&lt;a href=&#34;https://www.amazon.co.jp/gp/product/B07K7MBNZ2/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B07K7MBNZ2&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=5012f106ddfdeb7467c8a02d523f6ad0&#34;&gt;Apple iPad Pro (11インチ, Wi-Fi, 512GB) - スペースグレイ (最新モデル)&lt;/a&gt;」と「&lt;a href=&#34;https://www.amazon.co.jp/gp/product/B07KR69HH9/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B07KR69HH9&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=256d1dc837b0ae029969e0ea28e6603f&#34;&gt;Apple Pencil（第2世代）&lt;/a&gt;」を購入。
+最後まで12.9インチと悩んだけど、論文読むのは等倍でなくても大丈夫だと判断して普段の取り回しの良さの面から11インチにした。
+論文管理の仕組みを構築していかねば。&lt;/p&gt;</description></item></channel></rss>

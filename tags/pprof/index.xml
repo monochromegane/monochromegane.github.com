@@ -1,189 +1,123 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>pprof on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/pprof/</link><description>Recent content in pprof on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Tue, 15 Dec 2015 00:00:00 +0900</lastBuildDate><atom:link href="/tags/pprof/" rel="self" type="application/rss+xml"/><item><title>The Platinum Searcherを5倍高速化するためにやったこと</title><link>https://blog.monochromegane.com/blog/2015/12/15/how-to-speed-up-the-platinum-searcher-v2/</link><pubDate>Tue, 15 Dec 2015 00:00:00 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2015/12/15/how-to-speed-up-the-platinum-searcher-v2/</guid><description>
-&lt;p&gt;&lt;strong&gt;この記事は &lt;a href=&#34;http://qiita.com/advent-calendar/2015/go2&#34;&gt;Go Advent Calendar 2015 その2&lt;/a&gt; の 15日目の記事です。&lt;/strong&gt;&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;先日、5倍の高速化を実現した&lt;a href=&#34;https://blog.monochromegane.com/blog/2015/12/08/the-platinum-searcher-v2/&#34;&gt;高速検索ツールThe Platinum SearcherのV2をリリース&lt;/a&gt;しました。&lt;/p&gt;
-&lt;p&gt;今回は、高速化にあたり工夫した点をまとめておこうと思います。&lt;/p&gt;
-&lt;h2 id=&#34;the-platinum-searcherの基本実装について&#34;&gt;The Platinum Searcherの基本実装について&lt;/h2&gt;
-&lt;p&gt;以前、&lt;a href=&#34;https://speakerdeck.com/monochromegane/pt-and-goroutines&#34;&gt;GoConferenceで発表した資料&lt;/a&gt;にまとめてあるので、興味のあるかたはご覧ください。
-基本的にはFind、Grep、PrintのGoroutineがそれぞれの結果をChannelを経由して渡すつくりになっており、それぞれのGoroutine内で並行で処理を行うために更にGoroutineを起動しています。&lt;/p&gt;
-&lt;h2 id=&#34;ボトルネックの調査&#34;&gt;ボトルネックの調査&lt;/h2&gt;
-&lt;p&gt;今回は完全書き直しだったのでボトルネックを潰していくという手法ではなかったのですが、再実装にあたり、気をつけるべき点を確認する上でも現状のボトルネック箇所を最初に調査しました。&lt;/p&gt;
-&lt;p&gt;プロファイリングツールにはpprofを使います。既存のコードに以下を追加し&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;cpuprofile := &amp;quot;mycpu.prof&amp;quot;
-f, _ := os.Create(cpuprofile)
-pprof.StartCPUProfile(f)
-defer pprof.StopCPUProfile()
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;ビルドして、処理（今回は検索）を実行、出力された結果に対して &lt;code&gt;top&lt;/code&gt; や &lt;code&gt;top20&lt;/code&gt; などを使いボトルネックを確認します。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ go build -o pt cmd/pt/main.go
-$ ./pt EXPORT_SYMBOL_GPL ~/src/github.com/torvalds/linux/ &amp;gt; /dev/null
-$ go tool pprof pt mycpu.prof
-Entering interactive mode (type &amp;quot;help&amp;quot; for commands)
-(pprof) top
-16.02s of 16.59s total (96.56%)
-Dropped 102 nodes (cum &amp;lt;= 0.08s)
-Showing top 10 nodes out of 85 (cum &amp;gt;= 0.16s)
-flat flat% sum% cum cum%
-14.67s 88.43% 88.43% 14.67s 88.43% syscall.Syscall
-0.70s 4.22% 92.65% 0.70s 4.22% nanotime
-0.15s 0.9% 93.55% 0.15s 0.9% runtime.mach_semaphore_timedwait
-0.13s 0.78% 94.33% 0.13s 0.78% runtime.mach_semaphore_wait
-0.12s 0.72% 95.06% 0.12s 0.72% runtime.memmove
-0.11s 0.66% 95.72% 0.11s 0.66% syscall.Syscall6
-0.10s 0.6% 96.32% 0.10s 0.6% runtime.usleep
-0.02s 0.12% 96.44% 0.19s 1.15% runtime.findrunnable
-0.01s 0.06% 96.50% 7.08s 42.68% bufio.(*Reader).ReadLine
-0.01s 0.06% 96.56% 0.16s 0.96% github.com/monochromegane/the_platinum_searcher.patterns.match
-(pprof)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;syscall.Syscallが一番時間がかかっていることは分かりますが、どこから呼ばれたものかをさっと把握は難しいです。&lt;/p&gt;
-&lt;p&gt;こういう場合は &lt;code&gt;web&lt;/code&gt; を使うことで呼び出し元含めて図示することができます。 &lt;a href=&#34;https://blog.monochromegane.com/images/2015/12/pprof_pt_v1.7.9.svg&#34;&gt;全体図はこちら&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2015/12/pprof_pt_web.png&#34; alt=&#34;pprof_pt_web&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;全体図から syscall.Read と syscall.Open が時間がかかっており、それぞれの呼び出し元が Grep時のbufio.ReadLine と Find時の os.Open であることが判明したのでV2ではこれらに注意しながら再実装を進めることにしました。&lt;/p&gt;
-&lt;h2 id=&#34;findの高速化&#34;&gt;Findの高速化&lt;/h2&gt;
-&lt;p&gt;Findは対象のディレクトリを探索し、gitignore対象を除外した上で、Grepに対象ファイルパスを渡していくのが仕事です。当然、Grepのほうがファイルの読み込みと文字列検索処理が入り、遅くなるのですが、Findが遅いと、主に立ち上がり時にGrepが暇をしてしまうので、ここもある程度高速であることが求められます。&lt;/p&gt;
-&lt;p&gt;V1系の実装では、デフォルトで検索対象のディレクトリ直下のディレクトリ数分だけGoroutineを起動していましたが、V2では上限値までは常にGoroutineを起動してFindの多重度を高めています。&lt;/p&gt;
-&lt;p&gt;Find時のGoroutine起動部分はこのようになっています。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;wg := &amp;amp;sync.WaitGroup{}
-for _, file := range files {
-f := newFileInfo(path, file)
-select {
-// 同時起動可能であればGoroutineを使う
-case sem &amp;lt;- struct{}{}:
-wg.Add(1)
-go func(path string, file fileInfo, depth int, ignores ignoreMatchers, wg *sync.WaitGroup) {
-defer wg.Done()
-defer func() { &amp;lt;-sem }()
-walk(path, file, depth, ignores, walkFn, sem)
-}(filepath.Join(path, file.Name()), f, depth, ignores, wg)
-// 同時起動数の上限に達していれば通常のwalk
-default:
-walk(filepath.Join(path, file.Name()), f, depth, ignores, walkFn, sem)
-}
-}
-wg.Wait()
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;ここでは、よくある同時起動数の制御を行っていますが、selectを使って同時起動可能でなければGoroutineを使わずに処理を継続するという方法をとっています。&lt;/p&gt;
-&lt;h2 id=&#34;grepの高速化&#34;&gt;Grepの高速化&lt;/h2&gt;
-&lt;p&gt;受け取ったファイルを読み込み、パターンにマッチする文字列を探す部分です。また、文字コードの判定も行います。&lt;/p&gt;
-&lt;p&gt;V1系では素直に1行読んで、パターンにマッチするかどうか判定するという実装で、さらに文字コード判定時に別途同じファイル読み込みを行っていました。これは実装が簡単な反面、IOが多く発生してしまいます。&lt;/p&gt;
-&lt;h3 id=&#34;ioの削減&#34;&gt;IOの削減&lt;/h3&gt;
-&lt;p&gt;V2系ではこれを見直し、大きめのバッファを用意して読み込み、その中でパターンにマッチするものがあるか、文字コードがなんであるかを判断するようにしてIO(syscall.Read)を減らしています。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// bufferを確保
-buf := make([]byte, 8196)
-for {
-// 読み込み
-c, err := f.Read(buf)
-if err != nil &amp;amp;&amp;amp; err != io.EOF {
-log.Fatalf(&amp;quot;read: %s\n&amp;quot;, err)
-}
-if err == io.EOF {
-break
-}
-// 文字コードの判定
-if !identified {
-limit := c
-if limit &amp;gt; 512 {
-limit = 512
-}
-encoding = detectEncoding(buf[:limit])
-...
-}
-// bufferにパターンが含まれるか判定
-if bytes.Contains(buf[:c], pattern) {
-...
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;固定サイズのバッファだと行の途中で切れてしまう箇所がありますが、途中で切れた部分は一度退避しておいて、次の読み込んだバッファと結合して欠損をリカバリするような処理を書いています。&lt;/p&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>pprof on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/pprof/</link><description>Recent content in pprof on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Tue, 15 Dec 2015 00:00:00 +0900</lastBuildDate><atom:link href="/tags/pprof/" rel="self" type="application/rss+xml"/><item><title>2019年11月12日</title><link>https://blog.monochromegane.com/diary/20191112/</link><pubDate>Tue, 12 Nov 2019 22:10:53 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191112/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;、原稿出し終えたのでジャーナル執筆と並行しなくて良いように先にポスター書いてしまう。&lt;/p&gt;
+&lt;p&gt;Fukuoka.LTという去年から始まった福岡のいろいろなコミュニティの合同忘年会があるのだけど、今年の運営をFukuoka.goが任されることになったので、先週ぐらいから準備していた。&lt;/p&gt;
+&lt;p&gt;今年は、Fukuoka.goらしく技術を肴に酒を飲もうという感じに、言語や技術を横断した登壇と忘年会とした。
+今日は登壇者募集の告知。
+集まるといいなあ。
+これぐらいのイベントだと大規模カンファレンスやったあとなので比較的楽に進めることができる。
+コミュニティ運営力のレベルアップだ。&lt;/p&gt;</description></item><item><title>2019年11月11日</title><link>https://blog.monochromegane.com/diary/20191111/</link><pubDate>Mon, 11 Nov 2019 23:21:16 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191111/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の共著者レビューを終えて提出。
+順調なのでこのままポスターも作ってしまいたいがフォーマットやサイズなどがまだ公開されていない。うーむ。&lt;/p&gt;
+&lt;p&gt;午後は、年末の福岡エンジニアコミュニティの集まりの主催についてガッと進めた。
+方針は決まったのであとは登壇者が順調に集まってくれるのを祈るのみ。&lt;/p&gt;
+&lt;p&gt;帰宅後はこのブログをGitHub Actionsでデプロイできるようにするなど。
+HugoのSetup、GitHub Pagesへのデプロイはこの辺りを使った&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/the_platinum_searcher/blob/de8fb0707bda5878026afa4fc33783c31bac93c3/fixed_grep.go#L96-L103&#34;&gt;このあたりで退避&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/the_platinum_searcher/blob/de8fb0707bda5878026afa4fc33783c31bac93c3/fixed_grep.go#L64-L83&#34;&gt;このあたりで復元&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/peaceiris/actions-hugo&#34;&gt;https://github.com/peaceiris/actions-hugo&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/peaceiris/actions-gh-pages&#34;&gt;https://github.com/peaceiris/actions-gh-pages&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=&#34;文字コード変換コストの削減&#34;&gt;文字コード変換コストの削減&lt;/h3&gt;
-&lt;p&gt;EUCやShiftJISのファイルを検索する際にV1ではファイル側の文字コードをUTF-8に変換して判定していましたが、V2からはパターン文字列側を文字コード変換してファイル側の文字コード変換のコストを削減しています。&lt;/p&gt;
-&lt;h3 id=&#34;パターンにマッチしたファイルの処理&#34;&gt;パターンにマッチしたファイルの処理&lt;/h3&gt;
-&lt;p&gt;実際はパターンにマッチしたファイルについては行単位でマッチする行を再度探しなおします。これは処理の共通化やPrintまわりの実装を複雑にしないためですが、Grepはマッチするファイルかどうかの判定が一番多く、ここに対しての最適化をまず行ったためです。今後、まだ高速化したい場合はここも含めてチューニングを検討していこうと思っています。&lt;/p&gt;
-&lt;h2 id=&#34;printの高速化&#34;&gt;Printの高速化&lt;/h2&gt;
-&lt;p&gt;Grepで見つかった文字列を画面に表示する処理です。ファイル単位でグルーピングした結果を出力する必要があるため、出力を排他する必要があります。&lt;/p&gt;
-&lt;h3 id=&#34;排他処理&#34;&gt;排他処理&lt;/h3&gt;
-&lt;p&gt;V1系では排他処理のためbufferが1のchannelを設け、Print用のGoroutineを起動していましたが、V2ではsync.Mutexを使った排他処理に変更しました。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func (p printer) print(match match) {
-p.mu.Lock()
-defer p.mu.Unlock()
-if match.size() == 0 {
-return
-}
-p.formatter.print(match)
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;ここのベンチマークはnaoinaさんの&lt;a href=&#34;http://qiita.com/naoina/items/d71ddfab31f4b29f6693#%E4%BE%8B%E3%81%88%E3%81%B0channel-%E3%82%92%E4%BD%BF%E3%82%8F%E3%81%AA%E3%81%84&#34;&gt;Golang パフォーマンスチューニング - 例えば、channel を使わない&lt;/a&gt;などが参考になると思います。&lt;/p&gt;
-&lt;h3 id=&#34;文字列結合を減らす&#34;&gt;文字列結合を減らす&lt;/h3&gt;
-&lt;p&gt;また、微々たるものですが、様々な出力形式に対応するため細かい単位でfmt.Printfを使っていた（1行内で複数回使うこともあった）のをできるだけfmt.Printfを使わない、文字列結合をまとめるなどを行っています。&lt;/p&gt;
-&lt;h2 id=&#34;gitignore&#34;&gt;Gitignore&lt;/h2&gt;
-&lt;p&gt;The Platinum SearcherではGitignoreの判定を自前で実装しています。V1系では素直に全パターンをマッチングしていましたが、パターン数が多い場合にボトルネックとなり得る状態でした。&lt;/p&gt;
-&lt;h3 id=&#34;マッチング対象のパターンを減らす&#34;&gt;マッチング対象のパターンを減らす&lt;/h3&gt;
-&lt;p&gt;V2系ではマッチング対象のパターンを少なくするために以下のようなシンプルな（原始的な）木構造のインデックスを用意するようにしました。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;.
-├── accept # 許可リスト(e.g. !hoge)
-│ ├── absolute # 絶対パス
-│ │ └── depth # 階層数
-│ │ ├── initial # 頭文字[a-zA-z0-9]
-│ │ └── other # その他の頭文字
-│ └── relative
-│ └── depth
-│ ├── initial
-│ └── other
-└── ignore # 無視リスト
-├── absolute
-│ └── depth
-│ ├── initial
-│ └── other
-└── relative
-└── depth
-├── initial
-└── other
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;depthはパターンの階層数で、initialはパターンの頭文字です。渡されたファイルパスから必要なパターンのみを取り出して最小限のマッチングを行います。&lt;/p&gt;
-&lt;p&gt;木構造の末端に含まれるパターン数は必ずしも均等にはならないですが、単純に全パターンのマッチよりは充分高速に判定可能になりました。&lt;/p&gt;
-&lt;p&gt;以下65個のパターンが含まれるlinuxカーネルのgitignoreに対してのマッチングをベンチマークしたものです。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;BenchmarkIndex-4 3000000 397 ns/op 0 B/op 0 allocs/op
-BenchmarkFull-4 200000 5896 ns/op 0 B/op 0 allocs/op
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;go-gitignore&#34;&gt;go-gitignore&lt;/h3&gt;
-&lt;p&gt;また、こちらの高速なgitignore判定については、パッケージに切り出したのでもしGitignore判定したいというニッチなニーズをお持ちの方は使ってみてください。&lt;/p&gt;
-&lt;iframe src=&#34;//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fgo-gitignore&#34; title=&#34;monochromegane/go-gitignore&#34; class=&#34;embed-card embed-webcard&#34; scrolling=&#34;no&#34; frame border=&#34;0&#34; style=&#34;width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;&#34;&gt;&amp;lt;a href=&#34;https://github.com/monochromegane/go-gitignore&#34;&amp;gt;monochromegane/go-gitignore&amp;lt;/a&amp;gt;&lt;/iframe&gt;
-&lt;h2 id=&#34;channel-bufferのチューニング&#34;&gt;Channel bufferのチューニング&lt;/h2&gt;
-&lt;p&gt;The Platinum SearcherはFindの同時起動数、Grepの同時起動数、FindとGrepをつなぐChannelのBuffer数が主に性能に影響してくるパラメタとなります。&lt;/p&gt;
-&lt;p&gt;これらのチューニングですが、今回は実際の値を見ながら数値を変更して最適な値を探っていくというだいぶ泥臭いやり方になりました。何かよい方法があれば教えて下さい。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// GoroutineとChannel bufferの利用数を出力する
-go func() {
-for {
-time.Sleep(10 * time.Millisecond)
-fmt.Printf(&amp;quot;NumGoroutine %d / NumBuffer %d\n&amp;quot;, runtime.NumGoroutine(), len(grepChan))
-}
-}()
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Findの同時起動数はFind単体で実行した際はもう少し増やすことで性能出るのですが、Grepのほうにリソースが行き渡らなくなるためか、全体としては増やし過ぎると遅くなるという結果になりました。&lt;/p&gt;
-&lt;p&gt;またGrepについても同様ですが、OS側のキャッシュが効いていない場合、ファイルを閉じる処理が間に合わずに &lt;code&gt;too many open files&lt;/code&gt; が発生してしまうため現状の値にしています。&lt;/p&gt;
-&lt;h3 id=&#34;gomaxprocsについて&#34;&gt;GOMAXPROCSについて&lt;/h3&gt;
-&lt;p&gt;GOMAXPROCSはCPUコア数以上を指定しても現状のThe Platinum Searcherの構成では速くはならずむしろ若干遅くなるという結果になりました。IO待ちなどが発生する間、他にやる処理があるようなプログラムの場合は、CPU数以上増やしても効果があるかもしれませんが、&lt;code&gt;runtime.NumCPU()&lt;/code&gt;と同じ(1.5からのデフォルト)が一番バランスがよさそうです。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func init() {
-if cpu := runtime.NumCPU(); cpu == 1 {
-runtime.GOMAXPROCS(2)
-} else {
-runtime.GOMAXPROCS(cpu)
-}
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
-&lt;p&gt;The Platinum Searcherの高速化について代表的な修正を書き出してみました。単純にGoroutine使ったらこんなに速い〜からもう少し踏み込んだチューニングが今回出来たのではないかなと思います。&lt;/p&gt;
-&lt;p&gt;また、今回の高速化はあくまでThe Platinum Searcherで効果があったことであり、上記のことをやれば必ず速くなるわけではないと思います。実際、ミニマムな実装をつくって何か処理を実装する度に処理時間を計測し、パラメタの調整や使う関数のベンチマークをとって処理時間の少ない方、アロケートの少ない方を採用するよう地道に実装を進めました。遅いと言われている処理を使っても使いドコロによっては影響なかったり、逆に意外なところが遅くなったりもします。&lt;/p&gt;
-&lt;p&gt;まさに &lt;code&gt;推測するな、計測せよ&lt;/code&gt; ですね。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;最後にV1とV2の差分とプロファイリング結果をおいておきます。なにかの参考になればうれしいです。&lt;/p&gt;
+&lt;p&gt;最終的なWorkflowはこんな感じ。
+コンテンツの管理とGitHub Pagesのリポジトリを分けているが、その辺りもオプションでよしなにできて便利だった。&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/the_platinum_searcher/pull/110&#34;&gt;V1&amp;hellip;V2&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/images/2015/12/pprof_pt_v1.7.9.svg&#34;&gt;V1 Profile&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/images/2015/12/pprof_pt_v2.0.0.svg&#34;&gt;V2 Profile&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/thinking-megane/blob/master/.github/workflows/gh-pages.yml&#34;&gt;https://github.com/monochromegane/thinking-megane/blob/master/.github/workflows/gh-pages.yml&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;hr /&gt;
-&lt;p&gt;明日は &lt;a href=&#34;http://qiita.com/advent-calendar/2015/go2&#34;&gt;Go Advent Calendar 2015 その2&lt;/a&gt; の 16日目です。担当は&lt;a href=&#34;http://qiita.com/hogedigo&#34;&gt;hogedigo&lt;/a&gt;さんです。&lt;/p&gt;</description></item></channel></rss>
+&lt;p&gt;GitHub Actions、トークンやらキーやらの管理がGitHubの中で完結するので便利。
+キューのつまりも特に感じないし難しいことしなければ少なくとも現時点ではこれでいいのではという感じ。
+ボチボチ移行していくつもり。&lt;/p&gt;</description></item><item><title>2019年11月10日</title><link>https://blog.monochromegane.com/diary/20191110/</link><pubDate>Sun, 10 Nov 2019 23:50:53 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191110/</guid><description>&lt;p&gt;午前中は髪を切りに天神へ。
+さっぱりした後、本格的に寒くなるまでのつなぎになりそうなアウターを購入したりお茶したり散策して過ごす。
+帰宅後は、鍋と頂き物のかしわご飯を美味しくいただく。
+やっと鍋の似合う季節になってきた。&lt;/p&gt;
+&lt;p&gt;就寝前はブログのCIをGitHub Actionsに移行がてら触っていた。
+静的サイトとしてのコンテンツ出力に必要な箇所はできたので来週どこかでデプロイ部分をWerckerから切り替えよう。
+pushしてからCIが開始されるまでと実際のビルドもとにかく速いのでストレスなく使えそう。&lt;/p&gt;</description></item><item><title>2019年11月9日</title><link>https://blog.monochromegane.com/diary/20191109/</link><pubDate>Sat, 09 Nov 2019 22:25:38 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191109/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の査読結果の反映、最終確認。
+午前中にひとまず終えたものの、査読結果へのコメントに個別に答えるとまだ修正必要な気がして終われなかった。&lt;/p&gt;
+&lt;p&gt;昼寝の後、夕方までになんとか仕上げた。
+共著者へレビューを依頼。
+色々忙しかったとはいえ、時間が立つほどに記憶も薄れるので査読対応はさっさとやってしまった方が良さそう。
+ポスターも来週早々に終わらせてしまいたいが、まだフォーマットなど情報がないのでどうしたものか。&lt;/p&gt;
+&lt;p&gt;夕方、年末調整の提出が終わったので一安心。
+明日は、年末の福岡エンジニアコミュニティの集まりの主催についてボチボチ進めよう。&lt;/p&gt;</description></item><item><title>2019年11月8日</title><link>https://blog.monochromegane.com/diary/20191108/</link><pubDate>Sat, 09 Nov 2019 22:15:01 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191108/</guid><description>&lt;p&gt;終日&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の査読結果の反映。
+おおよそできたと思うので明日最終確認する。
+査読、丁寧に見てもらえていて本当に良い。
+これだとわからないですね〜という言い方の向こうにきちんと考えればより分かりやすくなる道が見える気がする。&lt;/p&gt;
+&lt;p&gt;時間を見つけて、&lt;a href=&#34;https://efc.fukuoka.jp/award&#34;&gt;エンジニアフレンドリーシティ福岡アワード&lt;/a&gt;のコミュニティ部門へのエントリーを仕上げた。
+Fukuoka.go、活動を振り返ると改めて着実に進んでいて我ながらエラいなあと思った。
+もちろん共同主催者に恵まれていることに感謝したい。&lt;/p&gt;
+&lt;p&gt;夜は『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/479071733X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479071733X&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=632f660a2f794586c0155153916e0aaa&#34;&gt;文化人類学の思考法&lt;/a&gt;』を少し読み進める。
+バイアスをどう認識するかという問題は突き詰めていくと人類であることすらバイアスであり、文化人類学はそのようなレイヤから比較し続けているのだなあととても面白い。
+一つ一つのネタは実際難しいけれどもまだ読み進めてどこかでまとめたい。&lt;/p&gt;</description></item><item><title>2019年11月7日</title><link>https://blog.monochromegane.com/diary/20191107/</link><pubDate>Thu, 07 Nov 2019 21:34:34 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191107/</guid><description>&lt;p&gt;深夜寝れなかったためリズムが悪く感じた。&lt;/p&gt;
+&lt;p&gt;PC移行で環境構築がうまくいってなかった箇所にハマってしまい、共同研究のデータ抽出に時間がかかってしまった。反省。&lt;/p&gt;
+&lt;p&gt;午後は研究会。
+共著論文で提案する手法にまつわるサーベイ論文のサーベイ結果などを共有してもらう。
+定義や定式化されている前例をもとにした議論になったことで手法の方針検討が整理された。&lt;/p&gt;
+&lt;p&gt;年内においてもどんどん研究が進む予感で楽しみになってきた。
+自分自身もポスターとジャーナルをしっかりやる。&lt;/p&gt;
+&lt;p&gt;今週末ぐらいから一気に集中して確率系の勉強をやったのが、継続系のインプット・アウトプット、ひいては生活リズムを崩してしまっている気がするので、やりすぎないというのもうまく制御していかないといけないなあ。&lt;/p&gt;</description></item><item><title>2019年11月6日</title><link>https://blog.monochromegane.com/diary/20191106/</link><pubDate>Thu, 07 Nov 2019 21:27:43 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191106/</guid><description>&lt;p&gt;朝から九大へ。
+論文のジャーナル投稿に向けて作戦を立てる。
+議論の中でやるべきことが明確になってきた。
+今年中に投稿は済ませるぞ。&lt;/p&gt;
+&lt;p&gt;また、今後についても相談。
+自分の中では大きな決断であるけれども、そろそろ動いていく時期であると判断した。
+あとは自分の頑張り次第。やるしかない。&lt;/p&gt;
+&lt;p&gt;とはいえ、朝が早かったこともあり、午後はなんだかふんわりしてしまったので研究以外のことをざっと進めた。
+コミュニティ活動まわりで直近のイベント方針を決めたりアワードエントリの準備であっという間で合った。&lt;/p&gt;
+&lt;p&gt;帰り際に研究チームでもう一つの共著論文に向けた方針を話す。
+明日の研究会で聞きたいことを伝え帰宅。
+早めに寝てしまったが、逆に深夜に起きてしまい翌朝の動き出しがイマイチだった。
+無限にはなかなか寝れなくなってきたのでやはり規則正しくが一番みたいだ。
+今週は乱れがちなのでペースを取り戻さねば。&lt;/p&gt;</description></item><item><title>2019年11月5日</title><link>https://blog.monochromegane.com/diary/20191105/</link><pubDate>Thu, 07 Nov 2019 21:24:22 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191105/</guid><description>&lt;p&gt;所属する研究所で共著論文のため研究計画を改めて一緒に練るなどした。
+チームであることを活かしてどんどん並列で進めつつ大きなビジョンを達成していく。&lt;/p&gt;
+&lt;p&gt;午後は引き続きバンディットのポリシーの実装に向けた下調べなど。
+自身のメイン研究もバーンとやっていきたい。&lt;/p&gt;</description></item><item><title>2019年11月4日</title><link>https://blog.monochromegane.com/diary/20191104/</link><pubDate>Mon, 04 Nov 2019 22:27:48 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191104/</guid><description>&lt;p&gt;午前中は引き続きベイズ統計の勉強。
+仮定やデータが連続値になった場合についても得心が行ったと思う。
+勉強の見積もりがイマイチあっておらず予定より時間かかっているがバンディットの確率的な方策についてはこれで実装できるだろう。
+ベイズ統計を直接使うわけではないが、推論まわりは応用効きそうなので『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4061538322/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4061538322&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=624549ce46217ec9cd619e8b038b9865&#34;&gt;機械学習スタートアップシリーズ ベイズ推論による機械学習入門 (KS情報科学専門書)&lt;/a&gt;』を自習していこう。&lt;/p&gt;
+&lt;p&gt;午後は先日購入していた『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/479071733X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479071733X&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=632f660a2f794586c0155153916e0aaa&#34;&gt;文化人類学の思考法&lt;/a&gt;』を少し読む。
+新しいモノの見方を知ることができてしばらく楽しめそう。
+そのまま読みながら昼寝。&lt;/p&gt;
+&lt;p&gt;来週からは研究、ポスター、共同研究など忙しくなるけど一歩づつ進めていきたい。&lt;/p&gt;</description></item><item><title>2019年11月3日</title><link>https://blog.monochromegane.com/diary/20191103/</link><pubDate>Mon, 04 Nov 2019 00:47:07 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191103/</guid><description>&lt;p&gt;午前中ベイズの勉強。
+昨日に引き続き『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4797366575/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4797366575&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=df00ddc50d7fa4565615ab69d2bf54c9&#34;&gt;図解・ベイズ統計「超」入門 あいまいなデータから未来を予測する技術 (サイエンス・アイ新書)&lt;/a&gt;』を読み終えて『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4478013322/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4478013322&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=7dd44714a769c09e93745f716cda1b23&#34;&gt;完全独習 ベイズ統計学入門&lt;/a&gt;』と『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/B07HG42534/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B07HG42534&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=d178b6c02684603444f6a910c51f79a4&#34;&gt;まずはこの一冊から 意味がわかるベイズ統計学&lt;/a&gt;』を読む。
+仮定とデータがかなり自由に設定できるので柔軟な一方で難しい場合もある。
+特に確率分布まわりを使う時の整理がまだかなあという感じ。
+いったん、元の動機付けのところに戻りつつ必要な部分について整理を進めよう。&lt;/p&gt;
+&lt;p&gt;午後はiPad Proを触るなど。
+Face IDを使えるデバイスは初めてだったけどかなり快適。
+セットアップもiPhoneを隣におけばほぼ設定いらずで、ハードウェア含めて提供できているとこの辺強いなあという感想。
+論文管理も明日やっていこう。&lt;/p&gt;</description></item><item><title>2019年11月2日</title><link>https://blog.monochromegane.com/diary/20191102/</link><pubDate>Mon, 04 Nov 2019 00:40:34 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191102/</guid><description>&lt;p&gt;午前中はベイズ統計の勉強。
+ベイズの定理はだいぶ馴染んできたが、連続値の場合にまだ理解が不十分な気がするので引き続き明日も進める。&lt;/p&gt;
+&lt;p&gt;午後は本屋によって、『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4274067750/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4274067750&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=29048146b631aa17e79995b374c806ec&#34;&gt;プログラミングのための確率統計&lt;/a&gt;』と『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/479071733X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479071733X&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=632f660a2f794586c0155153916e0aaa&#34;&gt;文化人類学の思考法&lt;/a&gt;』を購入。
+夕食後、購入した本を読んでいたら寝てしまった感じ。&lt;/p&gt;</description></item><item><title>2019年11月1日</title><link>https://blog.monochromegane.com/diary/20191101/</link><pubDate>Sat, 02 Nov 2019 00:27:04 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191101/</guid><description>
+&lt;h2 id=&#34;健康診断&#34;&gt;健康診断&lt;/h2&gt;
+&lt;p&gt;午前中、健康診断。
+午後はベイズ推定関連の基礎知識をつけていた。
+バリウムは健康診断の後も終日大変なのであまり生産性は高くなかったかもしれない。
+来年は胃カメラ、鼻からでやってみるかなあ。&lt;/p&gt;
+&lt;h2 id=&#34;喩えと例え&#34;&gt;喩えと例え&lt;/h2&gt;
+&lt;p&gt;自分の場合、ベイズ推定なり数式を含む新しい概念を獲得するには身の丈にあった入門書を複数こなすことで、違った角度から見比べてその概念を掴んでいく。
+ただ、入門書は結構当たり外れがあるのが悩ましい。&lt;/p&gt;
+&lt;p&gt;良い本を見つけるため最近は、説明の「喩え」よりも「例え（ば）」を重視している。
+手元の辞書によると「喩え」は「たとえること。たとえとして引かれた事柄」とあり、「例えば」は「前文に述べた主旨を客観的に証明するに足る例をあげることを表す。」とある。
+学びたい概念を「喩え」る入門書は、読者の知る身近な事柄でこれを説明する。
+一方、「例えば」の入門書は、その概念の構成要素やそれらが成立する仕組みを裏付ける例を通して理解を助ける。&lt;/p&gt;
+&lt;p&gt;「喩え」に頼りすぎてしまってると感じた本の読後は、分かったような分からないような感じが多い。
+対して、簡潔な「例えば」が十分な量で用意されていた本は、なるほどそういう理由・仕組みだったのかと理解が深まったと感じる。
+この辺を区分できるようになって、ハズレはつかまなくなったかなあと思う。
+もちろん、適切な「喩え」が理解を助けることもあるのであくまでも重視する方という意味合いで。&lt;/p&gt;
+&lt;p&gt;ところで、簡潔に概念を説明できる「例えば」を作るためにはその概念に対する深い理解が必要である。
+論文であっても手法であっても、ある概念を相手に説明する際に「喩え」が出るか、複雑な「例えば」が出るか、簡潔な「例えば」を出せるかで自分の理解を問うていきたい。&lt;/p&gt;</description></item><item><title>2019年10月31日</title><link>https://blog.monochromegane.com/diary/20191031/</link><pubDate>Thu, 31 Oct 2019 21:58:58 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191031/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の採録通知。
+とても嬉しい。
+査読結果もなるほど納得なしっかり読み込んでくれた内容であったので将来のジャーナル化に向けてもありがたいアドバイスになった。&lt;/p&gt;
+&lt;p&gt;研究の手法を改善するためにベイズ推定まわりを押さえておかないと厳しい感じになってきたので、入門系の書物を数冊購入して帰宅。
+ちょうど最近、&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/10/11/random_number_gen_using_go/&#34;&gt;確率分布などをおさらいした&lt;/a&gt;のもあり、以前より理解できるのではないかと考えている。
+この辺、一足飛びには理解できないので、ひとつづつ理解を進めていく。
+専門力の向上が次のステップなのでやっていきたい。&lt;/p&gt;
+&lt;p&gt;昨年から始まった&lt;a href=&#34;https://fukuokaphp.connpass.com/event/109317/&#34;&gt;Fukuoka.LT&lt;/a&gt;だが、運営をコミュニティの持ち回りにしたので、今年はFukuoka.goでやることにした。
+普段のコミュニティで登壇してる内容を話してもらうことで一層コミュニティの雰囲気を知れるのではないかとなったのでそんな感じに進める。
+連絡周りは省力で進められるといいな。&lt;/p&gt;</description></item><item><title>2019年10月30日</title><link>https://blog.monochromegane.com/diary/20191030/</link><pubDate>Thu, 31 Oct 2019 21:56:23 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191030/</guid><description>&lt;p&gt;午前中Research I/O。
+論文の骨子などを検討していくのを午前中に進んでいるという状態はとても気分的に良い。
+午後はデータ分析など。&lt;/p&gt;
+&lt;p&gt;週途中ながらに疲れが出てきたので夜は早めに就寝した。
+iPad Proまだ開けれてない。とほほ。&lt;/p&gt;</description></item><item><title>2019年10月29日</title><link>https://blog.monochromegane.com/diary/20191029/</link><pubDate>Tue, 29 Oct 2019 23:51:16 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191029/</guid><description>&lt;p&gt;午前中、Research I/Oの時間。提案手法の新規性と有用性を論じるためのあれこれを考える。
+午後は、研究周りのデータ抽出や解析など。
+午前中に必ず研究系が進んでいるという状況は良いので引き続きやっていく。&lt;/p&gt;
+&lt;p&gt;帰り際にApple storeによって、その場で「&lt;a href=&#34;https://www.amazon.co.jp/gp/product/B07K7MBNZ2/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B07K7MBNZ2&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=5012f106ddfdeb7467c8a02d523f6ad0&#34;&gt;Apple iPad Pro (11インチ, Wi-Fi, 512GB) - スペースグレイ (最新モデル)&lt;/a&gt;」と「&lt;a href=&#34;https://www.amazon.co.jp/gp/product/B07KR69HH9/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B07KR69HH9&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=256d1dc837b0ae029969e0ea28e6603f&#34;&gt;Apple Pencil（第2世代）&lt;/a&gt;」を購入。
+最後まで12.9インチと悩んだけど、論文読むのは等倍でなくても大丈夫だと判断して普段の取り回しの良さの面から11インチにした。
+論文管理の仕組みを構築していかねば。&lt;/p&gt;</description></item></channel></rss>

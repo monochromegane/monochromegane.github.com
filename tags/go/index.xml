@@ -1,242 +1,123 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>go on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/go/</link><description>Recent content in go on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Thu, 17 Jul 2014 00:00:00 +0000</lastBuildDate><atom:link href="/tags/go/" rel="self" type="application/rss+xml"/><item><title>「ほい、これ」ってファイルを渡せる Hoi というツールをつくった</title><link>https://blog.monochromegane.com/blog/2014/07/17/hoi/</link><pubDate>Thu, 17 Jul 2014 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2014/07/17/hoi/</guid><description>
-&lt;p&gt;PC間でのファイル受け渡しのときにファイルサーバを使うことがたまにありますが、OSによってファイルパスやその書式が違ったり、受け渡し用のディレクトリをつくるとか、ファイル渡したいだけなのに、なんだか小さなひっかかりがあってスマートじゃないなあといつも感じてました。&lt;/p&gt;
-&lt;p&gt;なので、もっと直感的に「ほい、これ」って渡せるツールをつくってみました。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;hoi&#34;&gt;Hoi&lt;/h1&gt;
-&lt;p&gt;&lt;strong&gt;Hoi&lt;/strong&gt;はファイルの受け渡しを簡単に行うためのコマンドラインツールです。Go言語で書かれており、HTTPファイルサーバを利用して機能を提供します。&lt;/p&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>go on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/go/</link><description>Recent content in go on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Thu, 17 Jul 2014 00:00:00 +0000</lastBuildDate><atom:link href="/tags/go/" rel="self" type="application/rss+xml"/><item><title>2019年11月12日</title><link>https://blog.monochromegane.com/diary/20191112/</link><pubDate>Tue, 12 Nov 2019 22:10:53 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191112/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;、原稿出し終えたのでジャーナル執筆と並行しなくて良いように先にポスター書いてしまう。&lt;/p&gt;
+&lt;p&gt;Fukuoka.LTという去年から始まった福岡のいろいろなコミュニティの合同忘年会があるのだけど、今年の運営をFukuoka.goが任されることになったので、先週ぐらいから準備していた。&lt;/p&gt;
+&lt;p&gt;今年は、Fukuoka.goらしく技術を肴に酒を飲もうという感じに、言語や技術を横断した登壇と忘年会とした。
+今日は登壇者募集の告知。
+集まるといいなあ。
+これぐらいのイベントだと大規模カンファレンスやったあとなので比較的楽に進めることができる。
+コミュニティ運営力のレベルアップだ。&lt;/p&gt;</description></item><item><title>2019年11月11日</title><link>https://blog.monochromegane.com/diary/20191111/</link><pubDate>Mon, 11 Nov 2019 23:21:16 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191111/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の共著者レビューを終えて提出。
+順調なのでこのままポスターも作ってしまいたいがフォーマットやサイズなどがまだ公開されていない。うーむ。&lt;/p&gt;
+&lt;p&gt;午後は、年末の福岡エンジニアコミュニティの集まりの主催についてガッと進めた。
+方針は決まったのであとは登壇者が順調に集まってくれるのを祈るのみ。&lt;/p&gt;
+&lt;p&gt;帰宅後はこのブログをGitHub Actionsでデプロイできるようにするなど。
+HugoのSetup、GitHub Pagesへのデプロイはこの辺りを使った&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/hoi&#34;&gt;monochromegane/hoi (An easy file transfer tool using http file server.)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/peaceiris/actions-hugo&#34;&gt;https://github.com/peaceiris/actions-hugo&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/peaceiris/actions-gh-pages&#34;&gt;https://github.com/peaceiris/actions-gh-pages&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&#34;ファイルを渡す&#34;&gt;ファイルを渡す&lt;/h2&gt;
-&lt;p&gt;使い方は簡単でローカルのファイルパスを&lt;code&gt;hoi&lt;/code&gt;コマンドの引数に渡すだけです。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ hoi ~/Documents/hoge.txt
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;そうすると以下のような、ダウンロード用のURLが出力されます。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;http://192.168.0.100:8081/h6un2x8zx6018xuhhn3bu7twwnf4ol1y/hoge.txt&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;これをIRCなりなんなりで相手に伝えてください。&lt;/p&gt;
-&lt;h3 id=&#34;仕組み&#34;&gt;仕組み&lt;/h3&gt;
-&lt;p&gt;特に難しいことはしていません。主な処理はこういう感じです。&lt;/p&gt;
+&lt;p&gt;最終的なWorkflowはこんな感じ。
+コンテンツの管理とGitHub Pagesのリポジトリを分けているが、その辺りもオプションでよしなにできて便利だった。&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;ファイルダウンロード用にHTTPサーバを起動する&lt;/li&gt;
-&lt;li&gt;HTTPサーバのDocumentRootに対して引数のファイルのシンボリックリンクをはる&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/thinking-megane/blob/master/.github/workflows/gh-pages.yml&#34;&gt;https://github.com/monochromegane/thinking-megane/blob/master/.github/workflows/gh-pages.yml&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;見ての通り、シンボリックリンクさえはればどんなファイルでもダウンロード対象になりますし、HTTPSでもないので、&lt;br /&gt;
-&lt;strong&gt;必ず信頼できるネットワーク上で使うようにしてください。&lt;/strong&gt;&lt;/p&gt;
-&lt;h2 id=&#34;ファイルを消す&#34;&gt;ファイルを消す&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ hoi --clear
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;で公開しているファイルのシンボリックリンクを削除します。&lt;/p&gt;
-&lt;p&gt;そのうち、定期的に消すような処理を入れようかなと思ってます。&lt;/p&gt;
-&lt;h2 id=&#34;デーモン化について&#34;&gt;デーモン化について&lt;/h2&gt;
-&lt;p&gt;HTTPサーバのデーモン化、Supervisordとか使わず Hoi 単体だけでできるように、こんな感じのシンプルなやつにしてます。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func runAsDaemon() {
-cmd := exec.Command(os.Args[0], &amp;quot;--server&amp;quot;)
-cmd.Start()
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;今のところ、PIDでしかHTTPサーバのプロセスにたどり着く手段がなくて、サーバのstatus/stopとかの実装をどうしようか思案中です。&lt;/p&gt;
-&lt;p&gt;Go言語でのデーモン化についてよい案をお持ちのかた、アドバイスお待ちしてます。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;Go言語、HTTPサーバを立てるだけならすぐできてしまって便利ですね。&lt;/p&gt;
-&lt;p&gt;ファイルの受け渡しのためにローカルにHTTPサーバを立てるというのはある意味ぜいたくですが、全然負荷もかからないので、こんな風に使ってみるのもありかなとちょっと遊んでみました。&lt;/p&gt;</description></item><item><title>Go言語での構造体実装パターン</title><link>https://blog.monochromegane.com/blog/2014/03/23/struct-implementaion-patterns-in-golang/</link><pubDate>Sun, 23 Mar 2014 00:00:00 +0000</pubDate><guid>https://blog.monochromegane.com/blog/2014/03/23/struct-implementaion-patterns-in-golang/</guid><description>
-&lt;p&gt;Go言語での構造体実装は、埋込や独自コンセプトのインターフェースといったGo言語独自の機能を理解して行う必要があります。
-今年からGo言語を始めましたが理解が曖昧なままだと実装に迷うことが何度かありました。今回よい機会なので、Go言語での構造体実装パターンとしてまとめてみることにしました。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;構造体実装パターン&#34;&gt;構造体実装パターン&lt;/h1&gt;
-&lt;p&gt;実装パターンの洗い出しとして、GoFデザインパターンをGo言語で実装する手法をとりました。
-その中で繰り返し現れる実装をGo言語での構造体実装パターンとしてまとめてみました。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;コンストラクタ関数&lt;/li&gt;
-&lt;li&gt;エクスポートによるアクセス許可&lt;/li&gt;
-&lt;li&gt;インターフェースによるポリモフィズム&lt;/li&gt;
-&lt;li&gt;構造体によるポリモフィズム&lt;/li&gt;
-&lt;li&gt;構造体によるサブクラス・レスポンシビリティ&lt;/li&gt;
-&lt;li&gt;構造体による移譲&lt;/li&gt;
-&lt;li&gt;関数による移譲&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;以下、それぞれのパターンを解説していきます。&lt;/p&gt;
-&lt;h2 id=&#34;コンストラクタ関数&#34;&gt;コンストラクタ関数&lt;/h2&gt;
-&lt;p&gt;Go言語には構造体のコンストラクタがないため、構造体の初期化を行うには構造体の属するパッケージにコンストラクタ関数を定義します。&lt;/p&gt;
-&lt;p&gt;慣例では関数名としてNew + 構造体名() が用いられています。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;type StructA struct {
-Name string
-}
-// 初期化時に行いたい処理
-func (self *StructA) SomeInitialize() {
-// Some initialize
-}
-// コンストラクタ関数を定義
-func NewStructA(name string) *StructA {
-structA := &amp;amp;StructA{Name: name}
-structA.SomeInitialize()
-return structA
-}
-func main() {
-_ = NewStructA(&amp;quot;name&amp;quot;)
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;コンストラクタ関数を用いることには以下の利点があります。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;構造体の生成と同時に行いたい処理を利用側から隠す&lt;/li&gt;
-&lt;li&gt;埋込構造体を利用側から隠す（構造体の構造を利用側から隠す。埋込構造体の存在を隠すことにも使えます（後述））&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;エクスポートによるアクセス許可&#34;&gt;エクスポートによるアクセス許可&lt;/h2&gt;
-&lt;p&gt;Go言語ではパッケージ外へのアクセス許可は、名前の先頭を大文字にすることで行います（エクスポート）。
-これを利用することでシングルトンのようなインスタンス生成の制御を行うことが可能です。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package singleton
-// 構造体の名前を小文字にすることでパッケージ外へのエクスポートを行わない
-type singleton struct {
-}
-// インスタンスを保持する変数も小文字にすることでエクスポートを行わない
-var instance *singleton
-// インスタンス取得用の関数のみエクスポートしておき、ここでインスタンスが
-// 一意であることを保証する
-func GetInstance() *singleton {
-if instance == nil {
-instance = &amp;amp;singleton{}
-}
-return instance
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;省略書式&lt;code&gt;:=&lt;/code&gt;を使うことで構造体自体をエクスポートしなくても利用できます。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;singleton := singleton.GetInstance()
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;インターフェースによるポリモフィズム&#34;&gt;インターフェースによるポリモフィズム&lt;/h2&gt;
-&lt;p&gt;Go言語には型の継承機能が用意されていませんが、インターフェースを用いることでポリモフィズムを実現できます。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// インターフェースの定義
-type SomeBehivor interface {
-DoSomething(arg string) string
-}
-// 構造体の定義
-type StructA struct {
-}
-// インターフェースの実装
-func (self *StructA) DoSomething(arg string) string {
-return arg
-}
-// ポリモフィズム
-func main() {
-// インターフェース型の変数に格納できる
-var behivor SomeBehivor
-behivor = &amp;amp;StructA{}
-behivor.DoSomething(&amp;quot;A&amp;quot;)
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;構造体の埋込により擬似的な継承ができると説明しているものがありますが、これはあくまで透過的に構造体を利用できるだけで、&amp;rdquo;型&amp;rdquo;としてポリモフィズムを実現できるわけではないことに注意してください。&lt;/p&gt;
-&lt;h2 id=&#34;構造体によるポリモフィズム&#34;&gt;構造体によるポリモフィズム&lt;/h2&gt;
-&lt;p&gt;ポリモフィズムを実現しつつ、構造体に共通の実装やメンバを定義したい場合があります。
-この場合は、インターフェースを実装した構造体を用意して、それを埋め込む方法を取ります。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// インターフェースの定義
-type SomeBehivor interface {
-DoSomething() string
-}
-// 共通構造体の定義
-type DefaultStruct struct {
-// 共通メンバ
-Name string
-}
-// 共通構造体にインターフェースを実装
-func (self *DefaultStruct) DoSomething() string {
-return self.Name
-}
-// 共通構造体を埋め込む
-type StructA struct {
-*DefaultStruct
-}
-func main() {
-// インターフェース型の変数に格納できる
-behivor := &amp;amp;StructA{&amp;amp;DefaultStruct{&amp;quot;A&amp;quot;}}
-// 共通実装とメンバを使うことができる
-behivor.DoSomething()
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;ただし、この場合、利用側が初期化時に埋込構造体を意識する必要があるため、前述のコンストラクタ関数を用意するとよいでしょう。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// コンストラクタ関数
-func NewStructA(name string) *StructA {
-return &amp;amp;StructA{&amp;amp;DefaultStruct{&amp;quot;A&amp;quot;}}
-}
-// 利用側は埋込構造体の存在を意識しない
-behivor := NewStructA(&amp;quot;A&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;構造体によるサブクラス-レスポンシビリティ&#34;&gt;構造体によるサブクラス・レスポンシビリティ&lt;/h2&gt;
-&lt;p&gt;Go言語では、埋め込まれた構造体がもとの構造体の実装を利用することができません（Dispatch backされないと言います）。&lt;/p&gt;
-&lt;p&gt;そのため、TemplateMethodパターンのように子クラスに処理の実装を任せる機能をつくる場合、埋め込まれた構造体のメソッドに対してレシーバとなる、もとの構造体の参照を渡す必要があります。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;type Behivor interface {
-DoSomethingByOther()
-}
-type Abstract struct {
-}
-// 内部で、もとの構造体の実装を利用するメソッド
-func (self *Abstract) DoSomething(behivor Behivor) {
-behivor.DoSomethingByOther()
-// 仮にここで AbstractにBehivorを埋め込むなど、メソッドがある状態でコンパイルを通るようにして、
-// self.DoSomethingByOther()としてもpanic: runtime error: invalid memory address or nil pointer dereferenceが
-// 発生し、Dispatch backされないことがわかる
-}
-// 上で定義した構造体を埋め込む
-type Concrete struct {
-*Abstract
-}
-// インターフェースを実装
-func (self *Concrete) DoSomethingByOther() {
-// Do something
-}
-func main() {
-concrete := &amp;amp;Concrete{}
-// レシーバとなる自分自身を渡す
-concrete.DoSomething(concrete)
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;このレシーバを自ら指定する方法は、継承を利用できない言語で&lt;code&gt;Client-specified self&lt;/code&gt;というパターンという名前で使われているようです。
-ただし構造体間の依存関係が高くなるため、どうしても継承関係が必要な場合を除き、後述の構造体による移譲、または関数による移譲を検討するほうがよいでしょう。&lt;/p&gt;
-&lt;h2 id=&#34;構造体による移譲&#34;&gt;構造体による移譲&lt;/h2&gt;
-&lt;p&gt;Go言語では、処理の実装を適切な責務を持つ構造体に任せる移譲は簡単に実現できます。
-それには構造体をメンバとして保持し、必要に応じて、その構造体のメソッドを呼ぶようにします。&lt;/p&gt;
-&lt;p&gt;また、Strategyパターンのようにインターフェースに対して移譲するような設計にしておくと依存性をより下げることができるでしょう。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;type Strategy interface {
-DoSomething()
-}
-type ConcreteStrategy struct {
-}
-func (self *ConcreteStrategy) DoSomething() {
-// Do something
-}
-type StructA struct {
-// 移譲先をメンバに保持
-strategy Strategy
-}
-func (self *StructA) Operation() {
-// 埋め込んだ構造体に処理を移譲
-self.strategy.DoSomething()
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;関数による移譲&#34;&gt;関数による移譲&lt;/h2&gt;
-&lt;p&gt;Go言語では、関数をファーストクラスの型として扱えるため、移譲する処理を関数として渡す手法もとることができます。
-Go言語の基本パッケージを見ていると、移譲処理を外部から注入する機能を提供する場合、関数型を渡すような設計になっているのが多いように思われます。
-　&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;
-// 関数型を定義
-type DoSomething func()
-type StructA struct {
-}
-// 関数型を引数で受け取るメソッドを定義
-func (self *StructA) Operation(strategy DoSomething) {
-// 受け取った関数型に処理を移譲
-strategy()
-}
-func main() {
-structA := &amp;amp;StructA{}
-// 関数リテラルで引数として渡す
-structA.Operation(func(){
-// Do something
-})
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;hr /&gt;
-&lt;h1 id=&#34;go言語でのデザインパターン&#34;&gt;Go言語でのデザインパターン&lt;/h1&gt;
-&lt;p&gt;今回、パターンの洗い出しに使ったGo言語でのデザインパターン実装はこちらのリポジトリに公開しています。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/go_design_pattern&#34;&gt;monochromegane/go_design_pattern&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;パターン実装にあたっては、結城 浩さんの&lt;a href=&#34;http://www.amazon.co.jp/%E5%A2%97%E8%A3%9C%E6%94%B9%E8%A8%82%E7%89%88Java%E8%A8%80%E8%AA%9E%E3%81%A7%E5%AD%A6%E3%81%B6%E3%83%87%E3%82%B6%E3%82%A4%E3%83%B3%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3%E5%85%A5%E9%96%80-%E7%B5%90%E5%9F%8E-%E6%B5%A9/dp/4797327030/ref=sr_1_2?ie=UTF8&amp;amp;qid=1395468803&amp;amp;sr=8-2&amp;amp;keywords=%E3%83%87%E3%82%B6%E3%82%A4%E3%83%B3%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3&#34;&gt;増補改訂版Java言語で学ぶデザインパターン入門&lt;/a&gt;を参考にしました。
-各デザインパターンの解説についてはそちらを参考にしてください。&lt;/p&gt;</description></item></channel></rss>
+&lt;p&gt;GitHub Actions、トークンやらキーやらの管理がGitHubの中で完結するので便利。
+キューのつまりも特に感じないし難しいことしなければ少なくとも現時点ではこれでいいのではという感じ。
+ボチボチ移行していくつもり。&lt;/p&gt;</description></item><item><title>2019年11月10日</title><link>https://blog.monochromegane.com/diary/20191110/</link><pubDate>Sun, 10 Nov 2019 23:50:53 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191110/</guid><description>&lt;p&gt;午前中は髪を切りに天神へ。
+さっぱりした後、本格的に寒くなるまでのつなぎになりそうなアウターを購入したりお茶したり散策して過ごす。
+帰宅後は、鍋と頂き物のかしわご飯を美味しくいただく。
+やっと鍋の似合う季節になってきた。&lt;/p&gt;
+&lt;p&gt;就寝前はブログのCIをGitHub Actionsに移行がてら触っていた。
+静的サイトとしてのコンテンツ出力に必要な箇所はできたので来週どこかでデプロイ部分をWerckerから切り替えよう。
+pushしてからCIが開始されるまでと実際のビルドもとにかく速いのでストレスなく使えそう。&lt;/p&gt;</description></item><item><title>2019年11月9日</title><link>https://blog.monochromegane.com/diary/20191109/</link><pubDate>Sat, 09 Nov 2019 22:25:38 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191109/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の査読結果の反映、最終確認。
+午前中にひとまず終えたものの、査読結果へのコメントに個別に答えるとまだ修正必要な気がして終われなかった。&lt;/p&gt;
+&lt;p&gt;昼寝の後、夕方までになんとか仕上げた。
+共著者へレビューを依頼。
+色々忙しかったとはいえ、時間が立つほどに記憶も薄れるので査読対応はさっさとやってしまった方が良さそう。
+ポスターも来週早々に終わらせてしまいたいが、まだフォーマットなど情報がないのでどうしたものか。&lt;/p&gt;
+&lt;p&gt;夕方、年末調整の提出が終わったので一安心。
+明日は、年末の福岡エンジニアコミュニティの集まりの主催についてボチボチ進めよう。&lt;/p&gt;</description></item><item><title>2019年11月8日</title><link>https://blog.monochromegane.com/diary/20191108/</link><pubDate>Sat, 09 Nov 2019 22:15:01 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191108/</guid><description>&lt;p&gt;終日&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の査読結果の反映。
+おおよそできたと思うので明日最終確認する。
+査読、丁寧に見てもらえていて本当に良い。
+これだとわからないですね〜という言い方の向こうにきちんと考えればより分かりやすくなる道が見える気がする。&lt;/p&gt;
+&lt;p&gt;時間を見つけて、&lt;a href=&#34;https://efc.fukuoka.jp/award&#34;&gt;エンジニアフレンドリーシティ福岡アワード&lt;/a&gt;のコミュニティ部門へのエントリーを仕上げた。
+Fukuoka.go、活動を振り返ると改めて着実に進んでいて我ながらエラいなあと思った。
+もちろん共同主催者に恵まれていることに感謝したい。&lt;/p&gt;
+&lt;p&gt;夜は『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/479071733X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479071733X&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=632f660a2f794586c0155153916e0aaa&#34;&gt;文化人類学の思考法&lt;/a&gt;』を少し読み進める。
+バイアスをどう認識するかという問題は突き詰めていくと人類であることすらバイアスであり、文化人類学はそのようなレイヤから比較し続けているのだなあととても面白い。
+一つ一つのネタは実際難しいけれどもまだ読み進めてどこかでまとめたい。&lt;/p&gt;</description></item><item><title>2019年11月7日</title><link>https://blog.monochromegane.com/diary/20191107/</link><pubDate>Thu, 07 Nov 2019 21:34:34 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191107/</guid><description>&lt;p&gt;深夜寝れなかったためリズムが悪く感じた。&lt;/p&gt;
+&lt;p&gt;PC移行で環境構築がうまくいってなかった箇所にハマってしまい、共同研究のデータ抽出に時間がかかってしまった。反省。&lt;/p&gt;
+&lt;p&gt;午後は研究会。
+共著論文で提案する手法にまつわるサーベイ論文のサーベイ結果などを共有してもらう。
+定義や定式化されている前例をもとにした議論になったことで手法の方針検討が整理された。&lt;/p&gt;
+&lt;p&gt;年内においてもどんどん研究が進む予感で楽しみになってきた。
+自分自身もポスターとジャーナルをしっかりやる。&lt;/p&gt;
+&lt;p&gt;今週末ぐらいから一気に集中して確率系の勉強をやったのが、継続系のインプット・アウトプット、ひいては生活リズムを崩してしまっている気がするので、やりすぎないというのもうまく制御していかないといけないなあ。&lt;/p&gt;</description></item><item><title>2019年11月6日</title><link>https://blog.monochromegane.com/diary/20191106/</link><pubDate>Thu, 07 Nov 2019 21:27:43 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191106/</guid><description>&lt;p&gt;朝から九大へ。
+論文のジャーナル投稿に向けて作戦を立てる。
+議論の中でやるべきことが明確になってきた。
+今年中に投稿は済ませるぞ。&lt;/p&gt;
+&lt;p&gt;また、今後についても相談。
+自分の中では大きな決断であるけれども、そろそろ動いていく時期であると判断した。
+あとは自分の頑張り次第。やるしかない。&lt;/p&gt;
+&lt;p&gt;とはいえ、朝が早かったこともあり、午後はなんだかふんわりしてしまったので研究以外のことをざっと進めた。
+コミュニティ活動まわりで直近のイベント方針を決めたりアワードエントリの準備であっという間で合った。&lt;/p&gt;
+&lt;p&gt;帰り際に研究チームでもう一つの共著論文に向けた方針を話す。
+明日の研究会で聞きたいことを伝え帰宅。
+早めに寝てしまったが、逆に深夜に起きてしまい翌朝の動き出しがイマイチだった。
+無限にはなかなか寝れなくなってきたのでやはり規則正しくが一番みたいだ。
+今週は乱れがちなのでペースを取り戻さねば。&lt;/p&gt;</description></item><item><title>2019年11月5日</title><link>https://blog.monochromegane.com/diary/20191105/</link><pubDate>Thu, 07 Nov 2019 21:24:22 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191105/</guid><description>&lt;p&gt;所属する研究所で共著論文のため研究計画を改めて一緒に練るなどした。
+チームであることを活かしてどんどん並列で進めつつ大きなビジョンを達成していく。&lt;/p&gt;
+&lt;p&gt;午後は引き続きバンディットのポリシーの実装に向けた下調べなど。
+自身のメイン研究もバーンとやっていきたい。&lt;/p&gt;</description></item><item><title>2019年11月4日</title><link>https://blog.monochromegane.com/diary/20191104/</link><pubDate>Mon, 04 Nov 2019 22:27:48 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191104/</guid><description>&lt;p&gt;午前中は引き続きベイズ統計の勉強。
+仮定やデータが連続値になった場合についても得心が行ったと思う。
+勉強の見積もりがイマイチあっておらず予定より時間かかっているがバンディットの確率的な方策についてはこれで実装できるだろう。
+ベイズ統計を直接使うわけではないが、推論まわりは応用効きそうなので『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4061538322/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4061538322&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=624549ce46217ec9cd619e8b038b9865&#34;&gt;機械学習スタートアップシリーズ ベイズ推論による機械学習入門 (KS情報科学専門書)&lt;/a&gt;』を自習していこう。&lt;/p&gt;
+&lt;p&gt;午後は先日購入していた『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/479071733X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479071733X&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=632f660a2f794586c0155153916e0aaa&#34;&gt;文化人類学の思考法&lt;/a&gt;』を少し読む。
+新しいモノの見方を知ることができてしばらく楽しめそう。
+そのまま読みながら昼寝。&lt;/p&gt;
+&lt;p&gt;来週からは研究、ポスター、共同研究など忙しくなるけど一歩づつ進めていきたい。&lt;/p&gt;</description></item><item><title>2019年11月3日</title><link>https://blog.monochromegane.com/diary/20191103/</link><pubDate>Mon, 04 Nov 2019 00:47:07 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191103/</guid><description>&lt;p&gt;午前中ベイズの勉強。
+昨日に引き続き『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4797366575/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4797366575&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=df00ddc50d7fa4565615ab69d2bf54c9&#34;&gt;図解・ベイズ統計「超」入門 あいまいなデータから未来を予測する技術 (サイエンス・アイ新書)&lt;/a&gt;』を読み終えて『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4478013322/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4478013322&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=7dd44714a769c09e93745f716cda1b23&#34;&gt;完全独習 ベイズ統計学入門&lt;/a&gt;』と『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/B07HG42534/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B07HG42534&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=d178b6c02684603444f6a910c51f79a4&#34;&gt;まずはこの一冊から 意味がわかるベイズ統計学&lt;/a&gt;』を読む。
+仮定とデータがかなり自由に設定できるので柔軟な一方で難しい場合もある。
+特に確率分布まわりを使う時の整理がまだかなあという感じ。
+いったん、元の動機付けのところに戻りつつ必要な部分について整理を進めよう。&lt;/p&gt;
+&lt;p&gt;午後はiPad Proを触るなど。
+Face IDを使えるデバイスは初めてだったけどかなり快適。
+セットアップもiPhoneを隣におけばほぼ設定いらずで、ハードウェア含めて提供できているとこの辺強いなあという感想。
+論文管理も明日やっていこう。&lt;/p&gt;</description></item><item><title>2019年11月2日</title><link>https://blog.monochromegane.com/diary/20191102/</link><pubDate>Mon, 04 Nov 2019 00:40:34 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191102/</guid><description>&lt;p&gt;午前中はベイズ統計の勉強。
+ベイズの定理はだいぶ馴染んできたが、連続値の場合にまだ理解が不十分な気がするので引き続き明日も進める。&lt;/p&gt;
+&lt;p&gt;午後は本屋によって、『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4274067750/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4274067750&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=29048146b631aa17e79995b374c806ec&#34;&gt;プログラミングのための確率統計&lt;/a&gt;』と『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/479071733X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479071733X&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=632f660a2f794586c0155153916e0aaa&#34;&gt;文化人類学の思考法&lt;/a&gt;』を購入。
+夕食後、購入した本を読んでいたら寝てしまった感じ。&lt;/p&gt;</description></item><item><title>2019年11月1日</title><link>https://blog.monochromegane.com/diary/20191101/</link><pubDate>Sat, 02 Nov 2019 00:27:04 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191101/</guid><description>
+&lt;h2 id=&#34;健康診断&#34;&gt;健康診断&lt;/h2&gt;
+&lt;p&gt;午前中、健康診断。
+午後はベイズ推定関連の基礎知識をつけていた。
+バリウムは健康診断の後も終日大変なのであまり生産性は高くなかったかもしれない。
+来年は胃カメラ、鼻からでやってみるかなあ。&lt;/p&gt;
+&lt;h2 id=&#34;喩えと例え&#34;&gt;喩えと例え&lt;/h2&gt;
+&lt;p&gt;自分の場合、ベイズ推定なり数式を含む新しい概念を獲得するには身の丈にあった入門書を複数こなすことで、違った角度から見比べてその概念を掴んでいく。
+ただ、入門書は結構当たり外れがあるのが悩ましい。&lt;/p&gt;
+&lt;p&gt;良い本を見つけるため最近は、説明の「喩え」よりも「例え（ば）」を重視している。
+手元の辞書によると「喩え」は「たとえること。たとえとして引かれた事柄」とあり、「例えば」は「前文に述べた主旨を客観的に証明するに足る例をあげることを表す。」とある。
+学びたい概念を「喩え」る入門書は、読者の知る身近な事柄でこれを説明する。
+一方、「例えば」の入門書は、その概念の構成要素やそれらが成立する仕組みを裏付ける例を通して理解を助ける。&lt;/p&gt;
+&lt;p&gt;「喩え」に頼りすぎてしまってると感じた本の読後は、分かったような分からないような感じが多い。
+対して、簡潔な「例えば」が十分な量で用意されていた本は、なるほどそういう理由・仕組みだったのかと理解が深まったと感じる。
+この辺を区分できるようになって、ハズレはつかまなくなったかなあと思う。
+もちろん、適切な「喩え」が理解を助けることもあるのであくまでも重視する方という意味合いで。&lt;/p&gt;
+&lt;p&gt;ところで、簡潔に概念を説明できる「例えば」を作るためにはその概念に対する深い理解が必要である。
+論文であっても手法であっても、ある概念を相手に説明する際に「喩え」が出るか、複雑な「例えば」が出るか、簡潔な「例えば」を出せるかで自分の理解を問うていきたい。&lt;/p&gt;</description></item><item><title>2019年10月31日</title><link>https://blog.monochromegane.com/diary/20191031/</link><pubDate>Thu, 31 Oct 2019 21:58:58 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191031/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の採録通知。
+とても嬉しい。
+査読結果もなるほど納得なしっかり読み込んでくれた内容であったので将来のジャーナル化に向けてもありがたいアドバイスになった。&lt;/p&gt;
+&lt;p&gt;研究の手法を改善するためにベイズ推定まわりを押さえておかないと厳しい感じになってきたので、入門系の書物を数冊購入して帰宅。
+ちょうど最近、&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/10/11/random_number_gen_using_go/&#34;&gt;確率分布などをおさらいした&lt;/a&gt;のもあり、以前より理解できるのではないかと考えている。
+この辺、一足飛びには理解できないので、ひとつづつ理解を進めていく。
+専門力の向上が次のステップなのでやっていきたい。&lt;/p&gt;
+&lt;p&gt;昨年から始まった&lt;a href=&#34;https://fukuokaphp.connpass.com/event/109317/&#34;&gt;Fukuoka.LT&lt;/a&gt;だが、運営をコミュニティの持ち回りにしたので、今年はFukuoka.goでやることにした。
+普段のコミュニティで登壇してる内容を話してもらうことで一層コミュニティの雰囲気を知れるのではないかとなったのでそんな感じに進める。
+連絡周りは省力で進められるといいな。&lt;/p&gt;</description></item><item><title>2019年10月30日</title><link>https://blog.monochromegane.com/diary/20191030/</link><pubDate>Thu, 31 Oct 2019 21:56:23 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191030/</guid><description>&lt;p&gt;午前中Research I/O。
+論文の骨子などを検討していくのを午前中に進んでいるという状態はとても気分的に良い。
+午後はデータ分析など。&lt;/p&gt;
+&lt;p&gt;週途中ながらに疲れが出てきたので夜は早めに就寝した。
+iPad Proまだ開けれてない。とほほ。&lt;/p&gt;</description></item><item><title>2019年10月29日</title><link>https://blog.monochromegane.com/diary/20191029/</link><pubDate>Tue, 29 Oct 2019 23:51:16 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191029/</guid><description>&lt;p&gt;午前中、Research I/Oの時間。提案手法の新規性と有用性を論じるためのあれこれを考える。
+午後は、研究周りのデータ抽出や解析など。
+午前中に必ず研究系が進んでいるという状況は良いので引き続きやっていく。&lt;/p&gt;
+&lt;p&gt;帰り際にApple storeによって、その場で「&lt;a href=&#34;https://www.amazon.co.jp/gp/product/B07K7MBNZ2/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B07K7MBNZ2&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=5012f106ddfdeb7467c8a02d523f6ad0&#34;&gt;Apple iPad Pro (11インチ, Wi-Fi, 512GB) - スペースグレイ (最新モデル)&lt;/a&gt;」と「&lt;a href=&#34;https://www.amazon.co.jp/gp/product/B07KR69HH9/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B07KR69HH9&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=256d1dc837b0ae029969e0ea28e6603f&#34;&gt;Apple Pencil（第2世代）&lt;/a&gt;」を購入。
+最後まで12.9インチと悩んだけど、論文読むのは等倍でなくても大丈夫だと判断して普段の取り回しの良さの面から11インチにした。
+論文管理の仕組みを構築していかねば。&lt;/p&gt;</description></item></channel></rss>

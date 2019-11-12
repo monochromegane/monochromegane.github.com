@@ -1,4 +1,10 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>THINKING MEGANE</title><link>https://blog.monochromegane.com/diary/</link><description>Recent content on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Mon, 11 Nov 2019 23:21:16 +0900</lastBuildDate><atom:link href="/diary/" rel="self" type="application/rss+xml"/><item><title>2019年11月11日</title><link>https://blog.monochromegane.com/diary/20191111/</link><pubDate>Mon, 11 Nov 2019 23:21:16 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191111/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の共著者レビューを終えて提出。
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>THINKING MEGANE</title><link>https://blog.monochromegane.com/diary/</link><description>Recent content on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Tue, 12 Nov 2019 22:10:53 +0900</lastBuildDate><atom:link href="/diary/" rel="self" type="application/rss+xml"/><item><title>2019年11月12日</title><link>https://blog.monochromegane.com/diary/20191112/</link><pubDate>Tue, 12 Nov 2019 22:10:53 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191112/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;、原稿出し終えたのでジャーナル執筆と並行しなくて良いように先にポスター書いてしまう。&lt;/p&gt;
+&lt;p&gt;Fukuoka.LTという去年から始まった福岡のいろいろなコミュニティの合同忘年会があるのだけど、今年の運営をFukuoka.goが任されることになったので、先週ぐらいから準備していた。&lt;/p&gt;
+&lt;p&gt;今年は、Fukuoka.goらしく技術を肴に酒を飲もうという感じに、言語や技術を横断した登壇と忘年会とした。
+今日は登壇者募集の告知。
+集まるといいなあ。
+これぐらいのイベントだと大規模カンファレンスやったあとなので比較的楽に進めることができる。
+コミュニティ運営力のレベルアップだ。&lt;/p&gt;</description></item><item><title>2019年11月11日</title><link>https://blog.monochromegane.com/diary/20191111/</link><pubDate>Mon, 11 Nov 2019 23:21:16 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191111/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の共著者レビューを終えて提出。
 順調なのでこのままポスターも作ってしまいたいがフォーマットやサイズなどがまだ公開されていない。うーむ。&lt;/p&gt;
 &lt;p&gt;午後は、年末の福岡エンジニアコミュニティの集まりの主催についてガッと進めた。
 方針は決まったのであとは登壇者が順調に集まってくれるのを祈るのみ。&lt;/p&gt;
@@ -114,12 +120,4 @@ iPad Proまだ開けれてない。とほほ。&lt;/p&gt;</description></item><i
 午前中に必ず研究系が進んでいるという状況は良いので引き続きやっていく。&lt;/p&gt;
 &lt;p&gt;帰り際にApple storeによって、その場で「&lt;a href=&#34;https://www.amazon.co.jp/gp/product/B07K7MBNZ2/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B07K7MBNZ2&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=5012f106ddfdeb7467c8a02d523f6ad0&#34;&gt;Apple iPad Pro (11インチ, Wi-Fi, 512GB) - スペースグレイ (最新モデル)&lt;/a&gt;」と「&lt;a href=&#34;https://www.amazon.co.jp/gp/product/B07KR69HH9/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B07KR69HH9&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=256d1dc837b0ae029969e0ea28e6603f&#34;&gt;Apple Pencil（第2世代）&lt;/a&gt;」を購入。
 最後まで12.9インチと悩んだけど、論文読むのは等倍でなくても大丈夫だと判断して普段の取り回しの良さの面から11インチにした。
-論文管理の仕組みを構築していかねば。&lt;/p&gt;</description></item><item><title>2019年10月28日</title><link>https://blog.monochromegane.com/diary/20191028/</link><pubDate>Mon, 28 Oct 2019 22:59:56 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191028/</guid><description>&lt;p&gt;週末に調子悪いかも？と思っていた腰が怪しい雰囲気。
-あまり重いものを保たないように気をつけるしかない。&lt;/p&gt;
-&lt;p&gt;午前中をResearch I/Oとして予定を入れたので必ず午前中にジャーナルに向けた直接的な活動を進める。
-初日は前回分の査読結果の見直し。
-あれからまた少し研究報告進めているので共通する課題意識などから見てもう少しわかりやすくできそう。
-一方で、手法自体をどう高めるかについてはサーベイかなあというところ。&lt;/p&gt;
-&lt;p&gt;論文管理のデバイスとしてiPad Proを検討中なので帰りにApple storeで持ち比べしてきた。
-据え置き機として割り切るので12.9インチと考えていたけど、手に馴染むのは11インチだったなあ。
-そろそろ決めないと。&lt;/p&gt;</description></item></channel></rss>
+論文管理の仕組みを構築していかねば。&lt;/p&gt;</description></item></channel></rss>
