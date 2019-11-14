@@ -1,4 +1,22 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>gophercon on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/gophercon/</link><description>Recent content in gophercon on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 11 Aug 2019 16:57:47 +0900</lastBuildDate><atom:link href="/tags/gophercon/" rel="self" type="application/rss+xml"/><item><title>2019年11月13日</title><link>https://blog.monochromegane.com/diary/20191113/</link><pubDate>Wed, 13 Nov 2019 22:29:19 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191113/</guid><description>&lt;p&gt;昨日の夜は寝る前のスマホとPCをやめて物理的な本だけ読んだら寝起きがよかったのでしばらく続けようと思う。
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>gophercon on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/gophercon/</link><description>Recent content in gophercon on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 11 Aug 2019 16:57:47 +0900</lastBuildDate><atom:link href="/tags/gophercon/" rel="self" type="application/rss+xml"/><item><title>2019年11月14日</title><link>https://blog.monochromegane.com/diary/20191114/</link><pubDate>Thu, 14 Nov 2019 21:34:21 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191114/</guid><description>&lt;p&gt;昨日の夜もスマホとPC使わなかったので寝起きが良い。
+代わりに積ん読が減るしいいことづくめだ。
+しばらく続けようと思う。
+この日記と午前中の研究集中の時間も習慣化できたと思うので、勉強系も増やしていきたい。&lt;/p&gt;
+&lt;p&gt;出社後、ジャーナル執筆の再始動。
+リサーチクエスチョンを明確に定め、改めて論文の構成を固める。
+今回はおおよそ以下の流れを想定していく。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;背景: なぜその課題に取り組むか&lt;/li&gt;
+&lt;li&gt;リサーチクエスチョン: 何を解決したいのか&lt;/li&gt;
+&lt;li&gt;従来手法: これまではその課題をどう解決していたのか&lt;/li&gt;
+&lt;li&gt;従来手法の整理と提案手法の構想: これまでのやり方に残った課題は何か&lt;/li&gt;
+&lt;li&gt;提案手法: 残った課題をどう解決したか&lt;/li&gt;
+&lt;li&gt;評価: 残った課題は定量的にどの程度解決したか&lt;/li&gt;
+&lt;li&gt;まとめ: 評価の結果、提案手法で見つかった課題は何か&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;課題と提案手法のアプローチ、その評価はもれなくマッピングされるようにする。&lt;/p&gt;
+&lt;p&gt;午後は評価用のデータ探し。
+良い感じのスタートを切れたので明日もやっていく。&lt;/p&gt;</description></item><item><title>2019年11月13日</title><link>https://blog.monochromegane.com/diary/20191113/</link><pubDate>Wed, 13 Nov 2019 22:29:19 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191113/</guid><description>&lt;p&gt;昨日の夜は寝る前のスマホとPCをやめて物理的な本だけ読んだら寝起きがよかったのでしばらく続けようと思う。
 『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/479071733X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479071733X&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=632f660a2f794586c0155153916e0aaa&#34;&gt;文化人類学の思考法&lt;/a&gt;』は寝る前に世界が広がって心地よく寝れるのでちょうど良い。&lt;/p&gt;
 &lt;p&gt;終日、&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;。
 ひとまず完成。&lt;/p&gt;
@@ -120,8 +138,4 @@ Face IDを使えるデバイスは初めてだったけどかなり快適。
 専門力の向上が次のステップなのでやっていきたい。&lt;/p&gt;
 &lt;p&gt;昨年から始まった&lt;a href=&#34;https://fukuokaphp.connpass.com/event/109317/&#34;&gt;Fukuoka.LT&lt;/a&gt;だが、運営をコミュニティの持ち回りにしたので、今年はFukuoka.goでやることにした。
 普段のコミュニティで登壇してる内容を話してもらうことで一層コミュニティの雰囲気を知れるのではないかとなったのでそんな感じに進める。
-連絡周りは省力で進められるといいな。&lt;/p&gt;</description></item><item><title>2019年10月30日</title><link>https://blog.monochromegane.com/diary/20191030/</link><pubDate>Thu, 31 Oct 2019 21:56:23 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191030/</guid><description>&lt;p&gt;午前中Research I/O。
-論文の骨子などを検討していくのを午前中に進んでいるという状態はとても気分的に良い。
-午後はデータ分析など。&lt;/p&gt;
-&lt;p&gt;週途中ながらに疲れが出てきたので夜は早めに就寝した。
-iPad Proまだ開けれてない。とほほ。&lt;/p&gt;</description></item></channel></rss>
+連絡周りは省力で進められるといいな。&lt;/p&gt;</description></item></channel></rss>
