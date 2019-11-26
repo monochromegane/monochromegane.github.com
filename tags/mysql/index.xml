@@ -1,4 +1,27 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mysql on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/mysql/</link><description>Recent content in mysql on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Mon, 20 Jul 2015 21:15:28 +0900</lastBuildDate><atom:link href="/tags/mysql/" rel="self" type="application/rss+xml"/><item><title>2019年11月18日</title><link>https://blog.monochromegane.com/diary/20191118/</link><pubDate>Mon, 18 Nov 2019 23:04:59 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191118/</guid><description>&lt;p&gt;終日自宅作業とした。
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mysql on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/mysql/</link><description>Recent content in mysql on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Mon, 20 Jul 2015 21:15:28 +0900</lastBuildDate><atom:link href="/tags/mysql/" rel="self" type="application/rss+xml"/><item><title>2019年11月26日</title><link>https://blog.monochromegane.com/diary/20191126/</link><pubDate>Tue, 26 Nov 2019 16:55:54 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191126/</guid><description>&lt;p&gt;午前中と午後少しジャーナル以外のものを進めたがまた熱が上がってきたのと腰が痛くなってしまったので離脱。
+とほほ。&lt;/p&gt;
+&lt;p&gt;こういうのは手を動かせばすっきりするので今日まで完治に専念して明日シャッキリ進めよう。
+とりあえず溜まっていた日記だけでも進める。&lt;/p&gt;
+&lt;p&gt;june29さんの日記への取り組み方がいいなあと思った。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://june29.jp/2019/09/23/daily-diary/&#34;&gt;https://june29.jp/2019/09/23/daily-diary/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;僕の日記はあんちぽさん、柴田さん、june29さんのように書きたいと思っているので裏側とか考え方を知ることができて嬉しい。
+まだうまく言えないが、誰かと自分ではなくて何かに対してどう考えたか一段階、客観的に書けてるのが心に優しくて読み味として好きなのだろうと思う。&lt;/p&gt;</description></item><item><title>2019年11月25日</title><link>https://blog.monochromegane.com/diary/20191125/</link><pubDate>Tue, 26 Nov 2019 16:55:24 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191125/</guid><description>&lt;p&gt;風邪を直すのに専念。&lt;/p&gt;</description></item><item><title>2019年11月24日</title><link>https://blog.monochromegane.com/diary/20191124/</link><pubDate>Tue, 26 Nov 2019 16:53:46 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191124/</guid><description>&lt;p&gt;午前中はまだやる気持ちがあったが、どんどん熱が上がって動けなくなってしまった。
+とほほ。
+この一年の体力の低下と腰の痛みによる衰えが確実に仕事に影響がでている気がする。
+働き方を変えて本当に短い時間で何かを為さなければ何もできなくなってきそう。&lt;/p&gt;</description></item><item><title>2019年11月23日</title><link>https://blog.monochromegane.com/diary/20191123/</link><pubDate>Tue, 26 Nov 2019 16:52:44 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191123/</guid><description>&lt;p&gt;終日、プロット周りを頑張って欲しいデータにたどり着けたと思う。
+熱っぽかったがたどり着きたかったので頑張ってしまった結果、体調崩す。
+うーむ。&lt;/p&gt;</description></item><item><title>2019年11月22日</title><link>https://blog.monochromegane.com/diary/20191122/</link><pubDate>Tue, 26 Nov 2019 16:52:03 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191122/</guid><description>&lt;p&gt;オラっと評価を進める。
+バグも消化したのであとは見せ方。
+ここ重要。&lt;/p&gt;</description></item><item><title>2019年11月21日</title><link>https://blog.monochromegane.com/diary/20191121/</link><pubDate>Tue, 26 Nov 2019 16:50:52 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191121/</guid><description>&lt;p&gt;評価。&lt;/p&gt;
+&lt;p&gt;基盤チームで飲み。
+新しくチームに入った方もみんな優しい感じで終始ニコニコであった。&lt;/p&gt;</description></item><item><title>2019年11月20日</title><link>https://blog.monochromegane.com/diary/20191120/</link><pubDate>Tue, 26 Nov 2019 16:49:30 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191120/</guid><description>&lt;p&gt;評価を進める。
+振り返ればもうちょいうまくやれるだろうになあとは思う。
+気軽に相談したい。&lt;/p&gt;</description></item><item><title>2019年11月19日</title><link>https://blog.monochromegane.com/diary/20191119/</link><pubDate>Tue, 26 Nov 2019 16:46:22 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191119/</guid><description>&lt;p&gt;ひたすら評価用のコードの精度をあげていく感じ。
+この辺からだいたいリズムが崩れて日記がかけずに視野が少しづつ狭くなってくる感じがあるのでなんとかしなきゃなと振り返って思う。&lt;/p&gt;
+&lt;p&gt;ランチは前職の後輩から誘われたので天神でパスタ。
+頑張ってるみたい。&lt;/p&gt;</description></item><item><title>2019年11月18日</title><link>https://blog.monochromegane.com/diary/20191118/</link><pubDate>Mon, 18 Nov 2019 23:04:59 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191118/</guid><description>&lt;p&gt;終日自宅作業とした。
 集中してシミュレーション用のコードを書いた。
 データ整形の方に手間が取られたので明日目処を付けたいところ。&lt;/p&gt;
 &lt;p&gt;月内は論文かかりっきりで習慣系が疎かになるかもしれないのが怖い。&lt;/p&gt;</description></item><item><title>2019年11月17日</title><link>https://blog.monochromegane.com/diary/20191117/</link><pubDate>Mon, 18 Nov 2019 22:48:47 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191117/</guid><description>&lt;p&gt;週末の件や休暇中のタイムラインでなんだかモヤモヤしてしまうので改めて自分のエントリを見直していた。&lt;/p&gt;
@@ -50,73 +73,4 @@
 今日は登壇者募集の告知。
 集まるといいなあ。
 これぐらいのイベントだと大規模カンファレンスやったあとなので比較的楽に進めることができる。
-コミュニティ運営力のレベルアップだ。&lt;/p&gt;</description></item><item><title>2019年11月11日</title><link>https://blog.monochromegane.com/diary/20191111/</link><pubDate>Mon, 11 Nov 2019 23:21:16 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191111/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の共著者レビューを終えて提出。
-順調なのでこのままポスターも作ってしまいたいがフォーマットやサイズなどがまだ公開されていない。うーむ。&lt;/p&gt;
-&lt;p&gt;午後は、年末の福岡エンジニアコミュニティの集まりの主催についてガッと進めた。
-方針は決まったのであとは登壇者が順調に集まってくれるのを祈るのみ。&lt;/p&gt;
-&lt;p&gt;帰宅後はこのブログをGitHub Actionsでデプロイできるようにするなど。
-HugoのSetup、GitHub Pagesへのデプロイはこの辺りを使った&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/peaceiris/actions-hugo&#34;&gt;https://github.com/peaceiris/actions-hugo&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/peaceiris/actions-gh-pages&#34;&gt;https://github.com/peaceiris/actions-gh-pages&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;最終的なWorkflowはこんな感じ。
-コンテンツの管理とGitHub Pagesのリポジトリを分けているが、その辺りもオプションでよしなにできて便利だった。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/thinking-megane/blob/master/.github/workflows/gh-pages.yml&#34;&gt;https://github.com/monochromegane/thinking-megane/blob/master/.github/workflows/gh-pages.yml&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;GitHub Actions、トークンやらキーやらの管理がGitHubの中で完結するので便利。
-キューのつまりも特に感じないし難しいことしなければ少なくとも現時点ではこれでいいのではという感じ。
-ボチボチ移行していくつもり。&lt;/p&gt;</description></item><item><title>2019年11月10日</title><link>https://blog.monochromegane.com/diary/20191110/</link><pubDate>Sun, 10 Nov 2019 23:50:53 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191110/</guid><description>&lt;p&gt;午前中は髪を切りに天神へ。
-さっぱりした後、本格的に寒くなるまでのつなぎになりそうなアウターを購入したりお茶したり散策して過ごす。
-帰宅後は、鍋と頂き物のかしわご飯を美味しくいただく。
-やっと鍋の似合う季節になってきた。&lt;/p&gt;
-&lt;p&gt;就寝前はブログのCIをGitHub Actionsに移行がてら触っていた。
-静的サイトとしてのコンテンツ出力に必要な箇所はできたので来週どこかでデプロイ部分をWerckerから切り替えよう。
-pushしてからCIが開始されるまでと実際のビルドもとにかく速いのでストレスなく使えそう。&lt;/p&gt;</description></item><item><title>2019年11月9日</title><link>https://blog.monochromegane.com/diary/20191109/</link><pubDate>Sat, 09 Nov 2019 22:25:38 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191109/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の査読結果の反映、最終確認。
-午前中にひとまず終えたものの、査読結果へのコメントに個別に答えるとまだ修正必要な気がして終われなかった。&lt;/p&gt;
-&lt;p&gt;昼寝の後、夕方までになんとか仕上げた。
-共著者へレビューを依頼。
-色々忙しかったとはいえ、時間が立つほどに記憶も薄れるので査読対応はさっさとやってしまった方が良さそう。
-ポスターも来週早々に終わらせてしまいたいが、まだフォーマットなど情報がないのでどうしたものか。&lt;/p&gt;
-&lt;p&gt;夕方、年末調整の提出が終わったので一安心。
-明日は、年末の福岡エンジニアコミュニティの集まりの主催についてボチボチ進めよう。&lt;/p&gt;</description></item><item><title>2019年11月8日</title><link>https://blog.monochromegane.com/diary/20191108/</link><pubDate>Sat, 09 Nov 2019 22:15:01 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191108/</guid><description>&lt;p&gt;終日&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の査読結果の反映。
-おおよそできたと思うので明日最終確認する。
-査読、丁寧に見てもらえていて本当に良い。
-これだとわからないですね〜という言い方の向こうにきちんと考えればより分かりやすくなる道が見える気がする。&lt;/p&gt;
-&lt;p&gt;時間を見つけて、&lt;a href=&#34;https://efc.fukuoka.jp/award&#34;&gt;エンジニアフレンドリーシティ福岡アワード&lt;/a&gt;のコミュニティ部門へのエントリーを仕上げた。
-Fukuoka.go、活動を振り返ると改めて着実に進んでいて我ながらエラいなあと思った。
-もちろん共同主催者に恵まれていることに感謝したい。&lt;/p&gt;
-&lt;p&gt;夜は『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/479071733X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479071733X&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=632f660a2f794586c0155153916e0aaa&#34;&gt;文化人類学の思考法&lt;/a&gt;』を少し読み進める。
-バイアスをどう認識するかという問題は突き詰めていくと人類であることすらバイアスであり、文化人類学はそのようなレイヤから比較し続けているのだなあととても面白い。
-一つ一つのネタは実際難しいけれどもまだ読み進めてどこかでまとめたい。&lt;/p&gt;</description></item><item><title>2019年11月7日</title><link>https://blog.monochromegane.com/diary/20191107/</link><pubDate>Thu, 07 Nov 2019 21:34:34 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191107/</guid><description>&lt;p&gt;深夜寝れなかったためリズムが悪く感じた。&lt;/p&gt;
-&lt;p&gt;PC移行で環境構築がうまくいってなかった箇所にハマってしまい、共同研究のデータ抽出に時間がかかってしまった。反省。&lt;/p&gt;
-&lt;p&gt;午後は研究会。
-共著論文で提案する手法にまつわるサーベイ論文のサーベイ結果などを共有してもらう。
-定義や定式化されている前例をもとにした議論になったことで手法の方針検討が整理された。&lt;/p&gt;
-&lt;p&gt;年内においてもどんどん研究が進む予感で楽しみになってきた。
-自分自身もポスターとジャーナルをしっかりやる。&lt;/p&gt;
-&lt;p&gt;今週末ぐらいから一気に集中して確率系の勉強をやったのが、継続系のインプット・アウトプット、ひいては生活リズムを崩してしまっている気がするので、やりすぎないというのもうまく制御していかないといけないなあ。&lt;/p&gt;</description></item><item><title>2019年11月6日</title><link>https://blog.monochromegane.com/diary/20191106/</link><pubDate>Thu, 07 Nov 2019 21:27:43 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191106/</guid><description>&lt;p&gt;朝から九大へ。
-論文のジャーナル投稿に向けて作戦を立てる。
-議論の中でやるべきことが明確になってきた。
-今年中に投稿は済ませるぞ。&lt;/p&gt;
-&lt;p&gt;また、今後についても相談。
-自分の中では大きな決断であるけれども、そろそろ動いていく時期であると判断した。
-あとは自分の頑張り次第。やるしかない。&lt;/p&gt;
-&lt;p&gt;とはいえ、朝が早かったこともあり、午後はなんだかふんわりしてしまったので研究以外のことをざっと進めた。
-コミュニティ活動まわりで直近のイベント方針を決めたりアワードエントリの準備であっという間で合った。&lt;/p&gt;
-&lt;p&gt;帰り際に研究チームでもう一つの共著論文に向けた方針を話す。
-明日の研究会で聞きたいことを伝え帰宅。
-早めに寝てしまったが、逆に深夜に起きてしまい翌朝の動き出しがイマイチだった。
-無限にはなかなか寝れなくなってきたのでやはり規則正しくが一番みたいだ。
-今週は乱れがちなのでペースを取り戻さねば。&lt;/p&gt;</description></item><item><title>2019年11月5日</title><link>https://blog.monochromegane.com/diary/20191105/</link><pubDate>Thu, 07 Nov 2019 21:24:22 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191105/</guid><description>&lt;p&gt;所属する研究所で共著論文のため研究計画を改めて一緒に練るなどした。
-チームであることを活かしてどんどん並列で進めつつ大きなビジョンを達成していく。&lt;/p&gt;
-&lt;p&gt;午後は引き続きバンディットのポリシーの実装に向けた下調べなど。
-自身のメイン研究もバーンとやっていきたい。&lt;/p&gt;</description></item><item><title>2019年11月4日</title><link>https://blog.monochromegane.com/diary/20191104/</link><pubDate>Mon, 04 Nov 2019 22:27:48 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191104/</guid><description>&lt;p&gt;午前中は引き続きベイズ統計の勉強。
-仮定やデータが連続値になった場合についても得心が行ったと思う。
-勉強の見積もりがイマイチあっておらず予定より時間かかっているがバンディットの確率的な方策についてはこれで実装できるだろう。
-ベイズ統計を直接使うわけではないが、推論まわりは応用効きそうなので『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4061538322/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4061538322&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=624549ce46217ec9cd619e8b038b9865&#34;&gt;機械学習スタートアップシリーズ ベイズ推論による機械学習入門 (KS情報科学専門書)&lt;/a&gt;』を自習していこう。&lt;/p&gt;
-&lt;p&gt;午後は先日購入していた『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/479071733X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479071733X&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=632f660a2f794586c0155153916e0aaa&#34;&gt;文化人類学の思考法&lt;/a&gt;』を少し読む。
-新しいモノの見方を知ることができてしばらく楽しめそう。
-そのまま読みながら昼寝。&lt;/p&gt;
-&lt;p&gt;来週からは研究、ポスター、共同研究など忙しくなるけど一歩づつ進めていきたい。&lt;/p&gt;</description></item></channel></rss>
+コミュニティ運営力のレベルアップだ。&lt;/p&gt;</description></item></channel></rss>
