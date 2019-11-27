@@ -1,4 +1,35 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>ruby on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/ruby/</link><description>Recent content in ruby on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Tue, 22 Mar 2016 20:46:48 +0900</lastBuildDate><atom:link href="/tags/ruby/" rel="self" type="application/rss+xml"/><item><title>2019年11月26日</title><link>https://blog.monochromegane.com/diary/20191126/</link><pubDate>Tue, 26 Nov 2019 16:55:54 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191126/</guid><description>&lt;p&gt;午前中と午後少しジャーナル以外のものを進めたがまた熱が上がってきたのと腰が痛くなってしまったので離脱。
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>ruby on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/ruby/</link><description>Recent content in ruby on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Tue, 22 Mar 2016 20:46:48 +0900</lastBuildDate><atom:link href="/tags/ruby/" rel="self" type="application/rss+xml"/><item><title>2019年11月27日</title><link>https://blog.monochromegane.com/diary/20191127/</link><pubDate>Wed, 27 Nov 2019 22:36:58 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191127/</guid><description>&lt;p&gt;評価結果を元に論文の構成を検討。
+根拠が不足している部分の追加評価など。
+少し時間がかかるのがあるので夜間流しておく。&lt;/p&gt;
+&lt;p&gt;この辺りのシミュレーションのコードは何度か書いて欲しい機能が分かってきたので汎用的なコードを一個書いておこうかな。
+具体的には、シミュレーション複数回実行結果の平均化、再現用の乱数シード管理、途中結果の保存による再開機能、並行実行による時間短縮などなど。&lt;/p&gt;
+&lt;p&gt;サーベイの習慣化が滞っているのでなんとかせねばと思うものの、まずは今のジャーナルを乗り越えて年末に整えるか。うーむ。&lt;/p&gt;
+&lt;p&gt;夜は評価用のバッチを回しながら『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4535784728/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4535784728&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=469d5953843897a3f0eddfcc11254bd3&#34;&gt;論理と集合から始める数学の基礎&lt;/a&gt;』を読む。
+確率やらバンディット問題やら扱う際に集合関連の記法があやふやだったので途中で辞めていたのを改めて再開。
+とても丁寧に説明されていて、集合を前提とする数式などを読む際の行間を埋めてくれる知識が育つ感じでなかなか良い。&lt;/p&gt;</description></item><item><title>論文執筆の道しるべ</title><link>https://blog.monochromegane.com/blog/2019/11/27/guidepost_for_writing_paper/</link><pubDate>Wed, 27 Nov 2019 22:03:05 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2019/11/27/guidepost_for_writing_paper/</guid><description>&lt;p&gt;論文執筆にあたり自分向けの指針のようなものがまとまってきたのでメモしておく。
+以下の内容の一枚もののサマリがあると良いのではないか。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;背景: なぜその課題に取り組むか&lt;/li&gt;
+&lt;li&gt;リサーチクエスチョン: 何を解決したいのか&lt;/li&gt;
+&lt;li&gt;従来手法の整理: これまではその課題をどう解決していたのか、これまでのやり方に残った課題は何か&lt;/li&gt;
+&lt;li&gt;提案手法: 残った課題をどう解決したか&lt;/li&gt;
+&lt;li&gt;評価: 残った課題は定量的にどの程度解決したか&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;ここで&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;2.のリサーチクエスチョンと3.従来手法の課題を混同しない。&lt;/li&gt;
+&lt;li&gt;3.従来手法の課題、4.提案手法、5.評価はもれなく対応する。つまり、課題が3つであれば提案手法もそれらに対する解決アプローチを提示し、それぞれに評価が行われている。もしくは課題のうち、いくつを解決するものかを明示する。&lt;/li&gt;
+&lt;li&gt;これらは一枚まとめにすると良い。シーケンシャルな文章とこのまとめを交互に見直すことで道筋を外れずに具体と抽象を行き来できる（といいな）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;上手な査読者のレビューは提案内容を除けば上記の観点での過不足を指摘しているように思える。
+指摘事項に対する個別対処では、論文執筆力の向上はのぞめないのでこのような枠組みも意識して一定の水準での論文を執筆できるようにもなっていきたい。&lt;/p&gt;
+&lt;p&gt;また、議論から多くを得るためには&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;分野のやや異なる人とは1.背景の説明を長めに取ることで自分の思い込みや暗黙の前提が浮き彫りにされ読み易い論文になる&lt;/li&gt;
+&lt;li&gt;分野の同じ人とは同じ課題意識を持つとみなし、従来手法の整理と提案手法のアプローチを中心に議論する&lt;/li&gt;
+&lt;li&gt;差読者目線を持つ人とは、リサーチクエスチョンを一言で伝わるか、それが解決したかをできるだけ手短に説明する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;のような感じに使い分けると良いのではないかなと考えている。&lt;/p&gt;</description></item><item><title>2019年11月26日</title><link>https://blog.monochromegane.com/diary/20191126/</link><pubDate>Tue, 26 Nov 2019 16:55:54 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191126/</guid><description>&lt;p&gt;午前中と午後少しジャーナル以外のものを進めたがまた熱が上がってきたのと腰が痛くなってしまったので離脱。
 とほほ。&lt;/p&gt;
 &lt;p&gt;こういうのは手を動かせばすっきりするので今日まで完治に専念して明日シャッキリ進めよう。
 とりあえず溜まっていた日記だけでも進める。&lt;/p&gt;
@@ -58,19 +89,4 @@
 &lt;/ol&gt;
 &lt;p&gt;課題と提案手法のアプローチ、その評価はもれなくマッピングされるようにする。&lt;/p&gt;
 &lt;p&gt;午後は評価用のデータ探し。
-良い感じのスタートを切れたので明日もやっていく。&lt;/p&gt;</description></item><item><title>2019年11月13日</title><link>https://blog.monochromegane.com/diary/20191113/</link><pubDate>Wed, 13 Nov 2019 22:29:19 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191113/</guid><description>&lt;p&gt;昨日の夜は寝る前のスマホとPCをやめて物理的な本だけ読んだら寝起きがよかったのでしばらく続けようと思う。
-『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/479071733X/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=479071733X&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=632f660a2f794586c0155153916e0aaa&#34;&gt;文化人類学の思考法&lt;/a&gt;』は寝る前に世界が広がって心地よく寝れるのでちょうど良い。&lt;/p&gt;
-&lt;p&gt;終日、&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;。
-ひとまず完成。&lt;/p&gt;
-&lt;p&gt;一度論文の形式で8P使って漏れなく書くのに慣れると今度は削ることが怖くなってくる。
-ポスター1枚で書けることはとても少ないので、難航した。
-研究の肝は何かを端的に説明できることはとても重要だろう。
-論文執筆においても評価検証においても軸を持つことができる。
-ポスターもこのような訓練になると思うのでどんどんやっていきたい。&lt;/p&gt;
-&lt;p&gt;明日からはジャーナルに向けて頑張るのだ。&lt;/p&gt;</description></item><item><title>2019年11月12日</title><link>https://blog.monochromegane.com/diary/20191112/</link><pubDate>Tue, 12 Nov 2019 22:10:53 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191112/</guid><description>&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;、原稿出し終えたのでジャーナル執筆と並行しなくて良いように先にポスター書いてしまう。&lt;/p&gt;
-&lt;p&gt;Fukuoka.LTという去年から始まった福岡のいろいろなコミュニティの合同忘年会があるのだけど、今年の運営をFukuoka.goが任されることになったので、先週ぐらいから準備していた。&lt;/p&gt;
-&lt;p&gt;今年は、Fukuoka.goらしく技術を肴に酒を飲もうという感じに、言語や技術を横断した登壇と忘年会とした。
-今日は登壇者募集の告知。
-集まるといいなあ。
-これぐらいのイベントだと大規模カンファレンスやったあとなので比較的楽に進めることができる。
-コミュニティ運営力のレベルアップだ。&lt;/p&gt;</description></item></channel></rss>
+良い感じのスタートを切れたので明日もやっていく。&lt;/p&gt;</description></item></channel></rss>
