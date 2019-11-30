@@ -1,4 +1,19 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>情報要求 on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/%E6%83%85%E5%A0%B1%E8%A6%81%E6%B1%82/</link><description>Recent content in 情報要求 on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Fri, 01 Mar 2019 16:47:54 +0900</lastBuildDate><atom:link href="/tags/%E6%83%85%E5%A0%B1%E8%A6%81%E6%B1%82/" rel="self" type="application/rss+xml"/><item><title>2019年11月27日</title><link>https://blog.monochromegane.com/diary/20191127/</link><pubDate>Wed, 27 Nov 2019 22:36:58 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191127/</guid><description>&lt;p&gt;評価結果を元に論文の構成を検討。
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>情報要求 on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/%E6%83%85%E5%A0%B1%E8%A6%81%E6%B1%82/</link><description>Recent content in 情報要求 on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Fri, 01 Mar 2019 16:47:54 +0900</lastBuildDate><atom:link href="/tags/%E6%83%85%E5%A0%B1%E8%A6%81%E6%B1%82/" rel="self" type="application/rss+xml"/><item><title>2019年11月30日</title><link>https://blog.monochromegane.com/diary/20191130/</link><pubDate>Sat, 30 Nov 2019 22:49:41 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191130/</guid><description>&lt;p&gt;終日、論文の執筆。
+とは言え、昨晩2時ごろに目が覚めて4時すぎまで寝付けなかったことでまた体調がイマイチ。
+イマイチ筆が載らずだった。
+手を動かすことができたので今日はよしとする。
+早めに寝てしまおう。&lt;/p&gt;
+&lt;p&gt;夜中、新しい研究のアイディアが降りてきて膨らんだので寝付けなかったのもある。
+軽くサーベイしたら昨日の夜考えたところもすでに人類は到達しており、その先まで面白い研究が進んでいたので、ジャーナル終わったらもう少し調べてサービスの改善に活かしたいところ。&lt;/p&gt;</description></item><item><title>2019年11月29日</title><link>https://blog.monochromegane.com/diary/20191129/</link><pubDate>Sat, 30 Nov 2019 22:46:12 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191129/</guid><description>&lt;p&gt;ようやっと論文として文章への出力を開始する。
+来週の火曜日中に初稿としてあげていく予定とした。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の入稿が済み、研究データの調整も進み、論文も着手できて一気に動き出した感じがある。
+あとはやるだけ。
+とは言え風邪が完治せずに慢性的に怠かったりするのが厳しいところ。
+悪化させないよう、でも頑張って進めていくしかない。&lt;/p&gt;</description></item><item><title>2019年11月28日</title><link>https://blog.monochromegane.com/diary/20191128/</link><pubDate>Sat, 30 Nov 2019 22:38:06 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191128/</guid><description>&lt;p&gt;評価良い結果が出たので論文用にまとめて所属する研究所の定例の研究会で慌てて発表。&lt;/p&gt;
+&lt;p&gt;『&lt;a href=&#34;https://www.sbj.or.jp/wp-content/uploads/file/sbj/9711/9711_career_academia_1.pdf&#34;&gt;M1で論文を書く研究室の運営&lt;/a&gt;』を読んだ。
+やはり継続的かつ目的意識を持った習慣化のフレームワークが必要である。&lt;/p&gt;
+&lt;p&gt;今回の論文は着手が予定より遅れてしまっているがやはり研究のデータと評価を作るところが時間がかかってしまった。
+二度目なので対策を考えなければなあと思っていたが、このゼミ室の運営だと評価（しかも再現性のある確実な結果）を二週間ごとに確実に出すようにするのだとあってここもやはり習慣化なのだなと思えた。&lt;/p&gt;</description></item><item><title>2019年11月27日</title><link>https://blog.monochromegane.com/diary/20191127/</link><pubDate>Wed, 27 Nov 2019 22:36:58 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191127/</guid><description>&lt;p&gt;評価結果を元に論文の構成を検討。
 根拠が不足している部分の追加評価など。
 少し時間がかかるのがあるので夜間流しておく。&lt;/p&gt;
 &lt;p&gt;この辺りのシミュレーションのコードは何度か書いて欲しい機能が分かってきたので汎用的なコードを一個書いておこうかな。
@@ -66,27 +81,4 @@
 &lt;p&gt;気分転換に見た『鬼滅の刃』がよかった。
 原作での戦闘シーンは時が止まったような静かな絵としての印象だったのに対して音楽と動きがつくことで緊張感と臨場感が出てた。
 キャラもよく書けてるし、映画も楽しみになった。
-ちょい寝不足。&lt;/p&gt;</description></item><item><title>2019年11月16日</title><link>https://blog.monochromegane.com/diary/20191116/</link><pubDate>Mon, 18 Nov 2019 22:47:44 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191116/</guid><description>&lt;p&gt;研究評価用のコードを終日書いていたがイマイチ進まず。
-週末はやはりゆっくりリフレッシュした方が良いのだろう。&lt;/p&gt;</description></item><item><title>2019年11月15日</title><link>https://blog.monochromegane.com/diary/20191115/</link><pubDate>Mon, 18 Nov 2019 22:44:53 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191115/</guid><description>&lt;p&gt;昨日に引き続き評価用のデータ探し。
-なんとか目処がついた。
-週末シミュレーションのコードを進めておこうかな。&lt;/p&gt;
-&lt;p&gt;帰り際にあまり楽しくない知らせを聞いてイマイチな感じで帰宅したけれども家でゆっくり気持ちを整理する。
-いつも話に付き合ってくれて助かる。&lt;/p&gt;</description></item><item><title>2019年11月14日</title><link>https://blog.monochromegane.com/diary/20191114/</link><pubDate>Thu, 14 Nov 2019 21:34:21 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191114/</guid><description>&lt;p&gt;昨日の夜もスマホとPC使わなかったので寝起きが良い。
-代わりに積ん読が減るしいいことづくめだ。
-しばらく続けようと思う。
-この日記と午前中の研究集中の時間も習慣化できたと思うので、勉強系も増やしていきたい。&lt;/p&gt;
-&lt;p&gt;出社後、ジャーナル執筆の再始動。
-リサーチクエスチョンを明確に定め、改めて論文の構成を固める。
-今回はおおよそ以下の流れを想定していく。&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;背景: なぜその課題に取り組むか&lt;/li&gt;
-&lt;li&gt;リサーチクエスチョン: 何を解決したいのか&lt;/li&gt;
-&lt;li&gt;従来手法: これまではその課題をどう解決していたのか&lt;/li&gt;
-&lt;li&gt;従来手法の整理と提案手法の構想: これまでのやり方に残った課題は何か&lt;/li&gt;
-&lt;li&gt;提案手法: 残った課題をどう解決したか&lt;/li&gt;
-&lt;li&gt;評価: 残った課題は定量的にどの程度解決したか&lt;/li&gt;
-&lt;li&gt;まとめ: 評価の結果、提案手法で見つかった課題は何か&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;課題と提案手法のアプローチ、その評価はもれなくマッピングされるようにする。&lt;/p&gt;
-&lt;p&gt;午後は評価用のデータ探し。
-良い感じのスタートを切れたので明日もやっていく。&lt;/p&gt;</description></item></channel></rss>
+ちょい寝不足。&lt;/p&gt;</description></item></channel></rss>
