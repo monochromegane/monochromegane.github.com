@@ -1,4 +1,11 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>takosan on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/takosan/</link><description>Recent content in takosan on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 01 Mar 2015 00:00:00 +0000</lastBuildDate><atom:link href="/tags/takosan/" rel="self" type="application/rss+xml"/><item><title>2019年11月30日</title><link>https://blog.monochromegane.com/diary/20191130/</link><pubDate>Sat, 30 Nov 2019 22:49:41 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191130/</guid><description>&lt;p&gt;終日、論文の執筆。
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>takosan on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/takosan/</link><description>Recent content in takosan on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 01 Mar 2015 00:00:00 +0000</lastBuildDate><atom:link href="/tags/takosan/" rel="self" type="application/rss+xml"/><item><title>2019年12月2日</title><link>https://blog.monochromegane.com/diary/20191202/</link><pubDate>Mon, 02 Dec 2019 23:52:15 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191202/</guid><description>&lt;p&gt;眠い。&lt;/p&gt;
+&lt;p&gt;昨日の無理がやっぱり来ている。とほほ。
+今日中になんとか考察に必要なグラフはできたかな。&lt;/p&gt;</description></item><item><title>2019年12月1日</title><link>https://blog.monochromegane.com/diary/20191201/</link><pubDate>Mon, 02 Dec 2019 23:43:37 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191201/</guid><description>&lt;p&gt;終日評価実験の続き。
+実際に考察を書く段階になるとどうも図の見せ方や集計観点に納得がいかずまた一日使ってしまった。
+長時間かかるバッチまで実行できるようにと明け方4時近くまでなんだかんだかかってしまってよくなかったなあ。
+評価のグラフだけで論文の骨子を作るぐらいの論文執筆方法もあるみたいなのでそれだけ情報量を詰め込めることができる反面、短時間ではできないものなのだろうから地道に進めておくしかない。
+来年の課題になりそう。&lt;/p&gt;
+&lt;p&gt;面白いもので、論文の章立ての順番通りに課題感がやってきて少しづつ進んでいる。&lt;/p&gt;</description></item><item><title>2019年11月30日</title><link>https://blog.monochromegane.com/diary/20191130/</link><pubDate>Sat, 30 Nov 2019 22:49:41 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191130/</guid><description>&lt;p&gt;終日、論文の執筆。
 とは言え、昨晩2時ごろに目が覚めて4時すぎまで寝付けなかったことでまた体調がイマイチ。
 イマイチ筆が載らずだった。
 手を動かすことができたので今日はよしとする。
@@ -67,18 +74,4 @@
 気軽に相談したい。&lt;/p&gt;</description></item><item><title>2019年11月19日</title><link>https://blog.monochromegane.com/diary/20191119/</link><pubDate>Tue, 26 Nov 2019 16:46:22 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191119/</guid><description>&lt;p&gt;ひたすら評価用のコードの精度をあげていく感じ。
 この辺からだいたいリズムが崩れて日記がかけずに視野が少しづつ狭くなってくる感じがあるのでなんとかしなきゃなと振り返って思う。&lt;/p&gt;
 &lt;p&gt;ランチは前職の後輩から誘われたので天神でパスタ。
-頑張ってるみたい。&lt;/p&gt;</description></item><item><title>2019年11月18日</title><link>https://blog.monochromegane.com/diary/20191118/</link><pubDate>Mon, 18 Nov 2019 23:04:59 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191118/</guid><description>&lt;p&gt;終日自宅作業とした。
-集中してシミュレーション用のコードを書いた。
-データ整形の方に手間が取られたので明日目処を付けたいところ。&lt;/p&gt;
-&lt;p&gt;月内は論文かかりっきりで習慣系が疎かになるかもしれないのが怖い。&lt;/p&gt;</description></item><item><title>2019年11月17日</title><link>https://blog.monochromegane.com/diary/20191117/</link><pubDate>Mon, 18 Nov 2019 22:48:47 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191117/</guid><description>&lt;p&gt;週末の件や休暇中のタイムラインでなんだかモヤモヤしてしまうので改めて自分のエントリを見直していた。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2018/08/16/reason/&#34;&gt;理性の人&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;この時分から変えられていないところもあって歯痒いけれども前にも進んでいると思える。
-周りからの評価を恐れてやるべきことを見失ったり曲げてしまうのはとても悲しいことだ。&lt;/p&gt;
-&lt;p&gt;幸いにも今の道を支えてくれる人たちがいる。
-自分の評価軸を超えるために着実に進めていきたい。&lt;/p&gt;
-&lt;p&gt;気分転換に見た『鬼滅の刃』がよかった。
-原作での戦闘シーンは時が止まったような静かな絵としての印象だったのに対して音楽と動きがつくことで緊張感と臨場感が出てた。
-キャラもよく書けてるし、映画も楽しみになった。
-ちょい寝不足。&lt;/p&gt;</description></item></channel></rss>
+頑張ってるみたい。&lt;/p&gt;</description></item></channel></rss>
