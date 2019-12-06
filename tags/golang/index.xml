@@ -1,4 +1,23 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>golang on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/golang/</link><description>Recent content in golang on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Fri, 25 Oct 2019 17:24:43 +0900</lastBuildDate><atom:link href="/tags/golang/" rel="self" type="application/rss+xml"/><item><title>2019年12月2日</title><link>https://blog.monochromegane.com/diary/20191202/</link><pubDate>Mon, 02 Dec 2019 23:52:15 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191202/</guid><description>&lt;p&gt;眠い。&lt;/p&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>golang on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/golang/</link><description>Recent content in golang on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Fri, 25 Oct 2019 17:24:43 +0900</lastBuildDate><atom:link href="/tags/golang/" rel="self" type="application/rss+xml"/><item><title>2019年12月6日</title><link>https://blog.monochromegane.com/diary/20191206/</link><pubDate>Fri, 06 Dec 2019 23:13:56 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191206/</guid><description>&lt;p&gt;IOTS2019の二日目。&lt;/p&gt;
+&lt;p&gt;今日はゆううきさんやつるべさんといった関わりのある人たちの発表があり、完成度の高さに驚いた。
+自分が三年ぐらい足踏みしているところは通過しているかもしれないなと思い悔しい気持ちはある。
+悔しいというか不甲斐ないというか。&lt;/p&gt;
+&lt;p&gt;発表はとても興味深く前提や実装などたくさん質問してしまった。&lt;/p&gt;
+&lt;p&gt;午後、自分のポスター発表は一番よかったと思えたので少しだけ期待していたもののポスター優秀賞は逃す。
+ゆううきさんは冠賞と最優秀論文賞のダブル受賞で素晴らしかったし、当然の出来だった。&lt;/p&gt;
+&lt;p&gt;自分は提出していない時点で土俵には乗っていないけれども、なんかその辺りの論文の提出先の戦略から論文を書き上げたり評価したり、という色々な面でまだまだやれることがたくさんあると痛感した。&lt;/p&gt;
+&lt;p&gt;自分の中でも今年の成長は確実に感じてはいるのだけれども、同時に自分の成長はまだまだ足りないとも感じるし、やりきれていないこともたくさんある。&lt;/p&gt;
+&lt;p&gt;ともあれ計画的に継続的にやっていく。&lt;/p&gt;</description></item><item><title>2019年12月5日</title><link>https://blog.monochromegane.com/diary/20191205/</link><pubDate>Fri, 06 Dec 2019 23:08:05 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191205/</guid><description>&lt;p&gt;IOTS2019の初日。
+朝イチでポスターの準備をした後はいろいろなセッションを聞きつつ、ランチ、懇親会。
+相変わらず議論も活発で楽しい。&lt;/p&gt;
+&lt;p&gt;柏崎先生の遠距離の拠点間を繋ぐネットワークに対するFailure Injection Testingとそのシナリオを生成する研究、規模感含めて着実に進んできて個人的に注目している。&lt;/p&gt;</description></item><item><title>2019年12月4日</title><link>https://blog.monochromegane.com/diary/20191204/</link><pubDate>Fri, 06 Dec 2019 23:04:42 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191204/</guid><description>&lt;p&gt;IOTSのポスターセッションに参加するため沖縄に移動。&lt;/p&gt;
+&lt;p&gt;移動中は、シミュレーターのシンプルなフレームワークの構想がなんとなく固まったので実装していた。
+ホテルついて実装進めたり共著者レビューの確認、評価資料など進めていたが疲れが出たので特にホテルから出ずに終わってしまった。&lt;/p&gt;</description></item><item><title>2019年12月3日</title><link>https://blog.monochromegane.com/diary/20191203/</link><pubDate>Wed, 04 Dec 2019 00:45:35 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191203/</guid><description>&lt;p&gt;終日、自宅で論文執筆。&lt;/p&gt;
+&lt;p&gt;予定した初稿を共著者へ共有するところまでできて一安心。
+とは言え、書きたいこと書いてしまったので分量がかなり多くなってしまった。
+ここからのシェイプアップで筋肉質になっていく様が楽しく感じられるようにはなった。
+まずは初稿なんだよなあ、なんでも。&lt;/p&gt;
+&lt;p&gt;昨日は書けなかったけど、今日は書けたじゃなくて昨日考えたのが整理されたから今日書けたという感じがするのでこれを日を跨がないでできるようにしていきたいなあ&lt;/p&gt;</description></item><item><title>2019年12月2日</title><link>https://blog.monochromegane.com/diary/20191202/</link><pubDate>Mon, 02 Dec 2019 23:52:15 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191202/</guid><description>&lt;p&gt;眠い。&lt;/p&gt;
 &lt;p&gt;昨日の無理がやっぱり来ている。とほほ。
 今日中になんとか考察に必要なグラフはできたかな。&lt;/p&gt;</description></item><item><title>2019年12月1日</title><link>https://blog.monochromegane.com/diary/20191201/</link><pubDate>Mon, 02 Dec 2019 23:43:37 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191201/</guid><description>&lt;p&gt;終日評価実験の続き。
 実際に考察を書く段階になるとどうも図の見せ方や集計観点に納得がいかずまた一日使ってしまった。
@@ -65,13 +84,4 @@
 この一年の体力の低下と腰の痛みによる衰えが確実に仕事に影響がでている気がする。
 働き方を変えて本当に短い時間で何かを為さなければ何もできなくなってきそう。&lt;/p&gt;</description></item><item><title>2019年11月23日</title><link>https://blog.monochromegane.com/diary/20191123/</link><pubDate>Tue, 26 Nov 2019 16:52:44 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191123/</guid><description>&lt;p&gt;終日、プロット周りを頑張って欲しいデータにたどり着けたと思う。
 熱っぽかったがたどり着きたかったので頑張ってしまった結果、体調崩す。
-うーむ。&lt;/p&gt;</description></item><item><title>2019年11月22日</title><link>https://blog.monochromegane.com/diary/20191122/</link><pubDate>Tue, 26 Nov 2019 16:52:03 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191122/</guid><description>&lt;p&gt;オラっと評価を進める。
-バグも消化したのであとは見せ方。
-ここ重要。&lt;/p&gt;</description></item><item><title>2019年11月21日</title><link>https://blog.monochromegane.com/diary/20191121/</link><pubDate>Tue, 26 Nov 2019 16:50:52 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191121/</guid><description>&lt;p&gt;評価。&lt;/p&gt;
-&lt;p&gt;基盤チームで飲み。
-新しくチームに入った方もみんな優しい感じで終始ニコニコであった。&lt;/p&gt;</description></item><item><title>2019年11月20日</title><link>https://blog.monochromegane.com/diary/20191120/</link><pubDate>Tue, 26 Nov 2019 16:49:30 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191120/</guid><description>&lt;p&gt;評価を進める。
-振り返ればもうちょいうまくやれるだろうになあとは思う。
-気軽に相談したい。&lt;/p&gt;</description></item><item><title>2019年11月19日</title><link>https://blog.monochromegane.com/diary/20191119/</link><pubDate>Tue, 26 Nov 2019 16:46:22 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191119/</guid><description>&lt;p&gt;ひたすら評価用のコードの精度をあげていく感じ。
-この辺からだいたいリズムが崩れて日記がかけずに視野が少しづつ狭くなってくる感じがあるのでなんとかしなきゃなと振り返って思う。&lt;/p&gt;
-&lt;p&gt;ランチは前職の後輩から誘われたので天神でパスタ。
-頑張ってるみたい。&lt;/p&gt;</description></item></channel></rss>
+うーむ。&lt;/p&gt;</description></item></channel></rss>
