@@ -1,4 +1,94 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>slack on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/slack/</link><description>Recent content in slack on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 01 Mar 2015 00:00:00 +0000</lastBuildDate><atom:link href="/tags/slack/" rel="self" type="application/rss+xml"/><item><title>2019年12月10日</title><link>https://blog.monochromegane.com/diary/20191210/</link><pubDate>Tue, 10 Dec 2019 22:26:30 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191210/</guid><description>&lt;p&gt;午前中に論文の共著者レビューを反映。
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>slack on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/slack/</link><description>Recent content in slack on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 01 Mar 2015 00:00:00 +0000</lastBuildDate><atom:link href="/tags/slack/" rel="self" type="application/rss+xml"/><item><title>2019</title><link>https://blog.monochromegane.com/blog/2019/12/31/2019/</link><pubDate>Tue, 31 Dec 2019 21:36:46 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2019/12/31/2019/</guid><description>
+&lt;p&gt;今年は研究とGo言語三昧だった。
+特にGo言語については、福岡でGoConを開催し、GopherCon2019で初の海外カンファレンスに登壇した。
+大規模カンファレンスの主催も海外の大きなカンファレンスでの登壇も初めての経験で準備もプレッシャーも大変だったが、多くの人と笑いながら協力しながらなんとか達成することができたと思う。
+これらの経験は自分の行動の幅を世界基準に広げるにあたって大きな自信につながった。
+加えて、コミュニティ活動として主催するFukuoka.goを他の地方コミュニティと同時開催したり、Go言語教室を招いたり、OSS Gateのメンター、Fukuoka.LTの運営をやったりと精力的に福岡のコミュニティを全国とつなげ、盛り上げることができた。
+来年もGo言語を武器にどんどん活動していきたい。&lt;/p&gt;
+&lt;p&gt;研究については、当初目標だったジャーナルには残念ながら不採録となったものの、改めて研究を発展させ年内に再度投稿することができた。
+今年執筆した論文とそのフィードバックから、研究の背景（動機、位置付け、従来課題の整理）は一定のレベルで書けるようになったのではないかと感じる。
+一方で、提案手法とその評価に関する指摘の割合が多くなってきており、改めて提案手法の貢献を明確にできるよう考え抜いていかなければならない。
+これまでの研究を通して「常に変化しうる多数の環境に対する自律適応的なシステムとその仕組み」が背景にあるのではないかと考えており、来年はこの観点でのサーベイと体系化を進めていきたい。&lt;/p&gt;
+&lt;p&gt;2019年をかけて、多くのことを達成することができた。
+特に精神的な面では強くなれたのでないかと思う。
+上期の前半は、研究で実績が出ないことに対する焦りや力不足でまたも袋小路に入ってしまったが、アドバイスや助力いただけたことで立て直すことができた。
+それでも、何かをやることに対する漠然とした恐怖や、過度な専念などいくつかの弱体化がかかっていたように思う。
+結局は、無能だと判断されたくないだとか、集中することができれば大きな成果を出せるはずだとか、心の奥底に対外的な評価が中心に据えられて、自己評価とのギャップと相まって動けなくなっていたことが原因だと思い至り、過去の理性の人のエントリを見返しつつ、自分を大切に、なすべきことをやっていけるよう少しづつ冷静になれた。
+周りからの評価を恐れてやるべきことを見失ったり曲げてしまうのはとても悲しいことだし、
+生きている以上、やることは常に発生するのだから、これらを後回しにすることは長期的には専念にはならないし、
+色々なことに向き合う必要があるのだから、人や結果に過度にひきづられることを言い訳にせずに個々の事象をある程度独立させて淡々とこなして行くのが良いのだろう。&lt;/p&gt;
+&lt;p&gt;来年は、数学、英語、サーベイを継続的にこなしつつジャーナルを通して博士課程に挑戦する。
+また、トップダウンの視点をもって行動の意義を共有することで影響力を高めていこうと思う。
+2020年もよろしくお願いします。&lt;/p&gt;
+&lt;h1 id=&#34;実績&#34;&gt;実績&lt;/h1&gt;
+&lt;p&gt;以下、実績を列挙する。&lt;/p&gt;
+&lt;h2 id=&#34;論文&#34;&gt;論文&lt;/h2&gt;
+&lt;p&gt;国内査読無し論文が2本と国内査読付きポスター発表が1本。執筆としては査読付き論文が2本。うち1本が不採録で、投稿中が1本。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;三宅 悠介, 栗林 健太郎, Kaburaya AutoScaler: 多環境での運用性を考慮した自律適応型オートスケーリング制御系, インターネットと運用技術シンポジウム論文集, 2019, pp.114-115, Nov 2019. &lt;a href=&#34;https://rand.pepabo.com/papers/iots2019-miyakey.pdf&#34;&gt;[論文]&lt;/a&gt; &lt;a href=&#34;https://speakerdeck.com/monochromegane/iots2019-kaburaya-autoscaler&#34;&gt;[発表資料]&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;三宅 悠介, 阿部 博, 栗林 健太郎, &lt;a href=&#34;http://id.nii.ac.jp/1001/00199414/&#34;&gt;なめらかなセキュリティを目指して&lt;/a&gt;, 研究報告インターネットと運用技術（IOT）, Vol.2019-IOT-47, pp.1-7, Sep 2019. &lt;a href=&#34;https://rand.pepabo.com/papers/iot47-miyakey.pdf&#34;&gt;[論文]&lt;/a&gt; &lt;a href=&#34;https://speakerdeck.com/monochromegane/toward-the-coherently-fittable-security&#34;&gt;[発表資料]&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;三宅 悠介, 松本 亮介, &lt;a href=&#34;http://id.nii.ac.jp/1001/00195696/&#34;&gt;利用者の文脈に応じて継続的に推薦手法の選択を最適化する推薦システム&lt;/a&gt;, 研究報告インターネットと運用技術（IOT）, Vol.2019-IOT-45, pp.1-7, May 2019. &lt;a href=&#34;https://rand.pepabo.com/papers/iot45-miyakey.pdf&#34;&gt;[論文]&lt;/a&gt; &lt;a href=&#34;https://speakerdeck.com/monochromegane/iot45-synapse&#34;&gt;[発表資料]&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;国外発表&#34;&gt;国外発表&lt;/h2&gt;
+&lt;p&gt;初の海外カンファレンス登壇。めでたい！&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Yusuke Miyake, &lt;a href=&#34;https://www.gophercon.com/agenda/session/49010&#34;&gt;Optimization for Number of goroutines Using Feedback Control&lt;/a&gt;, &lt;a href=&#34;https://www.gophercon.com/&#34;&gt;GopherCon Marriott Marquis San Diego Marina, California&lt;/a&gt;, July 2019. [&lt;a href=&#34;https://speakerdeck.com/monochromegane/optimization-for-number-of-goroutines-using-feedback-control&#34;&gt;資料&lt;/a&gt;] [&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/07/25/gophercon_2019_kaburaya/&#34;&gt;スピーカーノート&lt;/a&gt;] [&lt;a href=&#34;https://youtu.be/O_R7Nwsix1c&#34;&gt;動画&lt;/a&gt;]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;国内発表&#34;&gt;国内発表&lt;/h2&gt;
+&lt;p&gt;技術イベント、研究会での発表で計６回。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;三宅 悠介, &lt;a href=&#34;https://speakerdeck.com/monochromegane/fukuokago14-flagen&#34;&gt;コマンドラインオプションをパースするコードをコマンドラインオプションから生成するツールをつくった&lt;/a&gt;, &lt;a href=&#34;https://fukuokago.connpass.com/event/146447/&#34;&gt;Fukuoka.go#14+Umeda.go&lt;/a&gt;, 2019年10月.&lt;/li&gt;
+&lt;li&gt;三宅 悠介, &lt;a href=&#34;https://blog.monochromegane.com/blog/2019/10/04/wsa5_kaburaya_autoscaler/&#34;&gt;Kaburaya AutoScaler: 多環境での運用性を考慮した自律適応型オートスケーリング制御系&lt;/a&gt;, &lt;a href=&#34;https://websystemarchitecture.hatenablog.jp/entry/2019/07/30/172650&#34;&gt;第五回 Webシステムアーキテクチャ研究会&lt;/a&gt;, 2019年9月.&lt;/li&gt;
+&lt;li&gt;三宅 悠介, &lt;a href=&#34;https://www.facebook.com/events/454332078445860/&#34;&gt;「エンジニアコミュニティの運営について」パネルディスカッション&lt;/a&gt;, &lt;a href=&#34;https://www.facebook.com/events/454332078445860/&#34;&gt;Engineer Friendly Space&lt;/a&gt;, 2019年7月.&lt;/li&gt;
+&lt;li&gt;三宅 悠介, &lt;a href=&#34;https://speakerdeck.com/monochromegane/pepacon-night-ai-wg&#34;&gt;AI（機械学習）ワーキンググループ 成果報告&lt;/a&gt;, &lt;a href=&#34;https://pepabo.connpass.com/event/128486/&#34;&gt;ペパコンナイト&lt;/a&gt;, 2019年5月. &lt;a href=&#34;https://youtu.be/KKxHu5o01zw?t=4420&#34;&gt;[動画]&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;三宅 悠介, &lt;a href=&#34;https://speakerdeck.com/monochromegane/wsa-4-ebira&#34;&gt;Ebira: アクセス負荷に応じて継続的にスケーリング基準を最適化する汎用オートスケーリング機構&lt;/a&gt;, &lt;a href=&#34;https://websystemarchitecture.hatenablog.jp/entry/2019/02/26/100725&#34;&gt;第四回 Webシステムアーキテクチャ研究会&lt;/a&gt;, 2019年4月.&lt;/li&gt;
+&lt;li&gt;三宅 悠介, &lt;a href=&#34;https://speakerdeck.com/monochromegane/understanding-go-language-server&#34;&gt;Go language serverを理解する&lt;/a&gt;, &lt;a href=&#34;https://fukuokago.connpass.com/event/118377/&#34;&gt;Go 1.12 Release Party in Fukuoka&lt;/a&gt;, 2019年2月. &lt;a href=&#34;https://crash.academy/video/722/2051&#34;&gt;[動画]&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;三宅 悠介, &lt;a href=&#34;https://speakerdeck.com/monochromegane/dragon-imports&#34;&gt;dragon-importsで爆速goimports生活 - プロジェクト Go modules&lt;/a&gt;, &lt;a href=&#34;https://fukuokago.connpass.com/event/112073/&#34;&gt;Fukuoka.go#13+Okayama.go&lt;/a&gt;, 2019年2月.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;oss&#34;&gt;OSS&lt;/h2&gt;
+&lt;p&gt;Kaburayaを中心に自律適応的な仕組みに向けての知見を深めていった。また、研究系のシミュレーションが増えてきた。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/kaburaya&#34;&gt;Kaburaya&lt;/a&gt;: Kaburaya optimize the number of goroutines by feedback control.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/queuing-theory-simulator&#34;&gt;queuing-theory-simulator&lt;/a&gt;: Queuing theory simulator in Go.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/kaburaya-autoscaler&#34;&gt;Kaburaya AutoScaler&lt;/a&gt;: An autoscaler controller based on queuing theory.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/flagen&#34;&gt;flagen&lt;/a&gt;: A command line option parser generator using command line option.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;コミュニティ活動&#34;&gt;コミュニティ活動&lt;/h2&gt;
+&lt;p&gt;Goを中心に精力的に活動できた。特に全国規模のカンファレンスを福岡で主催したり、地方のGoコミュニティ同士を繋いだり福岡以外へも活動の幅が広がっている。
+また、OSS GateやFukuoka.LTへの参加を通して福岡全体の盛り上げにも協力できたかなと思う。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://fukuokago.connpass.com/event/112073/&#34;&gt;Fukuoka.go#13+Okayama.go&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://fukuokago.connpass.com/event/118377/&#34;&gt;Go 1.12 Release Party in Fukuoka&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oss-gate-fukuoka.connpass.com/event/121702/&#34;&gt;OSS Gate Fukuoka - 2 commits -&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://fukuokago.connpass.com/event/130797/&#34;&gt;Go Conference&amp;rsquo;19 Summer in Fukuoka&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://fukuokago.connpass.com/event/139929/&#34;&gt;Go 1.13 Release Party in Fukuoka /w Tokyo&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://fukuokago.connpass.com/event/143986/&#34;&gt;「はじめてのGo言語教室」〜晩夏の岩田プロ福岡出張スペシャル〜&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://fukuokago.connpass.com/event/146447/&#34;&gt;Fukuoka.go#14+Umeda.go&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://fukuokago.connpass.com/event/155369/&#34;&gt;Fukuoka.LT（福岡のいろんなコミュニティを集められるだけ集めて合同忘年LT大会）&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;出版物等への寄稿&#34;&gt;出版物等への寄稿&lt;/h2&gt;
+&lt;p&gt;前作に引き続きガッツリと査読に関わらせていただいた。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;書籍査読: スマートニュース株式会社　立石 賢吾, やさしく学ぶ ディープラーニングがわかる数学のきほん ~アヤノ＆ミオと学ぶ ディープラーニングの理論と数学、実装~, マイナビ出版, 2019年07月31日. &lt;a href=&#34;https://book.mynavi.jp/ec/products/detail/id=104970&#34;&gt;ISBN：978-4-8399-6837-3&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;ブログ&#34;&gt;ブログ&lt;/h2&gt;
+&lt;p&gt;13本。一時期は日記を書いていたが、考えをまとめる練習にはつながらなかったかもしれない。
+実績に加えてどうしてそのような活動に至ったのかについてもトップダウンの視点で書いていきたい。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/11/27/guidepost_for_writing_paper/&#34;&gt;論文執筆の道しるべ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/10/25/fukuokago14_flagen/&#34;&gt;コマンドラインオプションをパースするコードをコマンドラインオプションから生成するツールをつくった&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/10/11/random_number_gen_using_go/&#34;&gt;待ち行列理論に使われる分布に従う乱数をGo言語で生成する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/10/04/wsa5_kaburaya_autoscaler/&#34;&gt;Kaburaya AutoScaler: 多環境での運用性を考慮した自律適応型オートスケーリング制御系&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/08/11/toward_the_oversea_conference/&#34;&gt;初めて海外カンファレンス登壇するためにやったこと&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/08/10/gophercon_2019/&#34;&gt;GopherCon 2019で初の海外カンファレンス登壇をしてきました&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/08/02/gocon_fukuoka/&#34;&gt;福岡でGoConを開催した&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/07/25/gophercon_2019_kaburaya/&#34;&gt;GopherCon 2019: Optimization for Number of goroutines Using Feedback Control&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/04/14/wsa_4_ebira/&#34;&gt;Ebira: アクセス負荷に応じて継続的にスケーリング基準を最適化する汎用オートスケーリング機構&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/03/01/the-things-coherently-fittable-system-looks-ahead-to/&#34;&gt;なめらかなシステムの見据えるもの。個人的考察&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/02/25/entrance-of-research/&#34;&gt;わかるとわからないの間&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/02/23/remote-study-group/&#34;&gt;拠点間勉強会を接続するリモート勉強会への誘い&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/01/17/oss-gate-as-supporter/&#34;&gt;OSS Gateにサポーターとして参加した（東京・福岡）&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>2019年12月10日</title><link>https://blog.monochromegane.com/diary/20191210/</link><pubDate>Tue, 10 Dec 2019 22:26:30 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191210/</guid><description>&lt;p&gt;午前中に論文の共著者レビューを反映。
 まだかなり荒削りなので明日ガッと形を整えなければなるまい。&lt;/p&gt;
 &lt;p&gt;その他、マンションのことなど。
 ある程度均質な背景を持つ会社や技術コミュニティと違い、色々な背景や思惑が皆あるので健全に運営できるようにやっていきたいな。&lt;/p&gt;
@@ -65,27 +155,4 @@
 &lt;p&gt;サーベイの習慣化が滞っているのでなんとかせねばと思うものの、まずは今のジャーナルを乗り越えて年末に整えるか。うーむ。&lt;/p&gt;
 &lt;p&gt;夜は評価用のバッチを回しながら『&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4535784728/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4535784728&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=469d5953843897a3f0eddfcc11254bd3&#34;&gt;論理と集合から始める数学の基礎&lt;/a&gt;』を読む。
 確率やらバンディット問題やら扱う際に集合関連の記法があやふやだったので途中で辞めていたのを改めて再開。
-とても丁寧に説明されていて、集合を前提とする数式などを読む際の行間を埋めてくれる知識が育つ感じでなかなか良い。&lt;/p&gt;</description></item><item><title>論文執筆の道しるべ</title><link>https://blog.monochromegane.com/blog/2019/11/27/guidepost_for_writing_paper/</link><pubDate>Wed, 27 Nov 2019 22:03:05 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2019/11/27/guidepost_for_writing_paper/</guid><description>&lt;p&gt;論文執筆にあたり自分向けの指針のようなものがまとまってきたのでメモしておく。
-以下の内容の一枚もののサマリがあると良いのではないか。&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;背景: なぜその課題に取り組むか&lt;/li&gt;
-&lt;li&gt;リサーチクエスチョン: 何を解決したいのか&lt;/li&gt;
-&lt;li&gt;従来手法の整理: これまではその課題をどう解決していたのか、これまでのやり方に残った課題は何か&lt;/li&gt;
-&lt;li&gt;提案手法: 残った課題をどう解決したか&lt;/li&gt;
-&lt;li&gt;評価: 残った課題は定量的にどの程度解決したか&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;ここで&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;2.のリサーチクエスチョンと3.従来手法の課題を混同しない。&lt;/li&gt;
-&lt;li&gt;3.従来手法の課題、4.提案手法、5.評価はもれなく対応する。つまり、課題が3つであれば提案手法もそれらに対する解決アプローチを提示し、それぞれに評価が行われている。もしくは課題のうち、いくつを解決するものかを明示する。&lt;/li&gt;
-&lt;li&gt;これらは一枚まとめにすると良い。シーケンシャルな文章とこのまとめを交互に見直すことで道筋を外れずに具体と抽象を行き来できる（といいな）&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;上手な査読者のレビューは提案内容を除けば上記の観点での過不足を指摘しているように思える。
-指摘事項に対する個別対処では、論文執筆力の向上はのぞめないのでこのような枠組みも意識して一定の水準での論文を執筆できるようにもなっていきたい。&lt;/p&gt;
-&lt;p&gt;また、議論から多くを得るためには&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;分野のやや異なる人とは1.背景の説明を長めに取ることで自分の思い込みや暗黙の前提が浮き彫りにされ読み易い論文になる&lt;/li&gt;
-&lt;li&gt;分野の同じ人とは同じ課題意識を持つとみなし、従来手法の整理と提案手法のアプローチを中心に議論する&lt;/li&gt;
-&lt;li&gt;差読者目線を持つ人とは、リサーチクエスチョンを一言で伝わるか、それが解決したかをできるだけ手短に説明する&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;のような感じに使い分けると良いのではないかなと考えている。&lt;/p&gt;</description></item></channel></rss>
+とても丁寧に説明されていて、集合を前提とする数式などを読む際の行間を埋めてくれる知識が育つ感じでなかなか良い。&lt;/p&gt;</description></item></channel></rss>
