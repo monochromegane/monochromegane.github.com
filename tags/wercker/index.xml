@@ -1,4 +1,108 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>wercker on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/wercker/</link><description>Recent content in wercker on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sat, 18 Jul 2015 11:07:01 +0900</lastBuildDate><atom:link href="/tags/wercker/" rel="self" type="application/rss+xml"/><item><title>テッド・チャン『息吹』と「なめらかなシステム」</title><link>https://blog.monochromegane.com/blog/2020/01/26/exhalation-and-coherently-fittable-system/</link><pubDate>Sun, 26 Jan 2020 20:16:38 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/01/26/exhalation-and-coherently-fittable-system/</guid><description>&lt;p&gt;昨年末にあんちぽさんからお勧めされていた、テッド・チャン『息吹』をようやっと読み終えた。&lt;/p&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>wercker on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/wercker/</link><description>Recent content in wercker on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sat, 18 Jul 2015 11:07:01 +0900</lastBuildDate><atom:link href="/tags/wercker/" rel="self" type="application/rss+xml"/><item><title>『強化学習アルゴリズム入門』第1章〜第2章の学習メモ</title><link>https://blog.monochromegane.com/blog/2020/01/30/memo-getting-start-reinformation-learning-algorithm/</link><pubDate>Thu, 30 Jan 2020 20:37:43 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/01/30/memo-getting-start-reinformation-learning-algorithm/</guid><description>
+&lt;p&gt;書籍『強化学習アルゴリズム入門』について第1章〜第2章を読んでの学習メモをまとめる。&lt;/p&gt;
+&lt;p&gt;強化学習は一連の行動によって得られる報酬を最大化する行動基準を学習する。
+そのために、「一連の行動」を状態の遷移と捉えて、その状態に対する価値（状態価値）を求める。
+また、各状態には取りうる複数の行動があると考え、その状態の価値を、これらの行動ごとの価値（行動状態価値）から求める。&lt;/p&gt;
+&lt;h2 id=&#34;強化学習アルゴリズムごとの価値関数&#34;&gt;強化学習アルゴリズムごとの価値関数&lt;/h2&gt;
+&lt;p&gt;はじめに、第1章〜第2章までで学ぶ各強化学習アルゴリズムの状態価値関数と行動状態価値関数をまとめておく。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;状態価値関数 $V(S_t)$&lt;/th&gt;
+&lt;th&gt;行動状態価値関数 $Q(S_t,a_t)$&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;動的計画法&lt;/td&gt;
+&lt;td&gt;$V(S_t)=\sum_{a} \pi (a \mid S_t) Q(S_t, a_t) \tag{1}\label{1}$&lt;/td&gt;
+&lt;td&gt;$Q(S_t,a_t)=r_{t+1}+\gamma V(S_{t+1}) \tag{2}\label{2}$&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;モンテカルロ法&lt;/td&gt;
+&lt;td&gt;$V(S_t)=\sum_a Q(S_t,a_t) \frac{N_a}{N} \tag{3}\label{3}$ $V(S_t)=max\{Q(S_t,a_t)\} \tag{4}\label{4}$&lt;/td&gt;
+&lt;td&gt;$Q(S_t,a_t)=\frac{1}{m}\sum_{i=1}^{m} G^i(S_t,a_t) \tag{5}\label{5}$ $Q(S_t,a_t) \gets Q(S_t,a_t)+\alpha[G(S_t,a_t)-Q(S_t,a_t)] \tag{6}\label{6}$ where $G(S_t,a_t)=r_{t+1}+\gamma G(S_{t+1},a_{t+1}) \tag{7}\label{7}$&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;TD(0)法&lt;/td&gt;
+&lt;td&gt;同上&lt;/td&gt;
+&lt;td&gt;$Q(S_t,a_t) \gets Q(S_t,a_t)+\alpha[\{r_{t+1}+\gamma(Q(S_{t+1},a_{t+1}))\}-Q(S_t,a_t)] \tag{8}\label{8}$&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;以下、各強化学習アルゴリズムについて捕捉する。&lt;/p&gt;
+&lt;h2 id=&#34;動的計画法&#34;&gt;動的計画法&lt;/h2&gt;
+&lt;p&gt;確率型ベルマン方程式\eqref{1}に従い行動状態価値を更新する手法。
+ここで$\pi (a \mid S_t)$は行動確率であり、方策$\pi$に従い状態$S$において行動$a$を選択する確率を示す。
+また、$Q(S_t, a_t)$は行動状態価値関数であり\eqref{2}によって求める。&lt;/p&gt;
+&lt;p&gt;行動状態価値関数\eqref{2}は状態$S$において行動$a$によって遷移する状態$S$で得られる報酬$r$とその状態の価値$V$の和によって求められる。
+ここで$\gamma$は価値の割引率である。&lt;/p&gt;
+&lt;p&gt;書籍ではこの価値の求め方を「将来に対する平均（$X_{t+1}$ から$X_N$ までの平均$\bar{X}$）の逐次的な計算」との類似性によって説明している。
+\[
+\bar{X_t}=\bar{X}_{t+1}+\frac{1}{N-t}(X_{t+1}-\bar{X}_{t+1})&lt;br /&gt;
+=(\frac{1}{N-t})X_{t+1}-(\frac{N-t-1}{N-t})\bar{X}_{t+1}
+\]&lt;/p&gt;
+&lt;p&gt;動的計画法における学習プロセスは以下のようになる。&lt;/p&gt;
+&lt;h3 id=&#34;方策反復法&#34;&gt;方策反復法&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;1. 状態価値が収束するまで以下のステップを繰り返す
+2. 各状態において方策(行動ごとの行動状態価値Qによるepsilon-greedyなど)に従い行動確率を求める
+3. 各状態において行動ごとの行動状態価値を遷移後の状態の報酬と状態価値から求める
+4. 2と3よりその状態の状態価値を更新する
+5. 全ての状態で状態価値の更新が終わったら次の学習イテレーションへ
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;価値反復法&#34;&gt;価値反復法&lt;/h3&gt;
+&lt;p&gt;$\epsilon$-Greedyの探索率$\epsilon=0$の場合は方策に依存しない価値反復法となる。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;1. 状態価値が収束するまで以下のステップを繰り返す
+2. 各状態において行動ごとの行動状態価値を遷移後の状態の報酬と状態価値から求める
+3. 2のうち最大の値で状態の状態価値を更新する
+4. 全ての状態で状態価値の更新が終わったら次の学習イテレーションへ
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;モンテカルロ法&#34;&gt;モンテカルロ法&lt;/h2&gt;
+&lt;p&gt;動的計画法は環境情報が既知の場合に使えるが未知の場合、環境も含めて手探りで行動基準を学習しなければならない。
+そのような場合はモンテカルロ法を利用する。&lt;/p&gt;
+&lt;p&gt;モンテカルロ法の価値の学習には総報酬$G$\eqref{7}を用いる。
+総報酬は一連の行動が終わり得た報酬$r$から遡って状態（と行動）に対して価値を算出する。
+書籍ではこの価値の求め方も「将来に対する平均」で表現している（tの値をt+1から求める）。&lt;/p&gt;
+&lt;p&gt;なお、行動状態価値は\eqref{5}により試行数$m$での平均とする（学習ステップにおいて\eqref{3}\eqref{4}\eqref{6}は使わない）。&lt;/p&gt;
+&lt;p&gt;モンテカルロ法における学習プロセスは以下のようになる。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;1. 任意の試行回数だけ以下のステップを繰り返す
+2. 最初の状態から報酬rを得るまで以下のステップを繰り返す
+3. 現在の状態において方策(行動ごとの行動状態価値Qによるepsilon-greedyなど)に従い行動aを決定する
+4. 次の状態へ遷移
+5. 報酬を得たら行動を遡り各状態（と行動）の総報酬Gを求め、試行回数での平均によって行動状態価値Qを更新する
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;td-0-法&#34;&gt;TD(0)法&lt;/h2&gt;
+&lt;p&gt;モンテカルロ法は総報酬$G$を求めるために必ず一連の行動を終える必要がある。
+そこで、逐次的に行動状態価値を求めることでモンテカルロの探索行為を効率的に行おうとするTD(0)法がある。&lt;/p&gt;
+&lt;p&gt;TD(0)法では、行動状態価値$Q$を\eqref{8}によって求める。
+これは、モンテカルロ法の行動状態価値関数\eqref{5}を逐次計算表現にした\eqref{6}の$G(S_t,a_t)$を動的計画法の行動状態価値関数\eqref{2}で置き換えたものと考えることができる。
+つまり、総報酬$G$を$t+1$の報酬と状態価値で近似するものである。&lt;/p&gt;
+&lt;p&gt;TD(0)法における学習プロセスは以下のようになる。&lt;/p&gt;
+&lt;h3 id=&#34;sarsa-方策反復法&#34;&gt;SARSA （方策反復法）&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;1. 任意の試行回数だけ以下のステップを繰り返す
+2. 最初の状態から報酬rを得るまで以下のステップを繰り返す
+3. (S) 現在の状態において方策(行動ごとの行動状態価値Qによるepsilon-greedyなど)に従い行動aを決定、Q(S_t,a_t)を得る
+4. (A) 行動aに従い状態を遷移
+5. (R) 遷移後の状態で報酬rを得る（得られない時もある）
+6. (S) 遷移後の状態において方策に従い行動aを決定、Q(S_t+1,a_t+1)を得る
+7. (A) 行動aに従い状態を遷移
+8. 5の報酬rと3と6の行動状態価値QでQ(S_t,a_t)を更新
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;q学習-価値反復法&#34;&gt;Q学習 （価値反復法）&lt;/h3&gt;
+&lt;p&gt;$Q(S_{t+1},a_{t+1})$を$max\{Q(S_{t+1},a_{t+1})\}$で求めることで方策に非依存とする。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;1. 任意の試行回数だけ以下のステップを繰り返す
+2. 最初の状態から報酬rを得るまで以下のステップを繰り返す
+3. 現在の状態においてランダムに行動aを決定、Q(S_t,a_t)を得る
+4. 行動aに従い状態を遷移
+5. 遷移後の状態で報酬rを得る（得られない時もある）
+6. 遷移後の状態においてランダムに行動aを決定、Q(S_t+1,a_t+1)は全行動状態価値のうち最大の値とする
+7. 行動aに従い状態を遷移
+8. 5の報酬rと3と6の行動状態価値QでQ(S_t,a_t)を更新
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;学習書籍&#34;&gt;学習書籍&lt;/h1&gt;
+&lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;t=monochromeg03-22&amp;m=amazon&amp;o=9&amp;p=8&amp;l=as1&amp;IS2=1&amp;detail=1&amp;asins=427422371X&amp;linkId=e3e609dd57189d2dd910abc95a46bbd0&amp;bc1=ffffff&amp;lt1=_blank&amp;fc1=333333&amp;lc1=0066c0&amp;bg1=ffffff&amp;f=ifr&#34;&gt;
+&lt;/iframe&gt;</description></item><item><title>テッド・チャン『息吹』と「なめらかなシステム」</title><link>https://blog.monochromegane.com/blog/2020/01/26/exhalation-and-coherently-fittable-system/</link><pubDate>Sun, 26 Jan 2020 20:16:38 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/01/26/exhalation-and-coherently-fittable-system/</guid><description>&lt;p&gt;昨年末にあんちぽさんからお勧めされていた、テッド・チャン『息吹』をようやっと読み終えた。&lt;/p&gt;
 &lt;p&gt;本書を通して所属する研究所のビジョンである「なめらかなシステム」の世界観について理解が深まったように感じたのでメモしておく。&lt;/p&gt;
 &lt;p&gt;本書は表題の「息吹」を含むSFの短編集である。全部で9編の作品から成る。
 多くの作品は、現在の地球の水準より進んだ技術とそれを扱う知性体が登場する。
@@ -166,8 +270,4 @@
 &lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の入稿が済み、研究データの調整も進み、論文も着手できて一気に動き出した感じがある。
 あとはやるだけ。
 とは言え風邪が完治せずに慢性的に怠かったりするのが厳しいところ。
-悪化させないよう、でも頑張って進めていくしかない。&lt;/p&gt;</description></item><item><title>2019年11月28日</title><link>https://blog.monochromegane.com/diary/20191128/</link><pubDate>Sat, 30 Nov 2019 22:38:06 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191128/</guid><description>&lt;p&gt;評価良い結果が出たので論文用にまとめて所属する研究所の定例の研究会で慌てて発表。&lt;/p&gt;
-&lt;p&gt;『&lt;a href=&#34;https://www.sbj.or.jp/wp-content/uploads/file/sbj/9711/9711_career_academia_1.pdf&#34;&gt;M1で論文を書く研究室の運営&lt;/a&gt;』を読んだ。
-やはり継続的かつ目的意識を持った習慣化のフレームワークが必要である。&lt;/p&gt;
-&lt;p&gt;今回の論文は着手が予定より遅れてしまっているがやはり研究のデータと評価を作るところが時間がかかってしまった。
-二度目なので対策を考えなければなあと思っていたが、このゼミ室の運営だと評価（しかも再現性のある確実な結果）を二週間ごとに確実に出すようにするのだとあってここもやはり習慣化なのだなと思えた。&lt;/p&gt;</description></item></channel></rss>
+悪化させないよう、でも頑張って進めていくしかない。&lt;/p&gt;</description></item></channel></rss>
