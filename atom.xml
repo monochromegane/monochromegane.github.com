@@ -1,4 +1,32 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>THINKING MEGANE</title><link>https://blog.monochromegane.com/</link><description>Recent content on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Thu, 30 Jan 2020 20:37:43 +0900</lastBuildDate><atom:link href="/" rel="self" type="application/rss+xml"/><item><title>『強化学習アルゴリズム入門』第1章〜第2章の学習メモ</title><link>https://blog.monochromegane.com/blog/2020/01/30/memo-getting-start-reinformation-learning-algorithm/</link><pubDate>Thu, 30 Jan 2020 20:37:43 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/01/30/memo-getting-start-reinformation-learning-algorithm/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>THINKING MEGANE</title><link>https://blog.monochromegane.com/</link><description>Recent content on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sat, 01 Feb 2020 15:06:39 +0900</lastBuildDate><atom:link href="/" rel="self" type="application/rss+xml"/><item><title>2020年1月の振り返り。黙々と続ける習慣</title><link>https://blog.monochromegane.com/diary/20200201-january/</link><pubDate>Sat, 01 Feb 2020 15:06:39 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20200201-january/</guid><description>&lt;p&gt;今年は「継続」に意識的に取り組んでいる。&lt;/p&gt;
+&lt;p&gt;数学、英語、サーベイなど基礎となる能力ほど掛けた時間はレバレッジを伴い自分に戻ってくる。
+問題はこれを短期的に、あるいは近道をして手に入れようと焦る気持ちが出てしまうこと。&lt;/p&gt;
+&lt;p&gt;今年は、これらの能力を確実に伸ばせるように「継続」するアプローチで取り組んでいる。&lt;/p&gt;
+&lt;p&gt;1月達成できたルーティーンは以下。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;10:00-10:30 サーベイ論文の輪読&lt;/li&gt;
+&lt;li&gt;21:00-21:30 英語&lt;/li&gt;
+&lt;li&gt;23:00-24:00 数学&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;継続化するために、輪読は取り組む専門分野に精通しようという謳い文句で研究所の有志と毎朝の輪読会にした。
+今のところ、みんな楽しんでやれているし、知らなかったり興味を惹かれた技術要素の深堀なども別途勉強会につながったりして良い感じではないかと思う。
+副次的に毎朝同じ時間に仕事を始めるので睡眠リズムを崩さないよう気をつけるようになりルーティーンを支えてくれている。&lt;/p&gt;
+&lt;p&gt;英語の継続化は、自分にとってモチベーションの維持が課題だった。
+文法もヒアリングも発音練習もテストとしてはこれで良いのだろうけど、いざ英会話するとへこむばかりで練習と実践のレベル感が合わなかった。
+うづらさんが楽しそうにDuolingoを継続しているのを参考にアプリで、かつ即時フィードバックがあるゲーム形式のものを選び、今のところうまく続けられている。
+アプリはiOSの「英語漬け」というもので最初に会話の内容が日本語で表示されて次にそれをシャドーイングする。
+喋った内容は音声認識APIによって即時結果が出るというもの。
+採点の精度も満足できるもので、かつ30分ぐらいでキリの良いところまでできるので毎日お風呂入る前に&amp;rdquo;Hi, Mari&amp;rdquo;とか言ってる。&lt;/p&gt;
+&lt;p&gt;数学の継続化は以前高校数学の復讐に使って自分に合っていた参考書（マセマ出版社のやつ）の続きをやっている。
+大学院を検討していることもあって基礎教養としての素地は欲しいと考えていて、大学基礎数学シリーズをやっている。
+まずは微分積分、次は線形代数、最後に確率統計をやる予定。
+今は微分積分で数学IIIを駆け足で復讐したつけが回って少ない時は1日2Pとかで終わってしまうのでなかなか進まないけど焦らず進めている。&lt;/p&gt;
+&lt;p&gt;それから、継続のためにルーティーンより健康を優先することにしたのも効果的だったと思う。
+仕事含めて疲れがたまったときにルーティーンをやらなければと頑張りすぎて体調崩してなし崩しに継続が途絶えるというのが昨年まで何度かあった。
+今年は、疲れを感じたら潔くやらないことにした。
+結果的にまた頑張れるし、継続によって進んでいるという安心感があるため休むのも後ろめたさがなくなって良い循環になっていると思う。&lt;/p&gt;
+&lt;p&gt;1月は喫緊の論文提出などなく、また年末年始に充分休んだ効果もあったとはいえ、上手く習慣化ができたのではないかと思う。
+2月以降、また忙しくなってくる中でも、先延ばしなどせずに問題に対処していくことでこの習慣を守っていき、1年後のレベルで成長を実感したい。&lt;/p&gt;</description></item><item><title>『強化学習アルゴリズム入門』第1章〜第2章の学習メモ</title><link>https://blog.monochromegane.com/blog/2020/01/30/memo-getting-start-reinformation-learning-algorithm/</link><pubDate>Thu, 30 Jan 2020 20:37:43 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/01/30/memo-getting-start-reinformation-learning-algorithm/</guid><description>
 &lt;p&gt;書籍『強化学習アルゴリズム入門』について第1章〜第2章を読んでの学習メモをまとめる。&lt;/p&gt;
 &lt;p&gt;強化学習は一連の行動によって得られる報酬を最大化する行動基準を学習する。
 そのために、「一連の行動」を状態の遷移と捉えて、その状態に対する価値（状態価値）を求める。
@@ -265,9 +293,4 @@
 手を動かすことができたので今日はよしとする。
 早めに寝てしまおう。&lt;/p&gt;
 &lt;p&gt;夜中、新しい研究のアイディアが降りてきて膨らんだので寝付けなかったのもある。
-軽くサーベイしたら昨日の夜考えたところもすでに人類は到達しており、その先まで面白い研究が進んでいたので、ジャーナル終わったらもう少し調べてサービスの改善に活かしたいところ。&lt;/p&gt;</description></item><item><title>2019年11月29日</title><link>https://blog.monochromegane.com/diary/20191129/</link><pubDate>Sat, 30 Nov 2019 22:46:12 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191129/</guid><description>&lt;p&gt;ようやっと論文として文章への出力を開始する。
-来週の火曜日中に初稿としてあげていく予定とした。&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2019-poster/&#34;&gt;IOTS2019 ポスター&lt;/a&gt;の入稿が済み、研究データの調整も進み、論文も着手できて一気に動き出した感じがある。
-あとはやるだけ。
-とは言え風邪が完治せずに慢性的に怠かったりするのが厳しいところ。
-悪化させないよう、でも頑張って進めていくしかない。&lt;/p&gt;</description></item></channel></rss>
+軽くサーベイしたら昨日の夜考えたところもすでに人類は到達しており、その先まで面白い研究が進んでいたので、ジャーナル終わったらもう少し調べてサービスの改善に活かしたいところ。&lt;/p&gt;</description></item></channel></rss>
