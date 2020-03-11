@@ -1,4 +1,92 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>grep on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/grep/</link><description>Recent content in grep on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Thu, 16 Jan 2014 00:00:00 +0000</lastBuildDate><atom:link href="/tags/grep/" rel="self" type="application/rss+xml"/><item><title>勉強会をオンライン配信するための必要最小限な環境構築</title><link>https://blog.monochromegane.com/blog/2020/03/03/minimum-start-for-online-event/</link><pubDate>Tue, 03 Mar 2020 14:07:22 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/03/03/minimum-start-for-online-event/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>grep on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/grep/</link><description>Recent content in grep on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Thu, 16 Jan 2014 00:00:00 +0000</lastBuildDate><atom:link href="/tags/grep/" rel="self" type="application/rss+xml"/><item><title>Dynamic Gamma-Poisson modelを試す</title><link>https://blog.monochromegane.com/blog/2020/03/11/dynamic-gamma-poisson/</link><pubDate>Wed, 11 Mar 2020 21:25:09 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/03/11/dynamic-gamma-poisson/</guid><description>
+&lt;p&gt;&lt;a href=&#34;https://speakerdeck.com/monochromegane/fukuokago15-adwin-exphist&#34;&gt;以前のADWINのように&lt;/a&gt;、変化する環境において適応的に振る舞うための仕組みについて調べる中で以下の論文で紹介されていたDynamic Gamma-Poissonモデルについてベイズ推定の理解を兼ねて試してみたのでメモ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www2009.wwwconference.org/proceedings/pdf/p21.pdf&#34;&gt;Agarwal, Deepak, Bee-Chung Chen, and Pradheep Elango. &amp;ldquo;Spatio-temporal models for estimating click-through rate.&amp;rdquo; Proceedings of the 18th international conference on World wide web. 2009.&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;ベイズ推定&#34;&gt;ベイズ推定&lt;/h1&gt;
+&lt;p&gt;統計モデルとは&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;「ある確率変数$Y$の実現値$y=\{y_1,y_2,..,y_n\}$から、$Y$が本来従う確率分布（真の分布）を推定するためのもの」&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;とされている。
+ベイズ推定はベイズの定理に基づいて観測したデータと過去の情報からデータの本来従う確率分布を推定する。&lt;/p&gt;
+&lt;p&gt;ベイズの定理 $p(\theta \mid y) \propto p(y \mid \theta)p(y)$ に対して右辺（尤度x事前確率）が具体的な確率値でかつ分布が数え上げられるような単純な場合は理解は比較的容易。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://mathtrain.jp/bayesinfer&#34;&gt;ベイズ推定の簡単な例と利点&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一方で、データの確率分布がパラメタによって変動するような確率質量関数や確率密度関数に従う場合、&lt;strong&gt;そのパラメタ（母数）の分布を推定する&lt;/strong&gt;ことで、（分布の種類が分かっていればパラメタの推定が分布の特定になるので）データの従う確率分布を推定できる。
+この時、データの分布の種類に応じた事前分布を選択することで事後分布が求めやすくなる（共役事前分布）。&lt;/p&gt;
+&lt;p&gt;このようなパラメタを推定するようなベイズ推定に関しては以下の資料が理解の助けになる。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.slideshare.net/miyoshiyuya/ss&#34;&gt;ベイズ統計学入門&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mutopsy.net/pdf/note_sta_bayesian01.pdf&#34;&gt;ベイズ推定の初歩 二項分布を例に&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://ocw.mit.edu/courses/mathematics/18-443-statistics-for-applications-spring-2015/lecture-notes/MIT18_443S15_LEC8.pdf&#34;&gt;Parameter Estimation Fitting Probability Distributions Bayesian Approach&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;以下、ポアソン分布のパラメタ推定を例にベイズ推定の理解を深め、これを拡張したDynamic Gamma-Poissonモデルを説明する。&lt;/p&gt;
+&lt;h2 id=&#34;ポアソン分布&#34;&gt;ポアソン分布&lt;/h2&gt;
+&lt;p&gt;単位時間に平均$\lambda$回起きる事象が単位時間に$k$回発生する分布。&lt;/p&gt;
+&lt;p&gt;平均が$\lambda$のポアソン分布を表す確率質量関数は\[P(X=k)=\frac{\lambda^{k}}{k!}\cdot e^{-\lambda}\]であり平均$E[X]$は$\lambda$となる。&lt;/p&gt;
+&lt;h2 id=&#34;ポアソン分布のパラメタ-lambda-を推定する&#34;&gt;ポアソン分布のパラメタ$\lambda$を推定する&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://ocw.mit.edu/courses/mathematics/18-443-statistics-for-applications-spring-2015/lecture-notes/MIT18_443S15_LEC8.pdf&#34;&gt;Parameter Estimation Fitting Probability Distributions Bayesian Approach&lt;/a&gt;のp.19の例を元に説明する。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;$X_1,X_2,..,X_n$ $i.i.d.$ $Poisson(\lambda)$
+&lt;ul&gt;
+&lt;li&gt;単位時間に平均$\lambda$回起きる分布に従う確率変数の実現値を$n$回観測&lt;/li&gt;
+&lt;li&gt;$X_i$は0以上の整数値&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;$lik(\lambda) = f(x_1, x_2,..,x_n \mid \lambda) = \prod_{i=1}^n f(x_i \mid \lambda)$
+&lt;ul&gt;
+&lt;li&gt;尤度はパラメタ$\lambda$において観測した値が得られる確率（この場合は上述したポアソン分布の確率質量関数$P(X=x_i)$）&lt;/li&gt;
+&lt;li&gt;複数回観測した場合はその同時確率&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;$\lambda \sim Gamma(\alpha, \nu)$
+&lt;ul&gt;
+&lt;li&gt;事前分布、つまり、$\lambda$が「ある値（の範囲）」を取る確率&lt;/li&gt;
+&lt;li&gt;今回は事前分布にガンマ分布を仮定する（ポアソン分布の共役事前分布）&lt;/li&gt;
+&lt;li&gt;$\pi(\lambda)$&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;$\pi(\lambda \mid x) \propto lik(\lambda) \times \pi(\lambda)$
+&lt;ul&gt;
+&lt;li&gt;ベイズの定理より事後分布は尤度x事前分布で求められる&lt;/li&gt;
+&lt;li&gt;$P(x\mid\lambda)P(\lambda)$なので、$\lambda$の分布から観測値$x$が得られる確率と言える&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;$Gamma(\alpha^*,\nu^*)$ with $\alpha^*=\alpha+\sum_{1}^n x_i$ and $\nu^*=\nu+n$
+&lt;ul&gt;
+&lt;li&gt;上を計算すると事後分布は観測された$x$の値の合計を$\alpha$に、観測回数$n$を$\nu$に加えたものをパラメタとするガンマ分布とみなせる&lt;/li&gt;
+&lt;li&gt;観測したデータから$\lambda$の分布（確率変数が従う確率分布（分布の種類はわかっているのでそのパラメタ））を推定した&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;dynamic-gamma-poissonモデル&#34;&gt;Dynamic Gamma-Poissonモデル&lt;/h1&gt;
+&lt;p&gt;論文3.1によれば、クリック数$c$、閲覧数$v$、CTRを$\theta$としたときに、&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;平均$v\theta$(=$\lambda$)である$Poisson(\lambda)$に従い観測されたクリック数から&lt;/li&gt;
+&lt;li&gt;$\theta$の事前分布に平均が$\alpha/\gamma$、分散が$\alpha/\gamma^2$である$Gamma(\alpha,\gamma)$を仮定して&lt;/li&gt;
+&lt;li&gt;$\theta$の事後分布を$Gamma(\alpha+c,\gamma+v)$として得られるとしている&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;ただし、実際はこの推定は$\lambda$の推定であるため、CTRとして考えるために以下のように考える。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;$\lambda$を1閲覧($v$)の間の平均回数と考える（つまり$\lambda=1*\theta$）&lt;/li&gt;
+&lt;li&gt;1閲覧に該当する期間を閲覧数分、観測した&lt;/li&gt;
+&lt;li&gt;これによって推定された$\lambda$は$\theta$と等しくなる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;ここで、$Gamma$のパラメタはこれまでのクリック総数と閲覧総数であることから、$\lambda$の値が変化する場合に過去のデータに引きづられてしまい、速やかな追従を行うことができない。
+論文では、Dynamic Gamma-Poissonモデルとして過去の観測結果に対する割引の概念を導入することでこれを解決する。
+実現はシンプルで、割引率$(0&amp;lt; \delta \leq1)$を導入し、事後分布を$Gamma(\delta\alpha_{t-1}+c_t,\delta\gamma_{t-1}+v_t)$のように求める。
+これによって累積された過去の総数を減らし、直近のデータに重み付けが行われる。
+論文中では0.95から1の間ぐらいが良い結果を得たとしている。&lt;/p&gt;
+&lt;p&gt;以下、実際に同じ条件での$\lambda$の推定を通常のGamma-PoissonモデルとDynamic Gamma-Poissonモデルで行ったものを比較する。
+評価では、CTRが0.4のアイテムに対して1ステップごとに7回の閲覧が行われた際のクリック数を観測データとした。
+また、20ステップ目にCTRが半分の0.2になっている。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2020/03/dgp.gif&#34; alt=&#34;dgp&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;評価期間内では通常の推定の期待値0.3程度までの追従に止まったが、Dynamicな手法ではより早く実際のCTRである0.2に近づけたことが分かる。&lt;/p&gt;
+&lt;h1 id=&#34;動作確認用のコード&#34;&gt;動作確認用のコード&lt;/h1&gt;
+&lt;p&gt;動作確認用のコードは以下にある．&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://gist.github.com/monochromegane/942444fdf89735e7e273d5c7126df449&#34;&gt;dgp.py&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;このような感じで利用できる．&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;python dgp.py --lambda_ 0.4 --view 7 --delta 0.9
+&lt;/code&gt;&lt;/pre&gt;</description></item><item><title>勉強会をオンライン配信するための必要最小限な環境構築</title><link>https://blog.monochromegane.com/blog/2020/03/03/minimum-start-for-online-event/</link><pubDate>Tue, 03 Mar 2020 14:07:22 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/03/03/minimum-start-for-online-event/</guid><description>
 &lt;p&gt;昨今の状況だけでなく、多様な働き方やコミュニティ（とそこで得られる情報）に接する機会を増やすためにも今後、オンライン勉強会は広がっていくと思います。
 Fukuoka.goでも今回、初めて勉強会のオンライン配信を実施しました。
 同様のモチベーションを持つイベントの主催者に向けて、勉強会をオンライン配信するためにやった最小限の環境構築についてまとめておきます。&lt;/p&gt;
@@ -445,9 +533,4 @@ Ref: &lt;a href=&#34;https://github.com/ExistentialAudio/BlackHole/wiki/Multi-Ou
 まずは初稿なんだよなあ、なんでも。&lt;/p&gt;
 &lt;p&gt;昨日は書けなかったけど、今日は書けたじゃなくて昨日考えたのが整理されたから今日書けたという感じがするのでこれを日を跨がないでできるようにしていきたいなあ&lt;/p&gt;</description></item><item><title>2019年12月2日</title><link>https://blog.monochromegane.com/diary/20191202/</link><pubDate>Mon, 02 Dec 2019 23:52:15 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191202/</guid><description>&lt;p&gt;眠い。&lt;/p&gt;
 &lt;p&gt;昨日の無理がやっぱり来ている。とほほ。
-今日中になんとか考察に必要なグラフはできたかな。&lt;/p&gt;</description></item><item><title>2019年12月1日</title><link>https://blog.monochromegane.com/diary/20191201/</link><pubDate>Mon, 02 Dec 2019 23:43:37 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191201/</guid><description>&lt;p&gt;終日評価実験の続き。
-実際に考察を書く段階になるとどうも図の見せ方や集計観点に納得がいかずまた一日使ってしまった。
-長時間かかるバッチまで実行できるようにと明け方4時近くまでなんだかんだかかってしまってよくなかったなあ。
-評価のグラフだけで論文の骨子を作るぐらいの論文執筆方法もあるみたいなのでそれだけ情報量を詰め込めることができる反面、短時間ではできないものなのだろうから地道に進めておくしかない。
-来年の課題になりそう。&lt;/p&gt;
-&lt;p&gt;面白いもので、論文の章立ての順番通りに課題感がやってきて少しづつ進んでいる。&lt;/p&gt;</description></item></channel></rss>
+今日中になんとか考察に必要なグラフはできたかな。&lt;/p&gt;</description></item></channel></rss>
