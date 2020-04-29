@@ -1,4 +1,41 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>android on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/android/</link><description>Recent content in android on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Mon, 08 Jul 2013 00:00:00 +0000</lastBuildDate><atom:link href="/tags/android/" rel="self" type="application/rss+xml"/><item><title>軽量なインデックス機構を用いた全文検索ツールの高速化の検討</title><link>https://blog.monochromegane.com/blog/2020/04/29/wsa6_sifter/</link><pubDate>Wed, 29 Apr 2020 10:38:30 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/04/29/wsa6_sifter/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>android on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/android/</link><description>Recent content in android on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Mon, 08 Jul 2013 00:00:00 +0000</lastBuildDate><atom:link href="/tags/android/" rel="self" type="application/rss+xml"/><item><title>なぜ勉強会「だった」のか</title><link>https://blog.monochromegane.com/blog/2020/04/29/why-fukuokago/</link><pubDate>Wed, 29 Apr 2020 23:14:37 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/04/29/why-fukuokago/</guid><description>
+&lt;p&gt;主催するFukuoka.goでは2〜3ヶ月に一度の割合で登壇形式の勉強会を開催している。
+昨今の状況を受けて前回こそYouTubeを使ってリアルタイム配信を行ったものの、この状況が続くあるいは当たり前になるならば、地域言語コミュニティをどう運営していくべきか考えないといけないだろうなと思う。&lt;/p&gt;
+&lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;Fukuoka.go#16 をそろそろやろうかなと思いつつ、オンライン開催が前提で、もはや地理的な制約もない中で、このコミュニティで本当に実現したいことを改めて考えてみるなど。さて、どう楽しみますかねえ&lt;/p&gt;&amp;mdash; モノクロメガネ研究員 (@monochromegane) &lt;a href=&#34;https://twitter.com/monochromegane/status/1255359093058961412?ref_src=twsrc%5Etfw&#34;&gt;April 29, 2020&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
+&lt;p&gt;このエントリは、これまでの勉強会やカンファレンスではなぜ物理的に集合するのか、を自分の中で整理した上で、オンライン開催のありようを考える材料を見つけようとするものです。&lt;/p&gt;
+&lt;h1 id=&#34;なぜ物理的に集合するのか&#34;&gt;なぜ物理的に集合するのか&lt;/h1&gt;
+&lt;p&gt;これまでの勉強会やカンファレンスではなぜ物理的に集合していたのか。&lt;/p&gt;
+&lt;p&gt;今年、オンラインでの開催を余儀なくされた様々な勉強会やカンファレンスでは（それなりの運営の苦労はありつつも）比較的スムーズに移行できており、これはそのようなインフラが整っていたということに他ならない。
+一方で、これだけのインフラがある中、必要に迫られるまでは物理的に集合していたということは、この行為になんらかの利点があると考えるのが妥当だと思う。&lt;/p&gt;
+&lt;p&gt;物理的に集合する勉強会やカンファレンスでは、登壇者の発表を聞き、質疑があり、飲食の機会が提供される。
+同じ場に集ってリアルタイムに同時多発的に発生した議論によって、場には総体として大きくなった知が形成される。
+参加者は、場によって増幅された知を様々な形で受け取る。
+あるひとは有意義な情報として、あるひとはモチベーションとして。
+想定より多くの量を得ることができる人もいれば、あまり得るものがなかった人もいるかもしれない。
+主催者は、なるべくその機会を増やすべく、趣向を凝らす。&lt;/p&gt;
+&lt;p&gt;勉強会やカンファレンスというのは、興味関心を同じくするものの初対面の人たちを含む集団が限られた時間で効率よく、知の増幅を場に形成するための枠組みであると言える。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;発表者が資料を用意して丁寧に説明することで、「同じ事」を、&lt;/li&gt;
+&lt;li&gt;日程や会場を揃えることで、「同じタイミング」で、&lt;/li&gt;
+&lt;li&gt;質疑応答の機会や飲食による雰囲気を使って、「同じ立場」で、&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;参加者は一緒に考え、場を作っていく。&lt;/p&gt;
+&lt;p&gt;これまでは、物理的な集合を伴う勉強会やカンファレンスを開催することで、自然とこの枠組みに乗って、知の増幅を場に形成する機会を提供できていた。
+物理的な集合を伴わないオンライン開催が前提になれば、これらを達成するための仕組みを意識的に演出しなければならない（あるいは目的自体を変える？）&lt;/p&gt;
+&lt;h1 id=&#34;オンライン開催は代替となるのか&#34;&gt;オンライン開催は代替となるのか&lt;/h1&gt;
+&lt;p&gt;せっかくオンラインでやれるのだから、漠然とこれまでの勉強会の代替ではなく、目的を明確にした上で技術的に解決できるといいなと思っている。&lt;/p&gt;
+&lt;p&gt;知の増幅を場に形成するのであれば、物理的な集合を伴わないオンライン開催であっても、登壇のリアルタイム配信によって参加者が、同じことを同じタイミングで考えることは有効だろう。
+実際、難しいのは、「同じ立場」の部分だと思う。&lt;/p&gt;
+&lt;p&gt;興味関心を同じくするものの初対面の人たちが短時間で気兼ねなく議論できる状態を作りたい。
+明示的な質疑応答の機会はもちろん必要だろう。
+それでも、議論が深くなるとき、もしくは個別化しそうな時、同じミーティングルーム内で即座に個別かつ双方向に話せるだろうか。
+昨年、登壇したGopherConでは、発表後はもちろんのこと、廊下でのすれ違うタイミングで感想や質問をたくさん受けた。そういうことを再現できないだろうか。&lt;/p&gt;
+&lt;p&gt;問題意識の方向性やレベル感が同じくする人を積極的に見つけて、同じ立場の中でクラスタリングされて、その問題を本当に考えたい人が凝縮して、それぞれの知を増幅して、総体として大きくなった知が形成される。&lt;/p&gt;
+&lt;p&gt;この辺りの、集団から始まって最終的に、個と個をダイナミックにつなげる部分をなんとか解決していきたいと思う。&lt;/p&gt;
+&lt;h1 id=&#34;fukuoka-goはどうするのか&#34;&gt;Fukuoka.goはどうするのか&lt;/h1&gt;
+&lt;p&gt;どうしよう。&lt;/p&gt;
+&lt;p&gt;Fukuoka.goは長期的にみて知の増幅を地域に形成できる（といいな）というあたりを狙っているので、主催者が楽しんで継続できることを大切にしています。
+色々それらしきことを述べてみたものの、主催者のモチベは単純には「僕の最近のGo取り組みで面白かったものを聞いてください。よければご飯もどうですか」だったりもするので、オンライン飲みの余興で発表、とか、登壇を動画で配信とかでもいいのかもしれない。&lt;/p&gt;</description></item><item><title>軽量なインデックス機構を用いた全文検索ツールの高速化の検討</title><link>https://blog.monochromegane.com/blog/2020/04/29/wsa6_sifter/</link><pubDate>Wed, 29 Apr 2020 10:38:30 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/04/29/wsa6_sifter/</guid><description>
 &lt;p&gt;このエントリは、&lt;a href=&#34;https://websystemarchitecture.hatenablog.jp/entry/2019/12/11/165624&#34;&gt;第6回 Web System Architecture 研究会 (WSA研)&lt;/a&gt;の予稿です。&lt;/p&gt;
 &lt;h1 id=&#34;概要&#34;&gt;概要&lt;/h1&gt;
 &lt;p&gt;コマンドラインによる全文検索ツールの検索速度は、キャッシュ機構、並列化や効率的なアルゴリズムの導入によって高速化が図られている。一方で、これらのツールは、検索対象の変更や削除への追従を避けるためインデックスの採用を行なっておらず、都度検索対象に対して全探索を行う。&lt;/p&gt;
@@ -556,9 +593,4 @@ Ref: &lt;a href=&#34;https://github.com/ExistentialAudio/BlackHole/wiki/Multi-Ou
 相変わらず議論も活発で楽しい。&lt;/p&gt;
 &lt;p&gt;柏崎先生の遠距離の拠点間を繋ぐネットワークに対するFailure Injection Testingとそのシナリオを生成する研究、規模感含めて着実に進んできて個人的に注目している。&lt;/p&gt;</description></item><item><title>2019年12月4日</title><link>https://blog.monochromegane.com/diary/20191204/</link><pubDate>Fri, 06 Dec 2019 23:04:42 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191204/</guid><description>&lt;p&gt;IOTSのポスターセッションに参加するため沖縄に移動。&lt;/p&gt;
 &lt;p&gt;移動中は、シミュレーターのシンプルなフレームワークの構想がなんとなく固まったので実装していた。
-ホテルついて実装進めたり共著者レビューの確認、評価資料など進めていたが疲れが出たので特にホテルから出ずに終わってしまった。&lt;/p&gt;</description></item><item><title>2019年12月3日</title><link>https://blog.monochromegane.com/diary/20191203/</link><pubDate>Wed, 04 Dec 2019 00:45:35 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191203/</guid><description>&lt;p&gt;終日、自宅で論文執筆。&lt;/p&gt;
-&lt;p&gt;予定した初稿を共著者へ共有するところまでできて一安心。
-とは言え、書きたいこと書いてしまったので分量がかなり多くなってしまった。
-ここからのシェイプアップで筋肉質になっていく様が楽しく感じられるようにはなった。
-まずは初稿なんだよなあ、なんでも。&lt;/p&gt;
-&lt;p&gt;昨日は書けなかったけど、今日は書けたじゃなくて昨日考えたのが整理されたから今日書けたという感じがするのでこれを日を跨がないでできるようにしていきたいなあ&lt;/p&gt;</description></item></channel></rss>
+ホテルついて実装進めたり共著者レビューの確認、評価資料など進めていたが疲れが出たので特にホテルから出ずに終わってしまった。&lt;/p&gt;</description></item></channel></rss>
