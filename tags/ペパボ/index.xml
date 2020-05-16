@@ -1,4 +1,103 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>ペパボ on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/%E3%83%9A%E3%83%91%E3%83%9C/</link><description>Recent content in ペパボ on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 30 Oct 2016 21:32:56 +0900</lastBuildDate><atom:link href="/tags/%E3%83%9A%E3%83%91%E3%83%9C/" rel="self" type="application/rss+xml"/><item><title>なぜ勉強会「だった」のか</title><link>https://blog.monochromegane.com/blog/2020/04/29/why-fukuokago/</link><pubDate>Wed, 29 Apr 2020 23:14:37 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/04/29/why-fukuokago/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>ペパボ on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/%E3%83%9A%E3%83%91%E3%83%9C/</link><description>Recent content in ペパボ on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 30 Oct 2016 21:32:56 +0900</lastBuildDate><atom:link href="/tags/%E3%83%9A%E3%83%91%E3%83%9C/" rel="self" type="application/rss+xml"/><item><title>多腕バンディット問題におけるUCB方策を理解する</title><link>https://blog.monochromegane.com/blog/2020/05/16/bandit-algorithm-ucb1/</link><pubDate>Sat, 16 May 2020 16:22:39 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/05/16/bandit-algorithm-ucb1/</guid><description>
+&lt;p&gt;多腕バンディット問題における解法の一つであるUCB1方策では以下のスコアを各腕に対して求め、最大のものを選択する。&lt;/p&gt;
+&lt;p&gt;\[
+\overline{x}_j+\sqrt{\frac{2\ln{n}}{n_j}} \tag{1}\label{eq-1}
+\]&lt;/p&gt;
+&lt;p&gt;ここで、$\overline{x}_j$は腕$j$に対して観測された平均報酬、$n_j$は腕$j$が選択された回数、$n$は全体の試行回数である。
+第2項は選択された回数$n_j$が少ないほど大きくなることから、評価が不確かな腕ほど積極的に探索を行う（&lt;code&gt;Optimism in face of uncertainty&lt;/code&gt;）。&lt;/p&gt;
+&lt;p&gt;本エントリでは、この第2項について上記の振る舞い以上の理解を進める。&lt;/p&gt;
+&lt;h1 id=&#34;確率不等式&#34;&gt;確率不等式&lt;/h1&gt;
+&lt;p&gt;\eqref{eq-1}式は確率不等式の一種であるヘフディングの不等式に基づいたものであるため、まず確率不等式を学ぶ。
+確率不等式は、確率の分布に依らない確率の近似的な評価に利用される不等式である。
+簡単には、稀に発生する事象についての確率の上限を求めることができる。&lt;/p&gt;
+&lt;h2 id=&#34;マルコフの不等式-markov-s-inequality&#34;&gt;マルコフの不等式 Markov&amp;rsquo;s inequality&lt;/h2&gt;
+&lt;p&gt;非負の確率変数$X\geq0$と任意の正数$a &amp;gt; 0$に対して&lt;/p&gt;
+&lt;p&gt;\[
+Pr \left[ X \geq a \right] \leq \frac{E[X]}{a} \tag{2}\label{eq-2}
+\]&lt;/p&gt;
+&lt;p&gt;が成り立つ。\eqref{eq-2}をマルコフの不等式と呼ぶ。&lt;/p&gt;
+&lt;p&gt;この不等式を用いることで、確率変数$X$の実現値が$a$以上になる確率の上限を、確率分布に依らず期待値$E[X]$から求めることができる（ただし$a \leq E[X]$だと実用的な値にならない）。&lt;/p&gt;
+&lt;p&gt;マルコフの不等式を用いて例えば「期待値が10の確率変数で100以上が出る確率は10%以下」（$Pr \left[ X \geq 100 \right] \leq \frac{10}{100} = 0.1$）などと求めることができる。&lt;/p&gt;
+&lt;p&gt;証明は&lt;/p&gt;
+&lt;p&gt;\begin{align}
+E[X] &amp;amp;= \int_0^\infty x f(x) dx \notag \\ &amp;amp;= \int_0^a x f(x) dx + \int_a^\infty x f(x) dx \notag \\ &amp;amp;\geq \int_a^\infty x f(x) dx \notag \\ &amp;amp;\geq \int_a^\infty a f(x) dx = a \int_a^\infty f(x) dx = a Pr [X \geq a] \notag \&lt;br /&gt;
+\end{align}&lt;/p&gt;
+&lt;p&gt;となる。なお、2行目から3行目は、右辺第1項が$\geq 0$であるため。3行目から4行目は積分区間で最も小さい$a$を使うため。&lt;/p&gt;
+&lt;h2 id=&#34;チェビシェフの不等式-chebyshev-s-inequality&#34;&gt;チェビシェフの不等式 Chebyshev’s inequality&lt;/h2&gt;
+&lt;p&gt;確率変数$X$が期待値$E[X]=\mu$、分散$\sigma^2$を持つとき、任意の正数$a &amp;gt; 0$に対して&lt;/p&gt;
+&lt;p&gt;\[
+Pr \left[ \mid X - \mu \mid \geq a \sigma \right] \leq \frac{1}{a^2} \tag{3}\label{eq-3}
+\]&lt;/p&gt;
+&lt;p&gt;が成り立つ。\eqref{eq-3}をチェビシェフの不等式と呼ぶ。&lt;/p&gt;
+&lt;p&gt;この不等式を用いることで、確率変数$X$の実現値と期待値$\mu$の差が標準偏差$\sigma$の$a$倍以上になる確率の上限を、確率分布に依らず期待値$\mu$と分散$\sigma^2$から求めることができる。&lt;/p&gt;
+&lt;p&gt;証明は、マルコフの不等式に対して$X = (X-\mu)^2$と$a=a^2\sigma^2$とおいた時、&lt;/p&gt;
+&lt;p&gt;\[
+Pr[(X-\mu)^2 \geq a^2\sigma^2] \leq \frac{E[(X-\mu)^2]}{a^2\sigma^2} = \frac{\sigma^2}{a^2\sigma^2} = \frac{1}{a^2} \\ Pr[\mid X-\mu \mid \geq a\sigma] \leq \frac{1}{a^2}
+\]&lt;/p&gt;
+&lt;p&gt;となる。なお、少し工夫して$a=a^2$とすると&lt;/p&gt;
+&lt;p&gt;\[
+Pr[(X-\mu)^2 \geq a^2] \leq \frac{E[(X-\mu)^2]}{a^2} = \frac{\sigma^2}{a^2} \\ Pr[\mid X-\mu \mid \geq a] \leq \frac{\sigma^2}{a^2}
+\]&lt;/p&gt;
+&lt;p&gt;のように、確率変数$X$の実現値と期待値$\mu$の差を標準偏差$\sigma$を使わずに表現できる。この場合例えば「期待値が10で標準偏差が5の確率変数で100以上が出る確率は0.31%未満」（$Pr[X-10 \geq 90] \leq \frac{5^2}{90^2} = 0.00308&amp;hellip;$）などと求めることができる。&lt;/p&gt;
+&lt;h2 id=&#34;ヘフディングの不等式-hoeffding-s-inequality&#34;&gt;ヘフディングの不等式 Hoeffding’s inequality&lt;/h2&gt;
+&lt;p&gt;独立な$n$個の確率変数$X[a,b]$において平均を$\overline{X}$、期待値を$E\left[\overline{X}\right]$とおいた時、任意の正数$u &amp;gt; 0$に対して&lt;/p&gt;
+&lt;p&gt;\[
+Pr \left[\overline{X}-E\left[\overline{X}\right] \geq u\right] \leq \exp\left(-\frac{2n^2u^2}{\sum_{i=1}^{n}(b_i-a_i)^2}\right) \tag{4}\label{eq-4}
+\]&lt;/p&gt;
+&lt;p&gt;が成り立つ。\eqref{eq-4}をヘフディングの不等式と呼ぶ。&lt;/p&gt;
+&lt;p&gt;この不等式を用いることで、n個の確率変数$X$の平均と期待値の誤差が$u$以上になる（すなわち真の期待値を過大評価している）確率の上限を、確率分布に依らずに求めることができる。&lt;/p&gt;
+&lt;p&gt;同様に真の期待値を過小評価している確率の上限は、&lt;/p&gt;
+&lt;p&gt;\[
+Pr \left[-\overline{X}+E\left[\overline{X}\right] \geq u\right] \leq \exp\left(-\frac{2n^2u^2}{\sum_{i=1}^{n}(b_i-a_i)^2}\right) \tag{5}\label{eq-5}
+\]&lt;/p&gt;
+&lt;p&gt;であり、真の期待値に対して$u$以上の誤差が生じる確率の上限は\eqref{eq-4}と\eqref{eq-5}を合わせた、&lt;/p&gt;
+&lt;p&gt;\[
+Pr \left[\mid \overline{X}-E\left[\overline{X}\right] \mid \geq u\right] = Pr \left[\overline{X}-E\left[\overline{X}\right] \geq u\right] + Pr \left[-\overline{X}+E\left[\overline{X}\right] \geq u\right] \tag{6}\label{eq-6}
+\]&lt;/p&gt;
+&lt;p&gt;となる。&lt;/p&gt;
+&lt;p&gt;また、確率変数$X[a,b]$で$a=0,b=1$の時、\eqref{eq-4}より&lt;/p&gt;
+&lt;p&gt;\[
+Pr \left[\overline{X}-E\left[\overline{X}\right] \geq u\right] \leq \exp\left(-\frac{2n^2u^2}{n}\right) = \exp\left(-2nu^2\right)\tag{7}\label{eq-7}
+\]&lt;/p&gt;
+&lt;p&gt;同じく\eqref{eq-5}より&lt;/p&gt;
+&lt;p&gt;\[
+Pr \left[-\overline{X}+E\left[\overline{X}\right] \geq u\right] \leq \exp\left(-\frac{2n^2u^2}{n}\right) = \exp\left(-2nu^2\right)\tag{8}\label{eq-8}
+\]&lt;/p&gt;
+&lt;p&gt;である。証明は論文に譲る。&lt;/p&gt;
+&lt;h1 id=&#34;ucb1方策&#34;&gt;UCB1方策&lt;/h1&gt;
+&lt;p&gt;UCB1方策では、ヘフディングの不等式\eqref{eq-8}を用いて、腕$j$の報酬の期待値の信頼区間の上側の上限である\eqref{eq-1}を求める。
+\eqref{eq-1}を再掲する。&lt;/p&gt;
+&lt;p&gt;\[
+\overline{x}_j+\sqrt{\frac{2\ln{n}}{n_j}} \tag{1}
+\]&lt;/p&gt;
+&lt;p&gt;腕$j$の報酬の期待値を$x^*_j$とすると\eqref{eq-8}は&lt;/p&gt;
+&lt;p&gt;\[
+Pr \left[x^*_j \geq \overline{x}_j + u\right] \leq \exp\left(-2n_ju^2\right)\tag{9}\label{eq-9}
+\]&lt;/p&gt;
+&lt;p&gt;\eqref{eq-9}は真の期待値を過小評価している確率の上限であり、これを試行回数$n$が進むごとに小さくしたいと考えます。そこで右辺を$n^{-m}=\frac{1}{n^m}$とすると、&lt;/p&gt;
+&lt;p&gt;\begin{align}
+\exp\left(-2n_ju^2\right) &amp;amp;= \frac{1}{n^m} \notag \\ -2n_ju^2 &amp;amp;= \ln{\frac{1}{n^m}} \notag \\ &amp;amp;= \ln{1} - \ln{n^m} \notag \\ &amp;amp;= 0 - m\ln{n} \notag \\ 2n_ju^2 &amp;amp;= m\ln{n} \notag \\ u^2 &amp;amp;= \frac{m\ln{n}}{2n_j} \notag \\ u &amp;amp;= \sqrt{\frac{m\ln{n}}{2n_j}} \notag
+\end{align}&lt;/p&gt;
+&lt;p&gt;が得られます。理論限界より$n$回目の試行において$1/n$の確率で各腕が選択する必要があるとされており、これに従えば$m=1$ですが、論文では$m=4$としています（すなわち$u = \sqrt{\frac{2\ln{n}}{n_j}}$）。&lt;/p&gt;
+&lt;p&gt;これを\eqref{eq-9}に代入し&lt;/p&gt;
+&lt;p&gt;\[
+Pr \left[x^*_j \geq \overline{x}_j + \sqrt{\frac{2\ln{n}}{n_j}}\right] \leq \frac{1}{n^4}\tag{10}\label{eq-10}
+\]&lt;/p&gt;
+&lt;p&gt;よって$1/n^4$の上限において、\eqref{eq-1}のスコアを用いて報酬の期待値を最も低く見積もっているであろう腕を選択することができる。すなわち&lt;code&gt;Optimism in face of uncertainty&lt;/code&gt;に従う。&lt;/p&gt;
+&lt;h1 id=&#34;参考&#34;&gt;参考&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://ja.wikipedia.org/wiki/%E3%83%9E%E3%83%AB%E3%82%B3%E3%83%95%E3%81%AE%E4%B8%8D%E7%AD%89%E5%BC%8F&#34;&gt;マルコフの不等式&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://ja.wikipedia.org/wiki/%E3%83%81%E3%82%A7%E3%83%93%E3%82%B7%E3%82%A7%E3%83%95%E3%81%AE%E4%B8%8D%E7%AD%89%E5%BC%8F&#34;&gt;チェビシェフの不等式&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=d-ugoDdXWrU&#34;&gt;【大学数学】チェビシェフの不等式【確率統計】- 予備校のノリで学ぶ「大学の数学・物理」&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://stat.inf.uec.ac.jp/lib/exe/fetch.php?media=prob:prob-9-note-and-quizes-20120614.pdf&#34;&gt;確率論 (Probability Theory) 第 9 週&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Hoeffding%27s_inequality&#34;&gt;Hoeffding&amp;rsquo;s inequality&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://repository.lib.ncsu.edu/bitstream/1840.4/2170/1/ISMS_1962_326.pdf&#34;&gt;Hoeffding, Wassily (1963). &amp;ldquo;Probability inequalities for sums of bounded random variables&amp;rdquo;. Journal of the American Statistical Association. 58 (301): 13–30.&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://homes.di.unimi.it/~cesabian/Pubblicazioni/ml-02.pdf&#34;&gt;Auer, Peter, Nicolo Cesa-Bianchi, and Paul Fischer. &amp;ldquo;Finite-time analysis of the multiarmed bandit problem.&amp;rdquo; Machine learning 47.2-3 (2002): 235-256.&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://ludu-vorton.hatenablog.com/entry/2019/06/06/073000&#34;&gt;ヘフディングの不等式(Hoeffding&amp;rsquo;s inequality)と諸々の確率の評価の不等式&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://qiita.com/usaito/items/ad15394547bd5daf8937&#34;&gt;バンディットアルゴリズムで最適な介入を見つける（基本編）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://research.miidas.jp/2020/02/%E3%83%90%E3%83%B3%E3%83%87%E3%82%A3%E3%83%83%E3%83%88%E3%82%A2%E3%83%AB%E3%82%B4%E3%83%AA%E3%82%BA%E3%83%A0%E3%81%AE%E7%B6%9A%E3%81%8D/&#34;&gt;バンディットアルゴリズムの続き&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.slideshare.net/nishio/1-70974083&#34;&gt;強化学習その1&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>なぜ勉強会「だった」のか</title><link>https://blog.monochromegane.com/blog/2020/04/29/why-fukuokago/</link><pubDate>Wed, 29 Apr 2020 23:14:37 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/04/29/why-fukuokago/</guid><description>
 &lt;p&gt;主催するFukuoka.goでは2〜3ヶ月に一度の割合で登壇形式の勉強会を開催している。
 昨今の状況を受けて前回こそYouTubeを使ってリアルタイム配信を行ったものの、この状況が続くあるいは当たり前になるならば、地域言語コミュニティをどう運営していくべきか考えないといけないだろうなと思う。&lt;/p&gt;
 &lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;Fukuoka.go#16 をそろそろやろうかなと思いつつ、オンライン開催が前提で、もはや地理的な制約もない中で、このコミュニティで本当に実現したいことを改めて考えてみるなど。さて、どう楽しみますかねえ&lt;/p&gt;&amp;mdash; モノクロメガネ研究員 (@monochromegane) &lt;a href=&#34;https://twitter.com/monochromegane/status/1255359093058961412?ref_src=twsrc%5Etfw&#34;&gt;April 29, 2020&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
@@ -591,6 +690,4 @@ Ref: &lt;a href=&#34;https://github.com/ExistentialAudio/BlackHole/wiki/Multi-Ou
 &lt;p&gt;ともあれ計画的に継続的にやっていく。&lt;/p&gt;</description></item><item><title>2019年12月5日</title><link>https://blog.monochromegane.com/diary/20191205/</link><pubDate>Fri, 06 Dec 2019 23:08:05 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191205/</guid><description>&lt;p&gt;IOTS2019の初日。
 朝イチでポスターの準備をした後はいろいろなセッションを聞きつつ、ランチ、懇親会。
 相変わらず議論も活発で楽しい。&lt;/p&gt;
-&lt;p&gt;柏崎先生の遠距離の拠点間を繋ぐネットワークに対するFailure Injection Testingとそのシナリオを生成する研究、規模感含めて着実に進んできて個人的に注目している。&lt;/p&gt;</description></item><item><title>2019年12月4日</title><link>https://blog.monochromegane.com/diary/20191204/</link><pubDate>Fri, 06 Dec 2019 23:04:42 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191204/</guid><description>&lt;p&gt;IOTSのポスターセッションに参加するため沖縄に移動。&lt;/p&gt;
-&lt;p&gt;移動中は、シミュレーターのシンプルなフレームワークの構想がなんとなく固まったので実装していた。
-ホテルついて実装進めたり共著者レビューの確認、評価資料など進めていたが疲れが出たので特にホテルから出ずに終わってしまった。&lt;/p&gt;</description></item></channel></rss>
+&lt;p&gt;柏崎先生の遠距離の拠点間を繋ぐネットワークに対するFailure Injection Testingとそのシナリオを生成する研究、規模感含めて着実に進んできて個人的に注目している。&lt;/p&gt;</description></item></channel></rss>
