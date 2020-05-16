@@ -74,11 +74,11 @@ Pr \left[-\overline{X}+E\left[\overline{X}\right] \geq u\right] \leq \exp\left(-
 &lt;p&gt;\[
 Pr \left[x^*_j \geq \overline{x}_j + u\right] \leq \exp\left(-2n_ju^2\right)\tag{9}\label{eq-9}
 \]&lt;/p&gt;
-&lt;p&gt;\eqref{eq-9}は真の期待値を過小評価している確率の上限であり、これを試行回数$n$が進むごとに小さくしたいと考えます。そこで右辺を$n^{-m}=\frac{1}{n^m}$とすると、&lt;/p&gt;
+&lt;p&gt;\eqref{eq-9}は真の期待値を過小評価している確率の上限であり、これを試行回数$n$が進むごとに小さくしたいと考える。そこで右辺を$n^{-m}=\frac{1}{n^m}$とすると、&lt;/p&gt;
 &lt;p&gt;\begin{align}
 \exp\left(-2n_ju^2\right) &amp;amp;= \frac{1}{n^m} \notag \\ -2n_ju^2 &amp;amp;= \ln{\frac{1}{n^m}} \notag \\ &amp;amp;= \ln{1} - \ln{n^m} \notag \\ &amp;amp;= 0 - m\ln{n} \notag \\ 2n_ju^2 &amp;amp;= m\ln{n} \notag \\ u^2 &amp;amp;= \frac{m\ln{n}}{2n_j} \notag \\ u &amp;amp;= \sqrt{\frac{m\ln{n}}{2n_j}} \notag
 \end{align}&lt;/p&gt;
-&lt;p&gt;が得られます。理論限界より$n$回目の試行において$1/n$の確率で各腕が選択する必要があるとされており、これに従えば$m=1$ですが、論文では$m=4$としています（すなわち$u = \sqrt{\frac{2\ln{n}}{n_j}}$）。&lt;/p&gt;
+&lt;p&gt;が得られる。理論限界より$n$回目の試行において$1/n$の確率で各腕が選択する必要があるとされており、これに従えば$m=1$だが、論文では$m=4$としている（すなわち$u = \sqrt{\frac{2\ln{n}}{n_j}}$）。&lt;/p&gt;
 &lt;p&gt;これを\eqref{eq-9}に代入し&lt;/p&gt;
 &lt;p&gt;\[
 Pr \left[x^*_j \geq \overline{x}_j + \sqrt{\frac{2\ln{n}}{n_j}}\right] \leq \frac{1}{n^4}\tag{10}\label{eq-10}
@@ -97,6 +97,7 @@ Pr \left[x^*_j \geq \overline{x}_j + \sqrt{\frac{2\ln{n}}{n_j}}\right] \leq \fra
 &lt;li&gt;&lt;a href=&#34;https://qiita.com/usaito/items/ad15394547bd5daf8937&#34;&gt;バンディットアルゴリズムで最適な介入を見つける（基本編）&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://research.miidas.jp/2020/02/%E3%83%90%E3%83%B3%E3%83%87%E3%82%A3%E3%83%83%E3%83%88%E3%82%A2%E3%83%AB%E3%82%B4%E3%83%AA%E3%82%BA%E3%83%A0%E3%81%AE%E7%B6%9A%E3%81%8D/&#34;&gt;バンディットアルゴリズムの続き&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://www.slideshare.net/nishio/1-70974083&#34;&gt;強化学習その1&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.amazon.co.jp/dp/406152917X/&#34;&gt;バンディット問題の理論とアルゴリズム (機械学習プロフェッショナルシリーズ)&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</description></item><item><title>なぜ勉強会「だった」のか</title><link>https://blog.monochromegane.com/blog/2020/04/29/why-fukuokago/</link><pubDate>Wed, 29 Apr 2020 23:14:37 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/04/29/why-fukuokago/</guid><description>
 &lt;p&gt;主催するFukuoka.goでは2〜3ヶ月に一度の割合で登壇形式の勉強会を開催している。
 昨今の状況を受けて前回こそYouTubeを使ってリアルタイム配信を行ったものの、この状況が続くあるいは当たり前になるならば、地域言語コミュニティをどう運営していくべきか考えないといけないだろうなと思う。&lt;/p&gt;
