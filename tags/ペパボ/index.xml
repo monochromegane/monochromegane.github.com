@@ -1,4 +1,63 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>ペパボ on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/%E3%83%9A%E3%83%91%E3%83%9C/</link><description>Recent content in ペパボ on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 28 Jun 2020 13:00:48 +0900</lastBuildDate><atom:link href="/tags/%E3%83%9A%E3%83%91%E3%83%9C/" rel="self" type="application/rss+xml"/><item><title>ペパ研から研究をはじめてジャーナルでのアクセプトまでいけた日</title><link>https://blog.monochromegane.com/blog/2020/06/28/my-first-journal/</link><pubDate>Sun, 28 Jun 2020 13:00:48 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/06/28/my-first-journal/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>ペパボ on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/%E3%83%9A%E3%83%91%E3%83%9C/</link><description>Recent content in ペパボ on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 28 Jun 2020 13:00:48 +0900</lastBuildDate><atom:link href="/tags/%E3%83%9A%E3%83%91%E3%83%9C/" rel="self" type="application/rss+xml"/><item><title>九州大学大学院システム情報科学府博士後期課程に入学します</title><link>https://blog.monochromegane.com/blog/2020/09/21/isee-kyushu-u/</link><pubDate>Mon, 21 Sep 2020 12:38:52 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/09/21/isee-kyushu-u/</guid><description>
+&lt;p&gt;先日8/7、九州大学大学院システム情報科学府博士後期課程に無事合格しました。
+10/1より入学します。
+専攻は情報知能工学[*1]です。&lt;/p&gt;
+&lt;p&gt;39歳、文系学士から修士を飛ばして理系の博士課程への挑戦となった経緯や入試に向けた準備などまとめます。&lt;/p&gt;
+&lt;h2 id=&#34;略歴&#34;&gt;略歴&lt;/h2&gt;
+&lt;p&gt;大学では環境政策を学びましたが、工学的なアプローチの解決手法の方に興味を持ち、いろいろあってソフトウェアを扱える仕事につきました。
+2012年に転職し、現職のGMOペパボでインターネットサービスのWebアプリケーションの開発・運用維持業務に携わってきました。
+2017年より同社の研究職として情報システムの自律適応等の研究に従事しています。&lt;/p&gt;
+&lt;h2 id=&#34;研究員になった理由&#34;&gt;研究員になった理由&lt;/h2&gt;
+&lt;p&gt;サービスの運用開発の傍ら、&lt;a href=&#34;https://speakerdeck.com/monochromegane/pepabo-log-infrastructure-bigfoot&#34;&gt;ログ活用基盤の構築&lt;/a&gt;に取り組み、サービスを動的に改善していくための仕組みづくりと機械学習に興味を持ち始めたところ、その前年に設立した&lt;a href=&#34;https://rand.pepabo.com/&#34;&gt;ペパボ研究所&lt;/a&gt;でやってみませんかと&lt;a href=&#34;https://kentarokuribayashi.com/&#34;&gt;@antipop所長&lt;/a&gt;に誘われました。&lt;/p&gt;
+&lt;p&gt;当時、ソフトウェア開発という非常に強力で柔軟な相棒を得て、OSSを楽しく量産する一方で、独学でやってきたこともあり、解決できる課題規模やアルゴリズムなど実装力に関する頭打ちを感じていました。
+そんな折、コンピュータサイエンスや研究的なアプローチを学ぶことでここを突破できるのはないかと思えるこの誘いは非常に魅力的でした。&lt;/p&gt;
+&lt;p&gt;完全に未知の職種であること、天職だと思っていたエンジニアからの職種転換ということなど、悩む部分は正直多かったですが、所長との面談の中で「今までやっていることに論文書くのが加わるだけです」と後押しされ、その日のうちに決めました。（今思えば論文として研究をまとめるそれが一番難しいじゃ〜〜という気持ちでいっぱいですが興味があればやってみましょうと後押ししてくれたんだと思ってます）&lt;/p&gt;
+&lt;p&gt;実際に、今進めている研究も、インターネットサービスの運用維持の中で発生する課題を、研究というアプローチを用いて解決、サービスへ還元するという、エンジニアリングに研究が加わった方式で進めており、これまでのスキルも十分に活かしながら、研究観点での新規性・有効性・信頼性を追求することができています。&lt;/p&gt;
+&lt;h2 id=&#34;博士後期課程に入学した理由-大学の選定理由&#34;&gt;博士後期課程に入学した理由（大学の選定理由）&lt;/h2&gt;
+&lt;p&gt;自身の研究の発展はもちろんのこと、研究を推し進めていく力を高めたいと考え、博士後期課程へ挑戦しました。&lt;/p&gt;
+&lt;p&gt;僕の3年間の研究への取り組みは全く順調ではなく、研究活動もテーマも解決手段も評価も論文執筆も暗中模索で、そのくせいつの間にか年齢と共に大きくなっていた自意識が、光となるはずの先達からのアドバイスも歪めてしまっていました。
+結果として、&lt;a href=&#34;https://blog.monochromegane.com/blog/2017/12/31/2017/&#34;&gt;最初の2年ほどは迷走&lt;/a&gt;しており、研究所の皆さんには迷惑をかけてしまいました。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2020/06/28/my-first-journal/&#34;&gt;今年の6月に初めてジャーナルの採録通知をもらい&lt;/a&gt;、研究者としての一歩を踏み出したものの、研究への取り組み方はまだまだ下手くそだなあと自分自身考えています。
+具体的には、課題解決だけでなく、問題自体への向き合う時間を見直していく必要がありそうです。
+過去の迷走の中で、かろうじて掴んだことは、「研究とは、ある問題設定に対する解釈を深めることであり、その問題設定に対して向き合った量が結果につながる（のではないか）」というものでした。
+何が課題なのか、どういう世界があるべきなのか、これらは瞬時に明確になるものではなく、試行錯誤やアウトプットとフィードバックによって徐々に練られていく問いですが、この工程を避けてしまうと小手先や思いつきの対策に留まる、もしくは不要に複雑なだけの解法の適用に陥ってしまいます。
+周りを見ても、良い研究だなあと思うものは、課題そのものを高度に解決するのはもちろんのこと、問題設定自体にきちんと向き合うことで、研究の位置付けを明確にし、提案手法の汎用性を高めているものがたくさんあります。
+特に、モノの見方自体を少しでも変えるような問題設定に昇華した研究には尊敬すら覚えます。
+博士後期課程では、自分の研究というものを確立する過程を通して、世界をよくするような研究を推し進める力を高められたらと考えています。&lt;/p&gt;
+&lt;p&gt;10月より指導いただく峯先生とは、幸い、既に共著で論文執筆する機会があり、専門性の観点だけでなく、研究の課題や貢献に対する気づきを多数アドバイスいただき、この面でも学ぶことができると考えています。
+また、通学が可能な範囲、学費の面での国公立の大学という諸条件も九州大学は満たしており、受験を決めました。&lt;/p&gt;
+&lt;h2 id=&#34;博士後期課程に向けての準備など&#34;&gt;博士後期課程に向けての準備など&lt;/h2&gt;
+&lt;p&gt;九州大学大学院システム情報科学府では、社会人特別選抜試験が用意されており、こちらを受験することとなりました。
+前提として指導教官との受け入れに関する合意が必要ですが、僕の場合、幸い、既に先生と共著で論文執筆する機会があり、その繋がりで指導についてお願いすることができました。&lt;/p&gt;
+&lt;p&gt;出願について、学士である僕は、修士相当の学力を持つという出願資格を認めてもらうため、事前審査が必要でした。
+そのため、以下の出願資格を満たすことを証明する内容と研究実績を事前に提出しています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(7) 文部科学大臣の指定した者
+A) 大学を卒業し，大学，研究所等において，２年以上研究に従事した者で，本学府において，当
+該研究の成果等により，修士の学位を有する者と同等以上の学力があると認めた者&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;事前審査のため、通常の出願スケジュールより前倒しで各種書類なども合わせて準備する必要があります。
+僕の場合、2020年10月入学の入試に向けて、5月下旬が事前審査の書類提出でしたので4月下旬ごろから関係書類を集めていたようです。
+ここで落ちるようなら、修士から臨もうと考えていましたが、幸いにも出願資格を認めてもらうことができました。
+もしかしたらここが一番緊張したかもしれません。&lt;/p&gt;
+&lt;p&gt;2020年10月入学の入学試験は、口頭試問でした。
+これまでの研究実績と博士課程での研究計画に関して発表し、質疑応答という形式です。
+限られた時間で3年間の研究実績と研究計画に触れなければならず、羅列ではなくストーリーの中での位置付けと重要な部分の抜粋が必要となり、資料の作成には苦労しました。
+それでも、資料作成を通して研究テーマや位置付けの整理が一段階進み、結果として自分の研究とこれからを見直す良い機会になったなあと思います。
+せっかくなので公開可能な範囲で資料を公開しておきます。&lt;/p&gt;
+&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;74e88544d5e9470d9ef95e2ac094fdcc&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
+&lt;p&gt;試験を終えた感想としては、事前審査にしろ口頭試問にしろ、そのために慌てて頑張って準備が間に合うようなものではなく、きちんとこれまで積み重ねてきた実績やその課題設定に向き合ってきた量というのが試されたんだろうなあと思います。
+なお、完全に余談ですが、マスクをつけて30分程度の発表と質疑応答は酸欠で倒れそうになったので、今後もこのような状況が続くようであればフェイスマスクのような呼吸が楽な装備をお勧めします。&lt;/p&gt;
+&lt;h2 id=&#34;会社の支援&#34;&gt;会社の支援&lt;/h2&gt;
+&lt;p&gt;10月より社会人博士課程に挑むことになりますが、所属する研究所において、業務との両立について理解をいただけています。
+特に、博士課程の研究テーマにサービスの改善に適用可能なものを選択したことが理解を得やすかった点だと思います。&lt;/p&gt;
+&lt;h2 id=&#34;これから&#34;&gt;これから&lt;/h2&gt;
+&lt;p&gt;研究としては、今取り組んでいる推薦システムの自律適応について発展させていきたいと考えています。
+&lt;a href=&#34;https://www.isee.kyushu-u.ac.jp/internal/isee_tebiki.html&#34;&gt;シラバス&lt;/a&gt;を見る限り、博士論文に向けて色々指導の時間（指導教官以外の取り組む研究テーマの分野ごとの研究指導や関連研究調査など）があるようで、研究そのものの発展はもちろんのこと目的としている研究力の向上も図れるのではないかなと、今から楽しみです。&lt;/p&gt;
+&lt;hr /&gt;
+&lt;ul&gt;
+&lt;li&gt;[*1] 2021年度より「情報知能工学専攻」は「情報理工学専攻」に&lt;a href=&#34;http://www.isee.kyushu-u.ac.jp/reorganization.html&#34;&gt;改組されるとのこと&lt;/a&gt;です。&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>ペパ研から研究をはじめてジャーナルでのアクセプトまでいけた日</title><link>https://blog.monochromegane.com/blog/2020/06/28/my-first-journal/</link><pubDate>Sun, 28 Jun 2020 13:00:48 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/06/28/my-first-journal/</guid><description>
 &lt;p&gt;先週の6/22、初めてジャーナルの採録通知をいただいた。&lt;/p&gt;
 &lt;p&gt;大学は情報系ではなく、大学院にも行っていないので、研究なるものを始めたのが、&lt;a href=&#34;https://rand.pepabo.com/&#34;&gt;ペパボ研究所&lt;/a&gt;に入った2017年1月から。3年半もかかってしまった。&lt;/p&gt;
 &lt;p&gt;元々、サービスの運用開発をしていた経緯もあり、2017年の前半はその延長で研究報告を2本書き切った。
@@ -814,7 +873,4 @@ Ref: &lt;a href=&#34;https://github.com/ExistentialAudio/BlackHole/wiki/Multi-Ou
 本当にお疲れ様でした！&lt;/p&gt;
 &lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;ネットワーキングタイムでいろいろなコミュニティ同士の連携の話とかコミュニティ参加が初めての若者がコミュニティにつながる機会とか生まれているので大成功だな &lt;a href=&#34;https://twitter.com/hashtag/Fukuoka_LT?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#Fukuoka_LT&lt;/a&gt;&lt;/p&gt;&amp;mdash; モノクロメガネ研究員 (@monochromegane) &lt;a href=&#34;https://twitter.com/monochromegane/status/1203996769626910726?ref_src=twsrc%5Etfw&#34;&gt;December 9, 2019&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
 &lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;&lt;a href=&#34;https://t.co/Vsf57GJK59&#34;&gt;https://t.co/Vsf57GJK59&lt;/a&gt; まとめていただいた！当日は裏方に徹しましたが皆さんの協力のおかげでスケジュール通り進みました。また、色々なコミュニティの方とつながることができたのでとてもよかったです。来年もよろしくお願いします〜 &lt;a href=&#34;https://t.co/5zqBmnga54&#34;&gt;https://t.co/5zqBmnga54&lt;/a&gt; &lt;a href=&#34;https://twitter.com/hashtag/Fukuoka_LT?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#Fukuoka_LT&lt;/a&gt;&lt;/p&gt;&amp;mdash; モノクロメガネ研究員 (@monochromegane) &lt;a href=&#34;https://twitter.com/monochromegane/status/1204211023386832896?ref_src=twsrc%5Etfw&#34;&gt;December 10, 2019&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;</description></item><item><title>2019年12月8日</title><link>https://blog.monochromegane.com/diary/20191208/</link><pubDate>Tue, 10 Dec 2019 22:17:45 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191208/</guid><description>&lt;p&gt;昨日たくさん寝たのに結局また一日寝て過ごす。
-お疲れ様だった。&lt;/p&gt;</description></item><item><title>2019年12月7日</title><link>https://blog.monochromegane.com/diary/20191207/</link><pubDate>Tue, 10 Dec 2019 22:15:16 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191207/</guid><description>&lt;p&gt;出張と論文の疲れで一日寝ていた。&lt;/p&gt;
-&lt;p&gt;10時過ぎに起きてお土産のちんすこうを食べてまた寝た。
-起きたら18時だったのでそのままダラダラと過ごす。
-疲れが溜まっていたのだと思う。&lt;/p&gt;</description></item></channel></rss>
+お疲れ様だった。&lt;/p&gt;</description></item></channel></rss>
