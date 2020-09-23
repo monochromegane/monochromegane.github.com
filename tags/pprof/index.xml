@@ -1,4 +1,111 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>pprof on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/pprof/</link><description>Recent content in pprof on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Tue, 15 Dec 2015 00:00:00 +0900</lastBuildDate><atom:link href="/tags/pprof/" rel="self" type="application/rss+xml"/><item><title>九州大学大学院システム情報科学府博士後期課程に入学します</title><link>https://blog.monochromegane.com/blog/2020/09/21/isee-kyushu-u/</link><pubDate>Mon, 21 Sep 2020 12:38:52 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/09/21/isee-kyushu-u/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>pprof on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/pprof/</link><description>Recent content in pprof on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Tue, 15 Dec 2015 00:00:00 +0900</lastBuildDate><atom:link href="/tags/pprof/" rel="self" type="application/rss+xml"/><item><title>構造を意識した抜け漏れがなく主張点が明確な論文執筆</title><link>https://blog.monochromegane.com/blog/2020/09/23/structure-of-research-paper/</link><pubDate>Wed, 23 Sep 2020 13:36:25 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/09/23/structure-of-research-paper/</guid><description>
+&lt;h1 id=&#34;はじめに&#34;&gt;はじめに&lt;/h1&gt;
+&lt;p&gt;研究者は、自身の研究の有用性を主張するため論文を発表する。
+しかしながら、研究の有用性を主張するために、抜け漏れがなく主張点が明確な文章を書くのは、慣れないうちは難しい（慣れても難しい）。
+本エントリでは、論文の構造を見出だす工程とその構造を書き下す工程を明示的に分離することで、抜け漏れがなく主張点が明確な論文執筆を行う方法を検討する。&lt;/p&gt;
+&lt;h1 id=&#34;論文執筆の課題&#34;&gt;論文執筆の課題&lt;/h1&gt;
+&lt;p&gt;前述の通り、研究の有用性を主張するために、抜け漏れがなく主張点が明確な文章を書くのは、慣れないうちは難しい。
+これは、主張の整理と文章の生成を頭の中で同時にやろうとしていることが原因であるように思う。&lt;/p&gt;
+&lt;p&gt;第一に、主張の整理は複雑なタスクである。
+研究の有用性の主張は、いくつかの課題や提案、評価といった複数の要素と、要素同士の関係性のあり方、すなわち「構造」を持つ。
+要素やその関係性の増加に伴い、構造は複雑になるため、頭の中だけで網羅しつつ整合性を取り続けるのは困難である。&lt;/p&gt;
+&lt;p&gt;第二に、主張の構造を文章に落とし込むのは複雑なタスクである。
+文章は連続した文から構成され、逐次的に記述される。
+そのため、要素同士の関係性を含む主張の構造を書き下すためには、文同士の局所的な繋がりに加え、段落や接続詞による大局的な繋がりを表現しなければならない。
+頭の中の主張の構造を余さずに正確に文章へと変換するのは困難である。
+主張の構造が明らかでない段階では尚更である。&lt;/p&gt;
+&lt;h1 id=&#34;抜け漏れがなく主張点が明確な論文を書く&#34;&gt;抜け漏れがなく主張点が明確な論文を書く&lt;/h1&gt;
+&lt;p&gt;論文執筆が難しい理由は、主張の構造を見出だすこと、この構造を文章に落とし込むことという複雑なタスクを同時に行うためだと解釈した。
+そこで、これらのタスクを明示的に分離する方法を考える。
+この時、主張の構造を見出だすタスクの成果物を文章としてしまっては、主張の構造を文章に落とし込むタスクを兼ねてしまう。
+主張の構造を見出だすタスクには必要な要素を文単位で表し、これらの関係性を表現できる形式が望ましい。
+本エントリでは、このタスクをつなぐ中間表現を論文ストラクチャーと名付ける。
+提案する論文ストラクチャーを以下に示す。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2020/09/research_paper_structure.jpeg&#34; alt=&#34;structure&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;提案する論文執筆では、この論文ストラクチャーを埋めていく工程と、論文ストラクチャーをもとに主張を文章に落とし込む工程を繰り返すことで執筆を行う。&lt;/p&gt;
+&lt;h2 id=&#34;主張の構造を見出だす-論文ストラクチャーを埋める&#34;&gt;主張の構造を見出だす（論文ストラクチャーを埋める）&lt;/h2&gt;
+&lt;p&gt;以下、埋めるべき内容について簡単に説明する。
+はじめに②と⑤から主張を明確にし、その主張をストーリー立てて仕上げるよう残りの項目を埋めていくと良い。
+なお、③④⑥はリスト形式かつ対応づけを行えるため、ストーリー内の根拠の抜け漏れを防ぐことができる。&lt;/p&gt;
+&lt;h3 id=&#34;②-やりたいこと&#34;&gt;② やりたいこと&lt;/h3&gt;
+&lt;p&gt;⑤と合わせて、&lt;strong&gt;主張を明確にするために重要な要素&lt;/strong&gt;。
+リサーチクエスチョンとして、何を解決したいのか、達成したいのかを一文で述べる。&lt;/p&gt;
+&lt;p&gt;システム・ソフトウェア開発の論文では、提案手法によって、どのような理想の世界に近づくのかを示す。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;例）実行環境の変化に素早く適応する &lt;sup&gt;[*1]&lt;/sup&gt;&lt;/li&gt;
+&lt;li&gt;例）文脈に応じて継続的に推薦手法の選択を最適化する &lt;sup&gt;[*2]&lt;/sup&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;⑤-やったこと&#34;&gt;⑤ やったこと&lt;/h3&gt;
+&lt;p&gt;②と合わせて、&lt;strong&gt;主張を明確にするために重要な要素&lt;/strong&gt;。
+リサーチクエスチョンをどのようなアプローチ、着眼点をもって解決、達成したかを一文で述べる。&lt;/p&gt;
+&lt;p&gt;システム・ソフトウェア開発の論文では、開発したシステムやソフトウェア、アーキテクチャなどの特徴を示す。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;例）恒常性を持つシステムアーキテクチャ（を提案・開発）&lt;sup&gt;[*1]&lt;/sup&gt;&lt;/li&gt;
+&lt;li&gt;例）多腕バンディットを用いたメタ推薦システム（を開発）&lt;sup&gt;[*2]&lt;/sup&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;①-なぜ-やりたいのか&#34;&gt;① なぜ、やりたいのか&lt;/h3&gt;
+&lt;p&gt;②への導入となる要素。
+その研究の価値や意義を述べる。&lt;/p&gt;
+&lt;p&gt;システム・ソフトウェア開発の論文では、提案手法によって、どうして、そのような理想の世界に近づけたいのかを示す。
+世間一般的に解決すべき課題として位置付けるも良いし、これまで世間が気づけていなかったけれども見方を変えて課題として捉え直した、のようにしても良いと思う。&lt;/p&gt;
+&lt;h3 id=&#34;③-なぜ-できないのか&#34;&gt;③ なぜ、できないのか&lt;/h3&gt;
+&lt;p&gt;②に対しての課題であり、⑤のアプローチへの導入となる要素。
+理想となる世界に対しての（主に）技術的な課題を述べる。
+多くの研究では、従来の研究成果で未解決、もしくは改善が必要とされる領域についてサーベイ結果が該当する。&lt;/p&gt;
+&lt;p&gt;なお、ここは複数の要素が挙げられるため、論文ストラクチャー上は「A、B、C&amp;hellip;」とリスト形式で記述する。&lt;/p&gt;
+&lt;h3 id=&#34;④-どうやって-解決したのか&#34;&gt;④ どうやって、解決したのか&lt;/h3&gt;
+&lt;p&gt;③の複数の課題に対する個々の解決手段であり、⑤の詳細となる要素。
+提案手法である⑤がどのような方法で課題を解決するのかを述べる。&lt;/p&gt;
+&lt;p&gt;ここは対応づけを行うことでストーリー内での根拠の抜け漏れを防ぐことが目的であるため、③の個々の課題に対する解決手段を「A&amp;rsquo;、B&amp;rsquo;、C&amp;rsquo;&amp;hellip;」とリスト形式で記述する。&lt;/p&gt;
+&lt;h3 id=&#34;⑥-本当に-できたのか&#34;&gt;⑥ 本当に、できたのか&lt;/h3&gt;
+&lt;p&gt;③の課題を④の手法で解決できたことを示す要素。
+評価とその結果を述べる。&lt;/p&gt;
+&lt;p&gt;ここも対応づけによる抜け漏れを防ぐことが目的であるため、③④の個々の課題、手法に対する評価内容を「A&amp;rdquo;、B&amp;rdquo;、C&amp;rdquo;&amp;hellip;」とリスト形式で記述する。&lt;/p&gt;
+&lt;h2 id=&#34;構造を文章に落とし込む-論文ストラクチャーから文章を作る&#34;&gt;構造を文章に落とし込む（論文ストラクチャーから文章を作る）&lt;/h2&gt;
+&lt;p&gt;論文ストラクチャーを埋めたら、各項目を使って論文の文章の雛形を作っていく。&lt;/p&gt;
+&lt;h3 id=&#34;タイトル&#34;&gt;タイトル&lt;/h3&gt;
+&lt;p&gt;②と⑤を組み合わせることは主張を端的に表現したタイトル案を作ることができる。
+よく使われるパターンは「⑤を用いた②」「②が可能な⑤」などであろう。&lt;/p&gt;
+&lt;h3 id=&#34;概要&#34;&gt;概要&lt;/h3&gt;
+&lt;p&gt;①から⑥を順番に並べることで抜け漏れのない概要案を作ることができる。
+典型的な例では以下のようにつながれる。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;①の状況になっている&lt;/li&gt;
+&lt;li&gt;そのため②が求められている、必要となる&lt;/li&gt;
+&lt;li&gt;一方で③A&amp;hellip;の課題がある&lt;/li&gt;
+&lt;li&gt;本研究では⑤を提案する&lt;/li&gt;
+&lt;li&gt;提案手法では④A&amp;rsquo;&amp;hellip;を用いて課題を解決した&lt;/li&gt;
+&lt;li&gt;評価では⑤A&amp;rdquo;&amp;hellip;によって有効性を確認した&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1-はじめに&#34;&gt;1. はじめに&lt;/h3&gt;
+&lt;p&gt;概要と同じく①から⑥を順番に並べることで案を作ることができる。
+ここでは、パラグラフのトピックセンテンスが論文ストラクチャーの各項目になるように配置し、各パラグラフに説明とリファレンスを追加していくと良い。&lt;/p&gt;
+&lt;h3 id=&#34;2-関連研究&#34;&gt;2. 関連研究&lt;/h3&gt;
+&lt;p&gt;③の各課題を単位とする節やパラグラフを並べることで案を作ることができる。
+ここでは、各課題がなぜ発生するのか、解決できていないのかを説明するために、従来手法の説明を加えるのが一般的である。&lt;/p&gt;
+&lt;h3 id=&#34;3-提案手法&#34;&gt;3. 提案手法&lt;/h3&gt;
+&lt;p&gt;④の各手法を単位とする節やパラグラフを並べることで案を作ることができる。
+ここでは、③との対応づけが明らかになるようにできるだけ順序を維持し、また対応する課題について明記すべきである。
+また、⑤を用いて提案手法全体の概要と達成できる事柄について導入部分で触れておくと良い。&lt;/p&gt;
+&lt;h3 id=&#34;4-評価&#34;&gt;4. 評価&lt;/h3&gt;
+&lt;p&gt;⑥の各評価を単位とする節やパラグラフを並べることで案を作ることができる。
+ここでも、③や④との対応づけが明らかになるようにできるだけ順序を維持し、また対応する課題、手法について明記すべきである。&lt;/p&gt;
+&lt;h3 id=&#34;5-まとめ&#34;&gt;5. まとめ&lt;/h3&gt;
+&lt;p&gt;②と⑤からリサーチクエスチョンとこれに対する提案をまとめる。
+また、⑥の結果を踏まえ解決した③を明記する。
+最後に研究を発展させるための今後の予定を述べる。&lt;/p&gt;
+&lt;h1 id=&#34;おわりに&#34;&gt;おわりに&lt;/h1&gt;
+&lt;p&gt;本エントリでは、抜け漏れがなく主張点が明確な論文執筆のために、論文執筆の複雑なタスクを分離し、主張の構造を見出だすタスクと、この構造を文章に落とし込むタスクという二つのタスクを交互に行う方式を提案した。
+また、このために論文ストラクチャーと名付けた主張の構造の整理に適した表現形式を提案した。&lt;/p&gt;
+&lt;p&gt;提案手法によって、論文の品質を一定に保ちつつ初稿までの執筆時間を短縮する。
+加えて、論文ストラクチャーを通した研究成果共有によって共著者との早期の意思疎通が容易になり、手戻りを防ぐ効果が期待できる。&lt;/p&gt;
+&lt;p&gt;あとは良い研究をするだけである（それもまた難しいのであった）。&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h3 id=&#34;参照&#34;&gt;参照&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;*1: 松本 亮介, 近藤 宇智朗, 三宅 悠介, 力武 健次, 栗林 健太郎, FastContainer: 実行環境の変化に素早く適応できる恒常性を持つシステムアーキテクチャ, インターネットと運用技術シンポジウム2017論文集，2017，89-97（2017-11-30）, Nov 2017&lt;/li&gt;
+&lt;li&gt;*2: 三宅 悠介, 峯 恒憲, Synapse: 文脈に応じて継続的に推薦手法の選択を最適化する推薦システム, 電子情報通信学会論文誌D, Vol.J103-D,No.11,pp.-,Nov. 2020. (to appear)&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>九州大学大学院システム情報科学府博士後期課程に入学します</title><link>https://blog.monochromegane.com/blog/2020/09/21/isee-kyushu-u/</link><pubDate>Mon, 21 Sep 2020 12:38:52 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/09/21/isee-kyushu-u/</guid><description>
 &lt;p&gt;先日8/7、九州大学大学院システム情報科学府博士後期課程に無事合格しました。
 10/1より入学します。
 専攻は情報知能工学[*1]です。&lt;/p&gt;
@@ -872,5 +979,4 @@ Ref: &lt;a href=&#34;https://github.com/ExistentialAudio/BlackHole/wiki/Multi-Ou
 &lt;p&gt;終わってみれば大成功だと思う。
 本当にお疲れ様でした！&lt;/p&gt;
 &lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;ネットワーキングタイムでいろいろなコミュニティ同士の連携の話とかコミュニティ参加が初めての若者がコミュニティにつながる機会とか生まれているので大成功だな &lt;a href=&#34;https://twitter.com/hashtag/Fukuoka_LT?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#Fukuoka_LT&lt;/a&gt;&lt;/p&gt;&amp;mdash; モノクロメガネ研究員 (@monochromegane) &lt;a href=&#34;https://twitter.com/monochromegane/status/1203996769626910726?ref_src=twsrc%5Etfw&#34;&gt;December 9, 2019&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
-&lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;&lt;a href=&#34;https://t.co/Vsf57GJK59&#34;&gt;https://t.co/Vsf57GJK59&lt;/a&gt; まとめていただいた！当日は裏方に徹しましたが皆さんの協力のおかげでスケジュール通り進みました。また、色々なコミュニティの方とつながることができたのでとてもよかったです。来年もよろしくお願いします〜 &lt;a href=&#34;https://t.co/5zqBmnga54&#34;&gt;https://t.co/5zqBmnga54&lt;/a&gt; &lt;a href=&#34;https://twitter.com/hashtag/Fukuoka_LT?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#Fukuoka_LT&lt;/a&gt;&lt;/p&gt;&amp;mdash; モノクロメガネ研究員 (@monochromegane) &lt;a href=&#34;https://twitter.com/monochromegane/status/1204211023386832896?ref_src=twsrc%5Etfw&#34;&gt;December 10, 2019&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;</description></item><item><title>2019年12月8日</title><link>https://blog.monochromegane.com/diary/20191208/</link><pubDate>Tue, 10 Dec 2019 22:17:45 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191208/</guid><description>&lt;p&gt;昨日たくさん寝たのに結局また一日寝て過ごす。
-お疲れ様だった。&lt;/p&gt;</description></item></channel></rss>
+&lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;&lt;a href=&#34;https://t.co/Vsf57GJK59&#34;&gt;https://t.co/Vsf57GJK59&lt;/a&gt; まとめていただいた！当日は裏方に徹しましたが皆さんの協力のおかげでスケジュール通り進みました。また、色々なコミュニティの方とつながることができたのでとてもよかったです。来年もよろしくお願いします〜 &lt;a href=&#34;https://t.co/5zqBmnga54&#34;&gt;https://t.co/5zqBmnga54&lt;/a&gt; &lt;a href=&#34;https://twitter.com/hashtag/Fukuoka_LT?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#Fukuoka_LT&lt;/a&gt;&lt;/p&gt;&amp;mdash; モノクロメガネ研究員 (@monochromegane) &lt;a href=&#34;https://twitter.com/monochromegane/status/1204211023386832896?ref_src=twsrc%5Etfw&#34;&gt;December 10, 2019&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;</description></item></channel></rss>
