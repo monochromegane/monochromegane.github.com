@@ -1,4 +1,41 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on THINKING MEGANE</title><link>https://blog.monochromegane.com/post/</link><description>Recent content in Posts on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Wed, 23 Sep 2020 13:36:25 +0900</lastBuildDate><atom:link href="/post/" rel="self" type="application/rss+xml"/><item><title>構造を意識した抜け漏れがなく主張点が明確な論文執筆</title><link>https://blog.monochromegane.com/blog/2020/09/23/structure-of-research-paper/</link><pubDate>Wed, 23 Sep 2020 13:36:25 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/09/23/structure-of-research-paper/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on THINKING MEGANE</title><link>https://blog.monochromegane.com/post/</link><description>Recent content in Posts on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Wed, 14 Oct 2020 20:47:32 +0900</lastBuildDate><atom:link href="/post/" rel="self" type="application/rss+xml"/><item><title>ペンタブレットでリモートワークのコミュニケーションを改善する</title><link>https://blog.monochromegane.com/blog/2020/10/14/pen-tablet/</link><pubDate>Wed, 14 Oct 2020 20:47:32 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/10/14/pen-tablet/</guid><description>
+&lt;p&gt;リモートワークが続く中、口頭での説明を補足するため電子ホワイトボードなどを使ったコミュニケーションの機会が増えています。
+一方で、手書きの気軽さに追従できないマウスを使っていると、書くより口頭での説明の方が早いと電子ホワイトボードを使わずにすましてしまうこともありました。&lt;/p&gt;
+&lt;p&gt;しかしながら手書きの表現力を生かしたコミュニケーションは捨て難く、ペン型の入力装置を探していました。
+iPadは入力装置としても優れていますが、他にも活躍する場面が多いこと、連携時にも一手間かかることから、常時接続できる据置型のシンプルな入力装置としてペンタブレット（いわゆる板タブ）を導入しました。
+今のところ、快適に利用できているので、簡単にご紹介します。&lt;/p&gt;
+&lt;h2 id=&#34;機材&#34;&gt;機材&lt;/h2&gt;
+&lt;p&gt;家にあった&lt;a href=&#34;https://www.amazon.co.jp/gp/product/B013SMIUDU/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=B013SMIUDU&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=fe1ce71c51452d4f2aeb9e54b37e1ed5&#34;&gt;ワコム Intuos Comic&lt;/a&gt;を使っています。&lt;/p&gt;
+&lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;t=monochromeg03-22&amp;m=amazon&amp;o=9&amp;p=8&amp;l=as1&amp;IS2=1&amp;detail=1&amp;asins=B013SMIUDU&amp;linkId=9cbb775bf3a3f541b47049552333cda0&amp;bc1=ffffff&amp;lt1=_blank&amp;fc1=333333&amp;lc1=0066c0&amp;bg1=ffffff&amp;f=ifr&#34;&gt;
+&lt;/iframe&gt;
+&lt;p&gt;僕の用途であればSサイズ（210x169mm。ただし入力領域はこのうち155x95mm程度）で十分でした。
+こちらはUSB(Type-A)でPCと接続します。すでに旧モデルとのことで、これから購入するならBluetoothで接続できる新しいものが良さそうです。&lt;/p&gt;
+&lt;p&gt;また、接続先のPCはMacBook Pro (15-inch, 2019) です。
+macOS Catalinaですが、ワコムのサイトに公開されている最新のドライバをインストールした上で、「セキュリティとプライバシー」で必要なアプリケーションに許可を与えることで利用できるようになりました。&lt;/p&gt;
+&lt;h2 id=&#34;設定&#34;&gt;設定&lt;/h2&gt;
+&lt;p&gt;後述しますが、タブレットの座標検出は絶対位置の指定です。
+小さいタブレットに大きな画面をマッピングして使うのは向いていないため、画面内の限られた範囲をマッピングして利用しています。&lt;/p&gt;
+&lt;p&gt;僕の用途では電子ホワイトボードとしてJamboardを利用しており、画面内の決まった位置（左上）で扱うため、この範囲をタブレットの操作範囲としました。
+これによってJamboardの表示範囲とタブレットの入力領域がある程度同じになり、違和感なく入力できるようになりました。&lt;/p&gt;
+&lt;p&gt;ワコムのタブレットの場合、以下のように設定できます。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2020/10/wacom-config.png&#34; alt=&#34;wacom&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;タブレットの操作&#34;&gt;タブレットの操作&lt;/h2&gt;
+&lt;p&gt;普段の業務は、キーボードとマウスで済むため、タブレットは初めて利用でした。
+そのため、操作に慣れるまで少しだけ戸惑いましたが、以下のサイトを見て、基本を理解しました。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://tablet.wacom.co.jp/article/%E3%83%9A%E3%83%B3%E3%82%BF%E3%83%96%E3%83%AC%E3%83%83%E3%83%88-%E5%9F%BA%E6%9C%AC%E7%9A%84%E3%81%AA%E4%BD%BF%E3%81%84%E6%96%B9&#34;&gt;ペンタブレット 基本的な使い方&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;以下だけ理解すればすんなり使えると思います。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ペンをタブレットから浮かした状態でポインタを移動&lt;/li&gt;
+&lt;li&gt;ペンをタブレットにつけるとクリックしながらポインタを移動することに相当&lt;/li&gt;
+&lt;li&gt;タブレットの操作領域が画面にマッピングされている&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
+&lt;p&gt;Google MeetからJamboardを開いて参加者にリンクを共有できるようになり、便利になりました。
+利用までの手間を小さくできるよう、常時接続型のシンプルなタブレットを導入することで、Jamboardを積極的に利用することができ、手書きの気軽さと表現力を活かしたコミュニケーションの改善につながっていると感じます。&lt;/p&gt;
+&lt;p&gt;今後改善したいところとしては、ペンのボタンへのアクション割り当てなのですが、Jamboardの消しゴムやレーザーポインタ切り替えにショートカットがなく、まだ実現できていない状態です（フィードバック送ろう）。&lt;/p&gt;
+&lt;p&gt;まだまだリモートワークも続くでしょうから、引き続き、入力機器の構成や工夫など進めていきたいと思います。&lt;/p&gt;</description></item><item><title>構造を意識した抜け漏れがなく主張点が明確な論文執筆</title><link>https://blog.monochromegane.com/blog/2020/09/23/structure-of-research-paper/</link><pubDate>Wed, 23 Sep 2020 13:36:25 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/09/23/structure-of-research-paper/</guid><description>
 &lt;h1 id=&#34;はじめに&#34;&gt;はじめに&lt;/h1&gt;
 &lt;p&gt;研究者は、自身の研究の有用性を主張するため論文を発表する。
 しかしながら、研究の有用性を主張するために、抜け漏れがなく主張点が明確な文章を書くのは、慣れないうちは難しい（慣れても難しい）。
@@ -973,10 +1010,4 @@ Ref: &lt;a href=&#34;https://github.com/ExistentialAudio/BlackHole/wiki/Multi-Ou
 計画性を持つこととは反していなくて、ある長さのタスクを片付けるために先に先にやっていこうという気持ち。
 行動の根幹に失敗や周りからの評価についての恐れを持つとフットワークが重くなったり先延ばしにしがちになる。
 外部評価が行動の妨げになるのは目的に対して本末転倒であるし、考えが堂々巡りする時間が増えるだけであるのでサクサクやっていこう。
-次のステップはそういうところに見えてくると思う。&lt;/p&gt;</description></item><item><title>2019年12月9日</title><link>https://blog.monochromegane.com/diary/20191209/</link><pubDate>Tue, 10 Dec 2019 22:19:00 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191209/</guid><description>&lt;p&gt;ペパランチョンと&lt;a href=&#34;https://fukuokago.connpass.com/event/155369/&#34;&gt;Fukuoka.LT&lt;/a&gt;であっという間の一日。&lt;/p&gt;
-&lt;p&gt;Fukuoka.LTは予定していたネットワーキングタイムに必要なケータリングの到着が1.5hほど遅れてしまい、登壇者含めてその場その場でスケジュールを変更しながらの慌ただしい感じだった。&lt;/p&gt;
-&lt;p&gt;当初の狙い通り、コミュニティの深い紹介があったおかげで、コミュニティ同士の連携も生まれたし、新しくコミュニティへ参加したい人を各所に紹介するなどもできた。&lt;/p&gt;
-&lt;p&gt;終わってみれば大成功だと思う。
-本当にお疲れ様でした！&lt;/p&gt;
-&lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;ネットワーキングタイムでいろいろなコミュニティ同士の連携の話とかコミュニティ参加が初めての若者がコミュニティにつながる機会とか生まれているので大成功だな &lt;a href=&#34;https://twitter.com/hashtag/Fukuoka_LT?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#Fukuoka_LT&lt;/a&gt;&lt;/p&gt;&amp;mdash; モノクロメガネ研究員 (@monochromegane) &lt;a href=&#34;https://twitter.com/monochromegane/status/1203996769626910726?ref_src=twsrc%5Etfw&#34;&gt;December 9, 2019&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
-&lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;&lt;a href=&#34;https://t.co/Vsf57GJK59&#34;&gt;https://t.co/Vsf57GJK59&lt;/a&gt; まとめていただいた！当日は裏方に徹しましたが皆さんの協力のおかげでスケジュール通り進みました。また、色々なコミュニティの方とつながることができたのでとてもよかったです。来年もよろしくお願いします〜 &lt;a href=&#34;https://t.co/5zqBmnga54&#34;&gt;https://t.co/5zqBmnga54&lt;/a&gt; &lt;a href=&#34;https://twitter.com/hashtag/Fukuoka_LT?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#Fukuoka_LT&lt;/a&gt;&lt;/p&gt;&amp;mdash; モノクロメガネ研究員 (@monochromegane) &lt;a href=&#34;https://twitter.com/monochromegane/status/1204211023386832896?ref_src=twsrc%5Etfw&#34;&gt;December 10, 2019&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;</description></item></channel></rss>
+次のステップはそういうところに見えてくると思う。&lt;/p&gt;</description></item></channel></rss>
