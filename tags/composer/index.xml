@@ -1,4 +1,112 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>composer on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/composer/</link><description>Recent content in composer on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 02 Jun 2013 00:00:00 +0000</lastBuildDate><atom:link href="/tags/composer/" rel="self" type="application/rss+xml"/><item><title>ペンタブレットでリモートワークのコミュニケーションを改善する</title><link>https://blog.monochromegane.com/blog/2020/10/14/pen-tablet/</link><pubDate>Wed, 14 Oct 2020 20:47:32 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/10/14/pen-tablet/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>composer on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/composer/</link><description>Recent content in composer on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 02 Jun 2013 00:00:00 +0000</lastBuildDate><atom:link href="/tags/composer/" rel="self" type="application/rss+xml"/><item><title>嗜好伝達コミュニケーションの効率化を目指した伝達方式の検討</title><link>https://blog.monochromegane.com/blog/2020/11/17/wsa7-local-preference/</link><pubDate>Tue, 17 Nov 2020 10:46:53 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/11/17/wsa7-local-preference/</guid><description>
+&lt;p&gt;このエントリは、&lt;a href=&#34;https://wsa.connpass.com/event/187128/&#34;&gt;第7回 Web System Architecture 研究会 (WSA研)&lt;/a&gt;の予稿です。&lt;/p&gt;
+&lt;h1 id=&#34;嗜好伝達コミュニケーションの効率化を目指した伝達方式の検討&#34;&gt;嗜好伝達コミュニケーションの効率化を目指した伝達方式の検討&lt;/h1&gt;
+&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;適応的なシステムの実現には、システムが利用者の状況をよく知ることが重要になる。
+ECサイトのシステムであれば、利用者の嗜好を把握することで、最適な商品を提案できると考えられる。&lt;/p&gt;
+&lt;p&gt;ECサイトのシステムが利用者の嗜好を把握するためには、特に初期段階における利用者との一定量のコミュニケーションが必要となる。
+明示的なコミュニケーションであれば、システムは利用者に、年齢や居住地、興味関心などのプロファイルの登録を依頼する。
+暗黙的なコミュニケーションであれば、システムは利用者の、閲覧や購買、検索履歴を通して利用者の嗜好を把握する。
+システムはこれらのプロファイルの登録や履歴の蓄積なくして、適応的に振舞うことが難しい。
+一方で、これらのコミュニケーションは利用者に負担を強いる。
+これには、システムごとに発生するプロファイルの登録や履歴蓄積のための労力的な負担の他、プライバシーを守りたいという意識的な負担も考えられる。&lt;/p&gt;
+&lt;p&gt;本研究では、利用者の嗜好伝達に纏わるコミュニケーションの負担を低減しつつ、適応的なシステムによる利便性を常に享受できるインターネット世界に向けて、嗜好伝達コミュニケーションの効率化のための伝達方式の検討を行う。&lt;/p&gt;
+&lt;h2 id=&#34;嗜好伝達コミュニケーションの課題&#34;&gt;嗜好伝達コミュニケーションの課題&lt;/h2&gt;
+&lt;p&gt;嗜好伝達コミュニケーションの課題整理にあたり、本研究における「嗜好」を定義する。
+まず、嗜好(preference)とは「利用者の素性(feature)」に基づく「対象(content)への反応(reaction)」と考える。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;preference(feature,content) #=&amp;gt; reaction
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;対象(content)はシステムごと（ECサイトごと）に異なるため、嗜好伝達にはシステムごとに個別のコミュニケーションが求められる。
+利用者の素性(feature)を示すか、直接、対象(content)への反応(reaction)を示す行為がこれに該当する。
+推薦システムでは、利用者の素性(feature)を示す場合、類似する素性の群の反応を用いて利用者の嗜好が推測される。
+対象(content)への反応(reaction)を示す場合、この反応から、もしくは類似する群から利用者の嗜好が推測される。&lt;/p&gt;
+&lt;p&gt;本研究では、この、利用者の素性(feature)の伝達か、対象(content)への反応(reaction)の伝達に纏わるコミュニケーションの効率化を検討する。&lt;/p&gt;
+&lt;h3 id=&#34;利用者の素性-feature-の伝達の課題&#34;&gt;利用者の素性(feature)の伝達の課題&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;システム内に限定された利用者の素性&lt;/li&gt;
+&lt;li&gt;適切なデータ構造が不明&lt;/li&gt;
+&lt;li&gt;プライバシー保護が必要&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;「1. システム内に限定された利用者の素性」について、利用者の素性(feature)には人口統計的な情報だけでなく、行動データが考えられる。
+利用者の素性をより知るためには、システムを横断して蓄積された行動データを得られることが望ましい。
+しかしながら、通常、システムの把握可能な履歴はシステム内に限定される。
+オンライン広告に見られるアドネットワークやオーディエンスデータの利用により、横断した行動を特定できる。
+しかしながら、これらのcookieなどを用いた名寄せに関してはプライバシー保護意識の高まりもあり、代替手段を検討すべきである（要リファレンス）。&lt;/p&gt;
+&lt;p&gt;「2. 適切なデータ構造が不明」について、利用者の素性(feature)となり得る要因は無限に検討可能なことから、これを全てのシステムで共通に管理することは困難である。
+例えば、訪問したサイトを利用者の素性として扱うとして、多次元のベクトルデータで表現すると、各次元とサイトの紐付けやサイトの追加削除を管理しなければならない。&lt;/p&gt;
+&lt;p&gt;「3. プライバシー保護が必要」について、人口統計的な情報だけでなく、行動データを含む利用者の素性は多くのセンシティブな情報を含むことから、利用者側が開示するにあたって内容の制限が求められるであろう。&lt;/p&gt;
+&lt;h3 id=&#34;対象-content-への反応-reaction-の伝達の課題&#34;&gt;対象(content)への反応(reaction)の伝達の課題&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;システム内に限定された利用者の嗜好&lt;/li&gt;
+&lt;li&gt;プライバシー保護が必要&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;「1. システム内に限定された利用者の嗜好」について、前述の通り、プロファイルの登録や履歴蓄積のための労力的な負担が発生する。
+対象(content)はシステム内に限定されるため、システムごとにその反応を提示しなければならない。
+この時、利用者の嗜好をより知るためには、できるだけ多くの対象(content)に対する反応(reaction)を示せることが望ましいが、労力的な負担は比例して増加する。&lt;/p&gt;
+&lt;p&gt;「2. プライバシー保護が必要」について、利用者の嗜好傾向は（素性と比較して間接的ではあるものの）センシティブな情報を含むことから、利用者側が開示するにあたって内容の制限が求められるであろう。&lt;/p&gt;
+&lt;h2 id=&#34;嗜好伝達コミュニケーションの効率化の検討&#34;&gt;嗜好伝達コミュニケーションの効率化の検討&lt;/h2&gt;
+&lt;h3 id=&#34;利用者の素性-feature-の伝達の効率化&#34;&gt;利用者の素性(feature)の伝達の効率化&lt;/h3&gt;
+&lt;p&gt;本研究では、利用者の素性(feature)の伝達の効率化のため、人口統計的な情報だけでなく、システムを横断した行動データを局所管理するアプローチを検討する。
+無限に検討可能な要因を共通して扱うため、Key-Value形式のデータ構造を採用する。
+また、システムへの提示時に、このKey-Value形式のデータをBloomFilterに変換することでプライバシー保護を試みる。
+すなわち、BloomFilterの偽陽性に着目した素性であるKeyを断定することができない特性を利用する。
+また、BloomFilterが保存する要素数に依存しない特性を利用して、無限に検討可能な利用者の素性の要因を固定次元で扱うことができる。&lt;/p&gt;
+&lt;p&gt;なお、あるシステムに提示されるBloomFilterのパラメータは全ての利用者が同じものを用いる必要があるが、これらの共有方式についてはここでは検討しない。&lt;/p&gt;
+&lt;h3 id=&#34;対象-content-への反応-reaction-の伝達の効率化&#34;&gt;対象(content)への反応(reaction)の伝達の効率化&lt;/h3&gt;
+&lt;p&gt;本研究では、対象(content)への反応(reaction)の伝達の効率化のため、嗜好モデルを局所管理するアプローチを検討する。
+提案手法では、システムを横断した行動データから、嗜好モデルを構築するローカルエージェントを設ける。
+構築される嗜好モデルはこれまでの行動データから、未知の対象(content)への反応(reaction)を精度よく推測する。
+ローカルエージェントは、このモデルを使い、システムに対する対象(content)への反応(reaction)の伝達を代理する。
+具体的には、利用者が新しいシステムへのアクセスする際に、（システムが対応していれば）この嗜好モデルを使って、先方のシステムから示された大量の対象(content)への反応(reaction)を回答する。
+先方のシステムは、十分な量のコミュニケーションを終え、利用者に利便性の高い状態から利用を開始してもらうことができる。
+また、予めローカルエージェントの嗜好提示範囲に制限を持たせておくことで、プライバシー管理も行えると考える。&lt;/p&gt;
+&lt;p&gt;なお、これらの方式は検討段階であり、ローカルエージェント、嗜好モデルの具体的な実装はこれから検討していく。&lt;/p&gt;
+&lt;h2 id=&#34;評価&#34;&gt;評価&lt;/h2&gt;
+&lt;h3 id=&#34;利用者の素性-feature-の伝達の効率化の評価&#34;&gt;利用者の素性(feature)の伝達の効率化の評価&lt;/h3&gt;
+&lt;p&gt;提案手法の有効性を判断するため、BloomFilterに変換した素性によって嗜好情報の伝達能力を評価した。
+評価として、素性を特徴量として用いた多腕バンディットのシミュレーションを行った。
+元の素性と比較して提案手法の素性で、どの程度精度に変化があったかを確認した。&lt;/p&gt;
+&lt;p&gt;以下は、腕の数が30、密度（＊後述）10倍の実験設定の時の、BloomFilterの次元数と精度の変化を表している。
+ここで、精度の変化とは、元の素性を使ったシミュレーションで選定された腕と同じ腕を選定できた割合を言う。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;1: 1.0
+2: 0.60425
+3: 0.424515
+4: 0.38845
+5: 0.35002
+6: 0.32798
+7: 0.335945
+8: 0.307885
+9: 0.31443
+10: 0.317955
+20: 0.311235
+30: 0.3068
+40: 0.320385
+50: 0.30193
+60: 0.31655
+70: 0.33412
+80: 0.319935
+90: 0.309365
+100: 0.33812
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;BloomFilterで表現された素性をコンテキスト情報として用いた推定には誤差が生じる。
+そして、この誤差の増加はBloomFilterの偽陽性率の増加に従う。
+今回の問題設定では、例えば100次元のバイナリベクトルを50次元のBloomFilterで表現することである（このような状態を本研究では密度2倍と考える）。
+また、多腕バンディットでは腕の本数の増加に従い、不確実な状況において偶然当たる確率が下がる。
+これらを考慮して、100次元のコンテキスト情報を10次元へ圧縮、30本の腕という問題設定でベストな腕を選択できた割合をサンプリングによって求めた。
+結果として正しい腕を選択できたのは33%程度であった。
+現実の推薦システムにおいてあり得る程度のスケールでも精度に対して大きな影響が発生することがわかった。&lt;/p&gt;
+&lt;h3 id=&#34;対象-content-への反応-reaction-の伝達の効率化の評価&#34;&gt;対象(content)への反応(reaction)の伝達の効率化の評価&lt;/h3&gt;
+&lt;p&gt;今後、実装と評価を行っていく。&lt;/p&gt;
+&lt;h1 id=&#34;発表スライド&#34;&gt;発表スライド&lt;/h1&gt;
+&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;204ceec869d6488ea6a62fbe31e02c19&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
+&lt;p&gt;発表後の議論では、アプローチに対する新規性や有用性について、また、Webサービスへの適用のアイディアについても話すことができ、今後にとって非常に有意義なものとなった。&lt;/p&gt;
+&lt;h1 id=&#34;発表を終えて&#34;&gt;発表を終えて&lt;/h1&gt;
+&lt;p&gt;今回のWSA研では、最初のアプローチの失敗で終わらず、やりたいことに立ち返り、より良いと思われるアプローチも検討できた点が良かったと思う。
+長期間続く研究であればこそ、個々の結果に一喜一憂ではなく全体として進んでいけるよう全てを糧にしていきたい。&lt;/p&gt;
+&lt;p&gt;そして、このような研究のアイディア段階から前向きに意見を出し合うことができる機会を定期的に設けることができるWSA研はとても良いコンセプトの研究会だと思う。
+何よりその時間はとても楽しい。&lt;/p&gt;
+&lt;p&gt;Webシステムアーキテクチャに関する運用知見を研究的アプローチで前進させること興味がある方は次回開催の参加を検討してみてはいかがでしょうか。&lt;/p&gt;
+&lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;&lt;a href=&#34;https://twitter.com/hashtag/wsa%E7%A0%94?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#wsa研&lt;/a&gt; 7回目も無事おわり。半年ごとにアイディアを形にする良い機会になってるし、みんなの多様な取り組みを聞くのも興味深い。なにより、自分の夢中になってることを一緒に盛り上がって話せる場は貴重だよなあ。ありがとうございます。連続発表記録も更新していくぞう&lt;/p&gt;&amp;mdash; モノクロメガネ研究員 (@monochromegane) &lt;a href=&#34;https://twitter.com/monochromegane/status/1327251443728875525?ref_src=twsrc%5Etfw&#34;&gt;November 13, 2020&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;</description></item><item><title>ペンタブレットでリモートワークのコミュニケーションを改善する</title><link>https://blog.monochromegane.com/blog/2020/10/14/pen-tablet/</link><pubDate>Wed, 14 Oct 2020 20:47:32 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/10/14/pen-tablet/</guid><description>
 &lt;p&gt;リモートワークが続く中、口頭での説明を補足するため電子ホワイトボードなどを使ったコミュニケーションの機会が増えています。
 一方で、手書きの気軽さに追従できないマウスを使っていると、書くより口頭での説明の方が早いと電子ホワイトボードを使わずにすましてしまうこともありました。&lt;/p&gt;
 &lt;p&gt;しかしながら手書きの表現力を生かしたコミュニケーションは捨て難く、ペン型の入力装置を探していました。
@@ -1002,12 +1110,4 @@ Ref: &lt;a href=&#34;https://github.com/ExistentialAudio/BlackHole/wiki/Multi-Ou
 &lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/02/25/entrance-of-research/&#34;&gt;わかるとわからないの間&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/02/23/remote-study-group/&#34;&gt;拠点間勉強会を接続するリモート勉強会への誘い&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/01/17/oss-gate-as-supporter/&#34;&gt;OSS Gateにサポーターとして参加した（東京・福岡）&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>2019年12月10日</title><link>https://blog.monochromegane.com/diary/20191210/</link><pubDate>Tue, 10 Dec 2019 22:26:30 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20191210/</guid><description>&lt;p&gt;午前中に論文の共著者レビューを反映。
-まだかなり荒削りなので明日ガッと形を整えなければなるまい。&lt;/p&gt;
-&lt;p&gt;その他、マンションのことなど。
-ある程度均質な背景を持つ会社や技術コミュニティと違い、色々な背景や思惑が皆あるので健全に運営できるようにやっていきたいな。&lt;/p&gt;
-&lt;p&gt;上記に絡めて、どうしても気が重くなりがちなタスクを淡々と処理できるようにしていきたい。
-計画性を持つこととは反していなくて、ある長さのタスクを片付けるために先に先にやっていこうという気持ち。
-行動の根幹に失敗や周りからの評価についての恐れを持つとフットワークが重くなったり先延ばしにしがちになる。
-外部評価が行動の妨げになるのは目的に対して本末転倒であるし、考えが堂々巡りする時間が増えるだけであるのでサクサクやっていこう。
-次のステップはそういうところに見えてくると思う。&lt;/p&gt;</description></item></channel></rss>
+&lt;/ul&gt;</description></item></channel></rss>
