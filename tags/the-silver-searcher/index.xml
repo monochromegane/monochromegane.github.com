@@ -1,4 +1,93 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>the-silver-searcher on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/the-silver-searcher/</link><description>Recent content in the-silver-searcher on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Thu, 16 Jan 2014 00:00:00 +0000</lastBuildDate><atom:link href="/tags/the-silver-searcher/" rel="self" type="application/rss+xml"/><item><title>2020</title><link>https://blog.monochromegane.com/blog/2020/12/31/2020/</link><pubDate>Thu, 31 Dec 2020 11:47:04 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/12/31/2020/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>the-silver-searcher on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/the-silver-searcher/</link><description>Recent content in the-silver-searcher on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Thu, 16 Jan 2014 00:00:00 +0000</lastBuildDate><atom:link href="/tags/the-silver-searcher/" rel="self" type="application/rss+xml"/><item><title>研究の位置づけを明確にする集中型の論文サーベイ方法</title><link>https://blog.monochromegane.com/blog/2021/05/15/survey-method/</link><pubDate>Sat, 15 May 2021 15:35:14 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2021/05/15/survey-method/</guid><description>
+&lt;p&gt;博士課程に進学し、国際会議に論文を投稿した際に行った論文サーベイの流れやツールについてまとめておく。
+今回のサーベイを行うにあたり、既存研究に対する自身の研究の位置づけを明らかにすることを目標とした。
+すなわち、自身の提案がある程度カタチになっていることを前提とした集中的サーベイ方法である。&lt;/p&gt;
+&lt;h1 id=&#34;論文サーベイの流れ&#34;&gt;論文サーベイの流れ&lt;/h1&gt;
+&lt;p&gt;以下に行った工程を示す。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;会議名とキーワード検索による候補のリストアップ&lt;/li&gt;
+&lt;li&gt;各候補のアブストラクトによる選定&lt;/li&gt;
+&lt;li&gt;各候補の精読&lt;/li&gt;
+&lt;li&gt;必要に応じて参考になる会議名、キーワード、参照論文を候補に追加&lt;/li&gt;
+&lt;li&gt;候補がなくなるまで繰り返す&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;以降、各工程について利用したツールや工夫などを述べる。&lt;/p&gt;
+&lt;h1 id=&#34;1-会議名とキーワード検索による候補のリストアップ&#34;&gt;1. 会議名とキーワード検索による候補のリストアップ&lt;/h1&gt;
+&lt;p&gt;サーベイは十分な量の候補を必要とする。
+自身の研究分野や貢献と完全に一致する論文は多くはないが、全くゼロではない。
+もし多すぎるのであれば、自身の研究の貢献や目的が十分に掘り下げられていない可能性がある。
+もしゼロであれば、自身の研究に有用性がないか、十分な調査ができていないかもしれない。
+自身の研究を信じる我々は、いずれにせよ十分に候補を見つける必要がある。&lt;/p&gt;
+&lt;p&gt;候補の選定には、&lt;a href=&#34;https://scholar.google.com/&#34;&gt;Google Scholar&lt;/a&gt;によるキーワード検索を用いる。
+なるべく多くの論文を候補とするため、キーワードは関連しそうなキーワードを複数挙げて、ORで繋ぐと良い。
+この時、指導教官からのアドバイスで会議名を絞って検索するようにした。
+これは、検索クエリに &lt;code&gt;source:SIGKDD&lt;/code&gt; などと指定することで実現できる。&lt;/p&gt;
+&lt;p&gt;そして、検索結果から以下の情報をリスト化する。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Title&lt;/li&gt;
+&lt;li&gt;Citiations&lt;/li&gt;
+&lt;li&gt;URL&lt;/li&gt;
+&lt;li&gt;Authors&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;おおよそ、Google Scholarではキーワードへの関連性が高いものから並べてくれているため、会議ごとに上位20-50本程度を候補とすれば十分であったように思える。&lt;/p&gt;
+&lt;p&gt;リスト化にはGoogleスプレッドシートを利用した。後の工程のため、関連有無フラグとメモ欄をカラムとして追加する。&lt;/p&gt;
+&lt;p&gt;なお、検索〜リスト作成は手動では面倒なので、スクリプトを用意した。&lt;/p&gt;
+&lt;h1 id=&#34;2-各候補のアブストラクトによる選定&#34;&gt;2. 各候補のアブストラクトによる選定&lt;/h1&gt;
+&lt;p&gt;1.でリストアップした候補について、精読すべきかの選定を行う。
+なお、選定はアブストラクトのみで行うこと。
+ここで、個別に精読を始めると時間がいくらあっても足りないからである（逆に言えば自身の研究もやはりアブストラクトに提案と貢献をしっかり記述する必要がある）。&lt;/p&gt;
+&lt;p&gt;選定基準は自身の研究や提案、貢献に関連がありそうかとする。
+また、いくつか読んでいく中で判断基準が徐々に形成されていくので、効率よく見直せるよう、メモを書いておく。
+メモには、どういう提案や手法かを一行程度書けば良い。
+精読すべきと判断したものには、リストに丸をつけ、フィルタなり色付けして候補を見つけやすくしておく。&lt;/p&gt;
+&lt;h1 id=&#34;3-各候補の精読&#34;&gt;3. 各候補の精読&lt;/h1&gt;
+&lt;p&gt;2.で選定した精読候補を読み、まとめる。
+多くの論文を読まなければならないこと、最終的に自分の研究との相対的な位置づけを整理する必要があるため、効率よく見直せるようまとめを残す必要がある。
+まとめがないと何度も同じ論文をイチから読み直す必要があるので絶対にまとめること。
+以下にまとめの観点とこれを実現するツールについて示す。&lt;/p&gt;
+&lt;h2 id=&#34;まとめの観点&#34;&gt;まとめの観点&lt;/h2&gt;
+&lt;p&gt;まとめの粒度や項目が統一されていることが望ましい。
+自分は、&lt;a href=&#34;https://www.slideshare.net/Ochyai/1-ftma15/&#34;&gt;落合メソッド&lt;/a&gt;をアレンジして使っている。
+つまり、自分の研究の位置づけを整理するのに適した問いかけにしている。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;どんなもの？&lt;/li&gt;
+&lt;li&gt;先行研究と比べてどこがすごい？（どんな課題を解決する？）&lt;/li&gt;
+&lt;li&gt;技術や手法のキモはどこ？（どうやって解決した？）&lt;/li&gt;
+&lt;li&gt;どうやって有効だと検証した？&lt;/li&gt;
+&lt;li&gt;議論はある？（自分の研究との差異は？）&lt;/li&gt;
+&lt;li&gt;次に読むべき論文は？（他に知らなかった技術や概念は？）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;括弧内が自分用の問いかけである。
+特に、「議論はある？」を「自分の研究との差異は？」に置き換えることで位置付けの整理を強く意識したまとめができるようになった点が気に入っている。&lt;/p&gt;
+&lt;h2 id=&#34;まとめのためのツール&#34;&gt;まとめのためのツール&lt;/h2&gt;
+&lt;p&gt;これまで論文管理には、&lt;a href=&#34;https://www.mendeley.com/&#34;&gt;Mendeley&lt;/a&gt;を利用し、&lt;a href=&#34;https://www.papershipapp.com/&#34;&gt;PaperShip&lt;/a&gt;と同期、必要に応じてiPadで書き込みを行っていた。&lt;/p&gt;
+&lt;p&gt;しかしながら、今回まとめには&lt;a href=&#34;https://www.notion.so/&#34;&gt;Notion&lt;/a&gt;を別途利用した。
+Notionは、論文への直接書き込みの場合の、十分な余白がない点や論文同士の関係性を横串で把握しにくかった点を解消してくれる。
+Notionで、上述のアレンジ版落合メソッドを含んだテンプレートを用意し、サーベイDATABASEに論文ごとに1ページ作り、読みながらまとめを作っていく。&lt;/p&gt;
+&lt;p&gt;この時、最初からまとめようとすると論文全体を覚えておかなくてはならないので、自由に記入可能なメモ欄を用意して、読みながら、そちらにわかったこと疑問に思ったことなどを気楽に書いて、最後にまとめる方法をとっている。
+メモ欄も残したままにしておくと後から読み直した時に記憶が蘇りやすいのでそのまま残している。&lt;/p&gt;
+&lt;p&gt;また、Notionでは各ページに対してPropertyを付与することで絞り込みができるため、会議名タグ、論文の発行年度、論文のURL、その論文を読んだ日付、キーワードのタグをPropertyとして設定している。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2021/05/notion_survey_template.png&#34; alt=&#34;notion-survey-template&#34; /&gt;&lt;/p&gt;
+&lt;h1 id=&#34;4-必要に応じて参考になる会議名-キーワード-参照論文を候補に追加&#34;&gt;4. 必要に応じて参考になる会議名、キーワード、参照論文を候補に追加&lt;/h1&gt;
+&lt;p&gt;精読の中で、気になる会議名、キーワードが追加された場合、もう一度、1.の検索に戻り候補を追加する。
+また、参照されている論文も候補に追加する。&lt;/p&gt;
+&lt;p&gt;コツとしては、追加された候補に対してすぐにアブストや精読を始めずに、候補として追加に止める事。
+この追加した候補はまた新しい候補を増やすので、ゴールが見えなくなってしまうからである。
+なので、最初に決めた候補まで読み切ってから、新しい候補の処理に着手すると気分的に進捗感が出て楽であった（これはまあ人による）。&lt;/p&gt;
+&lt;h1 id=&#34;5-候補がなくなるまで繰り返す&#34;&gt;5. 候補がなくなるまで繰り返す&lt;/h1&gt;
+&lt;p&gt;以上を候補がなくなるまで繰り返す。
+参考文献が参考文献を呼んで終わらないのではないかと思われたが、2-3周もすれば新しい文献も出てこなくなってくる。
+まとめの中で自身の研究が位置付けられてくるので、そこを一旦の止め時とした。&lt;/p&gt;
+&lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
+&lt;p&gt;国際会議への投稿にあたって、自身の研究の位置づけを明確にするための論文サーベイの方法をまとめた。
+今回は、最初のリストが243本、精読が47本であった。
+会議を分けてサーベイすることで会議ごとに同じキーワードでも論文に特色があることなどが分かり興味深かった。
+また、トップカンファレンスに限ることで、サーベイ効率も高まったと思う。
+指導教官に感謝である。&lt;/p&gt;
+&lt;p&gt;Notion上の47ページの論文まとめは執筆中、何度も読み直したが自分なりのまとめメモが入っていること、自分の研究との位置づけが一言でまとめられていることから、効率よく記憶が蘇らせることができた。
+結果として、複数の論文同士の関係性を整理するという目標に自身のリソースを采配することができたと思う。&lt;/p&gt;
+&lt;p&gt;一方で、キーワード検索では、既読管理と相性が悪いため、普段のインプットとしての継続的なサーベイには向かない。
+RSSフィード的なインプットの方法を探したい。&lt;/p&gt;</description></item><item><title>2020</title><link>https://blog.monochromegane.com/blog/2020/12/31/2020/</link><pubDate>Thu, 31 Dec 2020 11:47:04 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/12/31/2020/</guid><description>
 &lt;p&gt;今年は、なんと言っても、6月の初めてのジャーナル論文採録が文句なしに一番嬉しかった出来事だった。
 ペパボ研究所に入って3年半。
 本当に長かったし苦しかった。
@@ -1087,27 +1176,4 @@ Ref: &lt;a href=&#34;https://github.com/ExistentialAudio/BlackHole/wiki/Multi-Ou
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h1 id=&#34;学習書籍&#34;&gt;学習書籍&lt;/h1&gt;
 &lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;t=monochromeg03-22&amp;m=amazon&amp;o=9&amp;p=8&amp;l=as1&amp;IS2=1&amp;detail=1&amp;asins=427422371X&amp;linkId=e3e609dd57189d2dd910abc95a46bbd0&amp;bc1=ffffff&amp;lt1=_blank&amp;fc1=333333&amp;lc1=0066c0&amp;bg1=ffffff&amp;f=ifr&#34;&gt;
-&lt;/iframe&gt;</description></item><item><title>テッド・チャン『息吹』と「なめらかなシステム」</title><link>https://blog.monochromegane.com/blog/2020/01/26/exhalation-and-coherently-fittable-system/</link><pubDate>Sun, 26 Jan 2020 20:16:38 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/01/26/exhalation-and-coherently-fittable-system/</guid><description>&lt;p&gt;昨年末にあんちぽさんからお勧めされていた、テッド・チャン『息吹』をようやっと読み終えた。&lt;/p&gt;
-&lt;p&gt;本書を通して所属する研究所のビジョンである「なめらかなシステム」の世界観について理解が深まったように感じたのでメモしておく。&lt;/p&gt;
-&lt;p&gt;本書は表題の「息吹」を含むSFの短編集である。全部で9編の作品から成る。
-多くの作品は、現在の地球の水準より進んだ技術とそれを扱う知性体が登場する。
-登場人物は世界を左右するような運命や世界をまたにかける使命など帯びていないどこにでもいるような人々であることが多い。
-（『イブの時間』などが雰囲気としては近いかもしれない）
-彼ら彼女らはただ、彼らにとっては当然となった新しい技術に起因する変化に彼ら彼女らなりに適応していく。
-この技術と変化の設定がリアリティを持っているがゆえに、読者はそう遠くない未来に地球の技術水準が到達した後に発生するであろう変化に対して自分ならばどうするかと没入感を持って作品にのめり込む。&lt;/p&gt;
-&lt;p&gt;さて研究所のビジョンとしての「&lt;a href=&#34;https://rand.pepabo.com/papers/dicomo2018-proceeding-antipop.pdf&#34;&gt;なめらかなシステム&lt;/a&gt;」であるが、情報システムとこれを取り巻く要素が互いに影響を及ぼし合う総体としてのシステム観である。
-これに対し、以前に「&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/03/01/the-things-coherently-fittable-system-looks-ahead-to&#34;&gt;なめらかなシステムの見据えるもの。個人的考察&lt;/a&gt;」のエントリで、なめらかであることの必然性を問いの発端としてその未来像を検討した。
-その際は、「個性」というキーワードで、システムと接する要素が多様かつ継続的に変化することを前提としてこれにシステム側が適応することがこの必然性につながると考えた。
-いわば、システムを利用する要素（特に人間）が主でシステムが従のような捉え方であった。
-ここで、「なめらかなシステム」自体は、要素間に主従の考えは導入していないにも関わらず、個人の感性としてバイアス的にこのような考えが導入されてしまったと思う。
-そのためか、互いに影響を及ぼし合うと言いつつも、システムの利用側としては、そのシステムとそのタスクに限定された影響（例えば、情報要求の前進、あるいは具体化など）程度に収まると考えていた。&lt;/p&gt;
-&lt;p&gt;一方で、今回の読書を通して、一段階規模を広げたシステム観に思い至れた。
-もし、個別のシステムを超えて、全体としての技術水準やパラダイムのような圧倒的な変化があれば、主従が変化し、そのような技術に追従するために人生観や哲学でさえも（好むと好まざるに関わらず）そこに適応しなければならない。
-「なめらかなシステム」においては、ある意味、これまでであれば受け手側が制御不能なレベルでの変化をも適応していきたい。&lt;/p&gt;
-&lt;p&gt;今回、単一のシステムから技術、パラダイムの変化にまで拡大してシステム観を適用して考える契機になったと思う。
-僕にとって発想を広げるのはSFを読む醍醐味であり、今回の作品は大いにこれが達成されて満足している。
-興味を持った方は是非読んで欲しい。
-短編集なので1時間程度の空きがあれば少しづつ読み進めることができると思う。
-代表作の「息吹」だけでも読んで欲しいし、「ソフトウェア・オブジェクトのライフサイクル」「偽りのない事実、偽りのない気持ち」「オムファロス」「不安は自由のめまい」もお勧めしたい。&lt;/p&gt;
-&lt;iframe style=&#34;width:120px;height:240px;&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; frameborder=&#34;0&#34; src=&#34;https://rcm-fe.amazon-adsystem.com/e/cm?ref=qf_sp_asin_til&amp;t=monochromeg03-22&amp;m=amazon&amp;o=9&amp;p=8&amp;l=as1&amp;IS2=1&amp;detail=1&amp;asins=4152098996&amp;linkId=c80e18f474ae1d11bcfb8c9f739235ab&amp;bc1=ffffff&amp;lt1=_blank&amp;fc1=333333&amp;lc1=0066c0&amp;bg1=ffffff&amp;f=ifr&#34;&gt;
 &lt;/iframe&gt;</description></item></channel></rss>
