@@ -1,4 +1,64 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>chrome on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/chrome/</link><description>Recent content in chrome on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Mon, 23 Dec 2013 00:00:00 +0000</lastBuildDate><atom:link href="/tags/chrome/" rel="self" type="application/rss+xml"/><item><title>非定常な多腕バンディット問題において効率的に変化を察知する方式の検討</title><link>https://blog.monochromegane.com/blog/2021/06/08/wsa8-predictive-exploratory-model/</link><pubDate>Tue, 08 Jun 2021 10:52:04 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2021/06/08/wsa8-predictive-exploratory-model/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>chrome on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/chrome/</link><description>Recent content in chrome on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Mon, 23 Dec 2013 00:00:00 +0000</lastBuildDate><atom:link href="/tags/chrome/" rel="self" type="application/rss+xml"/><item><title>2021</title><link>https://blog.monochromegane.com/blog/2021/12/29/2021/</link><pubDate>Wed, 29 Dec 2021 16:03:57 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2021/12/29/2021/</guid><description>
+&lt;p&gt;2021年は、自分の研究テーマとひたすら向き合った年となった。
+昨年10月より博士後期課程に在学していることもあり、まずは1本国際会議に通すべく、自身の提案手法の改善、評価と従来手法との比較分析を、1年間ひたすら続けていた。
+研究の進捗の節目ごとに投稿していた国際会議は、残念ながら3回投稿して全てリジェクトとなってしまったが、これらのフィードバックや方式の改善の結果、論文の質や提案手法の性能はこの1年間で随分上がったのではないかと思う。&lt;/p&gt;
+&lt;p&gt;実際に、これらの進捗を議論すべく報告した、国内の2回の研究会では3つの賞を受賞することができ、客観的にも、自分の研究テーマとの向き合ってきた結果が出てきていると思える。
+昨年度の受賞は、優秀プレゼンテーション賞という発表の分かりやすさの側面が強かったが、今年は、それに加え、座長や運営委員による選定という、より内容に踏み込んだ評価の上での受賞であり、非常に嬉しかったし、国際会議挑戦を継続するにあたって励みになった。&lt;/p&gt;
+&lt;p&gt;来年は引き続き国際会議への挑戦と研究の発展を進めたい。
+そのために、結果に一喜一憂せずに淡々と継続することを心がけていく。
+また、手法改善の基盤となる数学的な能力向上や先行研究のサーベイは一過性ではなく計画的に長期的に取り組めるような枠組みを作り上げたい。
+加えて、来年度は、個人のみの研究の位置付けからもう少し視座を高め、例えば研究所の取り組みと各研究員の研究、会社のサービスやビジョンとの関係性などから、方針や行動を見定め、それらに向かって導いたり知ってもらえるような振る舞いなど、今よりも先を見通し、今よりも大きく影響を与えることも意識していきたい。&lt;/p&gt;
+&lt;p&gt;2022年からは、支えてくれる周りの人にも、恩返しだったり良い影響を与えることをできるようになりたいと思う。
+来年もよろしくお願いします。&lt;/p&gt;
+&lt;h1 id=&#34;実績&#34;&gt;実績&lt;/h1&gt;
+&lt;p&gt;以下、実績を列挙する。&lt;/p&gt;
+&lt;h2 id=&#34;表彰&#34;&gt;表彰&lt;/h2&gt;
+&lt;p&gt;2021年は2つの研究会で3つの賞を受賞できた。
+聴講者だけでなく運営委員や座長による評価をいただけるような研究を継続的に出せるようになっていることは素直に嬉しい。
+また、研究所の共著論文でも2つの賞を受賞しており、研究所全体の盛り上げにも貢献できてよかったと思う。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.sigwi2.org/prev-awardlist&#34;&gt;ARG 第17回Webインテリジェンスとインタラクション研究会 優秀研究賞&lt;/a&gt;, 三宅 悠介, 峯 恒憲, 仮想的な探索を用いて文脈や時間の経過による番狂わせにも迅速に追従する多腕バンディット手法, 2021年12月.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://sites.google.com/view/sig-macc/smash/smash21-summer-symposium&#34;&gt;SMASH21 Summer Symposium 優秀賞&lt;/a&gt;, 三宅 悠介, 峯 恒憲, Synapse: 文脈と時間経過に応じて推薦手法の選択を最適化するメタ推薦システム, 2021年9月.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://sites.google.com/view/sig-macc/smash/smash21-summer-symposium&#34;&gt;SMASH21 Summer Symposium 奨励賞&lt;/a&gt;, 三宅 悠介, 峯 恒憲, Synapse: 文脈と時間経過に応じて推薦手法の選択を最適化するメタ推薦システム, 2021年9月.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;論文&#34;&gt;論文&lt;/h2&gt;
+&lt;p&gt;招待講演1本、研究報告2本。
+実際には国際会議3回投稿、投稿中の国内ジャーナル1本があり、体感的な執筆量は例年と変わらない程度であったと思う。
+また、研究報告のラストオーサーを2本、国内査読付き論文と国際会議（ワークショップ）論文でそれぞれ1本づつ共著を務めた。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;三宅 悠介, 峯 恒憲, &lt;a href=&#34;https://www.sigwi2.org/d_library&#34;&gt;仮想的な探索を用いて文脈や時間の経過による番狂わせにも迅速に追従する多腕バンディット手法&lt;/a&gt;, ARG Webインテリジェンスとインタラクション研究会 第17回研究会予稿集, No.17, pp.19-24, Dec 2021. &lt;a href=&#34;https://rand.pepabo.com/papers/wi2-17-miyakey.pdf&#34;&gt;[論文]&lt;/a&gt; &lt;a href=&#34;https://speakerdeck.com/monochromegane/wi2-lkf-bandits&#34;&gt;[発表資料]&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;三宅 悠介, 峯 恒憲, &lt;a href=&#34;http://id.nii.ac.jp/1001/00212709/&#34;&gt;Synapse: 文脈と時間経過に応じて推薦手法の選択を最適化するメタ推薦システム&lt;/a&gt;, 研究報告知能システム（ICS）, Vol.2021-ICS-204, No.9, pp.1-8, Sep 2021. &lt;a href=&#34;https://rand.pepabo.com/papers/smash21-miyakey.pdf&#34;&gt;[論文]&lt;/a&gt; &lt;a href=&#34;https://speakerdeck.com/monochromegane/smash21-synapse&#34;&gt;[発表資料]&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;三宅 悠介, 栗林 健太郎, &lt;a href=&#34;https://tsys.jp/dicomo/2021/program/program_abst.html#8A-1&#34;&gt;(招待講演) なめらかなシステムと運用維持の未来&lt;/a&gt;, マルチメディア，分散，協調とモバイル（DICOMO2021）シンポジウム論文集, 2021, p.1509, Jun-Jul 2021.&lt;a href=&#34;https://rand.pepabo.com/papers/dicomo2021-miyakey.pdf&#34;&gt;[論文]&lt;/a&gt; &lt;a href=&#34;https://speakerdeck.com/monochromegane/dicomo2021-coherently-fittable-system&#34;&gt;[発表資料]&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;国内発表&#34;&gt;国内発表&lt;/h2&gt;
+&lt;p&gt;技術イベント、研究会での発表をそれぞれ1回（学会の研究会、シンポジウムを除く）。
+今年はFukuoka.goもWSAも開催が少なかったこともあり、随分控えめになってしまった。
+来年はもう少し機会を見つけて登壇していきたい。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;三宅 悠介 &lt;a href=&#34;https://speakerdeck.com/monochromegane/fukoukago17-go-code-embedding&#34;&gt;go:embedでExplainable Binaryを作る&lt;/a&gt;, &lt;a href=&#34;https://fukuokago.connpass.com/event/202570/&#34;&gt;Fukuoka.go#17(オンライン開催)&lt;/a&gt;, 2021年6月.&lt;/li&gt;
+&lt;li&gt;三宅 悠介 &lt;a href=&#34;https://blog.monochromegane.com/blog/2021/06/08/wsa8-predictive-exploratory-model/&#34;&gt;非定常な多腕バンディット問題において効率的に変化を察知する方式の検討&lt;/a&gt;, &lt;a href=&#34;https://wsa.connpass.com/event/207143/&#34;&gt;Web System Architecture 研究会 (WSA研) #8&lt;/a&gt;, 2021年6月.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;oss&#34;&gt;OSS&lt;/h2&gt;
+&lt;p&gt;Fukuoka.go用に書いたツールが1本。
+先行研究の実装など随分とコードは書いている気がするので研究とOSSもうまくつないでいきたいところ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/go-code-embedding&#34;&gt;go-code-embedding&lt;/a&gt; A tool to embed Go source code into binary using go:embed.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;コミュニティ活動&#34;&gt;コミュニティ活動&lt;/h2&gt;
+&lt;p&gt;今年よりこれまでのFukuoka.goに加え、学会系の活動も手伝うようになった。
+具体的には研究会の運営委員への就任に伴う運営従事の他、査読、座長、シンポジウムのプログラム委員などを務めた。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://fukuokago.connpass.com/event/202570/&#34;&gt;Fukuoka.go#17 (オンライン開催)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/&#34;&gt;情報処理学会 インターネットと運用技術研究会 運営委員 就任&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.iot.ipsj.or.jp/symposium/iots2021/&#34;&gt;第14回 インターネットと運用技術シンポジウム（IOTS 2021）プログラム委員&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;ブログ&#34;&gt;ブログ&lt;/h2&gt;
+&lt;p&gt;2本。昨年までに比べるとかなり少なめだが、研究の進め方シリーズとして集中的サーベイは研究所のみんなに紹介するなど役立ったと思う。
+このような手探りからやり方に昇華できたものは今後もブログにまとめていきたい。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2021/06/08/wsa8-predictive-exploratory-model/&#34;&gt;非定常な多腕バンディット問題において効率的に変化を察知する方式の検討&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.monochromegane.com/blog/2021/05/15/survey-method/&#34;&gt;研究の位置づけを明確にする集中型の論文サーベイ方法&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>非定常な多腕バンディット問題において効率的に変化を察知する方式の検討</title><link>https://blog.monochromegane.com/blog/2021/06/08/wsa8-predictive-exploratory-model/</link><pubDate>Tue, 08 Jun 2021 10:52:04 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2021/06/08/wsa8-predictive-exploratory-model/</guid><description>
 &lt;p&gt;このエントリは、&lt;a href=&#34;https://wsa.connpass.com/event/207143/&#34;&gt;第8回 Web System Architecture 研究会 (WSA研)&lt;/a&gt;の予稿です。&lt;/p&gt;
 &lt;h1 id=&#34;非定常な多腕バンディット問題において効率的に変化を察知する方式の検討&#34;&gt;非定常な多腕バンディット問題において効率的に変化を察知する方式の検討&lt;/h1&gt;
 &lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
@@ -1146,32 +1206,4 @@ Ref: &lt;a href=&#34;https://github.com/ExistentialAudio/BlackHole/wiki/Multi-Ou
 そのような場合についてのノウハウも共有してもらえれば嬉しいです。&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://youtu.be/BIe67vUCnIM&#34;&gt;Fukuoka.go#15 + 鹿児島Gophers&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>2020年1月の振り返り。黙々と続ける習慣</title><link>https://blog.monochromegane.com/diary/20200201-january/</link><pubDate>Sat, 01 Feb 2020 15:06:39 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20200201-january/</guid><description>&lt;p&gt;今年は「継続」に意識的に取り組んでいる。&lt;/p&gt;
-&lt;p&gt;数学、英語、サーベイなど基礎となる能力ほど掛けた時間はレバレッジを伴い自分に戻ってくる。
-問題はこれを短期的に、あるいは近道をして手に入れようと焦る気持ちが出てしまうこと。&lt;/p&gt;
-&lt;p&gt;今年は、これらの能力を確実に伸ばせるように「継続」するアプローチで取り組んでいる。&lt;/p&gt;
-&lt;p&gt;1月達成できたルーティーンは以下。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;10:00-10:30 サーベイ論文の輪読&lt;/li&gt;
-&lt;li&gt;21:00-21:30 英語&lt;/li&gt;
-&lt;li&gt;23:00-24:00 数学&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;継続化するために、輪読は取り組む専門分野に精通しようという謳い文句で研究所の有志と毎朝の輪読会にした。
-今のところ、みんな楽しんでやれているし、知らなかったり興味を惹かれた技術要素の深堀なども別途勉強会につながったりして良い感じではないかと思う。
-副次的に毎朝同じ時間に仕事を始めるので睡眠リズムを崩さないよう気をつけるようになりルーティーンを支えてくれている。&lt;/p&gt;
-&lt;p&gt;英語の継続化は、自分にとってモチベーションの維持が課題だった。
-文法もヒアリングも発音練習もテストとしてはこれで良いのだろうけど、いざ英会話するとへこむばかりで練習と実践のレベル感が合わなかった。
-うづらさんが楽しそうにDuolingoを継続しているのを参考にアプリで、かつ即時フィードバックがあるゲーム形式のものを選び、今のところうまく続けられている。
-アプリはiOSの「英語漬け」というもので最初に会話の内容が日本語で表示されて次にそれをシャドーイングする。
-喋った内容は音声認識APIによって即時結果が出るというもの。
-採点の精度も満足できるもので、かつ30分ぐらいでキリの良いところまでできるので毎日お風呂入る前に&amp;rdquo;Hi, Mari&amp;rdquo;とか言ってる。&lt;/p&gt;
-&lt;p&gt;数学の継続化は以前高校数学の復讐に使って自分に合っていた参考書（マセマ出版社のやつ）の続きをやっている。
-大学院を検討していることもあって基礎教養としての素地は欲しいと考えていて、大学基礎数学シリーズをやっている。
-まずは微分積分、次は線形代数、最後に確率統計をやる予定。
-今は微分積分で数学IIIを駆け足で復讐したつけが回って少ない時は1日2Pとかで終わってしまうのでなかなか進まないけど焦らず進めている。&lt;/p&gt;
-&lt;p&gt;それから、継続のためにルーティーンより健康を優先することにしたのも効果的だったと思う。
-仕事含めて疲れがたまったときにルーティーンをやらなければと頑張りすぎて体調崩してなし崩しに継続が途絶えるというのが昨年まで何度かあった。
-今年は、疲れを感じたら潔くやらないことにした。
-結果的にまた頑張れるし、継続によって進んでいるという安心感があるため休むのも後ろめたさがなくなって良い循環になっていると思う。&lt;/p&gt;
-&lt;p&gt;1月は喫緊の論文提出などなく、また年末年始に充分休んだ効果もあったとはいえ、上手く習慣化ができたのではないかと思う。
-2月以降、また忙しくなってくる中でも、先延ばしなどせずに問題に対処していくことでこの習慣を守っていき、1年後のレベルで成長を実感したい。&lt;/p&gt;</description></item></channel></rss>
+&lt;/ul&gt;</description></item></channel></rss>
