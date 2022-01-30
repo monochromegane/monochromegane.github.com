@@ -1,4 +1,53 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>code-reading on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/code-reading/</link><description>Recent content in code-reading on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Fri, 01 May 2015 00:00:00 +0000</lastBuildDate><atom:link href="/tags/code-reading/" rel="self" type="application/rss+xml"/><item><title>2021</title><link>https://blog.monochromegane.com/blog/2021/12/29/2021/</link><pubDate>Wed, 29 Dec 2021 16:03:57 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2021/12/29/2021/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>code-reading on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/code-reading/</link><description>Recent content in code-reading on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Fri, 01 May 2015 00:00:00 +0000</lastBuildDate><atom:link href="/tags/code-reading/" rel="self" type="application/rss+xml"/><item><title>2022年1月のアイオー</title><link>https://blog.monochromegane.com/diary/20220130-io/</link><pubDate>Sun, 30 Jan 2022 19:04:47 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20220130-io/</guid><description>
+&lt;p&gt;月ごとのインプットとアウトプットの記録。&lt;/p&gt;
+&lt;h2 id=&#34;インプット&#34;&gt;インプット&lt;/h2&gt;
+&lt;h3 id=&#34;書籍&#34;&gt;書籍&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;『&lt;a href=&#34;https://amzn.to/3rerg1O&#34;&gt;未来は予測するものではなく創造するものである　――考える自由を取り戻すための〈ＳＦ思考〉&lt;/a&gt;』&lt;/p&gt;
+&lt;p&gt;2022年の目標である100倍研究のため、入出力の幅を広げられたらと思い読んだもの。SFプロトタイピング、実例などが紹介されている。自分や研究所として、実際にSFとして仕立てる必要はないと思うが、研究テーマやストーリーの生成に、バックキャスティング、フォアキャスティングの反復を意識的に取り入れることは重要だなと思えた。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;『&lt;a href=&#34;https://amzn.to/3oakVlW&#34;&gt;WEB+DB PRESS Vol.126&lt;/a&gt;』&lt;/p&gt;
+&lt;p&gt;特集の「Goで作って学ぶ検索エンジン」が気になって読んだ。この特集自体は『&lt;a href=&#34;https://amzn.to/3rerRk4&#34;&gt;情報検索の基礎&lt;/a&gt;』を思い出しながらふむふむとさっくり読めた。実装もついている点も良かった。せっかくなので他の記事も読んだが、コンテナやプライバシー関連の動向など界隈の新しめの情報が端的にまとまっており継続して読んでおこうと思えた。自身の研究がアルゴリズム寄りになりつつあるが、システムとして導入、評価できるという強みは保っておきたいことだし。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;『&lt;a href=&#34;https://amzn.to/3Ght26m&#34;&gt;データサイエンスの無駄遣い 日常の些細な出来事を真面目に分析する&lt;/a&gt;』&lt;/p&gt;
+&lt;p&gt;もっと機械学習等をどんどん使っていって普段の選択肢を広げたいなあとは思っているので、アイディアのヒントがないかなと読んだもの。なるほどこういう動機や解決策もあるんだなあと思いつつ、現時点ではあまりヒントにはならなかったかな。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;『&lt;a href=&#34;https://amzn.to/3reDk33&#34;&gt;完全独習 ベイズ統計学入門&lt;/a&gt;』&lt;/p&gt;
+&lt;p&gt;以前読んだはずだけど、所長が読んだという情報から内容が全然思い出せなかったので再読。今よりベイズ統計がさらにわかってなかった時に読んだのだが、今ならすんなり理解ができるので少しは成長した様子。離散から連続確率になるときに条件付き確率と記述されているのが尤度関数になる部分に納得がいかなかったのだが、研究所で教えてもらって理解がより深まった感じ。ありがたい。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;『&lt;a href=&#34;https://amzn.to/3oa1d9I&#34;&gt;ガイダンス 確率統計: 基礎から学び本質の理解へ&lt;/a&gt;』&lt;/p&gt;
+&lt;p&gt;確率統計はずっと苦手意識があるので何度目かの再入門として読んだ。証明や練習問題もありしっかりサポートしてくれているので、もう一周すればだいぶ理解が深まりそうだが、目を通したところまで。確率と集合の記号がもっと動いて見えるまで慣れないとダメだなあ。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;『&lt;a href=&#34;https://amzn.to/3gaCz4I&#34;&gt;円　劉慈欣短篇集&lt;/a&gt;』&lt;/p&gt;
+&lt;p&gt;趣味のSFとして。『三体』の作者の短編集。単純にどの作品も面白かったが、SF思考の後に読んだので、短編ごとになるほどそういう世界観で、その技術体系を導くのか等、いつもより多角的な視点で読めて良かった。個人的には「詩雲」「二〇一八年四月一日」「人生」が印象に残ったのだが共通点を振り返って自分でも意外だった。多様で飽きのこない短編集だった。おすすめ。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;『&lt;a href=&#34;https://amzn.to/3ISWykL&#34;&gt;実践 時系列解析 ―統計と機械学習による予測&lt;/a&gt;』&lt;/p&gt;
+&lt;p&gt;研究で時系列を扱う機会はとても多いので新しい観点が得られればと思い読んだもの。解析手法だけでなく、前処理や探索的な解析、データ保存手段、時系列データの探し方、解析の実例等幅広く扱っている。個人的には解析手法における分類自体がそもそもありがたいと感じた。ただし個別の説明はあまりわかりやすいものではないと感じたので、知識のインデックスの増強として割り切って読んだ。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;論文&#34;&gt;論文&lt;/h3&gt;
+&lt;p&gt;バンディット系を2本。ちょっと少ないので来月はこの辺を改善しようと思う。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://arxiv.org/abs/2010.00827&#34;&gt;Neural Thompson Sampling&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://arxiv.org/abs/1909.09146&#34;&gt;Weighted Linear Bandits for Non-Stationary Environments&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;アウトプット&#34;&gt;アウトプット&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://github.com/monochromegane/banditsflow&#34;&gt;BanditsFlow&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;100倍研究の出力側の施策として。研究で扱うシミュレーションに纏わる、開発効率の改善や再現性の確保といったいくつかの課題を解決する。シミュレーションにおける定型化可能なワークフロー、ならびにこれらのパラメータや結果の管理を一元に行えるフレームワークである。Gitとあわせて実験内容とその結果を時系列的にコード管理する予定。来月から玄人実行していく。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;100倍アイオーのために&#34;&gt;100倍アイオーのために&lt;/h2&gt;
+&lt;p&gt;今月はTwitterを制限して読書量が増えたので良かった。
+全然見ないというのも情報収集に支障が出るので、以下のような雑スクリプトを一日一回だけ実行している。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;#!/bin/bash
+argv=(&amp;quot;$@&amp;quot;)
+for i in `seq 1 $#`
+do
+yesterday=`date -v-1d &#39;+%Y-%m-%d&#39;`
+encoded=`echo &amp;quot;https://twitter.com/search?q=from:${argv[$i-1]} since:${yesterday}_00:00:00_JST until:${yesterday}_23:59:59_JST&amp;amp;src=typed_query&amp;amp;f=live&amp;quot; | ruby -r uri -ne &#39;print URI.encode $_.chomp&#39;`
+open $encoded
+done
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;以下のように実行すると、@hogeさんと@fugaさんと@piyoさんの昨日のTweetだけがそれぞれ検索結果のページとして開く。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;$ ./tw.sh hoge fuga piyo
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Twitterの中毒性は、未読を消化するべく無限に見てしまうことだと思う。
+この検索結果のページでは過去にスクロールできないため、やめ時が明確になる点が良い。
+今のところはうまくいっていると思う。&lt;/p&gt;
+&lt;p&gt;検索クエリは&lt;a href=&#34;https://scrapbox.io/june29/&#34;&gt;29box&lt;/a&gt;を参考にしました。ありがとうございます。&lt;/p&gt;</description></item><item><title>2021</title><link>https://blog.monochromegane.com/blog/2021/12/29/2021/</link><pubDate>Wed, 29 Dec 2021 16:03:57 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2021/12/29/2021/</guid><description>
 &lt;p&gt;2021年は、自分の研究テーマとひたすら向き合った年となった。
 昨年10月より博士後期課程に在学していることもあり、まずは1本国際会議に通すべく、自身の提案手法の改善、評価と従来手法との比較分析を、1年間ひたすら続けていた。
 研究の進捗の節目ごとに投稿していた国際会議は、残念ながら3回投稿して全てリジェクトとなってしまったが、これらのフィードバックや方式の改善の結果、論文の質や提案手法の性能はこの1年間で随分上がったのではないかと思う。&lt;/p&gt;
@@ -1043,167 +1092,4 @@ Webシステムアーキテクチャに関する運用知見を研究的アプ�
 &lt;/ul&gt;
 &lt;p&gt;このような感じで利用できる．&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;python dgp.py --lambda_ 0.4 --view 7 --delta 0.9
-&lt;/code&gt;&lt;/pre&gt;</description></item><item><title>勉強会をオンライン配信するための必要最小限な環境構築</title><link>https://blog.monochromegane.com/blog/2020/03/03/minimum-start-for-online-event/</link><pubDate>Tue, 03 Mar 2020 14:07:22 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/03/03/minimum-start-for-online-event/</guid><description>
-&lt;p&gt;昨今の状況だけでなく、多様な働き方やコミュニティ（とそこで得られる情報）に接する機会を増やすためにも今後、オンライン勉強会は広がっていくと思います。
-Fukuoka.goでも今回、初めて勉強会のオンライン配信を実施しました。
-同様のモチベーションを持つイベントの主催者に向けて、勉強会をオンライン配信するためにやった最小限の環境構築についてまとめておきます。&lt;/p&gt;
-&lt;h1 id=&#34;想定する環境&#34;&gt;想定する環境&lt;/h1&gt;
-&lt;p&gt;オンライン勉強会には、Google Hangouts Meetなどのビデオ会議のWebサービスとYouTubeライブ配信を用います。
-勉強会には、配信を行う運営者、発表を行う登壇者、発表を聞く参加者がいるとします。&lt;/p&gt;
-&lt;p&gt;登壇者はビデオ会議の画面共有によって各々のPCから発表を行います。
-運営者はビデオ会議の画面と音声をYouTubeでライブ配信します。
-参加者はYouTubeのライブ配信を視聴、必要に応じてコメントします。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2020/03/architecture.jpg&#34; alt=&#34;architecture&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;ビデオ会議とライブ配信のWebサービスを利用することで、Macに二つオープンソースソフトウェアをインストールするだけで、最低限の配信環境環境が整ってしまいます。ありがたい時代になりました。インターネット万歳。&lt;/p&gt;
-&lt;h1 id=&#34;手順のサマリ&#34;&gt;手順のサマリ&lt;/h1&gt;
-&lt;pre&gt;&lt;code&gt;1. YouTubeアカウントを作成（要Googleアカウント）
-2. YouTubeライブ配信を作成（初回は24時間程度待つ必要あり）
-3. 配信に必要なソフトウェアをダウンロードしてインストール
-- [OBS Studio](https://obsproject.com/download)
-- [BlackHole](https://github.com/ExistentialAudio/BlackHole)
-4. YouTubeエンコード配信を選択し、ストリーミングキーを発行
-5. OBSにストリーミングキーを設定
-6. OBSで音声ミキサーとしてBlackHoleを追加（マイク2）
-- 必要に応じてマイク(1)はミュート
-7. OBSでソースにウィンドキャプチャでMeetを実行するブラウザを追加
-- ウィンドウキャプチャに必要なウィンドウが出ない場合はmacOSXのセキュリティとプライバシーでOBSが画面収録を許可されているか確認
-8. macOSXの音声出力をBlackHoleに変更
-9. OBSで配信開始をクリック
-- しばらく待つとYouTube側の配信ボタンが押せるようになる
-10. YouTubeの配信開始をクリック
-11. 配信する
-- 画面がチラつく場合はOBS Studioがウィンドウキャプチャしている画面の前面に配置されていないか確認
-12. YouTubeの配信終了をクリック
-13. OBSの配信終了をクリック
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h1 id=&#34;手順の詳細&#34;&gt;手順の詳細&lt;/h1&gt;
-&lt;p&gt;以下、上記手順についての詳しい説明です。&lt;/p&gt;
-&lt;p&gt;なお、配信のための環境構築には配信の専用機を用意するのが一番楽でしょう。
-以下、配信の専用機としてMacBook Pro (15-inch, 2019) macOS Catalina(10.15.3)を用いています。&lt;/p&gt;
-&lt;p&gt;また、配信に利用するPCは有線によるネットワーク接続をおすすめします。&lt;/p&gt;
-&lt;h2 id=&#34;youtubeアカウントを作成&#34;&gt;YouTubeアカウントを作成&lt;/h2&gt;
-&lt;p&gt;持っていなければ作成しましょう。Googleのアカウントが必要です。&lt;/p&gt;
-&lt;h2 id=&#34;youtubeチャンネルを作成&#34;&gt;YouTubeチャンネルを作成&lt;/h2&gt;
-&lt;p&gt;ライブ配信をするチャンネルを作成しましょう。&lt;/p&gt;
-&lt;h2 id=&#34;youtubeライブ配信を作成&#34;&gt;YouTubeライブ配信を作成&lt;/h2&gt;
-&lt;p&gt;&lt;code&gt;ライブ配信を開始&lt;/code&gt; ボタンからライブ配信を登録します。
-初めてライブ配信を登録する場合は、&lt;strong&gt;24時間待つ必要がある&lt;/strong&gt;ため、余裕を持って登録しましょう。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2020/03/youtube_start.jpg&#34; alt=&#34;start&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;エンコーダ配信&lt;/code&gt; タブから、タイトル、公開範囲、カテゴリを指定します。
-作成後、ライブ配信のための &lt;code&gt;ストリームキー&lt;/code&gt; が取得できるため控えておきます。&lt;/p&gt;
-&lt;h2 id=&#34;配信に必要なソフトウェアをダウンロードしてインストール&#34;&gt;配信に必要なソフトウェアをダウンロードしてインストール&lt;/h2&gt;
-&lt;p&gt;ライブ配信をサポートしてくれる &lt;code&gt;OBS Studio&lt;/code&gt; と仮想オーディオデバイスを作成するための &lt;code&gt;BlackHole&lt;/code&gt; をインストールします。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://obsproject.com/download&#34;&gt;OBS Studio&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/ExistentialAudio/BlackHole&#34;&gt;BlackHole&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;＊BlackHoleはmacOSから出力される音声（今回の場合ではビデオ会議の音声）をYouTubeで配信するために利用します。配信機がWindowsであればデスクトップ音声をキャプチャできるそうなのですがmacOSではできないため、BlackHoleで仮想オーディオデバイスを作成して回避します。&lt;/p&gt;
-&lt;p&gt;以下、OBS Studioは &lt;code&gt;24.0.6 (64 bit)&lt;/code&gt;、BlackHoleは &lt;code&gt;v0.2.6&lt;/code&gt;を利用した場合の手順となります。&lt;/p&gt;
-&lt;h2 id=&#34;obs-studioでストリームキーの設定&#34;&gt;OBS Studioでストリームキーの設定&lt;/h2&gt;
-&lt;ol&gt;
-&lt;li&gt;設定 -&amp;gt; 配信&lt;/li&gt;
-&lt;li&gt;サービスにYouTube/YouTube Gamingを選択&lt;/li&gt;
-&lt;li&gt;サーバーにPrimary YouTube ingest serverを選択&lt;/li&gt;
-&lt;li&gt;ストリームキーに先ほど控えておいた値を入力&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&#34;obs-studioで音声の設定&#34;&gt;OBS Studioで音声の設定&lt;/h2&gt;
-&lt;ol&gt;
-&lt;li&gt;設定 -&amp;gt; 音声&lt;/li&gt;
-&lt;li&gt;マイク音声 2にBlackHole 16chを選択&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;必要に応じてマイク音声(1)は無効、もしくは配信時にミュートしておくと余計な音声が入らずに便利。&lt;/p&gt;
-&lt;h2 id=&#34;obs-studioで配信ソースの設定-待ち受け画面&#34;&gt;OBS Studioで配信ソースの設定（待ち受け画面）&lt;/h2&gt;
-&lt;p&gt;配信の準備中やビデオ会議の画面を表示したくない時の待ち受け画像のシーンを準備しておくと便利。&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;シーンを選択し、画像ソースを追加&lt;/li&gt;
-&lt;li&gt;新規作成からOKで画像プロパティが表示される&lt;/li&gt;
-&lt;li&gt;画像ファイルを選択してOK&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&#34;obs-studioで配信ソースの設定-ビデオ会議画面&#34;&gt;OBS Studioで配信ソースの設定（ビデオ会議画面）&lt;/h2&gt;
-&lt;p&gt;タブブラウザの場合、ビデオ会議のウィンドウは分けておくと便利。&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;待ち受け画面とシーンを分けるのでシーンを追加&lt;/li&gt;
-&lt;li&gt;新しいシーンを選択し、ウィンドウキャプチャソースを追加&lt;/li&gt;
-&lt;li&gt;新規作成からOKでウィンドウキャプチャプロパティが表示される&lt;/li&gt;
-&lt;li&gt;ビデオ会議のウィンドウを選択&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;ウィンドウに起動中のアプリが表示されない場合は、macOSの設定-&amp;gt;セキュリティとプライバシーから画面収録に対してOBSの許可がチェックついているか確認のこと。&lt;/p&gt;
-&lt;h2 id=&#34;obs-studioの設定確認&#34;&gt;OBS Studioの設定確認&lt;/h2&gt;
-&lt;p&gt;ここまででOBS Studioの下部は以下のような設定になっているはずです。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2020/03/obs_studio.jpg&#34; alt=&#34;obs&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;シーン&lt;/code&gt;は静止画用、&lt;code&gt;シーン2&lt;/code&gt;がビデオ会議の画像用です。
-僕の環境ではシーン2に、ビデオ会議の画面とTwitterの画面を二つ並べて表示するようにしたので、ウィンドウキャプチャのソースが2つあります。&lt;/p&gt;
-&lt;p&gt;また、音声ミキサーは&lt;code&gt;マイク2&lt;/code&gt;をミュートにすれば、ビデオ会議の音声が配信に乗らなくなります。&lt;/p&gt;
-&lt;h2 id=&#34;macosの音声出力をblackholeに変更&#34;&gt;macOSの音声出力をBlackHoleに変更&lt;/h2&gt;
-&lt;p&gt;ビデオ会議の音声をBlackHole経由でOBS Studioに渡せるようにします。
-macOSの設定-&amp;gt;サウンドから出力タブでBlackHoleを選択します。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;＊macOSの音声出力をBlackHoleに変更するとmacOSからは音声が聞こえなくなります。音声も聞きたい場合は、macOSのユーティリティ-&amp;gt;オーディオ装置から複数出力装置を作成し、MacBookのスピーカーとBlackHoleに同時に出力できるデバイスを作成してください。そしてmacOSの音声出力をBlackHoleではなく、複数出力装置を選びます（OBS StudioはBlackHoleの入力側を利用するのでそのままで良いです）。
-Ref: &lt;a href=&#34;https://github.com/ExistentialAudio/BlackHole/wiki/Multi-Output-Device&#34;&gt;https://github.com/ExistentialAudio/BlackHole/wiki/Multi-Output-Device&lt;/a&gt;
-手元では、複数出力装置について外部オーディオ装置との相性が悪かったため利用していません（配信の専用機なのでここから音が聞こえる必要はなく現在のところBlackHoleを直接利用で困ってない）
-もし、外部オーディオ装置も含めて高度な設定が必要な場合は、LadioCastなどのソフトウェアミキサーの導入を検討してください（そして良いやり方があれば教えてください）&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;obs-studioから配信開始&#34;&gt;OBS Studioから配信開始&lt;/h2&gt;
-&lt;p&gt;OBS Studio側で配信開始ボタンをクリック。
-しばらくするとYouTube側の管理画面に配信のプレビューが表示され、YouTube側のライブ配信開始ボタンがアクティブになる。&lt;/p&gt;
-&lt;h2 id=&#34;youtubeから配信開始&#34;&gt;YouTubeから配信開始&lt;/h2&gt;
-&lt;p&gt;YouTube側でライブ配信を開始ボタンをクリック。
-30秒程度で参加者にライブ配信が見えるようになる。&lt;/p&gt;
-&lt;h2 id=&#34;配信中&#34;&gt;配信中&lt;/h2&gt;
-&lt;p&gt;YouTuberとして頑張る。適宜シーンの切り替えやマイクのミュートなど操作が必要です。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;ウィンドウキャプチャの画面がチラつく場合は、OBS Studioがキャプチャするウィンドウの前面に表示されていないかを確認しましょう。
-僕の環境では、OBS Studioをこれらより背面に持っていくことでチラツキが解消しました。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;youtubeで配信終了&#34;&gt;YouTubeで配信終了&lt;/h2&gt;
-&lt;p&gt;YouTube側でライブ配信を終了する。&lt;/p&gt;
-&lt;h2 id=&#34;obs-studioで配信終了&#34;&gt;OBS Studioで配信終了&lt;/h2&gt;
-&lt;p&gt;OBS Studio側で配信終了ボタンをクリック。&lt;/p&gt;
-&lt;h2 id=&#34;配信後&#34;&gt;配信後&lt;/h2&gt;
-&lt;p&gt;ライブ配信の動画は自動でアーカイブとして公開されます。
-アーカイブに残さない場合は、YouTubeのライブ配信の管理画面から削除が必要です。
-この辺りは事前に発表者に了承をとっておく必要があると思います。&lt;/p&gt;
-&lt;p&gt;動画の編集もYouTubeの管理画面から行えるため、必要に応じて無言の時間などを取り除くことが可能です。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2020/03/youtube_editor.jpg&#34; alt=&#34;editor&#34; /&gt;&lt;/p&gt;
-&lt;h1 id=&#34;初のオンライン配信を終えての感想など&#34;&gt;初のオンライン配信を終えての感想など&lt;/h1&gt;
-&lt;p&gt;これまでFukuoka.goでは、&lt;a href=&#34;https://blog.monochromegane.com/blog/2019/02/23/remote-study-group/&#34;&gt;他の地域のコミュニティと拠点間をリモート接続する取り組みは既におこなっており&lt;/a&gt;、これをライブ配信に乗せるだけだろうと思っていましたが、それなりに準備や実行で大変だった点や反省点もありました。&lt;/p&gt;
-&lt;h2 id=&#34;よかった点&#34;&gt;よかった点&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;高速な配信環境を準備できた（配信のネットワーク環境は結構重要。家のネットワーク（特に上り）が遅いと配信できないので注意）&lt;/li&gt;
-&lt;li&gt;事前に発表者にアーカイブ残すことについてきちんと承諾をもらった&lt;/li&gt;
-&lt;li&gt;事前にOBS Studioの設定を終わらせて、当日は起動するだけでよかった&lt;/li&gt;
-&lt;li&gt;登壇者はイベント30分前にビデオ会議に集合して画面共有やミュートのルールなどの手順をおさらいした
-&lt;ul&gt;
-&lt;li&gt;特にGoogle Hangouts Meetの場合、ウィンドウ単位の共有後にプレゼンテーション再生すると画面が真っ暗になる点など&lt;/li&gt;
-&lt;li&gt;参考: &lt;a href=&#34;https://support.google.com/meet/answer/7290456?hl=ja&#34;&gt;ウィンドウを共有すると、プレゼンテーションが空白で表示される&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;事前にオンライン配信のノウハウを仕入れることができた
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://youtu.be/87r2N65hm3I&#34;&gt;オンラインイベントのノウハウあれこれ&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Twitterのタイムラインを横に表示するなども参考にさせていただいた&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;発表の始まりと終わりはある程度、司会者も音声オンで入っておき盛り上がりを演出できた&lt;/li&gt;
-&lt;li&gt;静止画のシーンを用意することでビデオ会議の切り替えなどのもたつきがあっても配信上は見せないようにできた&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;反省点&#34;&gt;反省点&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;配信準備した環境と配信を行った環境が違ったので設定周りで当日焦った（リハーサル大切&amp;hellip;）
-&lt;ul&gt;
-&lt;li&gt;画面のチラつき（途中で解消してよかった）&lt;/li&gt;
-&lt;li&gt;画面サイズの違い&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;発表中の登壇者に対して、連絡をとる手段を用意していなかった
-&lt;ul&gt;
-&lt;li&gt;打鍵音が気になる、発表時間過ぎてるなどを伝えようとするとそれも配信に乗ってしまう&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;発表中の登壇者がコメントの盛り上がりなどを見るのが難しかった&lt;/li&gt;
-&lt;li&gt;Twitterの画面を共有していたが自動更新にならないので手動で更新する手間がかかった&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;などです。&lt;/p&gt;
-&lt;p&gt;今回の構成は、登壇形式の勉強会において、参加者が視聴する際の敷居を低くすることを目的に設計しました。
-参加者にとっては個別のビデオ会議のWebサービスのアカウントが不要ですし、運営者にとってもビデオ会議のアクセス制限や人数制限を気にする必要がありません。
-もちろん、勉強会の方式（双方向のディスカッション）によっては他のやり方が最適な場合もあると思います。
-そのような場合についてのノウハウも共有してもらえれば嬉しいです。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://youtu.be/BIe67vUCnIM&#34;&gt;Fukuoka.go#15 + 鹿児島Gophers&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item></channel></rss>
+&lt;/code&gt;&lt;/pre&gt;</description></item></channel></rss>
