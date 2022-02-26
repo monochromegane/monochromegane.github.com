@@ -1,4 +1,38 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>markdown on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/markdown/</link><description>Recent content in markdown on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 17 May 2015 00:00:00 +0000</lastBuildDate><atom:link href="/tags/markdown/" rel="self" type="application/rss+xml"/><item><title>2022年1月のアイオー</title><link>https://blog.monochromegane.com/diary/20220130-io/</link><pubDate>Sun, 30 Jan 2022 19:04:47 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20220130-io/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>markdown on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/markdown/</link><description>Recent content in markdown on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 17 May 2015 00:00:00 +0000</lastBuildDate><atom:link href="/tags/markdown/" rel="self" type="application/rss+xml"/><item><title>2022年2月のアイオー</title><link>https://blog.monochromegane.com/diary/20220226-io/</link><pubDate>Sat, 26 Feb 2022 11:53:35 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20220226-io/</guid><description>
+&lt;p&gt;月ごとのインプットとアウトプットの記録。&lt;/p&gt;
+&lt;h2 id=&#34;インプット&#34;&gt;インプット&lt;/h2&gt;
+&lt;h3 id=&#34;書籍&#34;&gt;書籍&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;『&lt;a href=&#34;https://amzn.to/3sok7MY&#34;&gt;未踏の蒼穹&lt;/a&gt;』&lt;/p&gt;
+&lt;p&gt;趣味のSFとして。ジェイムズ・Ｐ・ホーガンの長編作品。作者の『星を継ぐもの』ほど惹かれなかったが、十分面白く読むことができた。作者の科学者に対する理想像の実現が『星を継ぐもの』から今作の間にこのように変わったのだなあという観点で裏読みできたのでもう少し間の作品を埋めてみようかな。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;『&lt;a href=&#34;https://amzn.to/3LZAxTL&#34;&gt;情報検索と言語処理 (言語と計算)&lt;/a&gt;』&lt;/p&gt;
+&lt;p&gt;今月は情報検索関連でまとまったインプットが必要になったので。初版1999年と古いが（今から見ると）技術的な打ち手がまだ少ない時代は、定量的な評価が難しい人の認知モデルも含めた幅広い議論が交わされており、個人的には立ち返る意味があると思っている。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;『&lt;a href=&#34;https://amzn.to/3M11yGd&#34;&gt;情報検索アルゴリズム&lt;/a&gt;』&lt;/p&gt;
+&lt;p&gt;同じく情報検索関連のインプットとして。初版2002年。ベクトル空間からの近傍探索、アドホックな文字列照会による検索、索引構築を備えた検索などの基本が広く紹介されている。現在では前半の、これらを一貫して評価するための検索モデルや基準などの整理が参考になると思われた。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;『&lt;a href=&#34;https://amzn.to/3BUPj9v&#34;&gt;情報検索のためのユーザインタフェース&lt;/a&gt;』&lt;/p&gt;
+&lt;p&gt;同上。初版2011年。以前読んだものだが検索の個人化について章が割り当てられていたので目を通した。フィードバックをどう負担なく獲得しかつ有用に活かすかについて各研究が苦労している様が見てとれる。全体的な傾向を活かすところから順次粒度を細かくしていくのが王道だろうか。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;『&lt;a href=&#34;https://amzn.to/33W6I5e&#34;&gt;AIアルゴリズムマーケティング 自動化のための機械学習/経済モデル、ベストプラクティス、アーキテクチャ&lt;/a&gt;』&lt;/p&gt;
+&lt;p&gt;同上。初版2018年。主に検索部分に目を通した。各施策に対してビジネス的な目標をおいた上でモデルやアーキテクチャを検討している。検索においては、その目標に沿って主観的にコントロール可能な部分が例示されており参考になった。上述の評価指標と組み合わせることで検索機構に対して求める性能の解像度を上げることができたと思う。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;『&lt;a href=&#34;https://amzn.to/33RIPLZ&#34;&gt;Elasticsearch実践ガイド&lt;/a&gt;』&lt;/p&gt;
+&lt;p&gt;同上。初版2018年。施策を具体的な実装に落とし込む際の用語の紐付けのために読んだ。アーキテクチャの全体と基本的な使い方がわかりやすく図解で紹介されており素早く目的を達成できた。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;『&lt;a href=&#34;https://amzn.to/3hgxvMA&#34;&gt;Pythonではじめる 情報検索プログラミング&lt;/a&gt;』&lt;/p&gt;
+&lt;p&gt;同上。初版2020年。情報検索に関する基本的なアルゴリズムを実際に手を動かしながら体験できる。具体的にどういう結果がえられるのか、アルゴリズムごとの特性の違いは何かなど勘所をつかむ上で良さそう。特にうまく検索できないパターンなどを具体的なイメージを得られるのではないだろうか。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;『&lt;a href=&#34;https://amzn.to/3Ho8OIw&#34;&gt;情報検索 :検索エンジンの実装と評価&lt;/a&gt;』&lt;/p&gt;
+&lt;p&gt;同上。初版2020年。タイトルの通り検索エンジンを実装し評価するために必要な技術が詳細に解説されている。今回は検索サーバを使う上での観点が必要だったのでパート3の検索とランキング部分を読んだ。検索サーバで提供されていない基準でどういう手法をとれるかという知識のインデックスを増やせたと思う。必要に応じて読み直すつもり。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;『&lt;a href=&#34;https://amzn.to/35bOoFF&#34;&gt;A/Bテスト実践ガイド　真のデータドリブンへ至る信用できる実験とは&lt;/a&gt;』&lt;/p&gt;
+&lt;p&gt;同上。初版2021年。情報検索の施策の有用性の評価の参考のため読んだ。A/Bテストの重要性や手法に加え、それを文化として根付かせるためのノウハウが紹介されている。個人的には多腕バンディットで解決できる部分も多いと思っていたが、その背景にある対照実験のための知識は重要だと改めて認識できたという面で参考になった。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;『&lt;a href=&#34;https://amzn.to/3BThXI8&#34;&gt;入門 機械学習による異常検知―Rによる実践ガイド&lt;/a&gt;』&lt;/p&gt;
+&lt;p&gt;時系列データの変化点検出をやりたくなり、以前も参考にしていた『&lt;a href=&#34;https://amzn.to/3BQL132&#34;&gt;異常検知と変化検知&lt;/a&gt;』とあわせて読んだ。非常に参考になるが、分布の仮定が今回解きたいものと合わないかもしれないなあというところで引き続き調べている。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;『&lt;a href=&#34;https://amzn.to/3hieMQH&#34;&gt;Machine Learning for Data Streams: with Practical Examples in MOA (Adaptive Computation and Machine Learning series) (English Edition)&lt;/a&gt;』&lt;/p&gt;
+&lt;p&gt;同じく変化点検出の方式調査で読んでいる。多腕バンディットやフィードバック制御など逐次的に適応していくような仕組みが好きなのだが、そのような仕組みのひとつで一時期調べていたADWINの提案者が執筆に参加しているもの。各方式については簡単な紹介だけなので英語であっても読みやすいが、アルゴリズム等の詳細は論文を読む必要があると思う。自分の興味範囲を整理整頓するのに良いと思い少しづつ読むことにした。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;論文&#34;&gt;論文&lt;/h3&gt;
+&lt;p&gt;読めていなかった〜。&lt;/p&gt;
+&lt;h2 id=&#34;アウトプット&#34;&gt;アウトプット&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://github.com/monochromegane/banditalgorithms&#34;&gt;Bandit algorithms&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;研究のシミュレーションで使う比較用の多腕バンディットのアルゴリズムをテスト込みできちんと整備することにした。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>2022年1月のアイオー</title><link>https://blog.monochromegane.com/diary/20220130-io/</link><pubDate>Sun, 30 Jan 2022 19:04:47 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20220130-io/</guid><description>
 &lt;p&gt;月ごとのインプットとアウトプットの記録。&lt;/p&gt;
 &lt;h2 id=&#34;インプット&#34;&gt;インプット&lt;/h2&gt;
 &lt;h3 id=&#34;書籍&#34;&gt;書籍&lt;/h3&gt;
@@ -1004,92 +1038,4 @@ Webシステムアーキテクチャに関する運用知見を研究的アプ�
 &lt;li&gt;&lt;a href=&#34;https://websystemarchitecture.hatenablog.jp/entry/2017/11/16/182041&#34;&gt;Web System Architecture研究会の発足と挨拶&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://websystemarchitecture.hatenablog.jp/purpose&#34;&gt;研究会の目的&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;＊次回は9月の後半のようです。&lt;/p&gt;</description></item><item><title>Dynamic Gamma-Poisson modelを試す</title><link>https://blog.monochromegane.com/blog/2020/03/11/dynamic-gamma-poisson/</link><pubDate>Wed, 11 Mar 2020 21:25:09 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/03/11/dynamic-gamma-poisson/</guid><description>
-&lt;p&gt;&lt;a href=&#34;https://speakerdeck.com/monochromegane/fukuokago15-adwin-exphist&#34;&gt;以前のADWINのように&lt;/a&gt;、変化する環境において適応的に振る舞うための仕組みについて調べる中で以下の論文で紹介されていたDynamic Gamma-Poissonモデルについてベイズ推定の理解を兼ねて試してみたのでメモ。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://www2009.wwwconference.org/proceedings/pdf/p21.pdf&#34;&gt;Agarwal, Deepak, Bee-Chung Chen, and Pradheep Elango. &amp;ldquo;Spatio-temporal models for estimating click-through rate.&amp;rdquo; Proceedings of the 18th international conference on World wide web. 2009.&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&#34;ベイズ推定&#34;&gt;ベイズ推定&lt;/h1&gt;
-&lt;p&gt;統計モデルとは&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;「ある確率変数$Y$の実現値$y=\{y_1,y_2,..,y_n\}$から、$Y$が本来従う確率分布（真の分布）を推定するためのもの」&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;とされている。
-ベイズ推定はベイズの定理に基づいて観測したデータと過去の情報からデータの本来従う確率分布を推定する。&lt;/p&gt;
-&lt;p&gt;ベイズの定理 $p(\theta \mid y) \propto p(y \mid \theta)p(y)$ に対して右辺（尤度x事前確率）が具体的な確率値でかつ分布が数え上げられるような単純な場合は理解は比較的容易。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://mathtrain.jp/bayesinfer&#34;&gt;ベイズ推定の簡単な例と利点&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;一方で、データの確率分布がパラメタによって変動するような確率質量関数や確率密度関数に従う場合、&lt;strong&gt;そのパラメタ（母数）の分布を推定する&lt;/strong&gt;ことで、（分布の種類が分かっていればパラメタの推定が分布の特定になるので）データの従う確率分布を推定できる。
-この時、データの分布の種類に応じた事前分布を選択することで事後分布が求めやすくなる（共役事前分布）。&lt;/p&gt;
-&lt;p&gt;このようなパラメタを推定するようなベイズ推定に関しては以下の資料が理解の助けになる。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.slideshare.net/miyoshiyuya/ss&#34;&gt;ベイズ統計学入門&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://mutopsy.net/pdf/note_sta_bayesian01.pdf&#34;&gt;ベイズ推定の初歩 二項分布を例に&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://ocw.mit.edu/courses/mathematics/18-443-statistics-for-applications-spring-2015/lecture-notes/MIT18_443S15_LEC8.pdf&#34;&gt;Parameter Estimation Fitting Probability Distributions Bayesian Approach&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;以下、ポアソン分布のパラメタ推定を例にベイズ推定の理解を深め、これを拡張したDynamic Gamma-Poissonモデルを説明する。&lt;/p&gt;
-&lt;h2 id=&#34;ポアソン分布&#34;&gt;ポアソン分布&lt;/h2&gt;
-&lt;p&gt;単位時間に平均$\lambda$回起きる事象が単位時間に$k$回発生する分布。&lt;/p&gt;
-&lt;p&gt;平均が$\lambda$のポアソン分布を表す確率質量関数は\[P(X=k)=\frac{\lambda^{k}}{k!}\cdot e^{-\lambda}\]であり平均$E[X]$は$\lambda$となる。&lt;/p&gt;
-&lt;h2 id=&#34;ポアソン分布のパラメタ-lambda-を推定する&#34;&gt;ポアソン分布のパラメタ$\lambda$を推定する&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://ocw.mit.edu/courses/mathematics/18-443-statistics-for-applications-spring-2015/lecture-notes/MIT18_443S15_LEC8.pdf&#34;&gt;Parameter Estimation Fitting Probability Distributions Bayesian Approach&lt;/a&gt;のp.19の例を元に説明する。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;$X_1,X_2,..,X_n$ $i.i.d.$ $Poisson(\lambda)$
-&lt;ul&gt;
-&lt;li&gt;単位時間に平均$\lambda$回起きる分布に従う確率変数の実現値を$n$回観測&lt;/li&gt;
-&lt;li&gt;$X_i$は0以上の整数値&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;$lik(\lambda) = f(x_1, x_2,..,x_n \mid \lambda) = \prod_{i=1}^n f(x_i \mid \lambda)$
-&lt;ul&gt;
-&lt;li&gt;尤度はパラメタ$\lambda$において観測した値が得られる確率（この場合は上述したポアソン分布の確率質量関数$P(X=x_i)$）&lt;/li&gt;
-&lt;li&gt;複数回観測した場合はその同時確率&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;$\lambda \sim Gamma(\alpha, \nu)$
-&lt;ul&gt;
-&lt;li&gt;事前分布、つまり、$\lambda$が「ある値（の範囲）」を取る確率&lt;/li&gt;
-&lt;li&gt;今回は事前分布にガンマ分布を仮定する（ポアソン分布の共役事前分布）&lt;/li&gt;
-&lt;li&gt;$\pi(\lambda)$&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;$\pi(\lambda \mid x) \propto lik(\lambda) \times \pi(\lambda)$
-&lt;ul&gt;
-&lt;li&gt;ベイズの定理より事後分布は尤度x事前分布で求められる&lt;/li&gt;
-&lt;li&gt;$P(x\mid\lambda)P(\lambda)$なので、$\lambda$の分布から観測値$x$が得られる確率と言える&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;$Gamma(\alpha^*,\nu^*)$ with $\alpha^*=\alpha+\sum_{1}^n x_i$ and $\nu^*=\nu+n$
-&lt;ul&gt;
-&lt;li&gt;上を計算すると事後分布は観測された$x$の値の合計を$\alpha$に、観測回数$n$を$\nu$に加えたものをパラメタとするガンマ分布とみなせる&lt;/li&gt;
-&lt;li&gt;観測したデータから$\lambda$の分布（確率変数が従う確率分布（分布の種類はわかっているのでそのパラメタ））を推定した&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&#34;dynamic-gamma-poissonモデル&#34;&gt;Dynamic Gamma-Poissonモデル&lt;/h1&gt;
-&lt;p&gt;論文3.1によれば、クリック数$c$、閲覧数$v$、CTRを$\theta$としたときに、&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;平均$v\theta$(=$\lambda$)である$Poisson(\lambda)$に従い観測されたクリック数から&lt;/li&gt;
-&lt;li&gt;$\theta$の事前分布に平均が$\alpha/\gamma$、分散が$\alpha/\gamma^2$である$Gamma(\alpha,\gamma)$を仮定して&lt;/li&gt;
-&lt;li&gt;$\theta$の事後分布を$Gamma(\alpha+c,\gamma+v)$として得られるとしている&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;ただし、実際はこの推定は$\lambda$の推定であるため、CTRとして考えるために以下のように考える。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;$\lambda$を1閲覧($v$)の間の平均回数と考える（つまり$\lambda=1*\theta$）&lt;/li&gt;
-&lt;li&gt;1閲覧に該当する期間を閲覧数分、観測した&lt;/li&gt;
-&lt;li&gt;これによって推定された$\lambda$は$\theta$と等しくなる&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;ここで、$Gamma$のパラメタはこれまでのクリック総数と閲覧総数であることから、$\lambda$の値が変化する場合に過去のデータに引きづられてしまい、速やかな追従を行うことができない。
-論文では、Dynamic Gamma-Poissonモデルとして過去の観測結果に対する割引の概念を導入することでこれを解決する。
-実現はシンプルで、割引率$(0&amp;lt; \delta \leq1)$を導入し、事後分布を$Gamma(\delta\alpha_{t-1}+c_t,\delta\gamma_{t-1}+v_t)$のように求める。
-これによって累積された過去の総数を減らし、直近のデータに重み付けが行われる。
-論文中では0.95から1の間ぐらいが良い結果を得たとしている。&lt;/p&gt;
-&lt;p&gt;以下、実際に同じ条件での$\lambda$の推定を通常のGamma-PoissonモデルとDynamic Gamma-Poissonモデルで行ったものを比較する。
-評価では、CTRが0.4のアイテムに対して1ステップごとに7回の閲覧が行われた際のクリック数を観測データとした。
-また、20ステップ目にCTRが半分の0.2になっている。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://blog.monochromegane.com/images/2020/03/dgp.gif&#34; alt=&#34;dgp&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;評価期間内では通常の推定の期待値0.3程度までの追従に止まったが、Dynamicな手法ではより早く実際のCTRである0.2に近づけたことが分かる。&lt;/p&gt;
-&lt;h1 id=&#34;動作確認用のコード&#34;&gt;動作確認用のコード&lt;/h1&gt;
-&lt;p&gt;動作確認用のコードは以下にある．&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://gist.github.com/monochromegane/942444fdf89735e7e273d5c7126df449&#34;&gt;dgp.py&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;このような感じで利用できる．&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;python dgp.py --lambda_ 0.4 --view 7 --delta 0.9
-&lt;/code&gt;&lt;/pre&gt;</description></item></channel></rss>
+&lt;p&gt;＊次回は9月の後半のようです。&lt;/p&gt;</description></item></channel></rss>
