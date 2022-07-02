@@ -1,4 +1,119 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Categories on THINKING MEGANE</title><link>https://blog.monochromegane.com/categories/</link><description>Recent content in Categories on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><atom:link href="/categories/" rel="self" type="application/rss+xml"/><item><title>2022年2月のアイオー</title><link>https://blog.monochromegane.com/diary/20220226-io/</link><pubDate>Sat, 26 Feb 2022 11:53:35 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20220226-io/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Categories on THINKING MEGANE</title><link>https://blog.monochromegane.com/categories/</link><description>Recent content in Categories on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><atom:link href="/categories/" rel="self" type="application/rss+xml"/><item><title>gonum/matパッケージを直感的に操作するMatrix Adapterをつくった</title><link>https://blog.monochromegane.com/blog/2022/07/02/matrix-adapter/</link><pubDate>Sat, 02 Jul 2022 11:59:22 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2022/07/02/matrix-adapter/</guid><description>
+&lt;p&gt;gonum/matによる行列計算を幾分か直感的に扱える薄いラッパーを作りました。
+具体的には、計算結果用に空の行列を予め用意するのではなく、計算結果を戻り値で受け取れるように統一します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/monochromegane/mat&#34;&gt;Matrix Adapter&lt;/a&gt;: Small adapter which provides method signatures that allow intuitive operation with fewer lines of code for gonum/mat.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;背景と課題感&#34;&gt;背景と課題感&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/gonum/gonum/tree/master/mat&#34;&gt;Gonumプロジェクトのmatパッケージ&lt;/a&gt;はGo言語での行列計算ライブラリを提供してくれています。
+こういった正確さと速度の求められる数値計算の処理には、（趣味は別として）自作ではなく、多くの人に使われ実績のあるライブラリを採用したいことから、このパッケージを利用しています。&lt;/p&gt;
+&lt;p&gt;非常に便利に使わせていただいている一方で、自分の場合、スムーズに書けないことがありました。
+理由としては、計算結果の受け取り方法に対する一貫性の崩れがあるだろうと考えています。&lt;/p&gt;
+&lt;p&gt;matパッケージでは、予め空の行列を用意し、これをレシーバーとして計算対象となる行列を引数で渡します。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var c mat.Dense
+c.Product(a, b)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;元の行列が維持されるこの設計は非常にありがたいです。
+しかしながら、一部の関数（例えば &lt;code&gt;Dense.T&lt;/code&gt;）は結果が戻り値として得られます。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;ct := c.T()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;この一貫性の崩れは不変と可変の混在にあるのではないかと考えています。
+gonum/matパッケージでは、&lt;a href=&#34;https://pkg.go.dev/gonum.org/v1/gonum/mat#hdr-Invariants&#34;&gt;引数で渡す行列は計算操作に対して不変&lt;/a&gt;とされています。
+これは、関数のパラメータの方が、&lt;code&gt;mat.Matrix&lt;/code&gt;インターフェースであることからも読み取れます。
+実際、このインターフェースには、&lt;code&gt;Dims()&lt;/code&gt;, &lt;code&gt;At()&lt;/code&gt;といった参照系かレシーバーを壊さない&lt;code&gt;T()&lt;/code&gt;のみが用意されています。&lt;/p&gt;
+&lt;p&gt;一方で、このインターフェースを実装した&lt;code&gt;mat.Dense&lt;/code&gt;などは自身をレシーバーとして内容を変更する操作を認めています。
+この差異により、mat.Matrixインターフェースのシグネチャの一つである&lt;code&gt;T()&lt;/code&gt;は戻り値を返すが、Denseの関数ではレシーバーを変更するという振る舞いの違いがあるのではないかと思われました。&lt;/p&gt;
+&lt;p&gt;gonum/matパッケージではほとんどの関数が空の行列を予め用意する方式に従っているため、慣れれば問題ない程度ではありますが、久しぶりに使う場合など、多少まごつくことが何度かありました。
+個人的に、Go言語で何か書くときは迷わず書きたいという欲求があり、迷わないため一貫性のあるラッパーを作ることとしました。&lt;/p&gt;
+&lt;h1 id=&#34;matrix-adapter&#34;&gt;Matrix Adapter&lt;/h1&gt;
+&lt;p&gt;今回は、計算結果を戻り値で受け取れるように統一します。
+これにより、利用側からはDenseらも不変であるかのように扱え、一貫性という側面から認知負荷が減ると考えるためです。&lt;/p&gt;
+&lt;p&gt;Matrix Adapterを適用した場合、先ほどの例は以下のようになります。
+&lt;code&gt;c&lt;/code&gt;がレシーバーではなく、先ほどは引数となっていた&lt;code&gt;a&lt;/code&gt;がレシーバーとなっていることに注意してください。
+&lt;code&gt;c&lt;/code&gt;は戻り値として受け取ることになりました。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;c := a.Product(b)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;実装と使い方&#34;&gt;実装と使い方&lt;/h2&gt;
+&lt;p&gt;Adapterの実装は単純明快で、元の構造体を埋め込み（embedding）し、結果を戻り値で返すように関数のシグネチャを変更しました。
+変更が不要なものは移譲されます。
+いわゆるGoFのデザインパターンにおけるAdapterパターンというやつです。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;type Dense struct {
+*mat.Dense
+}
+func (m *Dense) Add(b mat.Matrix) *Dense {
+var dense mat.Dense
+dense.Add(m.Dense, b)
+return &amp;amp;Dense{&amp;amp;dense}
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;現状、DenseとVecDenseに対するAdapterを提供しています。
+既存と同名の&lt;code&gt;NewDense()&lt;/code&gt;と&lt;code&gt;NewVecDense()&lt;/code&gt;を使って、ラップされたDenseやVecDenseを作成できます。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
+import (
+&amp;quot;fmt&amp;quot;
+&amp;quot;github.com/monochromegane/mat/adapter&amp;quot;
+)
+func main() {
+m := adapter.NewDense(2, 2, []float64{1.0, 2.0, 3.0, 4.0})
+fmt.Printf(&amp;quot;%v\n&amp;quot;, m)
+// ⎡1 2⎤
+// ⎣3 4⎦
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;ちなみに、提供されるDenseとVecDenseは&lt;code&gt;fmt.Stringer&lt;/code&gt;インターフェースを実装し、行列の内容を整形して出力するようにしています。&lt;/p&gt;
+&lt;p&gt;ここで、少し実践的な例として、リッジ回帰によるパラメータ推定（$\hat{\theta} = (X^{\top}X + \lambda I)^{-1} X^{\top}Y$）を実装し、比較してみます。&lt;/p&gt;
+&lt;h3 id=&#34;matrix-adapterでの実装&#34;&gt;Matrix Adapterでの実装&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt; X, Y := syntheticData(N, theta) // Return adapter.Dense
+I := mat.NewDiagDense(3, []float64{1.0, 1.0, 1.0})
+reg := DenseCopyOf(I).Scale(lambda)
+XTXinv, _ := X.Transpose().Product(X).Add(reg).Inverse()
+XTY := X.Transpose().Product(Y)
+estimated := XTXinv.Product(XTY)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;gonum-matでの実装&#34;&gt;gonum/matでの実装&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt; X, Y := syntheticData(N, theta) // Return adapter.Dense
+XTXinv := mat.NewDense(3, 3, nil)
+XTXinv.Product(X.T(), X)
+I := mat.NewDiagDense(3, []float64{1.0, 1.0, 1.0})
+reg := mat.DenseCopyOf(I)
+reg.Scale(lambda, reg)
+XTXinv.Add(XTXinv, reg)
+XTXinv.Inverse(XTXinv)
+XTY := mat.NewDense(3, 1, nil)
+XTY.Product(X.T(), Y)
+estimated := mat.NewDense(3, 1, nil)
+estimated.Product(XTXinv, XTY)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;この例では、gonum/matでの実装に比べてMatrix Adapterでの実装が、結果用の&lt;code&gt;Dense&lt;/code&gt;の準備が省略できたこと、各関数で受け取る引数が減ったことなどから、幾分か簡潔に記述できているかと思います。&lt;/p&gt;
+&lt;p&gt;なお、Adapterでの実装では、Method Chainによる行数の短縮も見てとれます。
+これについては、戻り値を返す実装としたことで副次的に得られた、本Adapterの特徴です。
+Go言語におけるMethod Chainは、errorを含む多値の戻り値との相性から、積極的に採用されていないと認識しています。
+ただ、今回は元のパッケージが各計算においてerrorを返さないものが多く、多値にならない関数が多くできたため、結果としてMethod Chainがつながる場合ができています（&lt;code&gt;Inverse()&lt;/code&gt;などerrorを返すものもあるため全部は繋げません）。
+この辺りのエラー処理については、一考の価値があると思いますが、現時点で本Adapterの対象外（従来パッケージを踏襲）としています。&lt;/p&gt;
+&lt;h2 id=&#34;相互運用性&#34;&gt;相互運用性&lt;/h2&gt;
+&lt;p&gt;Adapterの提供する関数でも、引数は&lt;code&gt;mat.Matrix&lt;/code&gt;（や&lt;code&gt;mat.Vector&lt;/code&gt;）を使うため、既存のラップしていないものを入力として受け取れます。
+また、これらのAdapterは、&lt;code&gt;mat.Dense&lt;/code&gt;（や&lt;code&gt;mat.VecDense&lt;/code&gt;）構造体を埋め込んでいるため、&lt;code&gt;mat.Matrix&lt;/code&gt;（や&lt;code&gt;mat.Vector&lt;/code&gt;）の実装を満たします。
+よって、ラップされた&lt;code&gt;adapter.Dense&lt;/code&gt;（や&lt;code&gt;adapter.VecDense&lt;/code&gt;）を既存の関数の入力として渡すことができます。&lt;/p&gt;
+&lt;p&gt;また、&lt;code&gt;T()&lt;/code&gt;は&lt;code&gt;mat.Matrix&lt;/code&gt;として維持しなければならない関数であることから、同等の&lt;code&gt;Transpose()&lt;/code&gt;を提供しています。
+これにより、転置行列がレシーバーとなるような呼び出しであっても、&lt;code&gt;adapter.Dense&lt;/code&gt;として振る舞うことができるようになり、Matrix Adapterとの親和性が向上します。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// X.T().Product(Y) is invalid due to mat.Matrix has no method Product.
+XTY := X.Transpose().Product(Y) // Valid
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
+&lt;p&gt;本エントリでは、gonum/matパッケージを直感的に操作するための&lt;a href=&#34;https://github.com/monochromegane/mat&#34;&gt;Matrix Adapter&lt;/a&gt;を紹介しました。
+本Adapterの作成とエントリ執筆において、「直感的でない」と主観的に感じる理由について、不変と可変の混在に起因するものではないかなと言語化できたのがよかったかなあと思います。&lt;/p&gt;
+&lt;p&gt;自分の利用範囲だと、DenseとVecDenseで事足りる場合が多いのですが、必要に応じて対象を増やしていこうかと思います。&lt;/p&gt;
+&lt;h1 id=&#34;参考&#34;&gt;参考&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://po3rin.com/blog/gonum&#34;&gt;Go + Gonum を使った行列計算まとめ&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;関数の直感性を上げるための独自関数や、行列のフォーマットなどを参考にさせていただきました。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/gorgonia/tensor&#34;&gt;gorgonia/tensor&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;gonum/matではないGo言語の行列計算パッケージ。戻り値で結果を受け取れたりerrorも返すので本Adapterの目指すところに近いとは思います。速度含めて検証が必要なのもあり、今回は慣れて使っている方が多いであろうgonum/matをラップする方式を採用しました。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>2022年2月のアイオー</title><link>https://blog.monochromegane.com/diary/20220226-io/</link><pubDate>Sat, 26 Feb 2022 11:53:35 +0900</pubDate><guid>https://blog.monochromegane.com/diary/20220226-io/</guid><description>
 &lt;p&gt;月ごとのインプットとアウトプットの記録。&lt;/p&gt;
 &lt;h2 id=&#34;インプット&#34;&gt;インプット&lt;/h2&gt;
 &lt;h3 id=&#34;書籍&#34;&gt;書籍&lt;/h3&gt;
@@ -1008,34 +1123,4 @@ Pr \left[x^*_j \geq \overline{x}_j + \sqrt{\frac{2\ln{n}}{n_j}}\right] \leq \fra
 &lt;h1 id=&#34;fukuoka-goはどうするのか&#34;&gt;Fukuoka.goはどうするのか&lt;/h1&gt;
 &lt;p&gt;どうしよう。&lt;/p&gt;
 &lt;p&gt;Fukuoka.goは長期的にみて知の増幅を地域に形成できる（といいな）というあたりを狙っているので、主催者が楽しんで継続できることを大切にしています。
-色々それらしきことを述べてみたものの、主催者のモチベは単純には「僕の最近のGo取り組みで面白かったものを聞いてください。よければご飯もどうですか」だったりもするので、オンライン飲みの余興で発表、とか、登壇を動画で配信とかでもいいのかもしれない。&lt;/p&gt;</description></item><item><title>軽量なインデックス機構を用いた全文検索ツールの高速化の検討</title><link>https://blog.monochromegane.com/blog/2020/04/29/wsa6_sifter/</link><pubDate>Wed, 29 Apr 2020 10:38:30 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/04/29/wsa6_sifter/</guid><description>
-&lt;p&gt;このエントリは、&lt;a href=&#34;https://websystemarchitecture.hatenablog.jp/entry/2019/12/11/165624&#34;&gt;第6回 Web System Architecture 研究会 (WSA研)&lt;/a&gt;の予稿です。&lt;/p&gt;
-&lt;h1 id=&#34;概要&#34;&gt;概要&lt;/h1&gt;
-&lt;p&gt;コマンドラインによる全文検索ツールの検索速度は、キャッシュ機構、並列化や効率的なアルゴリズムの導入によって高速化が図られている。一方で、これらのツールは、検索対象の変更や削除への追従を避けるためインデックスの採用を行なっておらず、都度検索対象に対して全探索を行う。&lt;/p&gt;
-&lt;p&gt;全文検索ツールに対するインデックス機構の課題を整理、解決し、インデックス機構を採用することができれば、検索対象を限定した、より高速な検索が可能になると考えられることから、本稿では、軽量なインデックス機構を用いた全文検索ツールの高速化の検討を行う。&lt;/p&gt;
-&lt;p&gt;提案手法では、インデックス機構に計算量と情報量の観点で効率的に扱うことのできるブルームフィルタを採用する。 まず全ての検索対象に対してブルームフィルタを作成し、結合・転置した軽量なインデックスを生成する。 次に検索対象へのクエリを行う前にインデックスから候補を取得し、全文検索ツールがこれを検索する。 検索対象の変更や削除への追従に対しては、インデックスを都度再生成する方式を採用するが、生成の高速化により利用者が負担とすることなくこれを行える。&lt;/p&gt;
-&lt;p&gt;評価では、提案手法を組み合わせることで、全文検索ツールの検索時間が短縮することを確認する。&lt;/p&gt;
-&lt;h1 id=&#34;発表スライド&#34;&gt;発表スライド&lt;/h1&gt;
-&lt;p&gt;提案手法のアーキテクチャ、ならびに具体的な実装である&lt;a href=&#34;https://github.com/monochromegane/sifter&#34;&gt;monochromegane/sifter&lt;/a&gt;とこれによる軽量・高速・汎用性についての評価は発表スライドを参照のこと。&lt;/p&gt;
-&lt;script async class=&#34;speakerdeck-embed&#34; data-id=&#34;b290ecaaf9d24927b528991ac76f9c89&#34; data-ratio=&#34;1.77777777777778&#34; src=&#34;//speakerdeck.com/assets/embed.js&#34;&gt;&lt;/script&gt;
-&lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
-&lt;p&gt;本研究会では軽量なインデックス機構を用いた全文検索ツールの高速化の検討とその参考実装を評価した。
-インデックス機構としてブルームフィルタを用いることで少ないメモリ使用量と問い合わせの高速化が達成でき、インデックス操作のツールに分離することで任意の全文検索ツールとの連携による汎用性を備えることができた。
-結果として、評価では全文検索ツールとの組み合わせにおいて大幅な検索時間の短縮を確認した。&lt;/p&gt;
-&lt;p&gt;一方で、インデックス構築時間の長さを解消することは、利用者にとっての負担の改善の観点から最優先で取り組まなければならない。
-ブルームフィルタにおけるハッシュ関数のボトルネックは多く研究されていることから、これを取り込むこと、また、ハッシュ関数の実行回数を減らしながら精度を保つことができるような効率的なトークン化を調べる必要がある。
-実装面ではハッシュ関数の結果は再利用できるため、キャッシュ機構の導入も効果があると考える。&lt;/p&gt;
-&lt;p&gt;今後は問い合わせ自体にオーバーヘッドが発生するようなアーキテクチャとの連携も検討し、Webシステムの分野へ研究を発展させたい。&lt;/p&gt;
-&lt;h1 id=&#34;発表を終えて&#34;&gt;発表を終えて&lt;/h1&gt;
-&lt;p&gt;今回のWSA研は初のリモート開催で新しい顔ぶれも揃い、6回目ながらに新鮮な気持ちで楽しめた。
-自身の発表でも、あまり気負いすぎずに頭の中で温めていたアイディアを形にして議論として発展できればいいなぐらいで臨んだ。
-結果的に、まずは発表に向けて形にして評価することで長所短所が明確になり、参加者から新しいアイディアのヒントをもらうことができた。
-特に、これまでプラチナサーチャーでの全文検索の高速化は、システムコールやバッファ確保の効率化やタスクの並列化といったプログラミングの実装面でのアプローチがほとんどであったため、アルゴリズムの観点からの取り組むためのとっかかりを色々議論できたと思う。
-この分野は先人の知恵が大量にある分野なので、色々勉強しつつプラチナサーチャーの進化系も考えていきたい（研究会終わった後の夜中に考えていた方法がSuffix Trieと同じだと気づいて、巨人の肩に乗るべく、まずは&lt;a href=&#34;https://www.amazon.co.jp/gp/product/4000069748/ref=as_li_tl?ie=UTF8&amp;amp;camp=247&amp;amp;creative=1211&amp;amp;creativeASIN=4000069748&amp;amp;linkCode=as2&amp;amp;tag=monochromeg03-22&amp;amp;linkId=1f321dceee1ea3723f7c384f5f3460cb&#34;&gt;高速文字列解析の世界――データ圧縮・全文検索・テキストマイニング (確率と情報の科学)&lt;/a&gt;を注文した）&lt;/p&gt;
-&lt;p&gt;このような普段の研究から少し離れた取り組みであっても、定期的に発表を促されることで形にすることができるのはとても大切で、やりっぱなし学びっぱなしではなく一つの区切りまで考え実装することで次回以降の研究への糧となる。
-Webシステムアーキテクチャに関する運用知見を研究的アプローチで前進させること興味がある方は次回開催の参加を検討してみてはいかがでしょうか。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://websystemarchitecture.hatenablog.jp/entry/2017/11/16/182041&#34;&gt;Web System Architecture研究会の発足と挨拶&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://websystemarchitecture.hatenablog.jp/purpose&#34;&gt;研究会の目的&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;＊次回は9月の後半のようです。&lt;/p&gt;</description></item></channel></rss>
+色々それらしきことを述べてみたものの、主催者のモチベは単純には「僕の最近のGo取り組みで面白かったものを聞いてください。よければご飯もどうですか」だったりもするので、オンライン飲みの余興で発表、とか、登壇を動画で配信とかでもいいのかもしれない。&lt;/p&gt;</description></item></channel></rss>
