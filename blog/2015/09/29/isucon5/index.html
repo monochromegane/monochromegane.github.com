@@ -1,5 +1,223 @@
-<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>ISUCON5、紙一重の差で予選落ちする方法 &middot; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="福岡スレンダーズというチームでISUCONに初参加、そして予選落ちしてきました。 来年に向けての糧となるよう、良かった点、悪かった点をまとめておきます。 この通りにやると紙一重の差で予選落ちすることができます。
-福岡スレンダーズ  @mizoR @tkengo @monochromegane Web/モバイルのアプリケーションエンジニア(インフラ専任なし) 使用言語は全員が共通して触れるRubyを選択 ベストスコアは約14,000。このスコアで終われていれば予選通過していたかも&hellip;  振り返り 良かった点 事前準備  環境構築は30分  チューニングに専念するため、資産をGitHubプライベートリポジトリで管理する、各自の開発環境(エディタ等のdotfiles)を整えるといった環境構築はほぼノンストップでできるように手順化、スクリプト化しておいた。  事前に集まって当日の進め方を確認  過去問を解きながら当日どのように作業を進めるか（作業分担やチューニングの方針、ツールの使い方共有）を中心に確認した。 過去問を解く事は大事だが、同じ問題は出ないので各自の自習で補う。  経験者の話を聞く  全員が見れる大きなディスプレイあると便利、昼飯は事前に買っておくと便利などの情報は一回参加してからじゃないと意外と気付けないので助かった。   当日  普段やってることしかしない（できない）  チームのチューニング方針 ISUCON過去問を解いても普段の地力で予選突破ラインは出せていたので、本番でも普段からやってないことに手を付ける博打ではなくやれることを確実にやるようにした。  推測するな、計測せよ  基本中の基本。時間は有限なので闇雲に手をつけず、アクセスログ(kataribe)、スロークエリログ(pt-query-digest)を根拠に効果の大きいと思われる箇所から対処していった。  見える化  作業内容はGitHub&#43;Slack通知で共有 ER図をホワイトボードに書き出す  声掛け  チームメンバが悩んでたら声を掛けて頭の整理を手伝い合った。   悪かった点 事前準備  特に無し。強いて言えばローカルベンチマークツールを想定してつくった結果通知の仕組みが無駄になったぐらい。  当日  司令塔役を決めておくとよかった  良い意味で全員まわりも見えるし実装もできるメンバーだったので前半は自律的に作業分担が進んでしまい、後半も自分で修正箇所を見つけて修正するの流れのまま進んだ。 結果的に各自の作業後、次の修正箇所を探すための時間ができ、継続的に修正を投入できなかった。 特に後半はベンチマークを実行、結果を元に次の修正箇所を指示する司令塔役を立てるべきだった。  ベンチマーク -&gt; ログ解析のリズムが悪かった  昨年までのローカルベンチマークを想定して各自の開発環境でベンチマーク-&gt;ログ解析を回す準備をしていたが、外部からのベンチマークになったことでサーバー上のログをどう共有するかを決めきれずに気づいた誰かがやるということになってしまった。 本来なら毎回のベンチマークごとにチューニングポイントが変わってくるはずなのに数回分間が空いたりしてリズムが悪いまま終わってしまった。  昼飯をきちんととらなかった  午前中、スコアが伸びず焦っていたこともあり、昼飯はおにぎり片手にひたすらチューニングを続けていた。 踏ん張りドコロの夕方頃、15分ぐらい集中力が切れた時間帯があったが今思うとあれはもったいなかった。 昼は外にいかないまでもちゃんと食べたほうがリフレッシュして午後望めたと思う。   ぐぬぬ案件  再起動テストでトラブル  終了1時間前に念のため行った再起動テストでISUCON5 本選出場者決定のお知らせにあるように再起動後rootボリュームがReadOnlyでマウントされてしまう現象に出くわしてしまった。 このままでは運営側の再起動テストにクリアできないので最終のチューニングタスクを全て止めて原因究明&amp;リカバリに注力。 最終的に開発用に立てていたインスタンスで再起動してReadOnlyにならなかったインスタンスを再登録。 このインスタンスでのベンチマークが前回より下がるも原因特定には至らず&hellip;   チューニング一覧 チームのチューニング内容は以下の通り。"><meta property="og:title" content="ISUCON5、紙一重の差で予選落ちする方法"><meta property="og:url" content="https://blog.monochromegane.com/blog/2015/09/29/isucon5/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2015/09/29/isucon5/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:true},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:true}}});</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2015/09/29/isucon5/>ISUCON5、紙一重の差で予選落ちする方法</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2015-09-29</div></time></header><div class=post-inner><p>福岡スレンダーズというチームでISUCONに初参加、そして予選落ちしてきました。
+<!doctype html><html>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width">
+<meta name=author content>
+<title>ISUCON5、紙一重の差で予選落ちする方法 &#183; THINKING MEGANE</title>
+<meta name=twitter:card content="summary">
+<meta name=twitter:site content="@monochromegane">
+<meta property="og:description" content="福岡スレンダーズというチームでISUCONに初参加、そして予選落ちしてきました。 来年に向けての糧となるよう、良かった点、悪かった点をまとめておきます。 この通りにやると紙一重の差で予選落ちすることができます。
+福岡スレンダーズ  @mizoR @tkengo @monochromegane Web/モバイルのアプリケーションエンジニア(インフラ専任なし) 使用言語は全員が共通して触れるRubyを選択 ベストスコアは約14,000。このスコアで終われていれば予選通過していたかも&mldr;  振り返り 良かった点 事前準備  環境構築は30分  チューニングに専念するため、資産をGitHubプライベートリポジトリで管理する、各自の開発環境(エディタ等のdotfiles)を整えるといった環境構築はほぼノンストップでできるように手順化、スクリプト化しておいた。   事前に集まって当日の進め方を確認  過去問を解きながら当日どのように作業を進めるか（作業分担やチューニングの方針、ツールの使い方共有）を中心に確認した。 過去問を解く事は大事だが、同じ問題は出ないので各自の自習で補う。   経験者の話を聞く  全員が見れる大きなディスプレイあると便利、昼飯は事前に買っておくと便利などの情報は一回参加してからじゃないと意外と気付けないので助かった。    当日  普段やってることしかしない（できない）  チームのチューニング方針 ISUCON過去問を解いても普段の地力で予選突破ラインは出せていたので、本番でも普段からやってないことに手を付ける博打ではなくやれることを確実にやるようにした。   推測するな、計測せよ  基本中の基本。時間は有限なので闇雲に手をつけず、アクセスログ(kataribe)、スロークエリログ(pt-query-digest)を根拠に効果の大きいと思われる箇所から対処していった。   見える化  作業内容はGitHub+Slack通知で共有 ER図をホワイトボードに書き出す   声掛け  チームメンバが悩んでたら声を掛けて頭の整理を手伝い合った。    悪かった点 事前準備  特に無し。強いて言えばローカルベンチマークツールを想定してつくった結果通知の仕組みが無駄になったぐらい。  当日  司令塔役を決めておくとよかった  良い意味で全員まわりも見えるし実装もできるメンバーだったので前半は自律的に作業分担が進んでしまい、後半も自分で修正箇所を見つけて修正するの流れのまま進んだ。 結果的に各自の作業後、次の修正箇所を探すための時間ができ、継続的に修正を投入できなかった。 特に後半はベンチマークを実行、結果を元に次の修正箇所を指示する司令塔役を立てるべきだった。   ベンチマーク -> ログ解析のリズムが悪かった  昨年までのローカルベンチマークを想定して各自の開発環境でベンチマーク->ログ解析を回す準備をしていたが、外部からのベンチマークになったことでサーバー上のログをどう共有するかを決めきれずに気づいた誰かがやるということになってしまった。 本来なら毎回のベンチマークごとにチューニングポイントが変わってくるはずなのに数回分間が空いたりしてリズムが悪いまま終わってしまった。   昼飯をきちんととらなかった  午前中、スコアが伸びず焦っていたこともあり、昼飯はおにぎり片手にひたすらチューニングを続けていた。 踏ん張りドコロの夕方頃、15分ぐらい集中力が切れた時間帯があったが今思うとあれはもったいなかった。 昼は外にいかないまでもちゃんと食べたほうがリフレッシュして午後望めたと思う。    ぐぬぬ案件  再起動テストでトラブル  終了1時間前に念のため行った再起動テストでISUCON5 本選出場者決定のお知らせにあるように再起動後rootボリュームがReadOnlyでマウントされてしまう現象に出くわしてしまった。 このままでは運営側の再起動テストにクリアできないので最終のチューニングタスクを全て止めて原因究明&リカバリに注力。 最終的に開発用に立てていたインスタンスで再起動してReadOnlyにならなかったインスタンスを再登録。 このインスタンスでのベンチマークが前回より下がるも原因特定には至らず&mldr;     チューニング一覧 チームのチューニング内容は以下の通り。">
+<meta property="og:title" content="ISUCON5、紙一重の差で予選落ちする方法">
+<meta property="og:url" content="https://blog.monochromegane.com/blog/2015/09/29/isucon5/">
+<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+<link rel=stylesheet href=/css/reset.css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
+<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
+<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
+<link rel=stylesheet href=/css/text.css>
+<link rel=stylesheet href=/css/color.css>
+<link rel=stylesheet href=/css/layout.css>
+<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
+<link rel="shortcut icon" href=/images/favicon.ico>
+<link rel=canonical href=https://blog.monochromegane.com/blog/2015/09/29/isucon5/>
+<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
+</head>
+<body>
+<div class=header>
+<header>
+<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
+<nav>
+<ul class=menu>
+<li><a href=/self-introduction/>Home</a></li>
+<li><a href=/post/>Archives</a></li>
+<li><a href=/diary/>Diary</a></li>
+<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
+</ul>
+</nav>
+</header>
+</div>
+<div class=container>
+<article>
+<div class=post>
+<header>
+<h1><a href=https://blog.monochromegane.com/blog/2015/09/29/isucon5/>ISUCON5、紙一重の差で予選落ちする方法</a></h1>
+<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2015-09-29</div></time>
+</header>
+<div class=post-inner>
+<p>福岡スレンダーズというチームでISUCONに初参加、そして予選落ちしてきました。
 来年に向けての糧となるよう、良かった点、悪かった点をまとめておきます。
-この通りにやると紙一重の差で予選落ちすることができます。</p><h1 id=福岡スレンダーズ>福岡スレンダーズ</h1><ul><li><a href=https://twitter.com/ryutaro_mizokam>@mizoR</a> <a href=https://twitter.com/tkengo>@tkengo</a> <a href=https://twitter.com/monochromegane>@monochromegane</a></li><li>Web/モバイルのアプリケーションエンジニア(インフラ専任なし)</li><li>使用言語は全員が共通して触れるRubyを選択</li><li>ベストスコアは約14,000。このスコアで終われていれば予選通過していたかも&hellip;</li></ul><h1 id=振り返り>振り返り</h1><h2 id=良かった点>良かった点</h2><h3 id=事前準備>事前準備</h3><ul><li>環境構築は30分<ul><li>チューニングに専念するため、資産をGitHubプライベートリポジトリで管理する、各自の開発環境(エディタ等のdotfiles)を整えるといった環境構築はほぼノンストップでできるように手順化、スクリプト化しておいた。</li></ul></li><li>事前に集まって当日の進め方を確認<ul><li>過去問を解きながら当日どのように作業を進めるか（作業分担やチューニングの方針、ツールの使い方共有）を中心に確認した。</li><li>過去問を解く事は大事だが、同じ問題は出ないので各自の自習で補う。</li></ul></li><li>経験者の話を聞く<ul><li>全員が見れる大きなディスプレイあると便利、昼飯は事前に買っておくと便利などの情報は一回参加してからじゃないと意外と気付けないので助かった。</li></ul></li></ul><h3 id=当日>当日</h3><ul><li>普段やってることしかしない（できない）<ul><li>チームのチューニング方針</li><li>ISUCON過去問を解いても普段の地力で予選突破ラインは出せていたので、本番でも普段からやってないことに手を付ける博打ではなくやれることを確実にやるようにした。</li></ul></li><li>推測するな、計測せよ<ul><li>基本中の基本。時間は有限なので闇雲に手をつけず、アクセスログ(kataribe)、スロークエリログ(pt-query-digest)を根拠に効果の大きいと思われる箇所から対処していった。</li></ul></li><li>見える化<ul><li>作業内容はGitHub+Slack通知で共有</li><li>ER図をホワイトボードに書き出す</li></ul></li><li>声掛け<ul><li>チームメンバが悩んでたら声を掛けて頭の整理を手伝い合った。</li></ul></li></ul><h2 id=悪かった点>悪かった点</h2><h3 id=事前準備-1>事前準備</h3><ul><li>特に無し。強いて言えばローカルベンチマークツールを想定してつくった結果通知の仕組みが無駄になったぐらい。</li></ul><h3 id=当日-1>当日</h3><ul><li>司令塔役を決めておくとよかった<ul><li>良い意味で全員まわりも見えるし実装もできるメンバーだったので前半は自律的に作業分担が進んでしまい、後半も自分で修正箇所を見つけて修正するの流れのまま進んだ。</li><li>結果的に各自の作業後、次の修正箇所を探すための時間ができ、継続的に修正を投入できなかった。</li><li>特に後半はベンチマークを実行、結果を元に次の修正箇所を指示する司令塔役を立てるべきだった。</li></ul></li><li>ベンチマーク -&gt; ログ解析のリズムが悪かった<ul><li>昨年までのローカルベンチマークを想定して各自の開発環境でベンチマーク-&gt;ログ解析を回す準備をしていたが、外部からのベンチマークになったことでサーバー上のログをどう共有するかを決めきれずに気づいた誰かがやるということになってしまった。</li><li>本来なら毎回のベンチマークごとにチューニングポイントが変わってくるはずなのに数回分間が空いたりしてリズムが悪いまま終わってしまった。</li></ul></li><li>昼飯をきちんととらなかった<ul><li>午前中、スコアが伸びず焦っていたこともあり、昼飯はおにぎり片手にひたすらチューニングを続けていた。</li><li>踏ん張りドコロの夕方頃、15分ぐらい集中力が切れた時間帯があったが今思うとあれはもったいなかった。</li><li>昼は外にいかないまでもちゃんと食べたほうがリフレッシュして午後望めたと思う。</li></ul></li></ul><h3 id=ぐぬぬ案件>ぐぬぬ案件</h3><ul><li>再起動テストでトラブル<ul><li>終了1時間前に念のため行った再起動テストで<a href=http://isucon.net/archives/45532743.html>ISUCON5 本選出場者決定のお知らせ</a>にあるように再起動後rootボリュームがReadOnlyでマウントされてしまう現象に出くわしてしまった。</li><li>このままでは運営側の再起動テストにクリアできないので最終のチューニングタスクを全て止めて原因究明&amp;リカバリに注力。</li><li>最終的に開発用に立てていたインスタンスで再起動してReadOnlyにならなかったインスタンスを再登録。</li><li>このインスタンスでのベンチマークが前回より下がるも原因特定には至らず&hellip;</li></ul></li></ul><hr><h1 id=チューニング一覧>チューニング一覧</h1><p>チームのチューニング内容は以下の通り。</p><h2 id=インフラ>インフラ</h2><ul><li>UnicornをDomain socket接続に変更</li><li>静的ファイルをNginxで返す</li><li>Nginxのworker connectionを増やす</li><li>Nginxのsendfile on, tcp_nopush on</li><li>MySQL sort_buffer_size, innodb_buffer_pool_size の調整</li><li>Unicornのworker processを1-&gt;4-&gt;8-&gt;6</li><li>Nginxのworker processを1-&gt;2</li></ul><h2 id=アプリケーション>アプリケーション</h2><ul><li>relations(created_at), footprints(user_id), relations(one), relations(another), comments(user_id) にインデックス</li><li>ログインページをエラーごとにRuby側でキャッシュする</li><li>トップページ、自分宛てのコメント一覧の取得で不要なentriesとのJOINをやめる</li><li>is_friend?によるN+1クエリを除去</li><li>get_userによるN+1クエリを除去</li><li>entries取得後使用されていないデータ整形処理を削除</li><li>友達のentriesを取得する際に不要なOR条件をクエリから除去</li></ul><p>以上で13,000後半から14,000程度。</p><p>その他、entriesテーブルのbodyからtitle切り出しは思いついたもののALTERに時間かかりすぎて断念。 <a href=http://sfujiwara.hatenablog.com/entry/2015/09/28/135717>こちら</a>の解決策を見て、さすがすぎる〜と唸る。</p><hr><h1 id=まとめ>まとめ</h1><p>ぐぬぬ案件はあったものの最終的なスコアは予選通過ギリギリだったはずなので方向性としては間違っていなかったかなと思いますが、やはり限られた時間を有効活用するために立ち止まらずチューニング施策を投入し続けるための体制にできたかどうかが紙一重、ただしとても分厚い紙一重の差となって現れたのかなと。</p><p>あとは地力を高めるためチューニングまわりの経験を勘ではなく根拠を元に進める経験をもっと積んでいこうと思います。</p><p>運営の皆様、こんなにも楽しいイベントを開催していただき、本当にありがとうございます！！そして、本当におつかれさまでした！！！</p><hr><p>最後に、うちのチームが一番輝いていたときのキャプチャを貼っておきますね。</p><p><img src=/images/2015/09/isucon5_fukuoka_slenders.png alt=isucon5_fukuoka_slenders></p><p>いや、ほんと参加してよかった。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/isucon>isucon</a></li><li><a class=tag-link href=/tags/isucon5>isucon5</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2015/09/29/isucon5/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','twitter-wjs');</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-38374674-1','auto');ga('send','pageview');</script></body></html>
+この通りにやると紙一重の差で予選落ちすることができます。</p>
+<h1 id=福岡スレンダーズ>福岡スレンダーズ</h1>
+<ul>
+<li><a href=https://twitter.com/ryutaro_mizokam>@mizoR</a> <a href=https://twitter.com/tkengo>@tkengo</a> <a href=https://twitter.com/monochromegane>@monochromegane</a></li>
+<li>Web/モバイルのアプリケーションエンジニア(インフラ専任なし)</li>
+<li>使用言語は全員が共通して触れるRubyを選択</li>
+<li>ベストスコアは約14,000。このスコアで終われていれば予選通過していたかも&mldr;</li>
+</ul>
+<h1 id=振り返り>振り返り</h1>
+<h2 id=良かった点>良かった点</h2>
+<h3 id=事前準備>事前準備</h3>
+<ul>
+<li>環境構築は30分
+<ul>
+<li>チューニングに専念するため、資産をGitHubプライベートリポジトリで管理する、各自の開発環境(エディタ等のdotfiles)を整えるといった環境構築はほぼノンストップでできるように手順化、スクリプト化しておいた。</li>
+</ul>
+</li>
+<li>事前に集まって当日の進め方を確認
+<ul>
+<li>過去問を解きながら当日どのように作業を進めるか（作業分担やチューニングの方針、ツールの使い方共有）を中心に確認した。</li>
+<li>過去問を解く事は大事だが、同じ問題は出ないので各自の自習で補う。</li>
+</ul>
+</li>
+<li>経験者の話を聞く
+<ul>
+<li>全員が見れる大きなディスプレイあると便利、昼飯は事前に買っておくと便利などの情報は一回参加してからじゃないと意外と気付けないので助かった。</li>
+</ul>
+</li>
+</ul>
+<h3 id=当日>当日</h3>
+<ul>
+<li>普段やってることしかしない（できない）
+<ul>
+<li>チームのチューニング方針</li>
+<li>ISUCON過去問を解いても普段の地力で予選突破ラインは出せていたので、本番でも普段からやってないことに手を付ける博打ではなくやれることを確実にやるようにした。</li>
+</ul>
+</li>
+<li>推測するな、計測せよ
+<ul>
+<li>基本中の基本。時間は有限なので闇雲に手をつけず、アクセスログ(kataribe)、スロークエリログ(pt-query-digest)を根拠に効果の大きいと思われる箇所から対処していった。</li>
+</ul>
+</li>
+<li>見える化
+<ul>
+<li>作業内容はGitHub+Slack通知で共有</li>
+<li>ER図をホワイトボードに書き出す</li>
+</ul>
+</li>
+<li>声掛け
+<ul>
+<li>チームメンバが悩んでたら声を掛けて頭の整理を手伝い合った。</li>
+</ul>
+</li>
+</ul>
+<h2 id=悪かった点>悪かった点</h2>
+<h3 id=事前準備-1>事前準備</h3>
+<ul>
+<li>特に無し。強いて言えばローカルベンチマークツールを想定してつくった結果通知の仕組みが無駄になったぐらい。</li>
+</ul>
+<h3 id=当日-1>当日</h3>
+<ul>
+<li>司令塔役を決めておくとよかった
+<ul>
+<li>良い意味で全員まわりも見えるし実装もできるメンバーだったので前半は自律的に作業分担が進んでしまい、後半も自分で修正箇所を見つけて修正するの流れのまま進んだ。</li>
+<li>結果的に各自の作業後、次の修正箇所を探すための時間ができ、継続的に修正を投入できなかった。</li>
+<li>特に後半はベンチマークを実行、結果を元に次の修正箇所を指示する司令塔役を立てるべきだった。</li>
+</ul>
+</li>
+<li>ベンチマーク -> ログ解析のリズムが悪かった
+<ul>
+<li>昨年までのローカルベンチマークを想定して各自の開発環境でベンチマーク->ログ解析を回す準備をしていたが、外部からのベンチマークになったことでサーバー上のログをどう共有するかを決めきれずに気づいた誰かがやるということになってしまった。</li>
+<li>本来なら毎回のベンチマークごとにチューニングポイントが変わってくるはずなのに数回分間が空いたりしてリズムが悪いまま終わってしまった。</li>
+</ul>
+</li>
+<li>昼飯をきちんととらなかった
+<ul>
+<li>午前中、スコアが伸びず焦っていたこともあり、昼飯はおにぎり片手にひたすらチューニングを続けていた。</li>
+<li>踏ん張りドコロの夕方頃、15分ぐらい集中力が切れた時間帯があったが今思うとあれはもったいなかった。</li>
+<li>昼は外にいかないまでもちゃんと食べたほうがリフレッシュして午後望めたと思う。</li>
+</ul>
+</li>
+</ul>
+<h3 id=ぐぬぬ案件>ぐぬぬ案件</h3>
+<ul>
+<li>再起動テストでトラブル
+<ul>
+<li>終了1時間前に念のため行った再起動テストで<a href=http://isucon.net/archives/45532743.html>ISUCON5 本選出場者決定のお知らせ</a>にあるように再起動後rootボリュームがReadOnlyでマウントされてしまう現象に出くわしてしまった。</li>
+<li>このままでは運営側の再起動テストにクリアできないので最終のチューニングタスクを全て止めて原因究明&リカバリに注力。</li>
+<li>最終的に開発用に立てていたインスタンスで再起動してReadOnlyにならなかったインスタンスを再登録。</li>
+<li>このインスタンスでのベンチマークが前回より下がるも原因特定には至らず&mldr;</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id=チューニング一覧>チューニング一覧</h1>
+<p>チームのチューニング内容は以下の通り。</p>
+<h2 id=インフラ>インフラ</h2>
+<ul>
+<li>UnicornをDomain socket接続に変更</li>
+<li>静的ファイルをNginxで返す</li>
+<li>Nginxのworker connectionを増やす</li>
+<li>Nginxのsendfile on, tcp_nopush on</li>
+<li>MySQL sort_buffer_size, innodb_buffer_pool_size の調整</li>
+<li>Unicornのworker processを1->4->8->6</li>
+<li>Nginxのworker processを1->2</li>
+</ul>
+<h2 id=アプリケーション>アプリケーション</h2>
+<ul>
+<li>relations(created_at), footprints(user_id), relations(one), relations(another), comments(user_id) にインデックス</li>
+<li>ログインページをエラーごとにRuby側でキャッシュする</li>
+<li>トップページ、自分宛てのコメント一覧の取得で不要なentriesとのJOINをやめる</li>
+<li>is_friend?によるN+1クエリを除去</li>
+<li>get_userによるN+1クエリを除去</li>
+<li>entries取得後使用されていないデータ整形処理を削除</li>
+<li>友達のentriesを取得する際に不要なOR条件をクエリから除去</li>
+</ul>
+<p>以上で13,000後半から14,000程度。</p>
+<p>その他、entriesテーブルのbodyからtitle切り出しは思いついたもののALTERに時間かかりすぎて断念。 <a href=http://sfujiwara.hatenablog.com/entry/2015/09/28/135717>こちら</a>の解決策を見て、さすがすぎる〜と唸る。</p>
+<hr>
+<h1 id=まとめ>まとめ</h1>
+<p>ぐぬぬ案件はあったものの最終的なスコアは予選通過ギリギリだったはずなので方向性としては間違っていなかったかなと思いますが、やはり限られた時間を有効活用するために立ち止まらずチューニング施策を投入し続けるための体制にできたかどうかが紙一重、ただしとても分厚い紙一重の差となって現れたのかなと。</p>
+<p>あとは地力を高めるためチューニングまわりの経験を勘ではなく根拠を元に進める経験をもっと積んでいこうと思います。</p>
+<p>運営の皆様、こんなにも楽しいイベントを開催していただき、本当にありがとうございます！！そして、本当におつかれさまでした！！！</p>
+<hr>
+<p>最後に、うちのチームが一番輝いていたときのキャプチャを貼っておきますね。</p>
+<p><img src=/images/2015/09/isucon5_fukuoka_slenders.png alt=isucon5_fukuoka_slenders></p>
+<p>いや、ほんと参加してよかった。</p>
+</div>
+<footer class=tag>
+<i class="fa fa-tags tag-icon"></i>
+<ul>
+<li><a class=tag-link href=/tags/isucon>isucon</a></li>
+<li><a class=tag-link href=/tags/isucon5>isucon5</a></li>
+</ul>
+<div class=clear></div>
+</footer>
+</div>
+</article>
+<div class=social-btn>
+<div>
+<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2015/09/29/isucon5/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
+</div>
+<div>
+<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
+</div>
+</div>
+</div>
+<footer class=footer>
+<div class=author></div>
+<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
+<p>monochromegane (モノクロめがね) と申します。</p>
+<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+<ul class=social>
+<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
+<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
+<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
+</ul>
+<p class=copyright>
+<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
+</p>
+</footer>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
+<script>hljs.initHighlightingOnLoad()</script>
+<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
+</body>
+</html>

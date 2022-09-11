@@ -1,18 +1,153 @@
-<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>Go言語でag(The Silver Searcher)ライクな高速検索ツールをつくった。EUC-JP/Shift-JISも検索できマス。 &middot; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="いまや高速パターン検索といえばag(The Silver Searcher)ですが、検索対象がUTF-8のテキストを前提としているため、EUC-JPやShift-JISといったファイルを検索するのに課題があります。
+<!doctype html><html>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width">
+<meta name=author content>
+<title>Go言語でag(The Silver Searcher)ライクな高速検索ツールをつくった。EUC-JP/Shift-JISも検索できマス。 &#183; THINKING MEGANE</title>
+<meta name=twitter:card content="summary">
+<meta name=twitter:site content="@monochromegane">
+<meta property="og:description" content="いまや高速パターン検索といえばag(The Silver Searcher)ですが、検索対象がUTF-8のテキストを前提としているため、EUC-JPやShift-JISといったファイルを検索するのに課題があります。
 これまで、それらの日本語文字セットを検索できるようにするため、色々とagの改造、公開を行っていました。
- ag(The Silver Searcher)でEUC-JP/Shift-JISのファイルも検索できるようにしてみた 日本語圏特化型ag -白金- の配備が完了しました  しかし、特定の国の文字コードだけに特化した修正というのをmasterに取り込んでもらうわけにもいかず、派生ブランチとして追随するのも、やはり面倒&hellip;
+ ag(The Silver Searcher)でEUC-JP/Shift-JISのファイルも検索できるようにしてみた 日本語圏特化型ag -白金- の配備が完了しました  しかし、特定の国の文字コードだけに特化した修正というのをmasterに取り込んでもらうわけにもいかず、派生ブランチとして追随するのも、やはり面倒&mldr;
 そこで年始にGo言語を触ったのをきっかけに、Go言語でパターン検索ツールをつくってみました。
 せっかくなのでポストagを目指して、プラチナサーチャー(The Platinum Searcher)と名付けてます。
 The Platinum Searcher 機能  ag相当の検索速度 プロジェクトのgitignore, hgignoreファイルによる検索対象の除外 日本語文字セット(UTF-8, EUC-JP, Shift-JIS)ファイルの検索 各OS(Mac OS X, Windows, Linux)向けのバイナリ提供  ベンチマーク ack, agと比較した結果です。agと同じくらいの速度は出せていると思います。
-ack go 6.24s user 1.06s system 99% cpu 7.304 total ag go 0.88s user 1.39s system 221% cpu 1.027 total pt go 1.05s user 1.03s system 195% cpu 1.066 total  ディレクトリ検索、Grep処理、結果表示などをゴルーチンを使って並行化したりしていますが、今回のようなシンプルな実装でこれだけの速度を出せているGo言語、なかなかよさそうです。"><meta property="og:title" content="Go言語でag(The Silver Searcher)ライクな高速検索ツールをつくった。EUC-JP/Shift-JISも検索できマス。"><meta property="og:url" content="https://blog.monochromegane.com/blog/2014/01/16/the-platinum-searcher/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2014/01/16/the-platinum-searcher/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:true},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:true}}});</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2014/01/16/the-platinum-searcher/>Go言語でag(The Silver Searcher)ライクな高速検索ツールをつくった。EUC-JP/Shift-JISも検索できマス。</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2014-01-16</div></time></header><div class=post-inner><p>いまや高速パターン検索といえばag(The Silver Searcher)ですが、検索対象がUTF-8のテキストを前提としているため、EUC-JPやShift-JISといったファイルを検索するのに課題があります。</p><p>これまで、それらの日本語文字セットを検索できるようにするため、色々とagの改造、公開を行っていました。</p><ul><li><a href=/blog/2013/09/15/the-silver-searcher-detects-japanese-char-set/>ag(The Silver Searcher)でEUC-JP/Shift-JISのファイルも検索できるようにしてみた</a></li><li><a href=/blog/2013/09/23/sg-spec/>日本語圏特化型ag -白金- の配備が完了しました</a></li></ul><p>しかし、特定の国の文字コードだけに特化した修正というのをmasterに取り込んでもらうわけにもいかず、派生ブランチとして追随するのも、やはり面倒&hellip;</p><p>そこで年始にGo言語を触ったのをきっかけに、Go言語でパターン検索ツールをつくってみました。</p><p>せっかくなのでポストagを目指して、<a href=https://github.com/monochromegane/the_platinum_searcher>プラチナサーチャー(The Platinum Searcher)</a>と名付けてます。</p><hr><h1 id=the-platinum-searcher>The Platinum Searcher</h1><h2 id=機能>機能</h2><ul><li>ag相当の検索速度</li><li>プロジェクトのgitignore, hgignoreファイルによる検索対象の除外</li><li>日本語文字セット(UTF-8, EUC-JP, Shift-JIS)ファイルの検索</li><li>各OS(Mac OS X, Windows, Linux)向けのバイナリ提供</li></ul><h3 id=ベンチマーク>ベンチマーク</h3><p><code>ack</code>, <code>ag</code>と比較した結果です。agと同じくらいの速度は出せていると思います。</p><pre><code>ack go  6.24s user 1.06s system 99%  cpu 7.304 total
+ack go 6.24s user 1.06s system 99% cpu 7.304 total ag go 0.88s user 1.39s system 221% cpu 1.027 total pt go 1.05s user 1.03s system 195% cpu 1.066 total ディレクトリ検索、Grep処理、結果表示などをゴルーチンを使って並行化したりしていますが、今回のようなシンプルな実装でこれだけの速度を出せているGo言語、なかなかよさそうです。
+インストール 各OS向けにビルドしたものを提供しています。">
+<meta property="og:title" content="Go言語でag(The Silver Searcher)ライクな高速検索ツールをつくった。EUC-JP/Shift-JISも検索できマス。">
+<meta property="og:url" content="https://blog.monochromegane.com/blog/2014/01/16/the-platinum-searcher/">
+<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+<link rel=stylesheet href=/css/reset.css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
+<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
+<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
+<link rel=stylesheet href=/css/text.css>
+<link rel=stylesheet href=/css/color.css>
+<link rel=stylesheet href=/css/layout.css>
+<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
+<link rel="shortcut icon" href=/images/favicon.ico>
+<link rel=canonical href=https://blog.monochromegane.com/blog/2014/01/16/the-platinum-searcher/>
+<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
+</head>
+<body>
+<div class=header>
+<header>
+<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
+<nav>
+<ul class=menu>
+<li><a href=/self-introduction/>Home</a></li>
+<li><a href=/post/>Archives</a></li>
+<li><a href=/diary/>Diary</a></li>
+<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
+</ul>
+</nav>
+</header>
+</div>
+<div class=container>
+<article>
+<div class=post>
+<header>
+<h1><a href=https://blog.monochromegane.com/blog/2014/01/16/the-platinum-searcher/>Go言語でag(The Silver Searcher)ライクな高速検索ツールをつくった。EUC-JP/Shift-JISも検索できマス。</a></h1>
+<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2014-01-16</div></time>
+</header>
+<div class=post-inner>
+<p>いまや高速パターン検索といえばag(The Silver Searcher)ですが、検索対象がUTF-8のテキストを前提としているため、EUC-JPやShift-JISといったファイルを検索するのに課題があります。</p>
+<p>これまで、それらの日本語文字セットを検索できるようにするため、色々とagの改造、公開を行っていました。</p>
+<ul>
+<li><a href=/blog/2013/09/15/the-silver-searcher-detects-japanese-char-set/>ag(The Silver Searcher)でEUC-JP/Shift-JISのファイルも検索できるようにしてみた</a></li>
+<li><a href=/blog/2013/09/23/sg-spec/>日本語圏特化型ag -白金- の配備が完了しました</a></li>
+</ul>
+<p>しかし、特定の国の文字コードだけに特化した修正というのをmasterに取り込んでもらうわけにもいかず、派生ブランチとして追随するのも、やはり面倒&mldr;</p>
+<p>そこで年始にGo言語を触ったのをきっかけに、Go言語でパターン検索ツールをつくってみました。</p>
+<p>せっかくなのでポストagを目指して、<a href=https://github.com/monochromegane/the_platinum_searcher>プラチナサーチャー(The Platinum Searcher)</a>と名付けてます。</p>
+<h1 id=the-platinum-searcher>The Platinum Searcher</h1>
+<h2 id=機能>機能</h2>
+<ul>
+<li>ag相当の検索速度</li>
+<li>プロジェクトのgitignore, hgignoreファイルによる検索対象の除外</li>
+<li>日本語文字セット(UTF-8, EUC-JP, Shift-JIS)ファイルの検索</li>
+<li>各OS(Mac OS X, Windows, Linux)向けのバイナリ提供</li>
+</ul>
+<h3 id=ベンチマーク>ベンチマーク</h3>
+<p><code>ack</code>, <code>ag</code>と比較した結果です。agと同じくらいの速度は出せていると思います。</p>
+<pre tabindex=0><code>ack go  6.24s user 1.06s system 99%  cpu 7.304 total
 ag go   0.88s user 1.39s system 221% cpu 1.027 total
 pt go   1.05s user 1.03s system 195% cpu 1.066 total
-</code></pre><p>ディレクトリ検索、Grep処理、結果表示などをゴルーチンを使って並行化したりしていますが、今回のようなシンプルな実装でこれだけの速度を出せているGo言語、なかなかよさそうです。</p><h2 id=インストール>インストール</h2><p>各OS向けにビルドしたものを提供しています。</p><p>以下のURLで提供しているバイナリファイルをパスの通ったところに置けばOKです。</p><ul><li><a href=https://drone.io/github.com/monochromegane/the_platinum_searcher/files/artifacts/bin/darwin_amd64/pt>Mac OS X(x86 64bit)</a></li><li><a href=https://drone.io/github.com/monochromegane/the_platinum_searcher/files/artifacts/bin/darwin_i386/pt>Mac OS X(x86 32bit)</a></li><li><a href=https://drone.io/github.com/monochromegane/the_platinum_searcher/files/artifacts/bin/windows_amd64/pt.exe>Windows(x86 64bit)</a></li><li><a href=https://drone.io/github.com/monochromegane/the_platinum_searcher/files/artifacts/bin/windows_i386/pt.exe>Windows(x86 32bit)</a></li><li><a href=https://drone.io/github.com/monochromegane/the_platinum_searcher/files/artifacts/bin/linux_amd64/pt>Linux(x86 64bit)</a></li><li><a href=https://drone.io/github.com/monochromegane/the_platinum_searcher/files/artifacts/bin/linux_i386/pt>Linux(x86 32bit)</a></li></ul><h2 id=使い方>使い方</h2><p>通常の ag コマンドと同様です。</p><pre><code class=language-sh>$ pt [OPTIONS] PATTERN [PATH]
-</code></pre><p>コマンド名は<code>pt</code>です。プラチナなので。</p><h2 id=unite-vimとの連携>Unite.vimとの連携</h2><p><a href=/blog/2013/09/18/ag-and-unite/>agとUnite.vimで快適高速grep環境を手に入れる</a> で紹介したのと同じようにプラチナもUnite.vimと連携できます。</p><pre><code class=language-vim>nnoremap &lt;silent&gt; ,g :&lt;C-u&gt;Unite grep:. -buffer-name=search-buffer&lt;CR&gt;
-if executable('pt')
-  let g:unite_source_grep_command = 'pt'
-  let g:unite_source_grep_default_opts = '--nogroup --nocolor'
-  let g:unite_source_grep_recursive_opt = ''
-endif
-</code></pre><hr><p>今後は、ポストag、プラチナの名に恥じないよう、agより速く検索できるようにしていきたいなと思ってます。</p><p>まだGo言語は触り始めたところなので、プルリクでのツッコミもらえたらうれしいです。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/ag>ag</a></li><li><a class=tag-link href=/tags/ack>ack</a></li><li><a class=tag-link href=/tags/grep>grep</a></li><li><a class=tag-link href=/tags/the-silver-searcher>the-silver-searcher</a></li><li><a class=tag-link href=/tags/unite.vim>unite.vim</a></li><li><a class=tag-link href=/tags/golang>golang</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2014/01/16/the-platinum-searcher/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','twitter-wjs');</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-38374674-1','auto');ga('send','pageview');</script></body></html>
+</code></pre><p>ディレクトリ検索、Grep処理、結果表示などをゴルーチンを使って並行化したりしていますが、今回のようなシンプルな実装でこれだけの速度を出せているGo言語、なかなかよさそうです。</p>
+<h2 id=インストール>インストール</h2>
+<p>各OS向けにビルドしたものを提供しています。</p>
+<p>以下のURLで提供しているバイナリファイルをパスの通ったところに置けばOKです。</p>
+<ul>
+<li><a href=https://drone.io/github.com/monochromegane/the_platinum_searcher/files/artifacts/bin/darwin_amd64/pt>Mac OS X(x86 64bit)</a></li>
+<li><a href=https://drone.io/github.com/monochromegane/the_platinum_searcher/files/artifacts/bin/darwin_i386/pt>Mac OS X(x86 32bit)</a></li>
+<li><a href=https://drone.io/github.com/monochromegane/the_platinum_searcher/files/artifacts/bin/windows_amd64/pt.exe>Windows(x86 64bit)</a></li>
+<li><a href=https://drone.io/github.com/monochromegane/the_platinum_searcher/files/artifacts/bin/windows_i386/pt.exe>Windows(x86 32bit)</a></li>
+<li><a href=https://drone.io/github.com/monochromegane/the_platinum_searcher/files/artifacts/bin/linux_amd64/pt>Linux(x86 64bit)</a></li>
+<li><a href=https://drone.io/github.com/monochromegane/the_platinum_searcher/files/artifacts/bin/linux_i386/pt>Linux(x86 32bit)</a></li>
+</ul>
+<h2 id=使い方>使い方</h2>
+<p>通常の ag コマンドと同様です。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ pt <span style=color:#f92672>[</span>OPTIONS<span style=color:#f92672>]</span> PATTERN <span style=color:#f92672>[</span>PATH<span style=color:#f92672>]</span>
+</code></pre></div><p>コマンド名は<code>pt</code>です。プラチナなので。</p>
+<h2 id=unitevimとの連携>Unite.vimとの連携</h2>
+<p><a href=/blog/2013/09/18/ag-and-unite/>agとUnite.vimで快適高速grep環境を手に入れる</a> で紹介したのと同じようにプラチナもUnite.vimと連携できます。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-vim data-lang=vim><span style=color:#a6e22e>nnoremap</span> &lt;<span style=color:#a6e22e>silent</span>&gt; ,<span style=color:#a6e22e>g</span> :&lt;<span style=color:#a6e22e>C</span>-<span style=color:#a6e22e>u</span>&gt;<span style=color:#a6e22e>Unite</span> <span style=color:#a6e22e>grep</span>:. -<span style=color:#a6e22e>buffer</span>-<span style=color:#a6e22e>name</span>=<span style=color:#a6e22e>search</span>-<span style=color:#a6e22e>buffer</span>&lt;<span style=color:#a6e22e>CR</span>&gt;<span style=color:#960050;background-color:#1e0010>
+</span><span style=color:#960050;background-color:#1e0010></span><span style=color:#66d9ef>if</span> <span style=color:#a6e22e>executable</span>(<span style=color:#e6db74>&#39;pt&#39;</span>)<span style=color:#960050;background-color:#1e0010>
+</span><span style=color:#960050;background-color:#1e0010></span>  <span style=color:#66d9ef>let</span> <span style=color:#a6e22e>g</span>:<span style=color:#a6e22e>unite_source_grep_command</span> = <span style=color:#e6db74>&#39;pt&#39;</span><span style=color:#960050;background-color:#1e0010>
+</span><span style=color:#960050;background-color:#1e0010></span>  <span style=color:#66d9ef>let</span> <span style=color:#a6e22e>g</span>:<span style=color:#a6e22e>unite_source_grep_default_opts</span> = <span style=color:#e6db74>&#39;--nogroup --nocolor&#39;</span><span style=color:#960050;background-color:#1e0010>
+</span><span style=color:#960050;background-color:#1e0010></span>  <span style=color:#66d9ef>let</span> <span style=color:#a6e22e>g</span>:<span style=color:#a6e22e>unite_source_grep_recursive_opt</span> = <span style=color:#e6db74>&#39;&#39;</span><span style=color:#960050;background-color:#1e0010>
+</span><span style=color:#960050;background-color:#1e0010></span><span style=color:#66d9ef>endif</span><span style=color:#960050;background-color:#1e0010>
+</span></code></pre></div>
+<p>今後は、ポストag、プラチナの名に恥じないよう、agより速く検索できるようにしていきたいなと思ってます。</p>
+<p>まだGo言語は触り始めたところなので、プルリクでのツッコミもらえたらうれしいです。</p>
+</div>
+<footer class=tag>
+<i class="fa fa-tags tag-icon"></i>
+<ul>
+<li><a class=tag-link href=/tags/ag>ag</a></li>
+<li><a class=tag-link href=/tags/ack>ack</a></li>
+<li><a class=tag-link href=/tags/grep>grep</a></li>
+<li><a class=tag-link href=/tags/the-silver-searcher>the-silver-searcher</a></li>
+<li><a class=tag-link href=/tags/unite.vim>unite.vim</a></li>
+<li><a class=tag-link href=/tags/golang>golang</a></li>
+</ul>
+<div class=clear></div>
+</footer>
+</div>
+</article>
+<div class=social-btn>
+<div>
+<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2014/01/16/the-platinum-searcher/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
+</div>
+<div>
+<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
+</div>
+</div>
+</div>
+<footer class=footer>
+<div class=author></div>
+<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
+<p>monochromegane (モノクロめがね) と申します。</p>
+<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+<ul class=social>
+<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
+<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
+<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
+</ul>
+<p class=copyright>
+<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
+</p>
+</footer>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
+<script>hljs.initHighlightingOnLoad()</script>
+<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
+</body>
+</html>

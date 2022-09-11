@@ -1,4 +1,12 @@
-<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>情報要求を取り巻く技術とプロセスモデル &middot; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="情報検索にまつわる開発を行っていると、情報検索や情報推薦の技術詳細、つまりシステム側に注目しがちである。しかしながら前回のエントリで触れたように、情報探索のプロセスには、これを駆動する主体である利用者が存在する。
+<!doctype html><html>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width">
+<meta name=author content>
+<title>情報要求を取り巻く技術とプロセスモデル &#183; THINKING MEGANE</title>
+<meta name=twitter:card content="summary">
+<meta name=twitter:site content="@monochromegane">
+<meta property="og:description" content="情報検索にまつわる開発を行っていると、情報検索や情報推薦の技術詳細、つまりシステム側に注目しがちである。しかしながら前回のエントリで触れたように、情報探索のプロセスには、これを駆動する主体である利用者が存在する。
 情報要求を取り巻く技術とプロセスモデルの関連を以下のように図に起こしてみた。
 利用者は何らかの情報要求をクエリなりの具体的な要求の形でシステムに問い合わせを行い、システムはシステムの持つ文書集合から検索や推薦などの技術を用いて最適と思われる結果を応答し、必要に応じクエリ修正と再問い合わせといった一連のインタラクションサイクルを繰り返す。
 狭義の情報検索技術は、静的な情報要求から作られた相互に関連を持たないクエリ集合に対しての適合性を評価される。これは上図で言う所のインタフェースより右側のみで完結するため定量的な評価が行いやすかった。一方で、利用者サイドを中心とした情報探索のプロセスモデルに関する先行研究により、情報要求は、探索プロセスのステージや個々人の戦略、検索結果など様々な文脈により変化していくことがわかっている。
@@ -8,5 +16,111 @@
 そのため、まずは自身の課題環境において、
  文脈により応答の評価が変わることを確認 利用者の文脈のパターン分類と識別手法の確立 必要に応じて直感的な問い合わせに応答できる検索情報技術の導入 課題設定の明確化支援の検討  のようになりそうである。
 なお、こういった利用者の背景を踏まえた評価は適切性や有用性といった観点での定性的な評価が必要となってくるそうで、別途文献をあたりたい。
-参考文献  情報アクセス技術 入門情報検索・多言語情報処理・テキストマイニング・情報可視化 情報検索の基礎 情報検索の認知的転回 情報捜索と情報検索の統合 情報検索のためのユーザインタフェース"><meta property="og:title" content="情報要求を取り巻く技術とプロセスモデル"><meta property="og:url" content="https://blog.monochromegane.com/blog/2018/01/10/information-need-association-chart/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2018/01/10/information-need-association-chart/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:true},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:true}}});</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2018/01/10/information-need-association-chart/>情報要求を取り巻く技術とプロセスモデル</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2018-01-10</div></time></header><div class=post-inner><p>情報検索にまつわる開発を行っていると、情報検索や情報推薦の技術詳細、つまりシステム側に注目しがちである。しかしながら<a href=/blog/2018/01/07/information-retrieval-process-model/>前回のエントリ</a>で触れたように、情報探索のプロセスには、これを駆動する主体である利用者が存在する。</p><p>情報要求を取り巻く技術とプロセスモデルの関連を以下のように図に起こしてみた。</p><p><img src=/images/2018/01/association_chart.jpg alt=association_chart></p><p>利用者は何らかの情報要求をクエリなりの具体的な要求の形でシステムに問い合わせを行い、システムはシステムの持つ文書集合から検索や推薦などの技術を用いて最適と思われる結果を応答し、必要に応じクエリ修正と再問い合わせといった一連のインタラクションサイクルを繰り返す。</p><p>狭義の情報検索技術は、静的な情報要求から作られた相互に関連を持たないクエリ集合に対しての適合性を評価される。これは上図で言う所のインタフェースより右側のみで完結するため定量的な評価が行いやすかった。一方で、利用者サイドを中心とした情報探索のプロセスモデルに関する先行研究により、情報要求は、探索プロセスのステージや個々人の戦略、検索結果など様々な文脈により変化していくことがわかっている。</p><p>これは、文脈により最適と考えられる応答が変わっていくということである。すなわち情報検索技術間での優位性を比較するのではなく、情報要求の背後にある利用者の文脈や状況、課題設定を把握して、適切な情報検索技術を選定するようなアプローチが考えられる。</p><p>また、利用者の存在を意識すると、情報要求を形にするまでの認知的な負荷を下げるため、曖昧だったり、人間的な感覚に近い問い合わせに対しても少ない試行回数でたどり着けることが重要となってくる。より先進的には、課題設定自体の明確化を支援する仕組みも必要かもしれない。</p><p>これらをまとめると、利用者の取りうる行動が文脈により変化すると仮定した上で、精緻な文脈の把握並びに課題設定の明確化支援を通して、直感的な問い合わせに応答できる仕組みが求められると考えられる。</p><p>そのため、まずは自身の課題環境において、</p><ol><li>文脈により応答の評価が変わることを確認</li><li>利用者の文脈のパターン分類と識別手法の確立</li><li>必要に応じて直感的な問い合わせに応答できる検索情報技術の導入</li><li>課題設定の明確化支援の検討</li></ol><p>のようになりそうである。</p><p>なお、こういった利用者の背景を踏まえた評価は適切性や有用性といった観点での定性的な評価が必要となってくるそうで、別途文献をあたりたい。</p><h1 id=参考文献>参考文献</h1><ul><li><a href="https://www.amazon.co.jp/gp/product/4627880413/ref=as_li_tl?ie=UTF8&amp;tag=monochromeg03-22&amp;camp=247&amp;creative=1211&amp;linkCode=as2&amp;creativeASIN=4627880413&amp;linkId=a57f9faa8a91d8a51737221a6091fece">情報アクセス技術 入門情報検索・多言語情報処理・テキストマイニング・情報可視化</a></li><li><a href="https://www.amazon.co.jp/gp/product/4320123220/ref=as_li_tl?ie=UTF8&amp;tag=monochromeg03-22&amp;camp=247&amp;creative=1211&amp;linkCode=as2&amp;creativeASIN=4320123220&amp;linkId=f2c094585f559eb5aec872a20156a9e9">情報検索の基礎</a></li><li><a href="https://www.amazon.co.jp/gp/product/462107945X/ref=as_li_tl?ie=UTF8&amp;tag=monochromeg03-22&amp;camp=247&amp;creative=1211&amp;linkCode=as2&amp;creativeASIN=462107945X&amp;linkId=94ea14dfc676d38fc81f18d6de787f65">情報検索の認知的転回 情報捜索と情報検索の統合</a></li><li><a href="https://www.amazon.co.jp/gp/product/4320122801/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&amp;tag=monochromeg03-22&amp;camp=247&amp;creative=1211&amp;linkCode=as2&amp;creativeASIN=4320122801&amp;linkId=89464f76e3622a9a8086ad4e0e0a36d5">情報検索のためのユーザインタフェース</a></li></ul></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/%E6%83%85%E5%A0%B1%E8%A6%81%E6%B1%82>情報要求</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2018/01/10/information-need-association-chart/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','twitter-wjs');</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-38374674-1','auto');ga('send','pageview');</script></body></html>
+参考文献  情報アクセス技術 入門情報検索・多言語情報処理・テキストマイニング・情報可視化 情報検索の基礎 情報検索の認知的転回 情報捜索と情報検索の統合 情報検索のためのユーザインタフェース  ">
+<meta property="og:title" content="情報要求を取り巻く技術とプロセスモデル">
+<meta property="og:url" content="https://blog.monochromegane.com/blog/2018/01/10/information-need-association-chart/">
+<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+<link rel=stylesheet href=/css/reset.css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
+<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
+<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
+<link rel=stylesheet href=/css/text.css>
+<link rel=stylesheet href=/css/color.css>
+<link rel=stylesheet href=/css/layout.css>
+<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
+<link rel="shortcut icon" href=/images/favicon.ico>
+<link rel=canonical href=https://blog.monochromegane.com/blog/2018/01/10/information-need-association-chart/>
+<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
+</head>
+<body>
+<div class=header>
+<header>
+<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
+<nav>
+<ul class=menu>
+<li><a href=/self-introduction/>Home</a></li>
+<li><a href=/post/>Archives</a></li>
+<li><a href=/diary/>Diary</a></li>
+<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
+</ul>
+</nav>
+</header>
+</div>
+<div class=container>
+<article>
+<div class=post>
+<header>
+<h1><a href=https://blog.monochromegane.com/blog/2018/01/10/information-need-association-chart/>情報要求を取り巻く技術とプロセスモデル</a></h1>
+<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2018-01-10</div></time>
+</header>
+<div class=post-inner>
+<p>情報検索にまつわる開発を行っていると、情報検索や情報推薦の技術詳細、つまりシステム側に注目しがちである。しかしながら<a href=/blog/2018/01/07/information-retrieval-process-model/>前回のエントリ</a>で触れたように、情報探索のプロセスには、これを駆動する主体である利用者が存在する。</p>
+<p>情報要求を取り巻く技術とプロセスモデルの関連を以下のように図に起こしてみた。</p>
+<p><img src=/images/2018/01/association_chart.jpg alt=association_chart></p>
+<p>利用者は何らかの情報要求をクエリなりの具体的な要求の形でシステムに問い合わせを行い、システムはシステムの持つ文書集合から検索や推薦などの技術を用いて最適と思われる結果を応答し、必要に応じクエリ修正と再問い合わせといった一連のインタラクションサイクルを繰り返す。</p>
+<p>狭義の情報検索技術は、静的な情報要求から作られた相互に関連を持たないクエリ集合に対しての適合性を評価される。これは上図で言う所のインタフェースより右側のみで完結するため定量的な評価が行いやすかった。一方で、利用者サイドを中心とした情報探索のプロセスモデルに関する先行研究により、情報要求は、探索プロセスのステージや個々人の戦略、検索結果など様々な文脈により変化していくことがわかっている。</p>
+<p>これは、文脈により最適と考えられる応答が変わっていくということである。すなわち情報検索技術間での優位性を比較するのではなく、情報要求の背後にある利用者の文脈や状況、課題設定を把握して、適切な情報検索技術を選定するようなアプローチが考えられる。</p>
+<p>また、利用者の存在を意識すると、情報要求を形にするまでの認知的な負荷を下げるため、曖昧だったり、人間的な感覚に近い問い合わせに対しても少ない試行回数でたどり着けることが重要となってくる。より先進的には、課題設定自体の明確化を支援する仕組みも必要かもしれない。</p>
+<p>これらをまとめると、利用者の取りうる行動が文脈により変化すると仮定した上で、精緻な文脈の把握並びに課題設定の明確化支援を通して、直感的な問い合わせに応答できる仕組みが求められると考えられる。</p>
+<p>そのため、まずは自身の課題環境において、</p>
+<ol>
+<li>文脈により応答の評価が変わることを確認</li>
+<li>利用者の文脈のパターン分類と識別手法の確立</li>
+<li>必要に応じて直感的な問い合わせに応答できる検索情報技術の導入</li>
+<li>課題設定の明確化支援の検討</li>
+</ol>
+<p>のようになりそうである。</p>
+<p>なお、こういった利用者の背景を踏まえた評価は適切性や有用性といった観点での定性的な評価が必要となってくるそうで、別途文献をあたりたい。</p>
+<h1 id=参考文献>参考文献</h1>
+<ul>
+<li><a href="https://www.amazon.co.jp/gp/product/4627880413/ref=as_li_tl?ie=UTF8&tag=monochromeg03-22&camp=247&creative=1211&linkCode=as2&creativeASIN=4627880413&linkId=a57f9faa8a91d8a51737221a6091fece">情報アクセス技術 入門情報検索・多言語情報処理・テキストマイニング・情報可視化</a></li>
+<li><a href="https://www.amazon.co.jp/gp/product/4320123220/ref=as_li_tl?ie=UTF8&tag=monochromeg03-22&camp=247&creative=1211&linkCode=as2&creativeASIN=4320123220&linkId=f2c094585f559eb5aec872a20156a9e9">情報検索の基礎</a></li>
+<li><a href="https://www.amazon.co.jp/gp/product/462107945X/ref=as_li_tl?ie=UTF8&tag=monochromeg03-22&camp=247&creative=1211&linkCode=as2&creativeASIN=462107945X&linkId=94ea14dfc676d38fc81f18d6de787f65">情報検索の認知的転回 情報捜索と情報検索の統合</a></li>
+<li><a href="https://www.amazon.co.jp/gp/product/4320122801/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&tag=monochromeg03-22&camp=247&creative=1211&linkCode=as2&creativeASIN=4320122801&linkId=89464f76e3622a9a8086ad4e0e0a36d5">情報検索のためのユーザインタフェース</a></li>
+</ul>
+</div>
+<footer class=tag>
+<i class="fa fa-tags tag-icon"></i>
+<ul>
+<li><a class=tag-link href=/tags/%E6%83%85%E5%A0%B1%E8%A6%81%E6%B1%82>情報要求</a></li>
+</ul>
+<div class=clear></div>
+</footer>
+</div>
+</article>
+<div class=social-btn>
+<div>
+<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2018/01/10/information-need-association-chart/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
+</div>
+<div>
+<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
+</div>
+</div>
+</div>
+<footer class=footer>
+<div class=author></div>
+<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
+<p>monochromegane (モノクロめがね) と申します。</p>
+<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+<ul class=social>
+<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
+<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
+<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
+</ul>
+<p class=copyright>
+<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
+</p>
+</footer>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
+<script>hljs.initHighlightingOnLoad()</script>
+<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
+</body>
+</html>

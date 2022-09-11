@@ -1,33 +1,169 @@
-<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>CSVテキストをMarkdown形式のテーブルに変換するツールをつくった &middot; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="Markdown形式のテーブル記法をいつまでたってもうろ覚えで、毎回検索したり、変換サイトにアクセスするのが面倒だったのでツールをつくりました。嘘です。Go書きたかっただけです。
-&lt;a href=&#34;https://github.com/monochromegane/mdt&#34;&gt;monochromegane/mdt&lt;/a&gt; 使い方 CSVテキストを標準入力から受け取って整形済みのMarkdown形式テーブルを出力します。
-$ mdt &lt; hoge.csv | headerA | headerB | | ------- | ---------------------- | | short | very very long content |  連携 コマンドラインツールなので、pbpasteやAutomatorと組み合わせて好きなように使えます。
+<!doctype html><html>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width">
+<meta name=author content>
+<title>CSVテキストをMarkdown形式のテーブルに変換するツールをつくった &#183; THINKING MEGANE</title>
+<meta name=twitter:card content="summary">
+<meta name=twitter:site content="@monochromegane">
+<meta property="og:description" content="Markdown形式のテーブル記法をいつまでたってもうろ覚えで、毎回検索したり、変換サイトにアクセスするのが面倒だったのでツールをつくりました。嘘です。Go書きたかっただけです。
+使い方 CSVテキストを標準入力から受け取って整形済みのMarkdown形式テーブルを出力します。
+$ mdt < hoge.csv | headerA | headerB | | ------- | ---------------------- | | short | very very long content | 連携 コマンドラインツールなので、pbpasteやAutomatorと組み合わせて好きなように使えます。
 以下は、Automatorのサービスとして登録したmdtをGitHubのIssue作成時に呼び出している様子です。
 便利っぽい。
 機能 CSV/TSVに対応 タブ区切りにも対応しているのでエクセル表をコピーして
-$ pbpaste | mdt  のようにしてMarkdown形式テーブルに変換できます。
+$ pbpaste | mdt のようにしてMarkdown形式テーブルに変換できます。
 整形 カラムの幅を自動で整えます。日本語文字が入っても大丈夫です。
-ヘッダでのalign定義 headerA:, :headerB: content, content  のようなCSVから
-| headerA | headerB | | -------:|:-------:| | content | content |  のようなalign定義されたテーブルを出力します。
+ヘッダでのalign定義 headerA:, :headerB: content, content のようなCSVから
+| headerA | headerB | | -------:|:-------:| | content | content | のようなalign定義されたテーブルを出力します。
 繰り返し Markdown形式のテーブルを編集するときもCSV形式で編集できるように、テーブルとCSVの混在した状態でも繰り返しコマンドを適用できます。もちろん毎回整形しなおします。
-| headerA | headerB | | -------:|:-------:| | content | content | next content, next content  のように行を追加した状態から以下の出力を得ることができます。"><meta property="og:title" content="CSVテキストをMarkdown形式のテーブルに変換するツールをつくった"><meta property="og:url" content="https://blog.monochromegane.com/blog/2015/05/17/csv-to-markdown-table/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2015/05/17/csv-to-markdown-table/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:true},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:true}}});</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2015/05/17/csv-to-markdown-table/>CSVテキストをMarkdown形式のテーブルに変換するツールをつくった</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2015-05-17</div></time></header><div class=post-inner><p>Markdown形式のテーブル記法をいつまでたってもうろ覚えで、毎回検索したり、変換サイトにアクセスするのが面倒だったのでツールをつくりました。<strong>嘘です。Go書きたかっただけです。</strong></p><iframe src="//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fmdt" title=monochromegane/mdt class="embed-card embed-webcard" scrolling=no frameborder=0 style="width:100%;height:155px;max-width:500px;margin:10px 0">&lt;a href="https://github.com/monochromegane/mdt"&gt;monochromegane/mdt&lt;/a&gt;</iframe><h2 id=使い方>使い方</h2><p>CSVテキストを標準入力から受け取って整形済みのMarkdown形式テーブルを出力します。</p><pre><code class=language-sh>$ mdt &lt; hoge.csv
+| headerA | headerB | | -------:|:-------:| | content | content | next content, next content のように行を追加した状態から以下の出力を得ることができます。">
+<meta property="og:title" content="CSVテキストをMarkdown形式のテーブルに変換するツールをつくった">
+<meta property="og:url" content="https://blog.monochromegane.com/blog/2015/05/17/csv-to-markdown-table/">
+<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+<link rel=stylesheet href=/css/reset.css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
+<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
+<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
+<link rel=stylesheet href=/css/text.css>
+<link rel=stylesheet href=/css/color.css>
+<link rel=stylesheet href=/css/layout.css>
+<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
+<link rel="shortcut icon" href=/images/favicon.ico>
+<link rel=canonical href=https://blog.monochromegane.com/blog/2015/05/17/csv-to-markdown-table/>
+<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
+</head>
+<body>
+<div class=header>
+<header>
+<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
+<nav>
+<ul class=menu>
+<li><a href=/self-introduction/>Home</a></li>
+<li><a href=/post/>Archives</a></li>
+<li><a href=/diary/>Diary</a></li>
+<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
+</ul>
+</nav>
+</header>
+</div>
+<div class=container>
+<article>
+<div class=post>
+<header>
+<h1><a href=https://blog.monochromegane.com/blog/2015/05/17/csv-to-markdown-table/>CSVテキストをMarkdown形式のテーブルに変換するツールをつくった</a></h1>
+<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2015-05-17</div></time>
+</header>
+<div class=post-inner>
+<p>Markdown形式のテーブル記法をいつまでたってもうろ覚えで、毎回検索したり、変換サイトにアクセスするのが面倒だったのでツールをつくりました。<strong>嘘です。Go書きたかっただけです。</strong></p>
+<h2 id=使い方>使い方</h2>
+<p>CSVテキストを標準入力から受け取って整形済みのMarkdown形式テーブルを出力します。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ mdt &lt; hoge.csv
 | headerA | headerB                |
 | ------- | ---------------------- |
 | short   | very very long content |
-</code></pre><h2 id=連携>連携</h2><p>コマンドラインツールなので、<code>pbpaste</code>や<code>Automator</code>と組み合わせて好きなように使えます。</p><p>以下は、<code>Automator</code>のサービスとして登録した<code>mdt</code>をGitHubのIssue作成時に呼び出している様子です。</p><p><img src=https://cloud.githubusercontent.com/assets/1845486/7668803/cc0a9178-fc87-11e4-9d0e-9fd32ea3c1fc.gif alt=mdt></p><p>便利っぽい。</p><h2 id=機能>機能</h2><h3 id=csv-tsvに対応>CSV/TSVに対応</h3><p>タブ区切りにも対応しているのでエクセル表をコピーして</p><pre><code class=language-sh>$ pbpaste | mdt
-</code></pre><p>のようにしてMarkdown形式テーブルに変換できます。</p><h3 id=整形>整形</h3><p>カラムの幅を自動で整えます。日本語文字が入っても大丈夫です。</p><h3 id=ヘッダでのalign定義>ヘッダでのalign定義</h3><pre><code>headerA:, :headerB:
+</code></pre></div><h2 id=連携>連携</h2>
+<p>コマンドラインツールなので、<code>pbpaste</code>や<code>Automator</code>と組み合わせて好きなように使えます。</p>
+<p>以下は、<code>Automator</code>のサービスとして登録した<code>mdt</code>をGitHubのIssue作成時に呼び出している様子です。</p>
+<p><img src=https://cloud.githubusercontent.com/assets/1845486/7668803/cc0a9178-fc87-11e4-9d0e-9fd32ea3c1fc.gif alt=mdt></p>
+<p>便利っぽい。</p>
+<h2 id=機能>機能</h2>
+<h3 id=csvtsvに対応>CSV/TSVに対応</h3>
+<p>タブ区切りにも対応しているのでエクセル表をコピーして</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ pbpaste | mdt
+</code></pre></div><p>のようにしてMarkdown形式テーブルに変換できます。</p>
+<h3 id=整形>整形</h3>
+<p>カラムの幅を自動で整えます。日本語文字が入っても大丈夫です。</p>
+<h3 id=ヘッダでのalign定義>ヘッダでのalign定義</h3>
+<pre tabindex=0><code>headerA:, :headerB:
 content, content
-</code></pre><p>のようなCSVから</p><pre><code>| headerA | headerB |
+</code></pre><p>のようなCSVから</p>
+<pre tabindex=0><code>| headerA | headerB |
 | -------:|:-------:|
 | content | content |
-</code></pre><p>のようなalign定義されたテーブルを出力します。</p><h3 id=繰り返し>繰り返し</h3><p>Markdown形式のテーブルを編集するときもCSV形式で編集できるように、テーブルとCSVの混在した状態でも繰り返しコマンドを適用できます。もちろん毎回整形しなおします。</p><pre><code>| headerA | headerB |
+</code></pre><p>のようなalign定義されたテーブルを出力します。</p>
+<h3 id=繰り返し>繰り返し</h3>
+<p>Markdown形式のテーブルを編集するときもCSV形式で編集できるように、テーブルとCSVの混在した状態でも繰り返しコマンドを適用できます。もちろん毎回整形しなおします。</p>
+<pre tabindex=0><code>| headerA | headerB |
 | -------:|:-------:|
 | content | content |
 next content, next content
-</code></pre><p>のように行を追加した状態から以下の出力を得ることができます。</p><pre><code>| headerA      | headerB      |
+</code></pre><p>のように行を追加した状態から以下の出力を得ることができます。</p>
+<pre tabindex=0><code>| headerA      | headerB      |
 | ------------:|:------------:|
 | content      | content      |
 | next content | next content |
-</code></pre><p><a href=https://godoc.org/github.com/monochromegane/mdt#pkg-examples>Examples</a>もあわせてどうぞ</p><h2 id=インストール>インストール</h2><pre><code class=language-sh>$ go get github.com/monochromegane/mdt/...
-</code></pre><p>です。</p><h2 id=automator>Automator</h2><p>冒頭のGitHubのPR/Issueや他のアプリケーションから使うために<code>mdt</code>をAutomatorに登録する手順です。</p><h3 id=設定>設定</h3><p>Automatorから新規サービスとして登録します。</p><p>アクションは<code>ライブラリ</code> &gt; <code>Run Shell Script</code>を選んでください。</p><p><img src=https://cloud.githubusercontent.com/assets/1845486/7668851/5d833f84-fc8c-11e4-8787-aa39ce6ab300.png alt=mdt\_with\_automator></p><p>このようにサービスとして登録することで</p><ul><li>選択したテキストを標準入力としてmdtに渡す</li><li>選択したテキストを結果で置き換え</li></ul><p>する動作を全てのアプリケーションから呼び出すことができます。</p><h3 id=ショートカットキー>ショートカットキー</h3><p>このままだと<code>メニュー</code>の<code>サービス</code>から呼び出す必要があるので、ショートカットキーを定義します。</p><p><code>システム環境設定</code> &gt; <code>キーボード</code> &gt; <code>ショートカット</code>タブ &gt; <code>サービス</code> を選択し、登録したサービスにショートカットキーを割り当てます。</p><hr><h1 id=まとめ>まとめ</h1><p>Automatorほとんど使ったことなかったのですが、コマンドラインツールと組み合わせてアプリケーション横断で同じ機能を使うことができるようになるのはいいなあと思いました。
-ブラウザ上でPR/Issue書いているときに整形するためエディタに切り替えなくてよいのは便利です。</p><p>それから、このツールを作ることでMarkdown形式のテーブル記法をやっと覚えることができました。Go言語最高ですね。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/golang>golang</a></li><li><a class=tag-link href=/tags/markdown>markdown</a></li><li><a class=tag-link href=/tags/table>table</a></li><li><a class=tag-link href=/tags/csv>csv</a></li><li><a class=tag-link href=/tags/automator>automator</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2015/05/17/csv-to-markdown-table/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','twitter-wjs');</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-38374674-1','auto');ga('send','pageview');</script></body></html>
+</code></pre><p><a href=https://godoc.org/github.com/monochromegane/mdt#pkg-examples>Examples</a>もあわせてどうぞ</p>
+<h2 id=インストール>インストール</h2>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ go get github.com/monochromegane/mdt/...
+</code></pre></div><p>です。</p>
+<h2 id=automator>Automator</h2>
+<p>冒頭のGitHubのPR/Issueや他のアプリケーションから使うために<code>mdt</code>をAutomatorに登録する手順です。</p>
+<h3 id=設定>設定</h3>
+<p>Automatorから新規サービスとして登録します。</p>
+<p>アクションは<code>ライブラリ</code> > <code>Run Shell Script</code>を選んでください。</p>
+<p><img src=https://cloud.githubusercontent.com/assets/1845486/7668851/5d833f84-fc8c-11e4-8787-aa39ce6ab300.png alt=mdt\_with\_automator></p>
+<p>このようにサービスとして登録することで</p>
+<ul>
+<li>選択したテキストを標準入力としてmdtに渡す</li>
+<li>選択したテキストを結果で置き換え</li>
+</ul>
+<p>する動作を全てのアプリケーションから呼び出すことができます。</p>
+<h3 id=ショートカットキー>ショートカットキー</h3>
+<p>このままだと<code>メニュー</code>の<code>サービス</code>から呼び出す必要があるので、ショートカットキーを定義します。</p>
+<p><code>システム環境設定</code> > <code>キーボード</code> > <code>ショートカット</code>タブ > <code>サービス</code> を選択し、登録したサービスにショートカットキーを割り当てます。</p>
+<hr>
+<h1 id=まとめ>まとめ</h1>
+<p>Automatorほとんど使ったことなかったのですが、コマンドラインツールと組み合わせてアプリケーション横断で同じ機能を使うことができるようになるのはいいなあと思いました。
+ブラウザ上でPR/Issue書いているときに整形するためエディタに切り替えなくてよいのは便利です。</p>
+<p>それから、このツールを作ることでMarkdown形式のテーブル記法をやっと覚えることができました。Go言語最高ですね。</p>
+</div>
+<footer class=tag>
+<i class="fa fa-tags tag-icon"></i>
+<ul>
+<li><a class=tag-link href=/tags/golang>golang</a></li>
+<li><a class=tag-link href=/tags/markdown>markdown</a></li>
+<li><a class=tag-link href=/tags/table>table</a></li>
+<li><a class=tag-link href=/tags/csv>csv</a></li>
+<li><a class=tag-link href=/tags/automator>automator</a></li>
+</ul>
+<div class=clear></div>
+</footer>
+</div>
+</article>
+<div class=social-btn>
+<div>
+<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2015/05/17/csv-to-markdown-table/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
+</div>
+<div>
+<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
+</div>
+</div>
+</div>
+<footer class=footer>
+<div class=author></div>
+<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
+<p>monochromegane (モノクロめがね) と申します。</p>
+<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+<ul class=social>
+<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
+<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
+<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
+</ul>
+<p class=copyright>
+<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
+</p>
+</footer>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
+<script>hljs.initHighlightingOnLoad()</script>
+<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
+</body>
+</html>

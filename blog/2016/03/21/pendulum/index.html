@@ -1,50 +1,168 @@
-<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>Treasure Dataのスケジュールジョブをコードで管理するPendulumというgemをつくった &middot; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="Treasure Dataに収集したデータを集計・出力するためにジョブをスケジュール登録するにあたり、ブラウザコンソールやAPIから直接行うと履歴管理やレビューができないといった課題を解決するために Pendulum というgemをつくりました。
-monochromegane/pendulum PendulumはDSLで記述された定義に従い、Treasure Dataのスケジュールジョブを管理します。 定義ファイルをGit管理することで、履歴管理やGitHubと連携したコードレビューが可能になります。
+<!doctype html><html>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width">
+<meta name=author content>
+<title>Treasure Dataのスケジュールジョブをコードで管理するPendulumというgemをつくった &#183; THINKING MEGANE</title>
+<meta name=twitter:card content="summary">
+<meta name=twitter:site content="@monochromegane">
+<meta property="og:description" content="Treasure Dataに収集したデータを集計・出力するためにジョブをスケジュール登録するにあたり、ブラウザコンソールやAPIから直接行うと履歴管理やレビューができないといった課題を解決するために Pendulum というgemをつくりました。
+PendulumはDSLで記述された定義に従い、Treasure Dataのスケジュールジョブを管理します。 定義ファイルをGit管理することで、履歴管理やGitHubと連携したコードレビューが可能になります。
 余談ですが、Pendulumは振り子という意味で、定期的な実行という意味と宝探しのダウジング的な意味から連想しています。ペンデュラム。響きがカッコイイ。
 使い方 Schedfileという名前で定義ファイルを用意して、
-schedule 'my-schedule-job' do database 'db_name' query 'select count(time) from access;' cron '30 0 * * *' result 'td://@/db_name/count' end  pendulumコマンドを実行するだけです。
-# dry-run で 適用内容を確認 $ pendulum --apikey='...' -a --dry-run # 適用 $ pendulum --apikey='...' -a  AWSのRoute53に対するRoadworker的なものを想像してもらえるとよいかと思います。
+schedule 'my-schedule-job' do database 'db_name' query 'select count(time) from access;' cron '30 0 * * *' result 'td://@/db_name/count' end pendulumコマンドを実行するだけです。
+# dry-run で 適用内容を確認 $ pendulum --apikey='...' -a --dry-run # 適用 $ pendulum --apikey='...' -a AWSのRoute53に対するRoadworker的なものを想像してもらえるとよいかと思います。
 エクスポート 既存のスケジュールジョブがある場合はエクスポートもできます。
-$ pendulum --apikey='...' -e  実行ディレクトリに Schedfile と queries ディレクトリが生成されジョブの定義とクエリが出力されています。
+$ pendulum --apikey='...' -e 実行ディレクトリに Schedfile と queries ディレクトリが生成されジョブの定義とクエリが出力されています。
 修正後、dry-runによるapplyを行ってみると、差分が検出されていることがわかります。
-$ pendulum --apikey='...' -a --dry-run Update schedule: my-scheduled-job (dry-run) set cron=@hourly  Schedfile APIで利用する名称と同じものが使えます。"><meta property="og:title" content="Treasure Dataのスケジュールジョブをコードで管理するPendulumというgemをつくった"><meta property="og:url" content="https://blog.monochromegane.com/blog/2016/03/21/pendulum/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2016/03/21/pendulum/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:true},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:true}}});</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2016/03/21/pendulum/>Treasure Dataのスケジュールジョブをコードで管理するPendulumというgemをつくった</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2016-03-21</div></time></header><div class=post-inner><p>Treasure Dataに収集したデータを集計・出力するためにジョブをスケジュール登録するにあたり、ブラウザコンソールやAPIから直接行うと履歴管理やレビューができないといった課題を解決するために <code>Pendulum</code> というgemをつくりました。</p><iframe src="//hatenablog-parts.com/embed?url=https://github.com/monochromegane/pendulum" title=monochromegane/pendulum class="embed-card embed-webcard" scrolling=no frame border=0 style="width:100%;height:155px;max-width:500px;margin:10px 0"><a href=https://github.com/monochromegane/pendulum>monochromegane/pendulum</a></iframe><p>PendulumはDSLで記述された定義に従い、Treasure Dataのスケジュールジョブを管理します。
-定義ファイルをGit管理することで、履歴管理やGitHubと連携したコードレビューが可能になります。</p><p>余談ですが、Pendulumは振り子という意味で、定期的な実行という意味と宝探しのダウジング的な意味から連想しています。ペンデュラム。響きがカッコイイ。</p><h2 id=使い方>使い方</h2><p><code>Schedfile</code>という名前で定義ファイルを用意して、</p><pre><code class=language-rb>schedule 'my-schedule-job' do
-  database 'db_name'
-  query    'select count(time) from access;'
-  cron     '30 0 * * *'
-  result   'td://@/db_name/count'
-end
-</code></pre><p><code>pendulum</code>コマンドを実行するだけです。</p><pre><code class=language-sh># dry-run で 適用内容を確認
-$ pendulum --apikey='...' -a --dry-run
-# 適用
-$ pendulum --apikey='...' -a
-</code></pre><p>AWSのRoute53に対するRoadworker的なものを想像してもらえるとよいかと思います。</p><h3 id=エクスポート>エクスポート</h3><p>既存のスケジュールジョブがある場合はエクスポートもできます。</p><pre><code class=language-sh>$ pendulum --apikey='...' -e
-</code></pre><p>実行ディレクトリに <code>Schedfile</code> と <code>queries</code> ディレクトリが生成されジョブの定義とクエリが出力されています。</p><p>修正後、dry-runによるapplyを行ってみると、差分が検出されていることがわかります。</p><pre><code class=language-sh>$ pendulum --apikey='...' -a --dry-run
-Update schedule: my-scheduled-job (dry-run)
-  set cron=@hourly
-</code></pre><h3 id=schedfile>Schedfile</h3><p>APIで利用する名称と同じものが使えます。</p><pre><code class=language-rb>schedule 'test-scheduled-job' do
-  database    'db_name'
-  query       'select count(time) from access;'
-  retry_limit 0
-  priority    :normal
-  cron        '30 0 * * *'
-  timezone    'Asia/Tokyo'
-  delay       0
-  result_url  'td://@/db_name/count'
-end
-</code></pre><p><code>priority</code>は<code>:very_high</code>など、<code>cron</code>は<code>:daily</code>といった読みやすい値も使えます。</p><h4 id=query-file>query_file</h4><p>クエリは<code>query_file</code>を使って別ファイルのクエリを読み込めます。</p><pre><code class=language-rb>query_file 'queries/test-scheduled-job.hql'
-</code></pre><p>集計用のクエリは長くなることが多いと思うので、こちらを使っていくことになるでしょう。</p><h4 id=result>result</h4><p>Result Exportの先を定義する、<code>result_url</code> をわかりやすくするための <code>result</code> もあります。</p><pre><code class=language-rb>schedule 'test-scheduled-job' do
-  database   'db_name'
-  ...
-  result :td do
-    database 'db_name'
-    table    'table_name'
-  end
-end
-</code></pre><p>現時点では出力先として<code>Treasure Data</code>と<code>PostgreSQL</code>、カスタムのresultをサポートしています。他の出力先をresult記法で書きたいときはPullRequestをお待ちしております。</p><h3 id=force>force</h3><p><code>Schedfile</code>に定義されていないスケジュールジョブは通常は<code>Undefined schedule</code>となり削除対象とはなりません。削除が必要な場合は<code>--force</code>オプションを使ってください。</p><p>また、Treasure DataのAPI都合上、result_url内のパスワードは<code>***</code>とマスキングされており差分が比較できません。もしパスワードを変更した場合も同様に<code>--force</code>オプションを使って適用してください。</p><h3 id=config>config</h3><p><code>environments/default.yml</code>などを用意することで、DSL内で<code>settings</code>経由で取得することができます。</p><pre><code class=language-rb>...
-  result :postgresql do
-    ...
-    password settings.password
-  end
-</code></pre><p>また、<code>-E</code> オプションによる環境ごとの設定ファイルにも対応しています。</p><h2 id=まとめ>まとめ</h2><p>コード管理により履歴管理やレビューといったフローに乗せることができるので大変便利になりました。そのあたりの運用で困っているかたは使ってみてはどうでしょうか。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/ruby>ruby</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2016/03/21/pendulum/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','twitter-wjs');</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-38374674-1','auto');ga('send','pageview');</script></body></html>
+$ pendulum --apikey='...' -a --dry-run Update schedule: my-scheduled-job (dry-run) set cron=@hourly Schedfile APIで利用する名称と同じものが使えます。">
+<meta property="og:title" content="Treasure Dataのスケジュールジョブをコードで管理するPendulumというgemをつくった">
+<meta property="og:url" content="https://blog.monochromegane.com/blog/2016/03/21/pendulum/">
+<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+<link rel=stylesheet href=/css/reset.css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
+<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
+<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
+<link rel=stylesheet href=/css/text.css>
+<link rel=stylesheet href=/css/color.css>
+<link rel=stylesheet href=/css/layout.css>
+<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
+<link rel="shortcut icon" href=/images/favicon.ico>
+<link rel=canonical href=https://blog.monochromegane.com/blog/2016/03/21/pendulum/>
+<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
+</head>
+<body>
+<div class=header>
+<header>
+<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
+<nav>
+<ul class=menu>
+<li><a href=/self-introduction/>Home</a></li>
+<li><a href=/post/>Archives</a></li>
+<li><a href=/diary/>Diary</a></li>
+<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
+</ul>
+</nav>
+</header>
+</div>
+<div class=container>
+<article>
+<div class=post>
+<header>
+<h1><a href=https://blog.monochromegane.com/blog/2016/03/21/pendulum/>Treasure Dataのスケジュールジョブをコードで管理するPendulumというgemをつくった</a></h1>
+<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2016-03-21</div></time>
+</header>
+<div class=post-inner>
+<p>Treasure Dataに収集したデータを集計・出力するためにジョブをスケジュール登録するにあたり、ブラウザコンソールやAPIから直接行うと履歴管理やレビューができないといった課題を解決するために <code>Pendulum</code> というgemをつくりました。</p>
+<p>PendulumはDSLで記述された定義に従い、Treasure Dataのスケジュールジョブを管理します。
+定義ファイルをGit管理することで、履歴管理やGitHubと連携したコードレビューが可能になります。</p>
+<p>余談ですが、Pendulumは振り子という意味で、定期的な実行という意味と宝探しのダウジング的な意味から連想しています。ペンデュラム。響きがカッコイイ。</p>
+<h2 id=使い方>使い方</h2>
+<p><code>Schedfile</code>という名前で定義ファイルを用意して、</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rb data-lang=rb>schedule <span style=color:#e6db74>&#39;my-schedule-job&#39;</span> <span style=color:#66d9ef>do</span>
+  database <span style=color:#e6db74>&#39;db_name&#39;</span>
+  query    <span style=color:#e6db74>&#39;select count(time) from access;&#39;</span>
+  cron     <span style=color:#e6db74>&#39;30 0 * * *&#39;</span>
+  result   <span style=color:#e6db74>&#39;td://@/db_name/count&#39;</span>
+<span style=color:#66d9ef>end</span>
+</code></pre></div><p><code>pendulum</code>コマンドを実行するだけです。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=color:#75715e># dry-run で 適用内容を確認</span>
+$ pendulum --apikey<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;...&#39;</span> -a --dry-run
+<span style=color:#75715e># 適用</span>
+$ pendulum --apikey<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;...&#39;</span> -a
+</code></pre></div><p>AWSのRoute53に対するRoadworker的なものを想像してもらえるとよいかと思います。</p>
+<h3 id=エクスポート>エクスポート</h3>
+<p>既存のスケジュールジョブがある場合はエクスポートもできます。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ pendulum --apikey<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;...&#39;</span> -e
+</code></pre></div><p>実行ディレクトリに <code>Schedfile</code> と <code>queries</code> ディレクトリが生成されジョブの定義とクエリが出力されています。</p>
+<p>修正後、dry-runによるapplyを行ってみると、差分が検出されていることがわかります。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ pendulum --apikey<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;...&#39;</span> -a --dry-run
+Update schedule: my-scheduled-job <span style=color:#f92672>(</span>dry-run<span style=color:#f92672>)</span>
+  set cron<span style=color:#f92672>=</span>@hourly
+</code></pre></div><h3 id=schedfile>Schedfile</h3>
+<p>APIで利用する名称と同じものが使えます。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rb data-lang=rb>schedule <span style=color:#e6db74>&#39;test-scheduled-job&#39;</span> <span style=color:#66d9ef>do</span>
+  database    <span style=color:#e6db74>&#39;db_name&#39;</span>
+  query       <span style=color:#e6db74>&#39;select count(time) from access;&#39;</span>
+  retry_limit <span style=color:#ae81ff>0</span>
+  priority    <span style=color:#e6db74>:normal</span>
+  cron        <span style=color:#e6db74>&#39;30 0 * * *&#39;</span>
+  timezone    <span style=color:#e6db74>&#39;Asia/Tokyo&#39;</span>
+  delay       <span style=color:#ae81ff>0</span>
+  result_url  <span style=color:#e6db74>&#39;td://@/db_name/count&#39;</span>
+<span style=color:#66d9ef>end</span>
+</code></pre></div><p><code>priority</code>は<code>:very_high</code>など、<code>cron</code>は<code>:daily</code>といった読みやすい値も使えます。</p>
+<h4 id=query_file>query_file</h4>
+<p>クエリは<code>query_file</code>を使って別ファイルのクエリを読み込めます。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rb data-lang=rb>query_file <span style=color:#e6db74>&#39;queries/test-scheduled-job.hql&#39;</span>
+</code></pre></div><p>集計用のクエリは長くなることが多いと思うので、こちらを使っていくことになるでしょう。</p>
+<h4 id=result>result</h4>
+<p>Result Exportの先を定義する、<code>result_url</code> をわかりやすくするための <code>result</code> もあります。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rb data-lang=rb>schedule <span style=color:#e6db74>&#39;test-scheduled-job&#39;</span> <span style=color:#66d9ef>do</span>
+  database   <span style=color:#e6db74>&#39;db_name&#39;</span>
+  <span style=color:#f92672>...</span>
+  result <span style=color:#e6db74>:td</span> <span style=color:#66d9ef>do</span>
+    database <span style=color:#e6db74>&#39;db_name&#39;</span>
+    table    <span style=color:#e6db74>&#39;table_name&#39;</span>
+  <span style=color:#66d9ef>end</span>
+<span style=color:#66d9ef>end</span>
+</code></pre></div><p>現時点では出力先として<code>Treasure Data</code>と<code>PostgreSQL</code>、カスタムのresultをサポートしています。他の出力先をresult記法で書きたいときはPullRequestをお待ちしております。</p>
+<h3 id=force>force</h3>
+<p><code>Schedfile</code>に定義されていないスケジュールジョブは通常は<code>Undefined schedule</code>となり削除対象とはなりません。削除が必要な場合は<code>--force</code>オプションを使ってください。</p>
+<p>また、Treasure DataのAPI都合上、result_url内のパスワードは<code>***</code>とマスキングされており差分が比較できません。もしパスワードを変更した場合も同様に<code>--force</code>オプションを使って適用してください。</p>
+<h3 id=config>config</h3>
+<p><code>environments/default.yml</code>などを用意することで、DSL内で<code>settings</code>経由で取得することができます。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rb data-lang=rb><span style=color:#f92672>...</span>
+  result <span style=color:#e6db74>:postgresql</span> <span style=color:#66d9ef>do</span>
+    <span style=color:#f92672>...</span>
+    password settings<span style=color:#f92672>.</span>password
+  <span style=color:#66d9ef>end</span>
+</code></pre></div><p>また、<code>-E</code> オプションによる環境ごとの設定ファイルにも対応しています。</p>
+<h2 id=まとめ>まとめ</h2>
+<p>コード管理により履歴管理やレビューといったフローに乗せることができるので大変便利になりました。そのあたりの運用で困っているかたは使ってみてはどうでしょうか。</p>
+</div>
+<footer class=tag>
+<i class="fa fa-tags tag-icon"></i>
+<ul>
+<li><a class=tag-link href=/tags/ruby>ruby</a></li>
+</ul>
+<div class=clear></div>
+</footer>
+</div>
+</article>
+<div class=social-btn>
+<div>
+<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2016/03/21/pendulum/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
+</div>
+<div>
+<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
+</div>
+</div>
+</div>
+<footer class=footer>
+<div class=author></div>
+<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
+<p>monochromegane (モノクロめがね) と申します。</p>
+<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+<ul class=social>
+<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
+<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
+<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
+</ul>
+<p class=copyright>
+<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
+</p>
+</footer>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
+<script>hljs.initHighlightingOnLoad()</script>
+<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
+</body>
+</html>

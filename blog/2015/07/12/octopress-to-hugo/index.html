@@ -1,39 +1,119 @@
-<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>OctopressからHugoに移行した &middot; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="前々からOctopressのpreview反映の遅さに厳しさを感じていたのでHugoに移行しました。手順などを簡単にまとめておきます。
+<!doctype html><html>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width">
+<meta name=author content>
+<title>OctopressからHugoに移行した &#183; THINKING MEGANE</title>
+<meta name=twitter:card content="summary">
+<meta name=twitter:site content="@monochromegane">
+<meta property="og:description" content="前々からOctopressのpreview反映の遅さに厳しさを感じていたのでHugoに移行しました。手順などを簡単にまとめておきます。
 Hugo Go製の静的サイトジェネレーターです。Octopressに比べて機能やテンプレートは少ないですが、起動やpreviewの反映の速さがそれを補って余りある感じです。
 以下、移行の手順です。
-インストール # Hugoをインストール $ go get github.com/spf13/hugo # テーマを全てダウンロード $ git clone --recursive https://github.com/spf13/hugoThemes themes  サイトの雛形を生成 $ hugo new site my_blog $ cd my_blog  画像の移動 Octopressで管理していたsource/imagesをstatic/imagesに移動します。
+インストール # Hugoをインストール $ go get github.com/spf13/hugo # テーマを全てダウンロード $ git clone --recursive https://github.com/spf13/hugoThemes themes サイトの雛形を生成 $ hugo new site my_blog $ cd my_blog 画像の移動 Octopressで管理していたsource/imagesをstatic/imagesに移動します。
 コンテンツの移動/変換 Octopressで管理していたsource/_postsを移動させます。URLを維持しつつ、エントリの日時を保持したかったのでディレクトリ構成を少し工夫しています。
 source/_posts/2015-07-05-dsn.markdownをcontent/post/2015/07/05/dsn.mdのようにします。（元の拡張子がmarkdownなのは気にしないでください）
 とりあえず雑なスクリプト
-#!/bin/sh for f in $(ls $1/source/_posts/*.markdown) do name=$(basename $f) y=$(echo $name | cut -d&#34;-&#34; -f 1) m=$(echo $name | cut -d&#34;-&#34; -f 2) d=$(echo $name | cut -d&#34;-&#34; -f 3) t=$(echo $name | cut -d&#34;-&#34; -f 4- | sed s/\."><meta property="og:title" content="OctopressからHugoに移行した"><meta property="og:url" content="https://blog.monochromegane.com/blog/2015/07/12/octopress-to-hugo/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2015/07/12/octopress-to-hugo/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:true},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:true}}});</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2015/07/12/octopress-to-hugo/>OctopressからHugoに移行した</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2015-07-12</div></time></header><div class=post-inner><p>前々からOctopressのpreview反映の遅さに厳しさを感じていたのでHugoに移行しました。手順などを簡単にまとめておきます。</p><h1 id=hugo>Hugo</h1><p>Go製の静的サイトジェネレーターです。Octopressに比べて機能やテンプレートは少ないですが、起動やpreviewの反映の速さがそれを補って余りある感じです。</p><p>以下、移行の手順です。</p><h2 id=インストール>インストール</h2><pre><code class=language-sh># Hugoをインストール
+#!/bin/sh  for f in $(ls $1/source/_posts/*.markdown) do name=$(basename $f) y=$(echo $name | cut -d&#34;-&#34; -f 1) m=$(echo $name | cut -d&#34;-&#34; -f 2) d=$(echo $name | cut -d&#34;-&#34; -f 3) t=$(echo $name | cut -d&#34;-&#34; -f 4- | sed s/\.">
+<meta property="og:title" content="OctopressからHugoに移行した">
+<meta property="og:url" content="https://blog.monochromegane.com/blog/2015/07/12/octopress-to-hugo/">
+<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+<link rel=stylesheet href=/css/reset.css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
+<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
+<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
+<link rel=stylesheet href=/css/text.css>
+<link rel=stylesheet href=/css/color.css>
+<link rel=stylesheet href=/css/layout.css>
+<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
+<link rel="shortcut icon" href=/images/favicon.ico>
+<link rel=canonical href=https://blog.monochromegane.com/blog/2015/07/12/octopress-to-hugo/>
+<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
+</head>
+<body>
+<div class=header>
+<header>
+<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
+<nav>
+<ul class=menu>
+<li><a href=/self-introduction/>Home</a></li>
+<li><a href=/post/>Archives</a></li>
+<li><a href=/diary/>Diary</a></li>
+<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
+</ul>
+</nav>
+</header>
+</div>
+<div class=container>
+<article>
+<div class=post>
+<header>
+<h1><a href=https://blog.monochromegane.com/blog/2015/07/12/octopress-to-hugo/>OctopressからHugoに移行した</a></h1>
+<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2015-07-12</div></time>
+</header>
+<div class=post-inner>
+<p>前々からOctopressのpreview反映の遅さに厳しさを感じていたのでHugoに移行しました。手順などを簡単にまとめておきます。</p>
+<h1 id=hugo>Hugo</h1>
+<p>Go製の静的サイトジェネレーターです。Octopressに比べて機能やテンプレートは少ないですが、起動やpreviewの反映の速さがそれを補って余りある感じです。</p>
+<p>以下、移行の手順です。</p>
+<h2 id=インストール>インストール</h2>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=color:#75715e># Hugoをインストール</span>
 $ go get github.com/spf13/hugo
-# テーマを全てダウンロード
+<span style=color:#75715e># テーマを全てダウンロード</span>
 $ git clone --recursive https://github.com/spf13/hugoThemes themes
-</code></pre><h2 id=サイトの雛形を生成>サイトの雛形を生成</h2><pre><code class=language-sh>$ hugo new site my_blog
+</code></pre></div><h2 id=サイトの雛形を生成>サイトの雛形を生成</h2>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ hugo new site my_blog
 $ cd my_blog
-</code></pre><h2 id=画像の移動>画像の移動</h2><p>Octopressで管理していた<code>source/images</code>を<code>static/images</code>に移動します。</p><h2 id=コンテンツの移動-変換>コンテンツの移動/変換</h2><p>Octopressで管理していた<code>source/_posts</code>を移動させます。URLを維持しつつ、エントリの日時を保持したかったのでディレクトリ構成を少し工夫しています。</p><p><code>source/_posts/2015-07-05-dsn.markdown</code>を<code>content/post/2015/07/05/dsn.md</code>のようにします。（元の拡張子がmarkdownなのは気にしないでください）</p><p>とりあえず雑なスクリプト</p><pre><code class=language-sh>#!/bin/sh
-
-for f in $(ls $1/source/_posts/*.markdown)
-do
-  name=$(basename $f)
-  y=$(echo $name | cut -d&quot;-&quot; -f 1)
-  m=$(echo $name | cut -d&quot;-&quot; -f 2)
-  d=$(echo $name | cut -d&quot;-&quot; -f 3)
-  t=$(echo $name | cut -d&quot;-&quot; -f 4- | sed s/\.markdown$/\.md/)
-  dest=content/post/$y/$m/$d
+</code></pre></div><h2 id=画像の移動>画像の移動</h2>
+<p>Octopressで管理していた<code>source/images</code>を<code>static/images</code>に移動します。</p>
+<h2 id=コンテンツの移動変換>コンテンツの移動/変換</h2>
+<p>Octopressで管理していた<code>source/_posts</code>を移動させます。URLを維持しつつ、エントリの日時を保持したかったのでディレクトリ構成を少し工夫しています。</p>
+<p><code>source/_posts/2015-07-05-dsn.markdown</code>を<code>content/post/2015/07/05/dsn.md</code>のようにします。（元の拡張子がmarkdownなのは気にしないでください）</p>
+<p>とりあえず雑なスクリプト</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=color:#75715e>#!/bin/sh
+</span><span style=color:#75715e></span>
+<span style=color:#66d9ef>for</span> f in <span style=color:#66d9ef>$(</span>ls $1/source/_posts/*.markdown<span style=color:#66d9ef>)</span>
+<span style=color:#66d9ef>do</span>
+  name<span style=color:#f92672>=</span><span style=color:#66d9ef>$(</span>basename $f<span style=color:#66d9ef>)</span>
+  y<span style=color:#f92672>=</span><span style=color:#66d9ef>$(</span>echo $name | cut -d<span style=color:#e6db74>&#34;-&#34;</span> -f 1<span style=color:#66d9ef>)</span>
+  m<span style=color:#f92672>=</span><span style=color:#66d9ef>$(</span>echo $name | cut -d<span style=color:#e6db74>&#34;-&#34;</span> -f 2<span style=color:#66d9ef>)</span>
+  d<span style=color:#f92672>=</span><span style=color:#66d9ef>$(</span>echo $name | cut -d<span style=color:#e6db74>&#34;-&#34;</span> -f 3<span style=color:#66d9ef>)</span>
+  t<span style=color:#f92672>=</span><span style=color:#66d9ef>$(</span>echo $name | cut -d<span style=color:#e6db74>&#34;-&#34;</span> -f 4- | sed s/<span style=color:#ae81ff>\.</span>markdown$/<span style=color:#ae81ff>\.</span>md/<span style=color:#66d9ef>)</span>
+  dest<span style=color:#f92672>=</span>content/post/$y/$m/$d
   echo copy $f to $dest/$t...
-  mkdir -p $dest &amp;&amp; cp $f $dest/$t
-done
-</code></pre><pre><code class=language-sh>$ sh copy.sh YOUR_OCTOPRESS_ROOT
-</code></pre><h2 id=ファイル内容の置換>ファイル内容の置換</h2><h3 id=記事ヘッダの日付フォーマット>記事ヘッダの日付フォーマット</h3><p>Octopressの記事形式だと日付フォーマットが異なってうまく解釈されないので、置換します。</p><pre><code class=language-sh>$ cd content/post
-$ find . -type f -exec sed -i &quot;&quot; -e 's/date: \([0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}\).*$/date: \1/g' {} \;
-</code></pre><p>その他、自分の環境固有のやつで何個か置換したけど割愛。</p><h2 id=octopress形式のurlを引き継ぐ>Octopress形式のURLを引き継ぐ</h2><p>config.tomlに以下を追記します。</p><pre><code class=language-ini>[permalinks]
-  post = &quot;/blog/:year/:month/:day/:filename/&quot;
-</code></pre><p>以上で、移行は完了。簡単。</p><h1 id=起動と動作確認>起動と動作確認</h1><pre><code class=language-sh>$ hugo server --theme=THEME_NAME --watch
-</code></pre><p>テーマは<code>themes</code>ディレクトリ配下のテーマを指定します。テーマごとにconfig.tomlで個別の設定が必要でした。</p><h1 id=ブログを書く>ブログを書く</h1><p><code>hugo new</code>でエントリの雛形を作ります。</p><pre><code class=language-sh>$ hugo new post/`date '+%Y'`/`date '+%m'`/`date '+%d'`/NEW_POST_NAME.md
+  mkdir -p $dest <span style=color:#f92672>&amp;&amp;</span> cp $f $dest/$t
+<span style=color:#66d9ef>done</span>
+</code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ sh copy.sh YOUR_OCTOPRESS_ROOT
+</code></pre></div><h2 id=ファイル内容の置換>ファイル内容の置換</h2>
+<h3 id=記事ヘッダの日付フォーマット>記事ヘッダの日付フォーマット</h3>
+<p>Octopressの記事形式だと日付フォーマットが異なってうまく解釈されないので、置換します。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ cd content/post
+$ find . -type f -exec sed -i <span style=color:#e6db74>&#34;&#34;</span> -e <span style=color:#e6db74>&#39;s/date: \([0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}\).*$/date: \1/g&#39;</span> <span style=color:#f92672>{}</span> <span style=color:#ae81ff>\;</span>
+</code></pre></div><p>その他、自分の環境固有のやつで何個か置換したけど割愛。</p>
+<h2 id=octopress形式のurlを引き継ぐ>Octopress形式のURLを引き継ぐ</h2>
+<p>config.tomlに以下を追記します。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=color:#66d9ef>[permalinks]</span>
+  <span style=color:#a6e22e>post</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;/blog/:year/:month/:day/:filename/&#34;</span>
+</code></pre></div><p>以上で、移行は完了。簡単。</p>
+<h1 id=起動と動作確認>起動と動作確認</h1>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ hugo server --theme<span style=color:#f92672>=</span>THEME_NAME --watch
+</code></pre></div><p>テーマは<code>themes</code>ディレクトリ配下のテーマを指定します。テーマごとにconfig.tomlで個別の設定が必要でした。</p>
+<h1 id=ブログを書く>ブログを書く</h1>
+<p><code>hugo new</code>でエントリの雛形を作ります。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ hugo new post/<span style=color:#e6db74>`</span>date <span style=color:#e6db74>&#39;+%Y&#39;</span><span style=color:#e6db74>`</span>/<span style=color:#e6db74>`</span>date <span style=color:#e6db74>&#39;+%m&#39;</span><span style=color:#e6db74>`</span>/<span style=color:#e6db74>`</span>date <span style=color:#e6db74>&#39;+%d&#39;</span><span style=color:#e6db74>`</span>/NEW_POST_NAME.md
 $ vi content/!$
-</code></pre><h1 id=記事の公開>記事の公開</h1><p>GitHub Pagesで公開しています。Octopress時代は公開用のコマンドがありましたが、Hugoにはないので、Werckerを経由して記事を公開します。（public配下の資産を自分でpushしてもOKです）</p><p>基本は<a href=http://gohugo.io/tutorials/automated-deployments/>本家のドキュメント</a>通りに進めてOKですが、wercker.yamlを少し追加修正しています。</p><h2 id=wercker-yml>wercker.yml</h2><p>本家のドキュメントだと<code>box</code>に<code>wercker/default</code>を指定するようになってますが、新しいDocker環境だと以下のようにエラーになるので <code>debian</code>を指定しています。</p><pre><code>Failed step: setup environment - GET https://registry.hub.docker.com/v1/repositories/wercker/default/images returned 404
-</code></pre><p>それにあわせて、gitのインストールステップを追加しました。</p><pre><code class=language-sh>box: debian
+</code></pre></div><h1 id=記事の公開>記事の公開</h1>
+<p>GitHub Pagesで公開しています。Octopress時代は公開用のコマンドがありましたが、Hugoにはないので、Werckerを経由して記事を公開します。（public配下の資産を自分でpushしてもOKです）</p>
+<p>基本は<a href=http://gohugo.io/tutorials/automated-deployments/>本家のドキュメント</a>通りに進めてOKですが、wercker.yamlを少し追加修正しています。</p>
+<h2 id=werckeryml>wercker.yml</h2>
+<p>本家のドキュメントだと<code>box</code>に<code>wercker/default</code>を指定するようになってますが、新しいDocker環境だと以下のようにエラーになるので <code>debian</code>を指定しています。</p>
+<pre tabindex=0><code>Failed step: setup environment - GET https://registry.hub.docker.com/v1/repositories/wercker/default/images returned 404
+</code></pre><p>それにあわせて、gitのインストールステップを追加しました。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>box: debian
 build:
   steps:
     - script:
@@ -47,7 +127,7 @@ build:
           git clone YOUR_THEME_REPO themes/THEME_NAME
           rm -rf themes/THEME_NAME/.git
     - arjen/hugo-build:
-        version: &quot;0.14&quot;
+        version: <span style=color:#e6db74>&#34;0.14&#34;</span>
         theme: THEME_NAME
     - script:
         name: create old RSS file
@@ -65,6 +145,69 @@ deploy:
         repo: YOUR_GITHUB_ACCOUNT/YOUR_GITHUB_PAGES_REPO
         domain: YOUR_BLOG_DOMAIN
         basedir: public
-</code></pre><p>deployの<code>repo</code>オプションはブログの管理と、GitHub Pagesのリポジトリを分けるときに指定します。
-同じリポジトリでやる場合は、gh-pagesブランチがGitHub Pagesとして使われるようです。</p><p>あとは、先ほどの本家マニュアルに沿ってやればOK。</p><p>記事を書き終わったらcommitしてpushすれば、werckerにより公開されます。</p><h1 id=デザイン>デザイン</h1><p>同僚の<a href=https://twitter.com/keita_kawamoto>@keita_kawamoto</a> に頼んだところ、Hugoテーマの作り方をシュッとものにして、かっこいいデザインをあててくれました！！ありがとうございます！！</p><h1 id=その他-メモ>その他、メモ</h1><ul><li>テーマによっては古い<code>{{ .Site.BaseUrl }}</code>を使っているので警告が気になるなら<code>{{ .Site.BaseURL }}</code>に変更する</li><li>Octopressだとシンタックスハイライトがついた状態で生成されるが、Hugoだと設定が必要だったので今回は highlight.js を使うようにした<ul><li>go、vim script は追加でjsの読み込みが必要だった</li><li><code>//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js</code></li><li><code>//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js</code></li></ul></li><li>初回のOctopressからHugoで生成したコンテンツへの置き換えた時だけ、サイトで以下の500エラーが表示されるが30分ぐらいでなおる。<ul><li><code>GitHub Pages is temporarily down for maintenance.</code></li><li>上記表示されてももう一度アクセスすれば、そのページは表示されるようになるのでGitHub Pages側の反映待ちっぽい</li></ul></li><li>OctopressだとRSSはatom.xmlだったけど、index.xmlになるので、コピーして既存のパスを残してみた（RSS2.0とAtomなのでダメかも）<ul><li>RSSを出力するにはlayoutのしたにrss.xmlを置く（テンプレートの内容は<a href=http://gohugo.io/templates/rss/>本家ドキュメント</a>を参考に）</li><li><code>{{ .RSSlink }}</code> は複数回呼び出すと空になる様子。（あまり追ってない）</li></ul></li></ul><hr><h1 id=まとめ>まとめ</h1><p>即座にpreviewが反映されるようになってストレスがなくなりました。Hugo移行オススメです。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/hugo>hugo</a></li><li><a class=tag-link href=/tags/golang>golang</a></li><li><a class=tag-link href=/tags/octopress>octopress</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2015/07/12/octopress-to-hugo/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','twitter-wjs');</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-38374674-1','auto');ga('send','pageview');</script></body></html>
+</code></pre></div><p>deployの<code>repo</code>オプションはブログの管理と、GitHub Pagesのリポジトリを分けるときに指定します。
+同じリポジトリでやる場合は、gh-pagesブランチがGitHub Pagesとして使われるようです。</p>
+<p>あとは、先ほどの本家マニュアルに沿ってやればOK。</p>
+<p>記事を書き終わったらcommitしてpushすれば、werckerにより公開されます。</p>
+<h1 id=デザイン>デザイン</h1>
+<p>同僚の<a href=https://twitter.com/keita_kawamoto>@keita_kawamoto</a> に頼んだところ、Hugoテーマの作り方をシュッとものにして、かっこいいデザインをあててくれました！！ありがとうございます！！</p>
+<h1 id=その他メモ>その他、メモ</h1>
+<ul>
+<li>テーマによっては古い<code>{{ .Site.BaseUrl }}</code>を使っているので警告が気になるなら<code>{{ .Site.BaseURL }}</code>に変更する</li>
+<li>Octopressだとシンタックスハイライトがついた状態で生成されるが、Hugoだと設定が必要だったので今回は highlight.js を使うようにした</li>
+<li>go、vim script は追加でjsの読み込みが必要だった</li>
+<li><code>//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js</code></li>
+<li><code>//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js</code></li>
+<li>初回のOctopressからHugoで生成したコンテンツへの置き換えた時だけ、サイトで以下の500エラーが表示されるが30分ぐらいでなおる。</li>
+<li><code>GitHub Pages is temporarily down for maintenance.</code></li>
+<li>上記表示されてももう一度アクセスすれば、そのページは表示されるようになるのでGitHub Pages側の反映待ちっぽい</li>
+<li>OctopressだとRSSはatom.xmlだったけど、index.xmlになるので、コピーして既存のパスを残してみた（RSS2.0とAtomなのでダメかも）</li>
+<li>RSSを出力するにはlayoutのしたにrss.xmlを置く（テンプレートの内容は<a href=http://gohugo.io/templates/rss/>本家ドキュメント</a>を参考に）</li>
+<li><code>{{ .RSSlink }}</code> は複数回呼び出すと空になる様子。（あまり追ってない）</li>
+</ul>
+<hr>
+<h1 id=まとめ>まとめ</h1>
+<p>即座にpreviewが反映されるようになってストレスがなくなりました。Hugo移行オススメです。</p>
+</div>
+<footer class=tag>
+<i class="fa fa-tags tag-icon"></i>
+<ul>
+<li><a class=tag-link href=/tags/hugo>hugo</a></li>
+<li><a class=tag-link href=/tags/golang>golang</a></li>
+<li><a class=tag-link href=/tags/octopress>octopress</a></li>
+</ul>
+<div class=clear></div>
+</footer>
+</div>
+</article>
+<div class=social-btn>
+<div>
+<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2015/07/12/octopress-to-hugo/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
+</div>
+<div>
+<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
+</div>
+</div>
+</div>
+<footer class=footer>
+<div class=author></div>
+<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
+<p>monochromegane (モノクロめがね) と申します。</p>
+<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+<ul class=social>
+<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
+<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
+<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
+</ul>
+<p class=copyright>
+<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
+</p>
+</footer>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
+<script>hljs.initHighlightingOnLoad()</script>
+<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
+</body>
+</html>

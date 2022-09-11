@@ -1,9 +1,123 @@
-<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>LGTMでめでたさを伝えるChrome拡張をつくった &middot; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="先日、高速にドッグフードを食べる方法を見て、LGTMとLGTM.inというサービスを知りました。
-LGTMは、&ldquo;looks good to me.&rdquo;の略で、GitHubのプルリクに対するOKコメント、LGTM.inは、そのコメントにノリのいい画像を添えてspice upしようというサービスです。コードレビューの終わりにめでたさを伝えてもらえれば、字面だけのLGTMよりもうれしいし、そういう小さな承認はお互いに大事。
+<!doctype html><html>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width">
+<meta name=author content>
+<title>LGTMでめでたさを伝えるChrome拡張をつくった &#183; THINKING MEGANE</title>
+<meta name=twitter:card content="summary">
+<meta name=twitter:site content="@monochromegane">
+<meta property="og:description" content="先日、高速にドッグフードを食べる方法を見て、LGTMとLGTM.inというサービスを知りました。
+LGTMは、&ldquo;looks good to me.&#34;の略で、GitHubのプルリクに対するOKコメント、LGTM.inは、そのコメントにノリのいい画像を添えてspice upしようというサービスです。コードレビューの終わりにめでたさを伝えてもらえれば、字面だけのLGTMよりもうれしいし、そういう小さな承認はお互いに大事。
 ということで、LGTMでめでたさを伝えるChrome拡張をつくりました。
 LGTM Chrome拡張 インストールはこちらから。 Chrome ウェブストア/LGTM
  拡張を起動するとLGTM.inから取得したランダム画像を3件表示します。 画像が気に入らないときはMore LGTMボタンをクリックして画像を再取得できます。  使い方  使用したいLGTMの画像をクリックするとURLをクリップボードにコピーします。 GitHubのプルリクページを開いていれば、選択した画像のURLをマークダウン形式でコメント欄に入力します。  その他 リポジトリはこちら。 monochromegane/LGTM
 LGTM.inはよいコンセプトだと思うのですが、プルリクのコメント書いているときに別のサイトを開いたり、提供されるBookmarkletがプレビューしづらかったりしてちょっと使いにくい。 こういう取り組みはめんどくさくなると途端にやらなくなるので、やりやすい環境を準備してみました。
-冒頭にも書きましたがめでたさを伝えるっていいことだと思うので、このChrome拡張でLGTM使ってみてはどうでしょうか。"><meta property="og:title" content="LGTMでめでたさを伝えるChrome拡張をつくった"><meta property="og:url" content="https://blog.monochromegane.com/blog/2013/12/23/lgtm-chrome-extension/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2013/12/23/lgtm-chrome-extension/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:true},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:true}}});</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2013/12/23/lgtm-chrome-extension/>LGTMでめでたさを伝えるChrome拡張をつくった</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2013-12-23</div></time></header><div class=post-inner><p>先日、<a href=https://speakerdeck.com/hitode909/gao-su-nidotuguhudowoshi-berufang-fa>高速にドッグフードを食べる方法</a>を見て、LGTMと<a href=http://www.lgtm.in/>LGTM.in</a>というサービスを知りました。</p><p>LGTMは、<strong>&ldquo;looks good to me.&rdquo;</strong>の略で、GitHubのプルリクに対するOKコメント、LGTM.inは、そのコメントにノリのいい画像を添えて<code>spice up</code>しようというサービスです。コードレビューの終わりに<strong>めでたさを伝え</strong>てもらえれば、字面だけのLGTMよりもうれしいし、そういう小さな承認はお互いに大事。</p><p>ということで、LGTMでめでたさを伝えるChrome拡張をつくりました。</p><h1 id=lgtm-chrome拡張>LGTM Chrome拡張</h1><p>インストールはこちらから。 <a href="https://chrome.google.com/webstore/detail/lgtm/oeacdmeoegfagkmiecjjikpfgebmalof?hl=ja&amp;gl=JP">Chrome ウェブストア/LGTM</a></p><ul><li>拡張を起動するとLGTM.inから取得したランダム画像を3件表示します。</li><li>画像が気に入らないときは<code>More LGTM</code>ボタンをクリックして画像を再取得できます。</li></ul><p><img src=/images/2013/12/LGTM_screenshot.png alt=LGTM></p><h2 id=使い方>使い方</h2><ul><li>使用したいLGTMの画像をクリックするとURLをクリップボードにコピーします。</li><li>GitHubのプルリクページを開いていれば、選択した画像のURLをマークダウン形式でコメント欄に入力します。</li></ul><p><img src=/images/2013/12/LGTM_comment.png alt=LGTM></p><h2 id=その他>その他</h2><p>リポジトリはこちら。 <a href=https://github.com/monochromegane/LGTM>monochromegane/LGTM</a></p><hr><p>LGTM.inはよいコンセプトだと思うのですが、プルリクのコメント書いているときに別のサイトを開いたり、提供されるBookmarkletがプレビューしづらかったりしてちょっと使いにくい。
-こういう取り組みはめんどくさくなると途端にやらなくなるので、やりやすい環境を準備してみました。</p><p>冒頭にも書きましたが<code>めでたさを伝える</code>っていいことだと思うので、このChrome拡張でLGTM使ってみてはどうでしょうか。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/lgtm>lgtm</a></li><li><a class=tag-link href=/tags/chrome>chrome</a></li><li><a class=tag-link href=/tags/extension>extension</a></li><li><a class=tag-link href=/tags/%E6%8B%A1%E5%BC%B5>拡張</a></li><li><a class=tag-link href=/tags/github>github</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/12/23/lgtm-chrome-extension/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','twitter-wjs');</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-38374674-1','auto');ga('send','pageview');</script></body></html>
+冒頭にも書きましたがめでたさを伝えるっていいことだと思うので、このChrome拡張でLGTM使ってみてはどうでしょうか。">
+<meta property="og:title" content="LGTMでめでたさを伝えるChrome拡張をつくった">
+<meta property="og:url" content="https://blog.monochromegane.com/blog/2013/12/23/lgtm-chrome-extension/">
+<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+<link rel=stylesheet href=/css/reset.css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
+<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
+<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
+<link rel=stylesheet href=/css/text.css>
+<link rel=stylesheet href=/css/color.css>
+<link rel=stylesheet href=/css/layout.css>
+<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
+<link rel="shortcut icon" href=/images/favicon.ico>
+<link rel=canonical href=https://blog.monochromegane.com/blog/2013/12/23/lgtm-chrome-extension/>
+<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
+</head>
+<body>
+<div class=header>
+<header>
+<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
+<nav>
+<ul class=menu>
+<li><a href=/self-introduction/>Home</a></li>
+<li><a href=/post/>Archives</a></li>
+<li><a href=/diary/>Diary</a></li>
+<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
+</ul>
+</nav>
+</header>
+</div>
+<div class=container>
+<article>
+<div class=post>
+<header>
+<h1><a href=https://blog.monochromegane.com/blog/2013/12/23/lgtm-chrome-extension/>LGTMでめでたさを伝えるChrome拡張をつくった</a></h1>
+<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2013-12-23</div></time>
+</header>
+<div class=post-inner>
+<p>先日、<a href=https://speakerdeck.com/hitode909/gao-su-nidotuguhudowoshi-berufang-fa>高速にドッグフードを食べる方法</a>を見て、LGTMと<a href=http://www.lgtm.in/>LGTM.in</a>というサービスを知りました。</p>
+<p>LGTMは、<strong>&ldquo;looks good to me."<strong>の略で、GitHubのプルリクに対するOKコメント、LGTM.inは、そのコメントにノリのいい画像を添えて<code>spice up</code>しようというサービスです。コードレビューの終わりに</strong>めでたさを伝え</strong>てもらえれば、字面だけのLGTMよりもうれしいし、そういう小さな承認はお互いに大事。</p>
+<p>ということで、LGTMでめでたさを伝えるChrome拡張をつくりました。</p>
+<h1 id=lgtm-chrome拡張>LGTM Chrome拡張</h1>
+<p>インストールはこちらから。 <a href="https://chrome.google.com/webstore/detail/lgtm/oeacdmeoegfagkmiecjjikpfgebmalof?hl=ja&gl=JP">Chrome ウェブストア/LGTM</a></p>
+<ul>
+<li>拡張を起動するとLGTM.inから取得したランダム画像を3件表示します。</li>
+<li>画像が気に入らないときは<code>More LGTM</code>ボタンをクリックして画像を再取得できます。</li>
+</ul>
+<p><img src=/images/2013/12/LGTM_screenshot.png alt=LGTM></p>
+<h2 id=使い方>使い方</h2>
+<ul>
+<li>使用したいLGTMの画像をクリックするとURLをクリップボードにコピーします。</li>
+<li>GitHubのプルリクページを開いていれば、選択した画像のURLをマークダウン形式でコメント欄に入力します。</li>
+</ul>
+<p><img src=/images/2013/12/LGTM_comment.png alt=LGTM></p>
+<h2 id=その他>その他</h2>
+<p>リポジトリはこちら。 <a href=https://github.com/monochromegane/LGTM>monochromegane/LGTM</a></p>
+<p>LGTM.inはよいコンセプトだと思うのですが、プルリクのコメント書いているときに別のサイトを開いたり、提供されるBookmarkletがプレビューしづらかったりしてちょっと使いにくい。
+こういう取り組みはめんどくさくなると途端にやらなくなるので、やりやすい環境を準備してみました。</p>
+<p>冒頭にも書きましたが<code>めでたさを伝える</code>っていいことだと思うので、このChrome拡張でLGTM使ってみてはどうでしょうか。</p>
+</div>
+<footer class=tag>
+<i class="fa fa-tags tag-icon"></i>
+<ul>
+<li><a class=tag-link href=/tags/lgtm>lgtm</a></li>
+<li><a class=tag-link href=/tags/chrome>chrome</a></li>
+<li><a class=tag-link href=/tags/extension>extension</a></li>
+<li><a class=tag-link href=/tags/%E6%8B%A1%E5%BC%B5>拡張</a></li>
+<li><a class=tag-link href=/tags/github>github</a></li>
+</ul>
+<div class=clear></div>
+</footer>
+</div>
+</article>
+<div class=social-btn>
+<div>
+<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/12/23/lgtm-chrome-extension/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
+</div>
+<div>
+<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
+</div>
+</div>
+</div>
+<footer class=footer>
+<div class=author></div>
+<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
+<p>monochromegane (モノクロめがね) と申します。</p>
+<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+<ul class=social>
+<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
+<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
+<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
+</ul>
+<p class=copyright>
+<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
+</p>
+</footer>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
+<script>hljs.initHighlightingOnLoad()</script>
+<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
+</body>
+</html>

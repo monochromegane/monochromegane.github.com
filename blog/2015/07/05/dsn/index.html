@@ -1,11 +1,114 @@
-<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>Go言語のDB接続情報をRailsのdatabase.ymlから借用するライブラリをつくった &middot; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="最近、Rails資産のあるサーバーでGoツールを動かすことがあったので、DB接続情報を共通で使えるようにしたいと思い小さなライブラリをつくりました。
-&lt;a href=&#34;https://github.com/monochromegane/dsn&#34;&gt;monochromegane/dsn&lt;/a&gt; Railsのdatabase.ymlからGoのsql.Openに渡すDataSourceNameを出力します。
+<!doctype html><html>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width">
+<meta name=author content>
+<title>Go言語のDB接続情報をRailsのdatabase.ymlから借用するライブラリをつくった &#183; THINKING MEGANE</title>
+<meta name=twitter:card content="summary">
+<meta name=twitter:site content="@monochromegane">
+<meta property="og:description" content="最近、Rails資産のあるサーバーでGoツールを動かすことがあったので、DB接続情報を共通で使えるようにしたいと思い小さなライブラリをつくりました。
+Railsのdatabase.ymlからGoのsql.Openに渡すDataSourceNameを出力します。
 使い方 database.ymlのパスと環境(productionやdevelopment)をパラメタとして渡してあげるだけです。
-name, dsn, _ := dsn.FromRailsConfig(&#34;myapp/config/database.yml&#34;, &#34;production&#34;) fmt.Printf(&#34;[%s] %s&#34;, name, dsn) // =&gt; [mysql] username:password@tcp(localhost:3306)/dbname  DSN、書式覚えるの厳しいので分かりやすいフォーマットの設定ファイルから読み込めるようになるのもうれしい感じです。
+name, dsn, _ := dsn.FromRailsConfig(&#34;myapp/config/database.yml&#34;, &#34;production&#34;) fmt.Printf(&#34;[%s] %s&#34;, name, dsn) // => [mysql] username:password@tcp(localhost:3306)/dbname DSN、書式覚えるの厳しいので分かりやすいフォーマットの設定ファイルから読み込めるようになるのもうれしい感じです。
 機能 今のところ、MySQL, PostgreSql, Sqlite に対応しています。
-実装と今後 単純にYAMLを解析しているだけなので、ERBが含まれる項目はうまく動作しません。
-そのうち、環境変数からやフラグからもDSNを生成できるようにするつもりですが、まだ自分の用途では特に必要になってないのでつくってません。よければPRお待ちしております。"><meta property="og:title" content="Go言語のDB接続情報をRailsのdatabase.ymlから借用するライブラリをつくった"><meta property="og:url" content="https://blog.monochromegane.com/blog/2015/07/05/dsn/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2015/07/05/dsn/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:true},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:true}}});</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2015/07/05/dsn/>Go言語のDB接続情報をRailsのdatabase.ymlから借用するライブラリをつくった</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2015-07-05</div></time></header><div class=post-inner><p>最近、Rails資産のあるサーバーでGoツールを動かすことがあったので、DB接続情報を共通で使えるようにしたいと思い小さなライブラリをつくりました。</p><iframe src="//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fdsn" title=monochromegane/dsn class="embed-card embed-webcard" scrolling=no frame border=0 style="width:100%;height:155px;max-width:500px;margin:10px 0">&lt;a href="https://github.com/monochromegane/dsn"&gt;monochromegane/dsn&lt;/a&gt;</iframe><p>Railsのdatabase.ymlからGoのsql.Openに渡すDataSourceNameを出力します。</p><h2 id=使い方>使い方</h2><p>database.ymlのパスと環境(productionやdevelopment)をパラメタとして渡してあげるだけです。</p><pre><code class=language-go>name, dsn, _ := dsn.FromRailsConfig(&quot;myapp/config/database.yml&quot;, &quot;production&quot;)
-fmt.Printf(&quot;[%s] %s&quot;, name, dsn)
-// =&gt; [mysql] username:password@tcp(localhost:3306)/dbname
-</code></pre><p>DSN、書式覚えるの厳しいので分かりやすいフォーマットの設定ファイルから読み込めるようになるのもうれしい感じです。</p><h2 id=機能>機能</h2><p>今のところ、MySQL, PostgreSql, Sqlite に対応しています。</p><hr><h1 id=実装と今後>実装と今後</h1><p>単純にYAMLを解析しているだけなので、ERBが含まれる項目はうまく動作しません。</p><p>そのうち、環境変数からやフラグからもDSNを生成できるようにするつもりですが、まだ自分の用途では特に必要になってないのでつくってません。よければPRお待ちしております。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/golang>golang</a></li><li><a class=tag-link href=/tags/rails>rails</a></li><li><a class=tag-link href=/tags/database>database</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2015/07/05/dsn/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','twitter-wjs');</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-38374674-1','auto');ga('send','pageview');</script></body></html>
+ 実装と今後 単純にYAMLを解析しているだけなので、ERBが含まれる項目はうまく動作しません。
+そのうち、環境変数からやフラグからもDSNを生成できるようにするつもりですが、まだ自分の用途では特に必要になってないのでつくってません。よければPRお待ちしております。">
+<meta property="og:title" content="Go言語のDB接続情報をRailsのdatabase.ymlから借用するライブラリをつくった">
+<meta property="og:url" content="https://blog.monochromegane.com/blog/2015/07/05/dsn/">
+<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+<link rel=stylesheet href=/css/reset.css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
+<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
+<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
+<link rel=stylesheet href=/css/text.css>
+<link rel=stylesheet href=/css/color.css>
+<link rel=stylesheet href=/css/layout.css>
+<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
+<link rel="shortcut icon" href=/images/favicon.ico>
+<link rel=canonical href=https://blog.monochromegane.com/blog/2015/07/05/dsn/>
+<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
+</head>
+<body>
+<div class=header>
+<header>
+<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
+<nav>
+<ul class=menu>
+<li><a href=/self-introduction/>Home</a></li>
+<li><a href=/post/>Archives</a></li>
+<li><a href=/diary/>Diary</a></li>
+<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
+</ul>
+</nav>
+</header>
+</div>
+<div class=container>
+<article>
+<div class=post>
+<header>
+<h1><a href=https://blog.monochromegane.com/blog/2015/07/05/dsn/>Go言語のDB接続情報をRailsのdatabase.ymlから借用するライブラリをつくった</a></h1>
+<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2015-07-05</div></time>
+</header>
+<div class=post-inner>
+<p>最近、Rails資産のあるサーバーでGoツールを動かすことがあったので、DB接続情報を共通で使えるようにしたいと思い小さなライブラリをつくりました。</p>
+<p>Railsのdatabase.ymlからGoのsql.Openに渡すDataSourceNameを出力します。</p>
+<h2 id=使い方>使い方</h2>
+<p>database.ymlのパスと環境(productionやdevelopment)をパラメタとして渡してあげるだけです。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#a6e22e>name</span>, <span style=color:#a6e22e>dsn</span>, <span style=color:#a6e22e>_</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>dsn</span>.<span style=color:#a6e22e>FromRailsConfig</span>(<span style=color:#e6db74>&#34;myapp/config/database.yml&#34;</span>, <span style=color:#e6db74>&#34;production&#34;</span>)
+<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;[%s] %s&#34;</span>, <span style=color:#a6e22e>name</span>, <span style=color:#a6e22e>dsn</span>)
+<span style=color:#75715e>// =&gt; [mysql] username:password@tcp(localhost:3306)/dbname
+</span></code></pre></div><p>DSN、書式覚えるの厳しいので分かりやすいフォーマットの設定ファイルから読み込めるようになるのもうれしい感じです。</p>
+<h2 id=機能>機能</h2>
+<p>今のところ、MySQL, PostgreSql, Sqlite に対応しています。</p>
+<hr>
+<h1 id=実装と今後>実装と今後</h1>
+<p>単純にYAMLを解析しているだけなので、ERBが含まれる項目はうまく動作しません。</p>
+<p>そのうち、環境変数からやフラグからもDSNを生成できるようにするつもりですが、まだ自分の用途では特に必要になってないのでつくってません。よければPRお待ちしております。</p>
+</div>
+<footer class=tag>
+<i class="fa fa-tags tag-icon"></i>
+<ul>
+<li><a class=tag-link href=/tags/golang>golang</a></li>
+<li><a class=tag-link href=/tags/rails>rails</a></li>
+<li><a class=tag-link href=/tags/database>database</a></li>
+</ul>
+<div class=clear></div>
+</footer>
+</div>
+</article>
+<div class=social-btn>
+<div>
+<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2015/07/05/dsn/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
+</div>
+<div>
+<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
+</div>
+</div>
+</div>
+<footer class=footer>
+<div class=author></div>
+<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
+<p>monochromegane (モノクロめがね) と申します。</p>
+<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+<ul class=social>
+<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
+<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
+<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
+</ul>
+<p class=copyright>
+<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
+</p>
+</footer>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
+<script>hljs.initHighlightingOnLoad()</script>
+<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
+</body>
+</html>

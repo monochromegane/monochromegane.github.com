@@ -1,38 +1,156 @@
-<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>[Rails] Unite.vimでSettingsLogicの長いキー名を入力する(unite-yaml) &middot; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="Railsで定数を管理する場合、SettingsLogicを使っていますが、プロジェクトが大きくなるとYAMLのキーが多くなったり、階層が深くなったりして入力が手間になってきます。 先週、Typoして時間をムダにしたのでUnite.vimでSettingsLogicのキー名を入力するUniteSource、unite-yamlを作ってみました。
+<!doctype html><html>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width">
+<meta name=author content>
+<title>[Rails] Unite.vimでSettingsLogicの長いキー名を入力する(unite-yaml) &#183; THINKING MEGANE</title>
+<meta name=twitter:card content="summary">
+<meta name=twitter:site content="@monochromegane">
+<meta property="og:description" content="Railsで定数を管理する場合、SettingsLogicを使っていますが、プロジェクトが大きくなるとYAMLのキーが多くなったり、階層が深くなったりして入力が手間になってきます。 先週、Typoして時間をムダにしたのでUnite.vimでSettingsLogicのキー名を入力するUniteSource、unite-yamlを作ってみました。
 unite-yaml unite-yamlを使うと、SettingsLogicで Settings.somekey.subkey.subsubkey.subsubsubkey のような長いキーをUniteの候補として選択、入力を行えます。
 インストール インストールはBundle、またはNeoBundleでmonochromegane/unite-yamlを指定してください。
-Bundleの場合は、.vimrcにBundle &#34;monochromegane/unite-yaml”を定義して、:BundleInstallです。
+Bundleの場合は、.vimrcにBundle &#34;monochromegane/unite-yaml”を定義して、 :BundleInstallです。
 使い方 1. YAMLファイルを選択する 以下のコマンドでカレントディレクトリ以下の*.ymlファイルが検索され、Uniteのウィンドウに表示されます。
-:Unite yaml-list  対象のYAMLファイルを選択し、Enterを押してください。
+:Unite yaml-list 対象のYAMLファイルを選択し、Enterを押してください。
 unite-yamlはERB enabled YAMLもサポートしています。
 2. 入力したいYAMLのキーを選択する 選択したYAMLファイルに定義されているキーの一覧がSettingsLogicのフォーマット(アクセサのキーチェーン)で表示されます。 また、キー名のあとには該当する値も表示されます。
 以下のYAMLファイルを選択した場合
-# config/application.yml defaults: &amp;defaults cool: saweet: nested settings neat_setting: 24 awesome_setting: &lt;%= &#34;Did you know 5 &#43; 5 = #{5 &#43; 5}?&#34; %&gt; development: &lt;&lt;: *defaults neat_setting: 800 test: &lt;&lt;: *defaults production: &lt;&lt;: *defaults  このように展開されます。
+# config/application.yml defaults: &defaults cool: saweet: nested settings neat_setting: 24 awesome_setting: <%= &#34;Did you know 5 + 5 = #{5 + 5}?&#34; %> development: <<: *defaults neat_setting: 800 test: <<: *defaults production: <<: *defaults このように展開されます。
 入力したいキー名を選択して、Enterを押すと、カーソル位置にキー名が入力されます（値は含まれません）
 キーバインド 以下のようなキーバインドをvimrcに定義しておくといいでしょう。
-&#34; yaml let g:unite_yaml_prefix = &#34;Settings."><meta property="og:title" content="[Rails] Unite.vimでSettingsLogicの長いキー名を入力する(unite-yaml)"><meta property="og:url" content="https://blog.monochromegane.com/blog/2013/11/10/unite-yaml/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2013/11/10/unite-yaml/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:true},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:true}}});</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2013/11/10/unite-yaml/>[Rails] Unite.vimでSettingsLogicの長いキー名を入力する(unite-yaml)</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2013-11-10</div></time></header><div class=post-inner><p>Railsで定数を管理する場合、<a href=https://github.com/binarylogic/settingslogic>SettingsLogic</a>を使っていますが、プロジェクトが大きくなるとYAMLのキーが多くなったり、階層が深くなったりして入力が手間になってきます。
-先週、Typoして時間をムダにしたのでUnite.vimでSettingsLogicのキー名を入力するUniteSource、<a href=https://github.com/monochromegane/unite-yaml>unite-yaml</a>を作ってみました。</p><h1 id=unite-yaml>unite-yaml</h1><p>unite-yamlを使うと、SettingsLogicで <code>Settings.somekey.subkey.subsubkey.subsubsubkey</code> のような長いキーをUniteの候補として選択、入力を行えます。</p><h2 id=インストール>インストール</h2><p>インストールはBundle、またはNeoBundleで<code>monochromegane/unite-yaml</code>を指定してください。</p><p>Bundleの場合は、<code>.vimrc</code>に<code>Bundle &quot;monochromegane/unite-yaml”</code>を定義して、<code>:BundleInstall</code>です。</p><h2 id=使い方>使い方</h2><h3 id=1-yamlファイルを選択する>1. YAMLファイルを選択する</h3><p>以下のコマンドでカレントディレクトリ以下の<code>*.yml</code>ファイルが検索され、Uniteのウィンドウに表示されます。</p><pre><code class=language-sh>:Unite yaml-list
-</code></pre><p><img src=/images/2013/11/unite-yaml-list.png alt="unite yaml-list"></p><p>対象のYAMLファイルを選択し、<code>Enter</code>を押してください。<br>unite-yamlは<code>ERB enabled YAML</code>もサポートしています。</p><h3 id=2-入力したいyamlのキーを選択する>2. 入力したいYAMLのキーを選択する</h3><p>選択したYAMLファイルに定義されているキーの一覧がSettingsLogicのフォーマット(アクセサのキーチェーン)で表示されます。
-また、キー名のあとには該当する値も表示されます。</p><p>以下のYAMLファイルを選択した場合</p><pre><code class=language-ruby># config/application.yml
-defaults: &amp;defaults
-  cool:
-    saweet: nested settings
-  neat_setting: 24
-  awesome_setting: &lt;%= &quot;Did you know 5 + 5 = #{5 + 5}?&quot; %&gt;
+&#34; yamllet g:unite_yaml_prefix = &#34;Settings.&#34;nnoremap <silent> ,y :<C-u>Unite yaml-list<CR>nnoremap <silent> ,Y :<C-u>UniteResume yaml-buffer<CR> yaml-listから開いたYAMLのキー一覧はyaml-bufferという名前のbufferで開かれているので上記のようにUniteResumeを使ってYAMLの再パースなしに再度呼び出すことができます。 g:unite_yaml_prefixを定義すると、入力時のキー名の前に指定した語が追加されます。Settings.">
+<meta property="og:title" content="[Rails] Unite.vimでSettingsLogicの長いキー名を入力する(unite-yaml)">
+<meta property="og:url" content="https://blog.monochromegane.com/blog/2013/11/10/unite-yaml/">
+<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+<link rel=stylesheet href=/css/reset.css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
+<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
+<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
+<link rel=stylesheet href=/css/text.css>
+<link rel=stylesheet href=/css/color.css>
+<link rel=stylesheet href=/css/layout.css>
+<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
+<link rel="shortcut icon" href=/images/favicon.ico>
+<link rel=canonical href=https://blog.monochromegane.com/blog/2013/11/10/unite-yaml/>
+<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
+</head>
+<body>
+<div class=header>
+<header>
+<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
+<nav>
+<ul class=menu>
+<li><a href=/self-introduction/>Home</a></li>
+<li><a href=/post/>Archives</a></li>
+<li><a href=/diary/>Diary</a></li>
+<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
+</ul>
+</nav>
+</header>
+</div>
+<div class=container>
+<article>
+<div class=post>
+<header>
+<h1><a href=https://blog.monochromegane.com/blog/2013/11/10/unite-yaml/>[Rails] Unite.vimでSettingsLogicの長いキー名を入力する(unite-yaml)</a></h1>
+<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2013-11-10</div></time>
+</header>
+<div class=post-inner>
+<p>Railsで定数を管理する場合、<a href=https://github.com/binarylogic/settingslogic>SettingsLogic</a>を使っていますが、プロジェクトが大きくなるとYAMLのキーが多くなったり、階層が深くなったりして入力が手間になってきます。
+先週、Typoして時間をムダにしたのでUnite.vimでSettingsLogicのキー名を入力するUniteSource、<a href=https://github.com/monochromegane/unite-yaml>unite-yaml</a>を作ってみました。</p>
+<h1 id=unite-yaml>unite-yaml</h1>
+<p>unite-yamlを使うと、SettingsLogicで <code>Settings.somekey.subkey.subsubkey.subsubsubkey</code> のような長いキーをUniteの候補として選択、入力を行えます。</p>
+<h2 id=インストール>インストール</h2>
+<p>インストールはBundle、またはNeoBundleで<code>monochromegane/unite-yaml</code>を指定してください。</p>
+<p>Bundleの場合は、<code>.vimrc</code>に<code>Bundle "monochromegane/unite-yaml”</code>を定義して、<code> :BundleInstall</code>です。</p>
+<h2 id=使い方>使い方</h2>
+<h3 id=1-yamlファイルを選択する>1. YAMLファイルを選択する</h3>
+<p>以下のコマンドでカレントディレクトリ以下の<code>*.yml</code>ファイルが検索され、Uniteのウィンドウに表示されます。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>:Unite yaml-list
+</code></pre></div><p><img src=/images/2013/11/unite-yaml-list.png alt="unite yaml-list"></p>
+<p>対象のYAMLファイルを選択し、<code>Enter</code>を押してください。<br>
+unite-yamlは<code>ERB enabled YAML</code>もサポートしています。</p>
+<h3 id=2-入力したいyamlのキーを選択する>2. 入力したいYAMLのキーを選択する</h3>
+<p>選択したYAMLファイルに定義されているキーの一覧がSettingsLogicのフォーマット(アクセサのキーチェーン)で表示されます。
+また、キー名のあとには該当する値も表示されます。</p>
+<p>以下のYAMLファイルを選択した場合</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#75715e># config/application.yml</span>
+<span style=color:#e6db74>defaults</span>: <span style=color:#f92672>&amp;</span>defaults
+  <span style=color:#e6db74>cool</span>:
+    <span style=color:#e6db74>saweet</span>: nested settings
+  <span style=color:#e6db74>neat_setting</span>: <span style=color:#ae81ff>24</span>
+  <span style=color:#e6db74>awesome_setting</span>: <span style=color:#f92672>&lt;</span><span style=color:#e6db74>%= &#34;Did you know 5 + 5 =</span> <span style=color:#75715e>#{5 + 5}?&#34; %&gt;</span>
 
-development:
-  &lt;&lt;: *defaults
-  neat_setting: 800
+<span style=color:#e6db74>development</span>:
+  <span style=color:#f92672>&lt;&lt;</span>: <span style=color:#f92672>*</span>defaults
+  <span style=color:#e6db74>neat_setting</span>: <span style=color:#ae81ff>800</span>
 
 test:
-  &lt;&lt;: *defaults
+  <span style=color:#f92672>&lt;&lt;</span>: <span style=color:#f92672>*</span>defaults
 
-production:
-  &lt;&lt;: *defaults
-</code></pre><p>このように展開されます。</p><p><img src=/images/2013/11/unite-yaml.png alt="unite yaml"></p><p>入力したいキー名を選択して、<code>Enter</code>を押すと、カーソル位置にキー名が入力されます（値は含まれません）</p><h2 id=キーバインド>キーバインド</h2><p>以下のようなキーバインドをvimrcに定義しておくといいでしょう。</p><pre><code class=language-vim>&quot; yaml
-let g:unite_yaml_prefix = &quot;Settings.&quot;
-nnoremap &lt;silent&gt; ,y  :&lt;C-u&gt;Unite yaml-list&lt;CR&gt;
-nnoremap &lt;silent&gt; ,Y  :&lt;C-u&gt;UniteResume yaml-buffer&lt;CR&gt;
-</code></pre><ul><li>yaml-listから開いたYAMLのキー一覧は<code>yaml-buffer</code>という名前のbufferで開かれているので上記のように<code>UniteResume</code>を使ってYAMLの再パースなしに再度呼び出すことができます。</li><li><code>g:unite_yaml_prefix</code>を定義すると、入力時のキー名の前に指定した語が追加されます。<code>Settings.</code>を指定することで入力の手間を省くことができます。</li></ul><hr><p>SettingsLogicは便利ですが、キーの打ち間違いや定義されているキーを見比べるためにファイル間を行ったり来たりして時間をムダにしがちです。
-Unite.vimを使っている人は、unite-yamlを導入してみてはどうでしょうか。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/unite.vim>unite.vim</a></li><li><a class=tag-link href=/tags/yaml>yaml</a></li><li><a class=tag-link href=/tags/rails>rails</a></li><li><a class=tag-link href=/tags/settingslogic>settingslogic</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/11/10/unite-yaml/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','twitter-wjs');</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-38374674-1','auto');ga('send','pageview');</script></body></html>
+<span style=color:#e6db74>production</span>:
+  <span style=color:#f92672>&lt;&lt;</span>: <span style=color:#f92672>*</span>defaults
+</code></pre></div><p>このように展開されます。</p>
+<p><img src=/images/2013/11/unite-yaml.png alt="unite yaml"></p>
+<p>入力したいキー名を選択して、<code>Enter</code>を押すと、カーソル位置にキー名が入力されます（値は含まれません）</p>
+<h2 id=キーバインド>キーバインド</h2>
+<p>以下のようなキーバインドをvimrcに定義しておくといいでしょう。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-vim data-lang=vim><span style=color:#75715e>&#34; yaml</span><span style=color:#960050;background-color:#1e0010>
+</span><span style=color:#960050;background-color:#1e0010></span><span style=color:#66d9ef>let</span> <span style=color:#a6e22e>g</span>:<span style=color:#a6e22e>unite_yaml_prefix</span> = <span style=color:#e6db74>&#34;Settings.&#34;</span><span style=color:#960050;background-color:#1e0010>
+</span><span style=color:#960050;background-color:#1e0010></span><span style=color:#a6e22e>nnoremap</span> &lt;<span style=color:#a6e22e>silent</span>&gt; ,<span style=color:#a6e22e>y</span>  :&lt;<span style=color:#a6e22e>C</span>-<span style=color:#a6e22e>u</span>&gt;<span style=color:#a6e22e>Unite</span> <span style=color:#a6e22e>yaml</span>-<span style=color:#a6e22e>list</span>&lt;<span style=color:#a6e22e>CR</span>&gt;<span style=color:#960050;background-color:#1e0010>
+</span><span style=color:#960050;background-color:#1e0010></span><span style=color:#a6e22e>nnoremap</span> &lt;<span style=color:#a6e22e>silent</span>&gt; ,<span style=color:#a6e22e>Y</span>  :&lt;<span style=color:#a6e22e>C</span>-<span style=color:#a6e22e>u</span>&gt;<span style=color:#a6e22e>UniteResume</span> <span style=color:#a6e22e>yaml</span>-<span style=color:#a6e22e>buffer</span>&lt;<span style=color:#a6e22e>CR</span>&gt;<span style=color:#960050;background-color:#1e0010>
+</span></code></pre></div><ul>
+<li>yaml-listから開いたYAMLのキー一覧は<code>yaml-buffer</code>という名前のbufferで開かれているので上記のように<code>UniteResume</code>を使ってYAMLの再パースなしに再度呼び出すことができます。</li>
+<li><code>g:unite_yaml_prefix</code>を定義すると、入力時のキー名の前に指定した語が追加されます。<code>Settings.</code>を指定することで入力の手間を省くことができます。</li>
+</ul>
+<p>SettingsLogicは便利ですが、キーの打ち間違いや定義されているキーを見比べるためにファイル間を行ったり来たりして時間をムダにしがちです。
+Unite.vimを使っている人は、unite-yamlを導入してみてはどうでしょうか。</p>
+</div>
+<footer class=tag>
+<i class="fa fa-tags tag-icon"></i>
+<ul>
+<li><a class=tag-link href=/tags/unite.vim>unite.vim</a></li>
+<li><a class=tag-link href=/tags/yaml>yaml</a></li>
+<li><a class=tag-link href=/tags/rails>rails</a></li>
+<li><a class=tag-link href=/tags/settingslogic>settingslogic</a></li>
+</ul>
+<div class=clear></div>
+</footer>
+</div>
+</article>
+<div class=social-btn>
+<div>
+<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/11/10/unite-yaml/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
+</div>
+<div>
+<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
+</div>
+</div>
+</div>
+<footer class=footer>
+<div class=author></div>
+<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
+<p>monochromegane (モノクロめがね) と申します。</p>
+<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+<ul class=social>
+<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
+<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
+<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
+</ul>
+<p class=copyright>
+<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
+</p>
+</footer>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
+<script>hljs.initHighlightingOnLoad()</script>
+<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
+</body>
+</html>

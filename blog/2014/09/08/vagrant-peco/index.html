@@ -1,17 +1,85 @@
-<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>pecoでVagrant操作を便利にする &middot; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="開発環境で利用するVagrantのVMの数が増えてきたのでpecoでVM選んで起動や停止をできるようにしてみました。
+<!doctype html><html>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width">
+<meta name=author content>
+<title>pecoでVagrant操作を便利にする &#183; THINKING MEGANE</title>
+<meta name=twitter:card content="summary">
+<meta name=twitter:site content="@monochromegane">
+<meta property="og:description" content="開発環境で利用するVagrantのVMの数が増えてきたのでpecoでVM選んで起動や停止をできるようにしてみました。
 vagrant-peco こんな感じで利用します。
-$ vagrant-peco up  うれしさ  pecoでVMを選択できる。Vagrantfileのあるディレクトリに移動しなくてよい VMを複数選択して一括で起動・停止できる 通常のvagrant global-statusよりも高速に表示 direnvとの連携  インストール Vagrant1.6以降でつくったVMとvagrant-peco、vagrant-global-statusが必要です。
-# vagrant-global-statusをインストール $ go get github.com/monochromegane/vagrant-global-status/... # vagrant-pecoをインストール $ cd [PATH] # PATHの通ったディレクトリ $ curl -O https://raw.githubusercontent.com/monochromegane/vagrant-peco/master/vagrant-peco $ chmod &#43;x ./vagrant-peco  仕組み vagrant global-status Vagrantの1.6からglobal-statusプラグインが取り込まれ、一度起動したVMにIDが割り振られるようになりました。
+$ vagrant-peco up うれしさ  pecoでVMを選択できる。Vagrantfileのあるディレクトリに移動しなくてよい VMを複数選択して一括で起動・停止できる 通常のvagrant global-statusよりも高速に表示 direnvとの連携  インストール Vagrant1.6以降でつくったVMとvagrant-peco、vagrant-global-statusが必要です。
+# vagrant-global-statusをインストール $ go get github.com/monochromegane/vagrant-global-status/... # vagrant-pecoをインストール $ cd [PATH] # PATHの通ったディレクトリ $ curl -O https://raw.githubusercontent.com/monochromegane/vagrant-peco/master/vagrant-peco $ chmod +x ./vagrant-peco 仕組み vagrant global-status Vagrantの1.6からglobal-statusプラグインが取り込まれ、一度起動したVMにIDが割り振られるようになりました。
 IDはvagrant global-statusコマンドで確認します。
-$ vagrant global-status id name provider state directory ------------------------------------------------------------------------------- 14c9626 cross_compile virtualbox poweroff /Users/miyakey/Documents/vm/golang dffc2a5 develop virtualbox poweroff /Users/miyakey/Documents/vm/golang ae3968b web1 virtualbox poweroff /Users/miyakey/Documents/vm/dev 825680e web2 virtualbox poweroff /Users/miyakey/Documents/vm/dev e0aa5e9 db virtualbox poweroff /Users/miyakey/Documents/vm/dev  このIDを使うことでVagrantfileのあるディレクトリに移動することなく任意のVMを操作できます。"><meta property="og:title" content="pecoでVagrant操作を便利にする"><meta property="og:url" content="https://blog.monochromegane.com/blog/2014/09/08/vagrant-peco/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2014/09/08/vagrant-peco/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:true},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:true}}});</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2014/09/08/vagrant-peco/>pecoでVagrant操作を便利にする</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2014-09-08</div></time></header><div class=post-inner><p>開発環境で利用するVagrantのVMの数が増えてきたのでpecoでVM選んで起動や停止をできるようにしてみました。</p><h1 id=vagrant-peco>vagrant-peco</h1><p>こんな感じで利用します。</p><pre><code class=language-sh>$ vagrant-peco up
-</code></pre><p><img src=https://raw.githubusercontent.com/monochromegane/vagrant-peco/master/images/vagrant-peco-up.gif alt></p><h2 id=うれしさ>うれしさ</h2><ul><li>pecoでVMを選択できる。Vagrantfileのあるディレクトリに移動しなくてよい</li><li>VMを複数選択して一括で起動・停止できる</li><li>通常のvagrant global-statusよりも高速に表示</li><li>direnvとの連携</li></ul><h2 id=インストール>インストール</h2><p>Vagrant1.6以降でつくったVMと<code>vagrant-peco</code>、<code>vagrant-global-status</code>が必要です。</p><pre><code class=language-sh># vagrant-global-statusをインストール
+$ vagrant global-status id name provider state directory ------------------------------------------------------------------------------- 14c9626 cross_compile virtualbox poweroff /Users/miyakey/Documents/vm/golang dffc2a5 develop virtualbox poweroff /Users/miyakey/Documents/vm/golang ae3968b web1 virtualbox poweroff /Users/miyakey/Documents/vm/dev 825680e web2 virtualbox poweroff /Users/miyakey/Documents/vm/dev e0aa5e9 db virtualbox poweroff /Users/miyakey/Documents/vm/dev このIDを使うことでVagrantfileのあるディレクトリに移動することなく任意のVMを操作できます。">
+<meta property="og:title" content="pecoでVagrant操作を便利にする">
+<meta property="og:url" content="https://blog.monochromegane.com/blog/2014/09/08/vagrant-peco/">
+<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+<link rel=stylesheet href=/css/reset.css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
+<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
+<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
+<link rel=stylesheet href=/css/text.css>
+<link rel=stylesheet href=/css/color.css>
+<link rel=stylesheet href=/css/layout.css>
+<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
+<link rel="shortcut icon" href=/images/favicon.ico>
+<link rel=canonical href=https://blog.monochromegane.com/blog/2014/09/08/vagrant-peco/>
+<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
+</head>
+<body>
+<div class=header>
+<header>
+<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
+<nav>
+<ul class=menu>
+<li><a href=/self-introduction/>Home</a></li>
+<li><a href=/post/>Archives</a></li>
+<li><a href=/diary/>Diary</a></li>
+<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
+</ul>
+</nav>
+</header>
+</div>
+<div class=container>
+<article>
+<div class=post>
+<header>
+<h1><a href=https://blog.monochromegane.com/blog/2014/09/08/vagrant-peco/>pecoでVagrant操作を便利にする</a></h1>
+<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2014-09-08</div></time>
+</header>
+<div class=post-inner>
+<p>開発環境で利用するVagrantのVMの数が増えてきたのでpecoでVM選んで起動や停止をできるようにしてみました。</p>
+<h1 id=vagrant-peco>vagrant-peco</h1>
+<p>こんな感じで利用します。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ vagrant-peco up
+</code></pre></div><p><img src=https://raw.githubusercontent.com/monochromegane/vagrant-peco/master/images/vagrant-peco-up.gif alt></p>
+<h2 id=うれしさ>うれしさ</h2>
+<ul>
+<li>pecoでVMを選択できる。Vagrantfileのあるディレクトリに移動しなくてよい</li>
+<li>VMを複数選択して一括で起動・停止できる</li>
+<li>通常のvagrant global-statusよりも高速に表示</li>
+<li>direnvとの連携</li>
+</ul>
+<h2 id=インストール>インストール</h2>
+<p>Vagrant1.6以降でつくったVMと<code>vagrant-peco</code>、<code>vagrant-global-status</code>が必要です。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=color:#75715e># vagrant-global-statusをインストール</span>
 $ go get github.com/monochromegane/vagrant-global-status/...
 
-# vagrant-pecoをインストール
-$ cd [PATH] # PATHの通ったディレクトリ
+<span style=color:#75715e># vagrant-pecoをインストール</span>
+$ cd <span style=color:#f92672>[</span>PATH<span style=color:#f92672>]</span> <span style=color:#75715e># PATHの通ったディレクトリ</span>
 $ curl -O https://raw.githubusercontent.com/monochromegane/vagrant-peco/master/vagrant-peco
 $ chmod +x ./vagrant-peco
-</code></pre><h1 id=仕組み>仕組み</h1><h2 id=vagrant-global-status>vagrant global-status</h2><p>Vagrantの1.6からglobal-statusプラグインが取り込まれ、一度起動したVMにIDが割り振られるようになりました。</p><p>IDは<code>vagrant global-status</code>コマンドで確認します。</p><pre><code class=language-sh>$ vagrant global-status
+</code></pre></div><h1 id=仕組み>仕組み</h1>
+<h2 id=vagrant-global-status>vagrant global-status</h2>
+<p>Vagrantの1.6からglobal-statusプラグインが取り込まれ、一度起動したVMにIDが割り振られるようになりました。</p>
+<p>IDは<code>vagrant global-status</code>コマンドで確認します。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ vagrant global-status
 id       name          provider   state    directory
 -------------------------------------------------------------------------------
 14c9626  cross_compile virtualbox poweroff /Users/miyakey/Documents/vm/golang
@@ -19,11 +87,74 @@ dffc2a5  develop       virtualbox poweroff /Users/miyakey/Documents/vm/golang
 ae3968b  web1          virtualbox poweroff /Users/miyakey/Documents/vm/dev
 825680e  web2          virtualbox poweroff /Users/miyakey/Documents/vm/dev
 e0aa5e9  db            virtualbox poweroff /Users/miyakey/Documents/vm/dev
-</code></pre><p>このIDを使うことでVagrantfileのあるディレクトリに移動することなく任意のVMを操作できます。</p><pre><code class=language-sh>$ vagrant up 14c9626
-</code></pre><h2 id=pecoと連携する>pecoと連携する</h2><p>毎度、IDを選ぶのは面倒なので peco で選べるようにします。</p><p>先に公開されている@gongoさんの<a href=https://github.com/gongo/pecrant>pecrant</a>でほぼばっちりです。</p><p>ただ、自分の環境だと<code>vagrant global-status</code>の起動が少し遅く感じたのと、Vagarntディレクトリごとの<code>direnv</code>定義を使いたかったので、以下のようにして解決しています。</p><h3 id=vagrant-global-status-1>vagrant-global-status</h3><ul><li><a href=https://github.com/monochromegane/vagrant-global-status>vagrant-global-status</a></li></ul><p><code>vagrant global-status</code>の起動が遅い問題を解決するためにつくりました。<br>同コマンドが参照するファイルを直接解析して結果を出力しています。ちょっとお行儀が悪いです。</p><p>自分の環境だと、1秒弱短縮できました。さくさく起動します。</p><pre><code class=language-sh>$ time vagrant global-status
+</code></pre></div><p>このIDを使うことでVagrantfileのあるディレクトリに移動することなく任意のVMを操作できます。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ vagrant up 14c9626
+</code></pre></div><h2 id=pecoと連携する>pecoと連携する</h2>
+<p>毎度、IDを選ぶのは面倒なので peco で選べるようにします。</p>
+<p>先に公開されている@gongoさんの<a href=https://github.com/gongo/pecrant>pecrant</a>でほぼばっちりです。</p>
+<p>ただ、自分の環境だと<code>vagrant global-status</code>の起動が少し遅く感じたのと、Vagarntディレクトリごとの<code>direnv</code>定義を使いたかったので、以下のようにして解決しています。</p>
+<h3 id=vagrant-global-status-1>vagrant-global-status</h3>
+<ul>
+<li><a href=https://github.com/monochromegane/vagrant-global-status>vagrant-global-status</a></li>
+</ul>
+<p><code>vagrant global-status</code>の起動が遅い問題を解決するためにつくりました。<br>
+同コマンドが参照するファイルを直接解析して結果を出力しています。ちょっとお行儀が悪いです。</p>
+<p>自分の環境だと、1秒弱短縮できました。さくさく起動します。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ time vagrant global-status
 vagrant global-status  0.97s user 0.09s system 99% cpu 1.072 total
 
 $ time vagrant-global-status
-vagrant-global-status  0.00s user 0.00s system 68% cpu 0.007 total # fast!!
-</code></pre><h3 id=vagrant-peco-1>vagrant-peco</h3><ul><li><a href=https://github.com/monochromegane/vagrant-peco>vagrant-peco</a></li></ul><p>Vagrant起動時に<code>direnv</code>を適用したかったのでつくりました。<br><code>vagrant-global-status</code>で選択したIDで操作する前に、該当ディレクトリの<code>.envrc</code>を読み込みます。</p><p>Vagrantfileはプロジェクト共通でマウントするソースファイルのディレクトリは個人ごとに環境変数で指定するような場合に都合がよいです。</p><hr><p>vagrant-pecoは、だいぶ自分の環境にあわせた感じになってしまいましたが、VagrantのVMが増えてきた方、pecrant含めて、使ってみてはどうでしょうか。</p><p>いや〜、peco、便利。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/peco>peco</a></li><li><a class=tag-link href=/tags/vagrant>vagrant</a></li><li><a class=tag-link href=/tags/golang>golang</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2014/09/08/vagrant-peco/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','twitter-wjs');</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-38374674-1','auto');ga('send','pageview');</script></body></html>
+vagrant-global-status  0.00s user 0.00s system 68% cpu 0.007 total <span style=color:#75715e># fast!!</span>
+</code></pre></div><h3 id=vagrant-peco-1>vagrant-peco</h3>
+<ul>
+<li><a href=https://github.com/monochromegane/vagrant-peco>vagrant-peco</a></li>
+</ul>
+<p>Vagrant起動時に<code>direnv</code>を適用したかったのでつくりました。<br>
+<code>vagrant-global-status</code>で選択したIDで操作する前に、該当ディレクトリの<code>.envrc</code>を読み込みます。</p>
+<p>Vagrantfileはプロジェクト共通でマウントするソースファイルのディレクトリは個人ごとに環境変数で指定するような場合に都合がよいです。</p>
+<hr>
+<p>vagrant-pecoは、だいぶ自分の環境にあわせた感じになってしまいましたが、VagrantのVMが増えてきた方、pecrant含めて、使ってみてはどうでしょうか。</p>
+<p>いや〜、peco、便利。</p>
+</div>
+<footer class=tag>
+<i class="fa fa-tags tag-icon"></i>
+<ul>
+<li><a class=tag-link href=/tags/peco>peco</a></li>
+<li><a class=tag-link href=/tags/vagrant>vagrant</a></li>
+<li><a class=tag-link href=/tags/golang>golang</a></li>
+</ul>
+<div class=clear></div>
+</footer>
+</div>
+</article>
+<div class=social-btn>
+<div>
+<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2014/09/08/vagrant-peco/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
+</div>
+<div>
+<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
+</div>
+</div>
+</div>
+<footer class=footer>
+<div class=author></div>
+<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
+<p>monochromegane (モノクロめがね) と申します。</p>
+<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+<ul class=social>
+<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
+<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
+<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
+</ul>
+<p class=copyright>
+<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
+</p>
+</footer>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
+<script>hljs.initHighlightingOnLoad()</script>
+<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
+</body>
+</html>

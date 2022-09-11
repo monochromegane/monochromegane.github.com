@@ -1,30 +1,154 @@
-<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>Goのデプロイを「もっと」簡単にする。ビルドプロキシCargo。改めTorokko。 &middot; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="Goアプリのデプロイはバイナリをひとつ配布して完了なのでとても楽なのですが、バイナリ自体をどこで管理するかについては意外と頭を悩ませることになります。 Goを使うにあたって、コードさえあればあとはバイナリも簡単に配布できる状態というのが望ましいと思い、仕組みを作ってみました。
-&lt;a href=&#34;https://github.com/monochromegane/torokko&#34;&gt;monochromegane/torokko&lt;/a&gt; 2015/08/16追記: CargoはRustのパッケージマネージャーと名前がかぶってたのでTorokko(トロッコ)に改名しました！
+<!doctype html><html>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width">
+<meta name=author content>
+<title>Goのデプロイを「もっと」簡単にする。ビルドプロキシCargo。改めTorokko。 &#183; THINKING MEGANE</title>
+<meta name=twitter:card content="summary">
+<meta name=twitter:site content="@monochromegane">
+<meta property="og:description" content="Goアプリのデプロイはバイナリをひとつ配布して完了なのでとても楽なのですが、バイナリ自体をどこで管理するかについては意外と頭を悩ませることになります。 Goを使うにあたって、コードさえあればあとはバイナリも簡単に配布できる状態というのが望ましいと思い、仕組みを作ってみました。
+2015/08/16追記: CargoはRustのパッケージマネージャーと名前がかぶってたのでTorokko(トロッコ)に改名しました！
 TorokkoはGoアプリのビルドと成果物ダウンロード用のAPIを提供するビルドプロキシです。
 リクエストのURLで対象リポジトリ、GOOS、GOARCH、バージョンを指定します。 ビルドはDockerコンテナを用いて行い、バックエンドストレージに成果物が保存され、ビルドリクエストと同じURLでダウンロードを行うことができます。
 Docker Hub の Automated Builds のGo版と考えてもらうとイメージしやすいかと思います。 Torokkoは、特にGoの開発環境をつくりたくないサーバー上へのデプロイを簡単にすることを目的としています。
-クイックスタート  Torokkoサーバーを起動します ビルド用のエンドポイントにアクセスします
-$ curl -X POST http://torokko-server/{remote}/{owner}/{repo}/{GOOS}/{GOARCH}/{version} # e.g. http://torokko-server/github.com/monochromegane/torokko/linux/amd64/v0.0.1   しばらく経つとビルドが完了しているので、ダウンロード用のエンドポイントにアクセスします。
-$ curl -OJL http://torokko-server/{remote}/{owner}/{repo}/{GOOS}/{GOARCH}/{version}  こちらにデモ用のAPIサーバーを用意しているので使ってみてください。
+クイックスタート  Torokkoサーバーを起動します ビルド用のエンドポイントにアクセスします  $ curl -X POST http://torokko-server/{remote}/{owner}/{repo}/{GOOS}/{GOARCH}/{version} # e.g. http://torokko-server/github.com/monochromegane/torokko/linux/amd64/v0.0.1 しばらく経つとビルドが完了しているので、ダウンロード用のエンドポイントにアクセスします。
+$ curl -OJL http://torokko-server/{remote}/{owner}/{repo}/{GOOS}/{GOARCH}/{version} こちらにデモ用のAPIサーバーを用意しているので使ってみてください。
 Torokkoの仕組み 基本的な仕組みは前述のとおりです。 リクエストURLに応じたリポジトリをDockerコンテナでビルドし、ダウンロードできるようにバックエンドのストレージに保存しています。
 ビルドとダウンロードを一元管理することで
  リポジトリはコードを管理するだけでよい デプロイ元のPCやデプロイ先のサーバーでビルドせずにダウンロードするだけでよい  といったメリットがあります。
 カスタムビルド TorokkoはGoアプリのビルドにmakeを使います。 単純なGoアプリの場合、Torokkoがデフォルトで用意するビルド手順で問題ないですが、Godepsやgo-bindata、go generateなどを使う場合、リポジトリにMakefileを準備してください。
 なお、デフォルトのMakefileは以下のとおりです。
-build: go get -d ./... go build  エンドポイント 紹介した、ビルド、ダウンロードの他にビルドログを確認するためのエンドポイントがあります。 詳しくはREADMEを参照ください。
+build: go get -d ./... go build エンドポイント 紹介した、ビルド、ダウンロードの他にビルドログを確認するためのエンドポイントがあります。 詳しくはREADMEを参照ください。
 まとめ とりあえずざっと作った感じで、まだプロトタイプに近いので環境つくる手順も整備できていない、かつスケールしやすい構成とはとても言えない状態ですが、
-CIサービスの設定 &#43; GitHub Releaseへの紐付け &#43; デプロイレシピの修正をしながら、"><meta property="og:title" content="Goのデプロイを「もっと」簡単にする。ビルドプロキシCargo。改めTorokko。"><meta property="og:url" content="https://blog.monochromegane.com/blog/2015/08/16/deploy-golang-by-cargo/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2015/08/16/deploy-golang-by-cargo/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:true},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:true}}});</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2015/08/16/deploy-golang-by-cargo/>Goのデプロイを「もっと」簡単にする。ビルドプロキシCargo。改めTorokko。</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2015-08-16</div></time></header><div class=post-inner><p>Goアプリのデプロイはバイナリをひとつ配布して完了なのでとても楽なのですが、バイナリ自体をどこで管理するかについては意外と頭を悩ませることになります。
-Goを使うにあたって、コードさえあればあとはバイナリも簡単に配布できる状態というのが望ましいと思い、仕組みを作ってみました。</p><iframe src="//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Ftorokko" title=monochromegane/torokko class="embed-card embed-webcard" scrolling=no frame border=0 style="width:100%;height:155px;max-width:500px;margin:10px 0">&lt;a href="https://github.com/monochromegane/torokko"&gt;monochromegane/torokko&lt;/a&gt;</iframe><p><strong>2015/08/16追記: CargoはRustのパッケージマネージャーと名前がかぶってたのでTorokko(トロッコ)に改名しました！</strong></p><p>TorokkoはGoアプリのビルドと成果物ダウンロード用のAPIを提供するビルドプロキシです。</p><p>リクエストのURLで対象リポジトリ、GOOS、GOARCH、バージョンを指定します。
-ビルドはDockerコンテナを用いて行い、バックエンドストレージに成果物が保存され、ビルドリクエストと同じURLでダウンロードを行うことができます。</p><p>Docker Hub の Automated Builds のGo版と考えてもらうとイメージしやすいかと思います。
-Torokkoは、特にGoの開発環境をつくりたくないサーバー上へのデプロイを簡単にすることを目的としています。</p><h2 id=クイックスタート>クイックスタート</h2><ol><li>Torokkoサーバーを起動します</li><li><p>ビルド用のエンドポイントにアクセスします</p><pre><code class=language-sh>$ curl -X POST http://torokko-server/{remote}/{owner}/{repo}/{GOOS}/{GOARCH}/{version}
-# e.g. http://torokko-server/github.com/monochromegane/torokko/linux/amd64/v0.0.1
-</code></pre></li></ol><p>しばらく経つとビルドが完了しているので、ダウンロード用のエンドポイントにアクセスします。</p><pre><code class=language-sh>$ curl -OJL http://torokko-server/{remote}/{owner}/{repo}/{GOOS}/{GOARCH}/{version}
-</code></pre><p><a href=http://torokko.monochromegane.com>こちら</a>にデモ用のAPIサーバーを用意しているので使ってみてください。</p><h2 id=torokkoの仕組み>Torokkoの仕組み</h2><p><img src=https://cloud.githubusercontent.com/assets/1845486/9293092/eba8190c-4457-11e5-9176-19d9f7ac3363.jpg alt=torokko\_overview></p><p>基本的な仕組みは前述のとおりです。
-リクエストURLに応じたリポジトリをDockerコンテナでビルドし、ダウンロードできるようにバックエンドのストレージに保存しています。</p><p>ビルドとダウンロードを一元管理することで</p><ul><li>リポジトリはコードを管理するだけでよい</li><li>デプロイ元のPCやデプロイ先のサーバーでビルドせずにダウンロードするだけでよい</li></ul><p>といったメリットがあります。</p><h2 id=カスタムビルド>カスタムビルド</h2><p>TorokkoはGoアプリのビルドに<code>make</code>を使います。
-単純なGoアプリの場合、Torokkoがデフォルトで用意するビルド手順で問題ないですが、Godepsやgo-bindata、go generateなどを使う場合、リポジトリにMakefileを準備してください。</p><p>なお、デフォルトのMakefileは以下のとおりです。</p><pre><code class=language-mak>build:
+CIサービスの設定 + GitHub Releaseへの紐付け + デプロイレシピの修正をしながら、
+「オレは！このバイナリを！ひとつ！サーバーに！置きたいだけなの！！」
+そう思ったことがあるひとは使ってみてもよいかもしれません。 お盆休み明けから社内サーバーに入れてみて少しずつブラッシュアップしていきます。">
+<meta property="og:title" content="Goのデプロイを「もっと」簡単にする。ビルドプロキシCargo。改めTorokko。">
+<meta property="og:url" content="https://blog.monochromegane.com/blog/2015/08/16/deploy-golang-by-cargo/">
+<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+<link rel=stylesheet href=/css/reset.css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
+<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
+<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
+<link rel=stylesheet href=/css/text.css>
+<link rel=stylesheet href=/css/color.css>
+<link rel=stylesheet href=/css/layout.css>
+<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
+<link rel="shortcut icon" href=/images/favicon.ico>
+<link rel=canonical href=https://blog.monochromegane.com/blog/2015/08/16/deploy-golang-by-cargo/>
+<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
+</head>
+<body>
+<div class=header>
+<header>
+<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
+<nav>
+<ul class=menu>
+<li><a href=/self-introduction/>Home</a></li>
+<li><a href=/post/>Archives</a></li>
+<li><a href=/diary/>Diary</a></li>
+<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
+</ul>
+</nav>
+</header>
+</div>
+<div class=container>
+<article>
+<div class=post>
+<header>
+<h1><a href=https://blog.monochromegane.com/blog/2015/08/16/deploy-golang-by-cargo/>Goのデプロイを「もっと」簡単にする。ビルドプロキシCargo。改めTorokko。</a></h1>
+<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2015-08-16</div></time>
+</header>
+<div class=post-inner>
+<p>Goアプリのデプロイはバイナリをひとつ配布して完了なのでとても楽なのですが、バイナリ自体をどこで管理するかについては意外と頭を悩ませることになります。
+Goを使うにあたって、コードさえあればあとはバイナリも簡単に配布できる状態というのが望ましいと思い、仕組みを作ってみました。</p>
+<p><strong>2015/08/16追記: CargoはRustのパッケージマネージャーと名前がかぶってたのでTorokko(トロッコ)に改名しました！</strong></p>
+<p>TorokkoはGoアプリのビルドと成果物ダウンロード用のAPIを提供するビルドプロキシです。</p>
+<p>リクエストのURLで対象リポジトリ、GOOS、GOARCH、バージョンを指定します。
+ビルドはDockerコンテナを用いて行い、バックエンドストレージに成果物が保存され、ビルドリクエストと同じURLでダウンロードを行うことができます。</p>
+<p>Docker Hub の Automated Builds のGo版と考えてもらうとイメージしやすいかと思います。
+Torokkoは、特にGoの開発環境をつくりたくないサーバー上へのデプロイを簡単にすることを目的としています。</p>
+<h2 id=クイックスタート>クイックスタート</h2>
+<ol>
+<li>Torokkoサーバーを起動します</li>
+<li>ビルド用のエンドポイントにアクセスします</li>
+</ol>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ curl -X POST http://torokko-server/<span style=color:#f92672>{</span>remote<span style=color:#f92672>}</span>/<span style=color:#f92672>{</span>owner<span style=color:#f92672>}</span>/<span style=color:#f92672>{</span>repo<span style=color:#f92672>}</span>/<span style=color:#f92672>{</span>GOOS<span style=color:#f92672>}</span>/<span style=color:#f92672>{</span>GOARCH<span style=color:#f92672>}</span>/<span style=color:#f92672>{</span>version<span style=color:#f92672>}</span>
+<span style=color:#75715e># e.g. http://torokko-server/github.com/monochromegane/torokko/linux/amd64/v0.0.1</span>
+</code></pre></div><p>しばらく経つとビルドが完了しているので、ダウンロード用のエンドポイントにアクセスします。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ curl -OJL http://torokko-server/<span style=color:#f92672>{</span>remote<span style=color:#f92672>}</span>/<span style=color:#f92672>{</span>owner<span style=color:#f92672>}</span>/<span style=color:#f92672>{</span>repo<span style=color:#f92672>}</span>/<span style=color:#f92672>{</span>GOOS<span style=color:#f92672>}</span>/<span style=color:#f92672>{</span>GOARCH<span style=color:#f92672>}</span>/<span style=color:#f92672>{</span>version<span style=color:#f92672>}</span>
+</code></pre></div><p><a href=http://torokko.monochromegane.com>こちら</a>にデモ用のAPIサーバーを用意しているので使ってみてください。</p>
+<h2 id=torokkoの仕組み>Torokkoの仕組み</h2>
+<p><img src=https://cloud.githubusercontent.com/assets/1845486/9293092/eba8190c-4457-11e5-9176-19d9f7ac3363.jpg alt=torokko\_overview></p>
+<p>基本的な仕組みは前述のとおりです。
+リクエストURLに応じたリポジトリをDockerコンテナでビルドし、ダウンロードできるようにバックエンドのストレージに保存しています。</p>
+<p>ビルドとダウンロードを一元管理することで</p>
+<ul>
+<li>リポジトリはコードを管理するだけでよい</li>
+<li>デプロイ元のPCやデプロイ先のサーバーでビルドせずにダウンロードするだけでよい</li>
+</ul>
+<p>といったメリットがあります。</p>
+<h2 id=カスタムビルド>カスタムビルド</h2>
+<p>TorokkoはGoアプリのビルドに<code>make</code>を使います。
+単純なGoアプリの場合、Torokkoがデフォルトで用意するビルド手順で問題ないですが、Godepsやgo-bindata、go generateなどを使う場合、リポジトリにMakefileを準備してください。</p>
+<p>なお、デフォルトのMakefileは以下のとおりです。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-mak data-lang=mak><span style=color:#a6e22e>build</span><span style=color:#f92672>:</span>
 	go get -d ./...
 	go build
-</code></pre><h2 id=エンドポイント>エンドポイント</h2><p>紹介した、ビルド、ダウンロードの他にビルドログを確認するためのエンドポイントがあります。
-詳しくは<a href=https://github.com/monochromegane/torokko/blob/master/README.md>README</a>を参照ください。</p><h1 id=まとめ>まとめ</h1><p>とりあえずざっと作った感じで、まだプロトタイプに近いので環境つくる手順も整備できていない、かつスケールしやすい構成とはとても言えない状態ですが、</p><p>CIサービスの設定 + GitHub Releaseへの紐付け + デプロイレシピの修正をしながら、</p><p>「オレは！このバイナリを！ひとつ！サーバーに！置きたいだけなの！！」</p><p>そう思ったことがあるひとは使ってみてもよいかもしれません。
-お盆休み明けから社内サーバーに入れてみて少しずつブラッシュアップしていきます。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/golang>golang</a></li><li><a class=tag-link href=/tags/torokko>torokko</a></li><li><a class=tag-link href=/tags/docker>docker</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2015/08/16/deploy-golang-by-cargo/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','twitter-wjs');</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-38374674-1','auto');ga('send','pageview');</script></body></html>
+</code></pre></div><h2 id=エンドポイント>エンドポイント</h2>
+<p>紹介した、ビルド、ダウンロードの他にビルドログを確認するためのエンドポイントがあります。
+詳しくは<a href=https://github.com/monochromegane/torokko/blob/master/README.md>README</a>を参照ください。</p>
+<h1 id=まとめ>まとめ</h1>
+<p>とりあえずざっと作った感じで、まだプロトタイプに近いので環境つくる手順も整備できていない、かつスケールしやすい構成とはとても言えない状態ですが、</p>
+<p>CIサービスの設定 + GitHub Releaseへの紐付け + デプロイレシピの修正をしながら、</p>
+<p>「オレは！このバイナリを！ひとつ！サーバーに！置きたいだけなの！！」</p>
+<p>そう思ったことがあるひとは使ってみてもよいかもしれません。
+お盆休み明けから社内サーバーに入れてみて少しずつブラッシュアップしていきます。</p>
+</div>
+<footer class=tag>
+<i class="fa fa-tags tag-icon"></i>
+<ul>
+<li><a class=tag-link href=/tags/golang>golang</a></li>
+<li><a class=tag-link href=/tags/torokko>torokko</a></li>
+<li><a class=tag-link href=/tags/docker>docker</a></li>
+</ul>
+<div class=clear></div>
+</footer>
+</div>
+</article>
+<div class=social-btn>
+<div>
+<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2015/08/16/deploy-golang-by-cargo/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
+</div>
+<div>
+<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
+</div>
+</div>
+</div>
+<footer class=footer>
+<div class=author></div>
+<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
+<p>monochromegane (モノクロめがね) と申します。</p>
+<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+<ul class=social>
+<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
+<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
+<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
+</ul>
+<p class=copyright>
+<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
+</p>
+</footer>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
+<script>hljs.initHighlightingOnLoad()</script>
+<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
+</body>
+</html>

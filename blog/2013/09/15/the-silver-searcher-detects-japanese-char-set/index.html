@@ -1,35 +1,149 @@
-<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>ag(The Silver Searcher)でEUC-JP/Shift-JISのファイルも検索できるようにしてみた &middot; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="ag(The Silver Searcher)は、高速なパターン検索が行えるため、ackから切り替える人も多いと思いますが、日本語文字セット（EUC-JPやShift-JIS）のファイルがバイナリファイルとして判定されて検索対象からスキップされてしまうという問題があります。
+<!doctype html><html>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width">
+<meta name=author content>
+<title>ag(The Silver Searcher)でEUC-JP/Shift-JISのファイルも検索できるようにしてみた &#183; THINKING MEGANE</title>
+<meta name=twitter:card content="summary">
+<meta name=twitter:site content="@monochromegane">
+<meta property="og:description" content="ag(The Silver Searcher)は、高速なパターン検索が行えるため、ackから切り替える人も多いと思いますが、日本語文字セット（EUC-JPやShift-JIS）のファイルがバイナリファイルとして判定されて検索対象からスキップされてしまうという問題があります。
  nDiki: ag やめて ack に戻す  業務ではまだEUC-JPやShift-JISのファイルを触る機会があるため、ag でEUC-JP/Shift-JISのファイルも検索できるようにしてみました。
-インストール $ git clone https://github.com/monochromegane/the_silver_searcher $ cd the_silver_searcher $ git checkout detect-japanese-char-set $ ./build.sh $ make install   ** 既にhomebrewなどでインストール済みの agコマンド がある場合はアンインストールしておいてください ** ** コンパイル前にautomakeとかpcre-develを適宜インストールおねがいします **  利用方法 通常の ag コマンドと同様です。
-$ ag [options] PATTERN [PATH]  修正点など src/util.cのis_binary内に EUC-JPとShift-JISの判定を追加しています。
-( なぜか10進数になっているのは既存のUTF-8を検出しているとこにあわせてるからです。16進数のほうがいいかな&hellip; )
-/* EUC-JP detection */ if (buf_c[i] == 142) { i&#43;&#43;; if (buf_c[i] &gt; 160 &amp;&amp; buf_c[i] &lt; 224) { continue; } } else if (buf_c[i] &gt; 160 &amp;&amp; buf_c[i] &lt; 255) { i&#43;&#43;; if(buf_c[i] &gt; 160 &amp;&amp; buf_c[i] &lt; 255) { continue; } } /* Shift-JIS detection */ if (buf_c[i] &gt; 160 &amp;&amp; buf_c[i] &lt; 224) { continue; } else if ((buf_c[i] &gt; 128 &amp;&amp; buf_c[i] &lt; 160) || (buf_c[i] &gt; 223 &amp;&amp; buf_c[i] &lt; 240)) { i&#43;&#43;; if ((buf_c[i] &gt; 63 &amp;&amp; buf_c[i] &lt; 127) || (buf_c[i] &gt; 127 &amp;&amp; buf_c[i] &lt; 253)) { continue; } }  性能に関しても特に劣化していないと思います。 不具合などあれば、プルリクください。"><meta property="og:title" content="ag(The Silver Searcher)でEUC-JP/Shift-JISのファイルも検索できるようにしてみた"><meta property="og:url" content="https://blog.monochromegane.com/blog/2013/09/15/the-silver-searcher-detects-japanese-char-set/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2013/09/15/the-silver-searcher-detects-japanese-char-set/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:true},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:true}}});</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2013/09/15/the-silver-searcher-detects-japanese-char-set/>ag(The Silver Searcher)でEUC-JP/Shift-JISのファイルも検索できるようにしてみた</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2013-09-15</div></time></header><div class=post-inner><p><a href=https://github.com/ggreer/the_silver_searcher>ag(The Silver Searcher)</a>は、高速なパターン検索が行えるため、ackから切り替える人も多いと思いますが、日本語文字セット（EUC-JPやShift-JIS）のファイルがバイナリファイルとして判定されて検索対象からスキップされてしまうという問題があります。</p><ul><li><a href=http://www.naney.org/diki/d/2013-07-17-The-Silver-Searcher.html>nDiki: ag やめて ack に戻す</a></li></ul><p>業務ではまだEUC-JPやShift-JISのファイルを触る機会があるため、ag でEUC-JP/Shift-JISのファイルも検索できるようにしてみました。</p><hr><h1 id=インストール>インストール</h1><pre><code class=language-sh>$ git clone https://github.com/monochromegane/the_silver_searcher
+インストール $ git clone https://github.com/monochromegane/the_silver_searcher $ cd the_silver_searcher $ git checkout detect-japanese-char-set $ ./build.sh $ make install  ** 既にhomebrewなどでインストール済みの agコマンド がある場合はアンインストールしておいてください ** ** コンパイル前にautomakeとかpcre-develを適宜インストールおねがいします **  利用方法 通常の ag コマンドと同様です。
+$ ag [options] PATTERN [PATH] 修正点など src/util.cのis_binary内に EUC-JPとShift-JISの判定を追加しています。
+( なぜか10進数になっているのは既存のUTF-8を検出しているとこにあわせてるからです。16進数のほうがいいかな&mldr; )
+/* EUC-JP detection */ if (buf_c[i] == 142) { i++; if (buf_c[i] > 160 && buf_c[i] < 224) { continue; } } else if (buf_c[i] > 160 && buf_c[i] < 255) { i++; if(buf_c[i] > 160 && buf_c[i] < 255) { continue; } } /* Shift-JIS detection */ if (buf_c[i] > 160 && buf_c[i] < 224) { continue; } else if ((buf_c[i] > 128 && buf_c[i] < 160) || (buf_c[i] > 223 && buf_c[i] < 240)) { i++; if ((buf_c[i] > 63 && buf_c[i] < 127) || (buf_c[i] > 127 && buf_c[i] < 253)) { continue; } } 性能に関しても特に劣化していないと思います。 不具合などあれば、プルリクください。">
+<meta property="og:title" content="ag(The Silver Searcher)でEUC-JP/Shift-JISのファイルも検索できるようにしてみた">
+<meta property="og:url" content="https://blog.monochromegane.com/blog/2013/09/15/the-silver-searcher-detects-japanese-char-set/">
+<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+<link rel=stylesheet href=/css/reset.css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
+<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
+<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
+<link rel=stylesheet href=/css/text.css>
+<link rel=stylesheet href=/css/color.css>
+<link rel=stylesheet href=/css/layout.css>
+<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
+<link rel="shortcut icon" href=/images/favicon.ico>
+<link rel=canonical href=https://blog.monochromegane.com/blog/2013/09/15/the-silver-searcher-detects-japanese-char-set/>
+<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
+</head>
+<body>
+<div class=header>
+<header>
+<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
+<nav>
+<ul class=menu>
+<li><a href=/self-introduction/>Home</a></li>
+<li><a href=/post/>Archives</a></li>
+<li><a href=/diary/>Diary</a></li>
+<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
+</ul>
+</nav>
+</header>
+</div>
+<div class=container>
+<article>
+<div class=post>
+<header>
+<h1><a href=https://blog.monochromegane.com/blog/2013/09/15/the-silver-searcher-detects-japanese-char-set/>ag(The Silver Searcher)でEUC-JP/Shift-JISのファイルも検索できるようにしてみた</a></h1>
+<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2013-09-15</div></time>
+</header>
+<div class=post-inner>
+<p><a href=https://github.com/ggreer/the_silver_searcher>ag(The Silver Searcher)</a>は、高速なパターン検索が行えるため、ackから切り替える人も多いと思いますが、日本語文字セット（EUC-JPやShift-JIS）のファイルがバイナリファイルとして判定されて検索対象からスキップされてしまうという問題があります。</p>
+<ul>
+<li><a href=http://www.naney.org/diki/d/2013-07-17-The-Silver-Searcher.html>nDiki: ag やめて ack に戻す</a></li>
+</ul>
+<p>業務ではまだEUC-JPやShift-JISのファイルを触る機会があるため、ag でEUC-JP/Shift-JISのファイルも検索できるようにしてみました。</p>
+<h1 id=インストール>インストール</h1>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ git clone https://github.com/monochromegane/the_silver_searcher
 $ cd the_silver_searcher
 $ git checkout detect-japanese-char-set
 $ ./build.sh
 $ make install
-</code></pre><ul><li>** 既にhomebrewなどでインストール済みの agコマンド がある場合はアンインストールしておいてください **</li><li>** コンパイル前に<code>automake</code>とか<code>pcre-devel</code>を適宜インストールおねがいします **</li></ul><hr><h1 id=利用方法>利用方法</h1><p>通常の ag コマンドと同様です。</p><pre><code class=language-sh>$ ag [options] PATTERN [PATH]
-</code></pre><hr><h1 id=修正点など>修正点など</h1><p><code>src/util.c</code>の<code>is_binary</code>内に EUC-JPとShift-JISの判定を追加しています。</p><p>( なぜか10進数になっているのは既存のUTF-8を検出しているとこにあわせてるからです。16進数のほうがいいかな&hellip; )</p><pre><code class=language-c>/* EUC-JP detection */
-if (buf_c[i] == 142) {
-    i++;
-    if (buf_c[i] &gt; 160 &amp;&amp; buf_c[i] &lt; 224) {
-      continue;
+</code></pre></div><ul>
+<li>** 既にhomebrewなどでインストール済みの agコマンド がある場合はアンインストールしておいてください **</li>
+<li>** コンパイル前に<code>automake</code>とか<code>pcre-devel</code>を適宜インストールおねがいします **</li>
+</ul>
+<h1 id=利用方法>利用方法</h1>
+<p>通常の ag コマンドと同様です。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ ag <span style=color:#f92672>[</span>options<span style=color:#f92672>]</span> PATTERN <span style=color:#f92672>[</span>PATH<span style=color:#f92672>]</span>
+</code></pre></div>
+<h1 id=修正点など>修正点など</h1>
+<p><code>src/util.c</code>の<code>is_binary</code>内に EUC-JPとShift-JISの判定を追加しています。</p>
+<p>( なぜか10進数になっているのは既存のUTF-8を検出しているとこにあわせてるからです。16進数のほうがいいかな&mldr; )</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#75715e>/* EUC-JP detection */</span>
+<span style=color:#66d9ef>if</span> (buf_c[i] <span style=color:#f92672>==</span> <span style=color:#ae81ff>142</span>) {
+    i<span style=color:#f92672>++</span>;
+    <span style=color:#66d9ef>if</span> (buf_c[i] <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>160</span> <span style=color:#f92672>&amp;&amp;</span> buf_c[i] <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>224</span>) {
+      <span style=color:#66d9ef>continue</span>;
     }
-} else if (buf_c[i] &gt; 160 &amp;&amp; buf_c[i] &lt; 255) {
-  i++;
-  if(buf_c[i] &gt; 160 &amp;&amp; buf_c[i] &lt; 255) {
-    continue;
+} <span style=color:#66d9ef>else</span> <span style=color:#66d9ef>if</span> (buf_c[i] <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>160</span> <span style=color:#f92672>&amp;&amp;</span> buf_c[i] <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>255</span>) {
+  i<span style=color:#f92672>++</span>;
+  <span style=color:#66d9ef>if</span>(buf_c[i] <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>160</span> <span style=color:#f92672>&amp;&amp;</span> buf_c[i] <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>255</span>) {
+    <span style=color:#66d9ef>continue</span>;
   }
 }
-/* Shift-JIS detection */
-if (buf_c[i] &gt; 160 &amp;&amp; buf_c[i] &lt; 224) {
-  continue;
-} else if ((buf_c[i] &gt; 128 &amp;&amp; buf_c[i] &lt; 160) || (buf_c[i] &gt; 223 &amp;&amp; buf_c[i] &lt; 240)) {
-  i++;
-  if ((buf_c[i] &gt; 63 &amp;&amp; buf_c[i] &lt; 127) || (buf_c[i] &gt; 127 &amp;&amp; buf_c[i] &lt; 253)) {
-    continue;
+<span style=color:#75715e>/* Shift-JIS detection */</span>
+<span style=color:#66d9ef>if</span> (buf_c[i] <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>160</span> <span style=color:#f92672>&amp;&amp;</span> buf_c[i] <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>224</span>) {
+  <span style=color:#66d9ef>continue</span>;
+} <span style=color:#66d9ef>else</span> <span style=color:#66d9ef>if</span> ((buf_c[i] <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>128</span> <span style=color:#f92672>&amp;&amp;</span> buf_c[i] <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>160</span>) <span style=color:#f92672>||</span> (buf_c[i] <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>223</span> <span style=color:#f92672>&amp;&amp;</span> buf_c[i] <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>240</span>)) {
+  i<span style=color:#f92672>++</span>;
+  <span style=color:#66d9ef>if</span> ((buf_c[i] <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>63</span> <span style=color:#f92672>&amp;&amp;</span> buf_c[i] <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>127</span>) <span style=color:#f92672>||</span> (buf_c[i] <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>127</span> <span style=color:#f92672>&amp;&amp;</span> buf_c[i] <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>253</span>)) {
+    <span style=color:#66d9ef>continue</span>;
   }
 }
-</code></pre><p>性能に関しても特に劣化していないと思います。
-不具合などあれば、プルリクください。</p><hr><h1 id=今後>今後</h1><p>日本語圏に限定された修正なので、プルリクだしても本家側には取り込まれない気がする…</p><p>このForkしたブランチでも本家masterの修正に追随していく予定なので、EUC-JPやShift-JISの資産をさわる方々、しばらくはこちらを使ってみてください。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/ag>ag</a></li><li><a class=tag-link href=/tags/the-silver-searcher>the-silver-searcher</a></li><li><a class=tag-link href=/tags/euc-jp>euc-jp</a></li><li><a class=tag-link href=/tags/shift-jis>shift-jis</a></li><li><a class=tag-link href=/tags/ack>ack</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/09/15/the-silver-searcher-detects-japanese-char-set/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','twitter-wjs');</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-38374674-1','auto');ga('send','pageview');</script></body></html>
+</code></pre></div><p>性能に関しても特に劣化していないと思います。
+不具合などあれば、プルリクください。</p>
+<h1 id=今後>今後</h1>
+<p>日本語圏に限定された修正なので、プルリクだしても本家側には取り込まれない気がする…</p>
+<p>このForkしたブランチでも本家masterの修正に追随していく予定なので、EUC-JPやShift-JISの資産をさわる方々、しばらくはこちらを使ってみてください。</p>
+</div>
+<footer class=tag>
+<i class="fa fa-tags tag-icon"></i>
+<ul>
+<li><a class=tag-link href=/tags/ag>ag</a></li>
+<li><a class=tag-link href=/tags/the-silver-searcher>the-silver-searcher</a></li>
+<li><a class=tag-link href=/tags/euc-jp>euc-jp</a></li>
+<li><a class=tag-link href=/tags/shift-jis>shift-jis</a></li>
+<li><a class=tag-link href=/tags/ack>ack</a></li>
+</ul>
+<div class=clear></div>
+</footer>
+</div>
+</article>
+<div class=social-btn>
+<div>
+<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/09/15/the-silver-searcher-detects-japanese-char-set/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
+</div>
+<div>
+<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
+</div>
+</div>
+</div>
+<footer class=footer>
+<div class=author></div>
+<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
+<p>monochromegane (モノクロめがね) と申します。</p>
+<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+<ul class=social>
+<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
+<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
+<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
+</ul>
+<p class=copyright>
+<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
+</p>
+</footer>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
+<script>hljs.initHighlightingOnLoad()</script>
+<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
+</body>
+</html>

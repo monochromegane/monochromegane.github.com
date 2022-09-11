@@ -1,14 +1,83 @@
-<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>Vagrantのネットワークが起動しないときは &middot; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="Vagrantでネットワーク構成を変更した場合など、こういうエラーが出てネットワークが起動しないことがあります。
-[default] Configuring and enabling network interfaces... The following SSH command responded with a non-zero exit status. Vagrant assumes that this means the command failed! /sbin/ifup eth1 2&gt; /dev/null  このエラーが出ると後続のマウント処理もキャンセルされて不便したので、対策をまとめておきます。
+<!doctype html><html>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width">
+<meta name=author content>
+<title>Vagrantのネットワークが起動しないときは &#183; THINKING MEGANE</title>
+<meta name=twitter:card content="summary">
+<meta name=twitter:site content="@monochromegane">
+<meta property="og:description" content="Vagrantでネットワーク構成を変更した場合など、こういうエラーが出てネットワークが起動しないことがあります。
+[default] Configuring and enabling network interfaces... The following SSH command responded with a non-zero exit status. Vagrant assumes that this means the command failed! /sbin/ifup eth1 2> /dev/null このエラーが出ると後続のマウント処理もキャンセルされて不便したので、対策をまとめておきます。
 調査した環境  Mac Vagrant 1.1.5 VirtualBox CentOS 6.4  ブリッジネットワークの場合 ブリッジネットワーク構成にした場合、2回目以降の起動時にエラーが発生します。
 原因 Vagrantはブリッジ構成にした場合に以下の処理を行います。
  ネットワークインターフェース設定ファイルの作成(/etc/sysconfig/network-script/ifcfg-eth1) ネットワークインターフェースの起動(DHCP取得)  2回目以降の起動時、作成された設定ファイルをもとにOS側でネットワークインターフェースが起動(DHCP起動)、その後、さらにVagrant側での起動処理が走るためDHCP取得済みエラーとなってしまっています。
-[vagrant@localhost ~]$ sudo ifup eth1 eth1 のIP情報を検出中...dhclient(1040) is already running - exiting. This version of ISC DHCP is based on the release available on ftp."><meta property="og:title" content="Vagrantのネットワークが起動しないときは"><meta property="og:url" content="https://blog.monochromegane.com/blog/2013/04/06/vagrant-network-error/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2013/04/06/vagrant-network-error/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:true},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:true}}});</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2013/04/06/vagrant-network-error/>Vagrantのネットワークが起動しないときは</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2013-04-06</div></time></header><div class=post-inner><p>Vagrantでネットワーク構成を変更した場合など、こういうエラーが出てネットワークが起動しないことがあります。</p><pre><code>[default] Configuring and enabling network interfaces...
+[vagrant@localhost ~]$ sudo ifup eth1 eth1 のIP情報を検出中...dhclient(1040) is already running - exiting. This version of ISC DHCP is based on the release available on ftp.">
+<meta property="og:title" content="Vagrantのネットワークが起動しないときは">
+<meta property="og:url" content="https://blog.monochromegane.com/blog/2013/04/06/vagrant-network-error/">
+<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+<link rel=stylesheet href=/css/reset.css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
+<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
+<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
+<link rel=stylesheet href=/css/text.css>
+<link rel=stylesheet href=/css/color.css>
+<link rel=stylesheet href=/css/layout.css>
+<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
+<link rel="shortcut icon" href=/images/favicon.ico>
+<link rel=canonical href=https://blog.monochromegane.com/blog/2013/04/06/vagrant-network-error/>
+<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
+</head>
+<body>
+<div class=header>
+<header>
+<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
+<nav>
+<ul class=menu>
+<li><a href=/self-introduction/>Home</a></li>
+<li><a href=/post/>Archives</a></li>
+<li><a href=/diary/>Diary</a></li>
+<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
+</ul>
+</nav>
+</header>
+</div>
+<div class=container>
+<article>
+<div class=post>
+<header>
+<h1><a href=https://blog.monochromegane.com/blog/2013/04/06/vagrant-network-error/>Vagrantのネットワークが起動しないときは</a></h1>
+<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2013-04-06</div></time>
+</header>
+<div class=post-inner>
+<p>Vagrantでネットワーク構成を変更した場合など、こういうエラーが出てネットワークが起動しないことがあります。</p>
+<pre tabindex=0><code>[default] Configuring and enabling network interfaces...
 The following SSH command responded with a non-zero exit status.
 Vagrant assumes that this means the command failed!
 
 /sbin/ifup eth1 2&gt; /dev/null
-</code></pre><p>このエラーが出ると後続のマウント処理もキャンセルされて不便したので、対策をまとめておきます。</p><h1 id=調査した環境>調査した環境</h1><ul><li>Mac</li><li>Vagrant 1.1.5</li><li>VirtualBox</li><li>CentOS 6.4</li></ul><h1 id=ブリッジネットワークの場合>ブリッジネットワークの場合</h1><p>ブリッジネットワーク構成にした場合、2回目以降の起動時にエラーが発生します。</p><h2 id=原因>原因</h2><p>Vagrantはブリッジ構成にした場合に以下の処理を行います。</p><ul><li>ネットワークインターフェース設定ファイルの作成(/etc/sysconfig/network-script/ifcfg-eth1)</li><li>ネットワークインターフェースの起動(DHCP取得)</li></ul><p>2回目以降の起動時、作成された設定ファイルをもとにOS側でネットワークインターフェースが起動(DHCP起動)、その後、さらにVagrant側での起動処理が走るためDHCP取得済みエラーとなってしまっています。</p><pre><code>[vagrant@localhost ~]$ sudo ifup eth1
+</code></pre><p>このエラーが出ると後続のマウント処理もキャンセルされて不便したので、対策をまとめておきます。</p>
+<h1 id=調査した環境>調査した環境</h1>
+<ul>
+<li>Mac</li>
+<li>Vagrant 1.1.5</li>
+<li>VirtualBox</li>
+<li>CentOS 6.4</li>
+</ul>
+<h1 id=ブリッジネットワークの場合>ブリッジネットワークの場合</h1>
+<p>ブリッジネットワーク構成にした場合、2回目以降の起動時にエラーが発生します。</p>
+<h2 id=原因>原因</h2>
+<p>Vagrantはブリッジ構成にした場合に以下の処理を行います。</p>
+<ul>
+<li>ネットワークインターフェース設定ファイルの作成(/etc/sysconfig/network-script/ifcfg-eth1)</li>
+<li>ネットワークインターフェースの起動(DHCP取得)</li>
+</ul>
+<p>2回目以降の起動時、作成された設定ファイルをもとにOS側でネットワークインターフェースが起動(DHCP起動)、その後、さらにVagrant側での起動処理が走るためDHCP取得済みエラーとなってしまっています。</p>
+<pre tabindex=0><code>[vagrant@localhost ~]$ sudo ifup eth1
 
 eth1 のIP情報を検出中...dhclient(1040) is already running - exiting.
 
@@ -22,7 +91,34 @@ Please report for this software via the Red Hat Bugzilla site:
 
 exiting.
  失敗
-</code></pre><h2 id=対策>対策</h2><p>対策方法は2つです。</p><ul><li>Vagrant側でネットワークインターフェース起動時のエラーを無視する</li><li>OS側でネットワークインターフェース(DHCP取得)を自動起動しない</li></ul><p>どちらもVagrantのソースを修正して対応します。</p><h3 id=vagrant側でネットワークインターフェース起動時のエラーを無視する>Vagrant側でネットワークインターフェース起動時のエラーを無視する</h3><p><strong>/Applications/Vagrant/embedded/gems/gems/vagrant-1.1.5/plugins/guests/redhat/guest.rb</strong></p><p>以下の記述を</p><p><code>vm.communicate.sudo(&quot;/sbin/ifup eth#{interface} 2&gt; /dev/null&quot;)</code></p><p>以下のように変更</p><p><code>vm.communicate.sudo(&quot;/sbin/ifup eth#{interface} 2&gt; /dev/null&quot;, :error_check =&gt; false)</code></p><p>この場合、DHCP取得処理を2回試みることには変わりないため、もうひとつの対策のほうがいいかと思います。</p><h3 id=os側でネットワークインターフェース-dhcp取得-を自動起動しない>OS側でネットワークインターフェース(DHCP取得)を自動起動しない</h3><p><strong>/Applications/Vagrant/embedded/gems/gems/vagrant-1.1.5/templates/guests/redhat/network_dhcp.erb</strong></p><p>以下の記述を</p><p><code>ONBOOT=yes</code></p><p>以下のように変更</p><p><code>ONBOOT=no</code></p><p>手動でOS側のネットワークインターフェース設定ファイル内の該当箇所の記載を変更しても起動のたびにこのテンプレートファイルで上書きされてしまうので注意してください。</p><hr><h1 id=ブリッジ-もしくはホストオンリーネットワークでパッケージングした場合>ブリッジ、もしくはホストオンリーネットワークでパッケージングした場合</h1><p>ブリッジ、もしくはホストオンリーネットワーク構成で<code>vagrant package</code>した場合、作成したボックスで、ブリッジ、もしくはホストオンリーネットワークを利用する場合もやはりエラーが発生します。</p><h2 id=原因-1>原因</h2><p>この現象はVagrantというよりも、仮想マシン作成時にMACアドレスが変更されることが原因となっています。</p><p>ブリッジ、もしくはホストオンリーネットワーク構成で起動すると、ネットワークインターフェース設定ファイルがVagrantにより作成されるのは前述しましたが、OS側ではネットワークインターフェースが追加された際に、ネットワークインターフェースとMACアドレスをマッピングしています。</p><pre><code>[vagrant@localhost ~]$ cat /etc/udev/rules.d/70-persistent-net.rules
+</code></pre><h2 id=対策>対策</h2>
+<p>対策方法は2つです。</p>
+<ul>
+<li>Vagrant側でネットワークインターフェース起動時のエラーを無視する</li>
+<li>OS側でネットワークインターフェース(DHCP取得)を自動起動しない</li>
+</ul>
+<p>どちらもVagrantのソースを修正して対応します。</p>
+<h3 id=vagrant側でネットワークインターフェース起動時のエラーを無視する>Vagrant側でネットワークインターフェース起動時のエラーを無視する</h3>
+<p><strong>/Applications/Vagrant/embedded/gems/gems/vagrant-1.1.5/plugins/guests/redhat/guest.rb</strong></p>
+<p>以下の記述を</p>
+<p><code>vm.communicate.sudo("/sbin/ifup eth#{interface} 2> /dev/null")</code></p>
+<p>以下のように変更</p>
+<p><code>vm.communicate.sudo("/sbin/ifup eth#{interface} 2> /dev/null", :error_check => false)</code></p>
+<p>この場合、DHCP取得処理を2回試みることには変わりないため、もうひとつの対策のほうがいいかと思います。</p>
+<h3 id=os側でネットワークインターフェースdhcp取得を自動起動しない>OS側でネットワークインターフェース(DHCP取得)を自動起動しない</h3>
+<p><strong>/Applications/Vagrant/embedded/gems/gems/vagrant-1.1.5/templates/guests/redhat/network_dhcp.erb</strong></p>
+<p>以下の記述を</p>
+<p><code>ONBOOT=yes</code></p>
+<p>以下のように変更</p>
+<p><code>ONBOOT=no</code></p>
+<p>手動でOS側のネットワークインターフェース設定ファイル内の該当箇所の記載を変更しても起動のたびにこのテンプレートファイルで上書きされてしまうので注意してください。</p>
+<hr>
+<h1 id=ブリッジもしくはホストオンリーネットワークでパッケージングした場合>ブリッジ、もしくはホストオンリーネットワークでパッケージングした場合</h1>
+<p>ブリッジ、もしくはホストオンリーネットワーク構成で<code>vagrant package</code>した場合、作成したボックスで、ブリッジ、もしくはホストオンリーネットワークを利用する場合もやはりエラーが発生します。</p>
+<h2 id=原因-1>原因</h2>
+<p>この現象はVagrantというよりも、仮想マシン作成時にMACアドレスが変更されることが原因となっています。</p>
+<p>ブリッジ、もしくはホストオンリーネットワーク構成で起動すると、ネットワークインターフェース設定ファイルがVagrantにより作成されるのは前述しましたが、OS側ではネットワークインターフェースが追加された際に、ネットワークインターフェースとMACアドレスをマッピングしています。</p>
+<pre tabindex=0><code>[vagrant@localhost ~]$ cat /etc/udev/rules.d/70-persistent-net.rules
 # This file was automatically generated by the /lib/udev/write_net_rules
 # program, run by the persistent-net-generator.rules rules file.
 #
@@ -35,7 +131,55 @@ SUBSYSTEM==&quot;net&quot;, ACTION==&quot;add&quot;, DRIVERS==&quot;?*&quot;, AT
 # PCI device 0x8086:0x100e (e1000)
 SUBSYSTEM==&quot;net&quot;, ACTION==&quot;add&quot;, DRIVERS==&quot;?*&quot;, ATTR{address}==&quot;08:00:27:b8:8a:d9&quot;, ATTR{type}==&quot;1&quot;, KERNEL==&quot;eth*&quot;, NAME=&quot;eth1&quot;
 </code></pre><p>パッケージングしたボックスで新しく仮想マシンを起動すると別のMACアドレスが割り振られるため、OS側は新しいネットワークインターフェースeth2としてマッピングしてしまうようです。
-にもかかわらず、ネットワークインターフェース設定ファイルはeth1用しか準備されておらず、eth1はOS側ではすでに存在しないMACアドレスのため、起動に失敗します。</p><pre><code>[vagrant@localhost ~]$ sudo ifup eth1
+にもかかわらず、ネットワークインターフェース設定ファイルはeth1用しか準備されておらず、eth1はOS側ではすでに存在しないMACアドレスのため、起動に失敗します。</p>
+<pre tabindex=0><code>[vagrant@localhost ~]$ sudo ifup eth1
 デバイス eth1 は存在しないようですので、初期化を遅らせます。
-</code></pre><h2 id=対策-1>対策</h2><p>パッケージングする前のゲストOS側でMACアドレスとのマッピングを無効にしておきます。</p><p><code>[vagrant@localhost ~]$ sudo ln -s -f /dev/null /etc/udev/rules.d/70-persistent-net.rules</code></p><p>この対策後は、パッケージングしたボックスで新しい仮想マシンを作成してMACアドレスが変更されてもエラーにならず起動することができます。</p><p>開発環境などの用途であれば、上記の対策で十分と思われます。</p><p>機能を無効にしたくない場合は、該当ファイルを削除してネットワークを再起動することで再度マッピングされますので、用途に応じて対策を行なってみてください。</p><p>VagrantとChef-Soloを使って開発環境のローカル化を進めていますが、とても快適です。</p><p>今後は、Chef-SoloのCookbooksなども紹介していきたいなーと思ってます。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/vagrant>vagrant</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/04/06/vagrant-network-error/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','twitter-wjs');</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-38374674-1','auto');ga('send','pageview');</script></body></html>
+</code></pre><h2 id=対策-1>対策</h2>
+<p>パッケージングする前のゲストOS側でMACアドレスとのマッピングを無効にしておきます。</p>
+<p><code>[vagrant@localhost ~]$ sudo ln -s -f /dev/null /etc/udev/rules.d/70-persistent-net.rules</code></p>
+<p>この対策後は、パッケージングしたボックスで新しい仮想マシンを作成してMACアドレスが変更されてもエラーにならず起動することができます。</p>
+<p>開発環境などの用途であれば、上記の対策で十分と思われます。</p>
+<p>機能を無効にしたくない場合は、該当ファイルを削除してネットワークを再起動することで再度マッピングされますので、用途に応じて対策を行なってみてください。</p>
+<p>VagrantとChef-Soloを使って開発環境のローカル化を進めていますが、とても快適です。</p>
+<p>今後は、Chef-SoloのCookbooksなども紹介していきたいなーと思ってます。</p>
+</div>
+<footer class=tag>
+<i class="fa fa-tags tag-icon"></i>
+<ul>
+<li><a class=tag-link href=/tags/vagrant>vagrant</a></li>
+</ul>
+<div class=clear></div>
+</footer>
+</div>
+</article>
+<div class=social-btn>
+<div>
+<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/04/06/vagrant-network-error/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
+</div>
+<div>
+<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
+</div>
+</div>
+</div>
+<footer class=footer>
+<div class=author></div>
+<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
+<p>monochromegane (モノクロめがね) と申します。</p>
+<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+<ul class=social>
+<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
+<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
+<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
+</ul>
+<p class=copyright>
+<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
+</p>
+</footer>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
+<script>hljs.initHighlightingOnLoad()</script>
+<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
+</body>
+</html>

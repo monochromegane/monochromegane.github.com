@@ -1,9 +1,17 @@
-<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>嗜好伝達コミュニケーションの効率化を目指した伝達方式の検討 &middot; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="このエントリは、第7回 Web System Architecture 研究会 (WSA研)の予稿です。
+<!doctype html><html>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width">
+<meta name=author content>
+<title>嗜好伝達コミュニケーションの効率化を目指した伝達方式の検討 &#183; THINKING MEGANE</title>
+<meta name=twitter:card content="summary">
+<meta name=twitter:site content="@monochromegane">
+<meta property="og:description" content="このエントリは、第7回 Web System Architecture 研究会 (WSA研)の予稿です。
 嗜好伝達コミュニケーションの効率化を目指した伝達方式の検討 はじめに 適応的なシステムの実現には、システムが利用者の状況をよく知ることが重要になる。 ECサイトのシステムであれば、利用者の嗜好を把握することで、最適な商品を提案できると考えられる。
 ECサイトのシステムが利用者の嗜好を把握するためには、特に初期段階における利用者との一定量のコミュニケーションが必要となる。 明示的なコミュニケーションであれば、システムは利用者に、年齢や居住地、興味関心などのプロファイルの登録を依頼する。 暗黙的なコミュニケーションであれば、システムは利用者の、閲覧や購買、検索履歴を通して利用者の嗜好を把握する。 システムはこれらのプロファイルの登録や履歴の蓄積なくして、適応的に振舞うことが難しい。 一方で、これらのコミュニケーションは利用者に負担を強いる。 これには、システムごとに発生するプロファイルの登録や履歴蓄積のための労力的な負担の他、プライバシーを守りたいという意識的な負担も考えられる。
 本研究では、利用者の嗜好伝達に纏わるコミュニケーションの負担を低減しつつ、適応的なシステムによる利便性を常に享受できるインターネット世界に向けて、嗜好伝達コミュニケーションの効率化のための伝達方式の検討を行う。
 嗜好伝達コミュニケーションの課題 嗜好伝達コミュニケーションの課題整理にあたり、本研究における「嗜好」を定義する。 まず、嗜好(preference)とは「利用者の素性(feature)」に基づく「対象(content)への反応(reaction)」と考える。
-preference(feature,content) #=&gt; reaction  対象(content)はシステムごと（ECサイトごと）に異なるため、嗜好伝達にはシステムごとに個別のコミュニケーションが求められる。 利用者の素性(feature)を示すか、直接、対象(content)への反応(reaction)を示す行為がこれに該当する。 推薦システムでは、利用者の素性(feature)を示す場合、類似する素性の群の反応を用いて利用者の嗜好が推測される。 対象(content)への反応(reaction)を示す場合、この反応から、もしくは類似する群から利用者の嗜好が推測される。
+preference(feature,content) #=> reaction 対象(content)はシステムごと（ECサイトごと）に異なるため、嗜好伝達にはシステムごとに個別のコミュニケーションが求められる。 利用者の素性(feature)を示すか、直接、対象(content)への反応(reaction)を示す行為がこれに該当する。 推薦システムでは、利用者の素性(feature)を示す場合、類似する素性の群の反応を用いて利用者の嗜好が推測される。 対象(content)への反応(reaction)を示す場合、この反応から、もしくは類似する群から利用者の嗜好が推測される。
 本研究では、この、利用者の素性(feature)の伝達か、対象(content)への反応(reaction)の伝達に纏わるコミュニケーションの効率化を検討する。
 利用者の素性(feature)の伝達の課題  システム内に限定された利用者の素性 適切なデータ構造が不明 プライバシー保護が必要  「1. システム内に限定された利用者の素性」について、利用者の素性(feature)には人口統計的な情報だけでなく、行動データが考えられる。 利用者の素性をより知るためには、システムを横断して蓄積された行動データを得られることが望ましい。 しかしながら、通常、システムの把握可能な履歴はシステム内に限定される。 オンライン広告に見られるアドネットワークやオーディエンスデータの利用により、横断した行動を特定できる。 しかしながら、これらのcookieなどを用いた名寄せに関してはプライバシー保護意識の高まりもあり、代替手段を検討すべきである（要リファレンス）。
 「2. 適切なデータ構造が不明」について、利用者の素性(feature)となり得る要因は無限に検討可能なことから、これを全てのシステムで共通に管理することは困難である。 例えば、訪問したサイトを利用者の素性として扱うとして、多次元のベクトルデータで表現すると、各次元とサイトの紐付けやサイトの追加削除を管理しなければならない。
@@ -12,38 +20,118 @@ preference(feature,content) #=&gt; reaction  対象(content)はシステムご�
 「2. プライバシー保護が必要」について、利用者の嗜好傾向は（素性と比較して間接的ではあるものの）センシティブな情報を含むことから、利用者側が開示するにあたって内容の制限が求められるであろう。
 嗜好伝達コミュニケーションの効率化の検討 利用者の素性(feature)の伝達の効率化 本研究では、利用者の素性(feature)の伝達の効率化のため、人口統計的な情報だけでなく、システムを横断した行動データを局所管理するアプローチを検討する。 無限に検討可能な要因を共通して扱うため、Key-Value形式のデータ構造を採用する。 また、システムへの提示時に、このKey-Value形式のデータをBloomFilterに変換することでプライバシー保護を試みる。 すなわち、BloomFilterの偽陽性に着目した素性であるKeyを断定することができない特性を利用する。 また、BloomFilterが保存する要素数に依存しない特性を利用して、無限に検討可能な利用者の素性の要因を固定次元で扱うことができる。
 なお、あるシステムに提示されるBloomFilterのパラメータは全ての利用者が同じものを用いる必要があるが、これらの共有方式についてはここでは検討しない。
-対象(content)への反応(reaction)の伝達の効率化 本研究では、対象(content)への反応(reaction)の伝達の効率化のため、嗜好モデルを局所管理するアプローチを検討する。 提案手法では、システムを横断した行動データから、嗜好モデルを構築するローカルエージェントを設ける。 構築される嗜好モデルはこれまでの行動データから、未知の対象(content)への反応(reaction)を精度よく推測する。 ローカルエージェントは、このモデルを使い、システムに対する対象(content)への反応(reaction)の伝達を代理する。 具体的には、利用者が新しいシステムへのアクセスする際に、（システムが対応していれば）この嗜好モデルを使って、先方のシステムから示された大量の対象(content)への反応(reaction)を回答する。 先方のシステムは、十分な量のコミュニケーションを終え、利用者に利便性の高い状態から利用を開始してもらうことができる。 また、予めローカルエージェントの嗜好提示範囲に制限を持たせておくことで、プライバシー管理も行えると考える。"><meta property="og:title" content="嗜好伝達コミュニケーションの効率化を目指した伝達方式の検討"><meta property="og:url" content="https://blog.monochromegane.com/blog/2020/11/17/wsa7-local-preference/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2020/11/17/wsa7-local-preference/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:true},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:true}}});</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2020/11/17/wsa7-local-preference/>嗜好伝達コミュニケーションの効率化を目指した伝達方式の検討</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2020-11-17</div></time></header><div class=post-inner><p>このエントリは、<a href=https://wsa.connpass.com/event/187128/>第7回 Web System Architecture 研究会 (WSA研)</a>の予稿です。</p><h1 id=嗜好伝達コミュニケーションの効率化を目指した伝達方式の検討>嗜好伝達コミュニケーションの効率化を目指した伝達方式の検討</h1><h2 id=はじめに>はじめに</h2><p>適応的なシステムの実現には、システムが利用者の状況をよく知ることが重要になる。
-ECサイトのシステムであれば、利用者の嗜好を把握することで、最適な商品を提案できると考えられる。</p><p>ECサイトのシステムが利用者の嗜好を把握するためには、特に初期段階における利用者との一定量のコミュニケーションが必要となる。
+対象(content)への反応(reaction)の伝達の効率化 本研究では、対象(content)への反応(reaction)の伝達の効率化のため、嗜好モデルを局所管理するアプローチを検討する。 提案手法では、システムを横断した行動データから、嗜好モデルを構築するローカルエージェントを設ける。 構築される嗜好モデルはこれまでの行動データから、未知の対象(content)への反応(reaction)を精度よく推測する。 ローカルエージェントは、このモデルを使い、システムに対する対象(content)への反応(reaction)の伝達を代理する。 具体的には、利用者が新しいシステムへのアクセスする際に、（システムが対応していれば）この嗜好モデルを使って、先方のシステムから示された大量の対象(content)への反応(reaction)を回答する。 先方のシステムは、十分な量のコミュニケーションを終え、利用者に利便性の高い状態から利用を開始してもらうことができる。 また、予めローカルエージェントの嗜好提示範囲に制限を持たせておくことで、プライバシー管理も行えると考える。">
+<meta property="og:title" content="嗜好伝達コミュニケーションの効率化を目指した伝達方式の検討">
+<meta property="og:url" content="https://blog.monochromegane.com/blog/2020/11/17/wsa7-local-preference/">
+<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+<link rel=stylesheet href=/css/reset.css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
+<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
+<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
+<link rel=stylesheet href=/css/text.css>
+<link rel=stylesheet href=/css/color.css>
+<link rel=stylesheet href=/css/layout.css>
+<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
+<link rel="shortcut icon" href=/images/favicon.ico>
+<link rel=canonical href=https://blog.monochromegane.com/blog/2020/11/17/wsa7-local-preference/>
+<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
+</head>
+<body>
+<div class=header>
+<header>
+<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
+<nav>
+<ul class=menu>
+<li><a href=/self-introduction/>Home</a></li>
+<li><a href=/post/>Archives</a></li>
+<li><a href=/diary/>Diary</a></li>
+<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
+</ul>
+</nav>
+</header>
+</div>
+<div class=container>
+<article>
+<div class=post>
+<header>
+<h1><a href=https://blog.monochromegane.com/blog/2020/11/17/wsa7-local-preference/>嗜好伝達コミュニケーションの効率化を目指した伝達方式の検討</a></h1>
+<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2020-11-17</div></time>
+</header>
+<div class=post-inner>
+<p>このエントリは、<a href=https://wsa.connpass.com/event/187128/>第7回 Web System Architecture 研究会 (WSA研)</a>の予稿です。</p>
+<h1 id=嗜好伝達コミュニケーションの効率化を目指した伝達方式の検討>嗜好伝達コミュニケーションの効率化を目指した伝達方式の検討</h1>
+<h2 id=はじめに>はじめに</h2>
+<p>適応的なシステムの実現には、システムが利用者の状況をよく知ることが重要になる。
+ECサイトのシステムであれば、利用者の嗜好を把握することで、最適な商品を提案できると考えられる。</p>
+<p>ECサイトのシステムが利用者の嗜好を把握するためには、特に初期段階における利用者との一定量のコミュニケーションが必要となる。
 明示的なコミュニケーションであれば、システムは利用者に、年齢や居住地、興味関心などのプロファイルの登録を依頼する。
 暗黙的なコミュニケーションであれば、システムは利用者の、閲覧や購買、検索履歴を通して利用者の嗜好を把握する。
 システムはこれらのプロファイルの登録や履歴の蓄積なくして、適応的に振舞うことが難しい。
 一方で、これらのコミュニケーションは利用者に負担を強いる。
-これには、システムごとに発生するプロファイルの登録や履歴蓄積のための労力的な負担の他、プライバシーを守りたいという意識的な負担も考えられる。</p><p>本研究では、利用者の嗜好伝達に纏わるコミュニケーションの負担を低減しつつ、適応的なシステムによる利便性を常に享受できるインターネット世界に向けて、嗜好伝達コミュニケーションの効率化のための伝達方式の検討を行う。</p><h2 id=嗜好伝達コミュニケーションの課題>嗜好伝達コミュニケーションの課題</h2><p>嗜好伝達コミュニケーションの課題整理にあたり、本研究における「嗜好」を定義する。
-まず、嗜好(preference)とは「利用者の素性(feature)」に基づく「対象(content)への反応(reaction)」と考える。</p><pre><code>preference(feature,content) #=&gt; reaction
+これには、システムごとに発生するプロファイルの登録や履歴蓄積のための労力的な負担の他、プライバシーを守りたいという意識的な負担も考えられる。</p>
+<p>本研究では、利用者の嗜好伝達に纏わるコミュニケーションの負担を低減しつつ、適応的なシステムによる利便性を常に享受できるインターネット世界に向けて、嗜好伝達コミュニケーションの効率化のための伝達方式の検討を行う。</p>
+<h2 id=嗜好伝達コミュニケーションの課題>嗜好伝達コミュニケーションの課題</h2>
+<p>嗜好伝達コミュニケーションの課題整理にあたり、本研究における「嗜好」を定義する。
+まず、嗜好(preference)とは「利用者の素性(feature)」に基づく「対象(content)への反応(reaction)」と考える。</p>
+<pre tabindex=0><code>preference(feature,content) #=&gt; reaction
 </code></pre><p>対象(content)はシステムごと（ECサイトごと）に異なるため、嗜好伝達にはシステムごとに個別のコミュニケーションが求められる。
 利用者の素性(feature)を示すか、直接、対象(content)への反応(reaction)を示す行為がこれに該当する。
 推薦システムでは、利用者の素性(feature)を示す場合、類似する素性の群の反応を用いて利用者の嗜好が推測される。
-対象(content)への反応(reaction)を示す場合、この反応から、もしくは類似する群から利用者の嗜好が推測される。</p><p>本研究では、この、利用者の素性(feature)の伝達か、対象(content)への反応(reaction)の伝達に纏わるコミュニケーションの効率化を検討する。</p><h3 id=利用者の素性-feature-の伝達の課題>利用者の素性(feature)の伝達の課題</h3><ol><li>システム内に限定された利用者の素性</li><li>適切なデータ構造が不明</li><li>プライバシー保護が必要</li></ol><p>「1. システム内に限定された利用者の素性」について、利用者の素性(feature)には人口統計的な情報だけでなく、行動データが考えられる。
+対象(content)への反応(reaction)を示す場合、この反応から、もしくは類似する群から利用者の嗜好が推測される。</p>
+<p>本研究では、この、利用者の素性(feature)の伝達か、対象(content)への反応(reaction)の伝達に纏わるコミュニケーションの効率化を検討する。</p>
+<h3 id=利用者の素性featureの伝達の課題>利用者の素性(feature)の伝達の課題</h3>
+<ol>
+<li>システム内に限定された利用者の素性</li>
+<li>適切なデータ構造が不明</li>
+<li>プライバシー保護が必要</li>
+</ol>
+<p>「1. システム内に限定された利用者の素性」について、利用者の素性(feature)には人口統計的な情報だけでなく、行動データが考えられる。
 利用者の素性をより知るためには、システムを横断して蓄積された行動データを得られることが望ましい。
 しかしながら、通常、システムの把握可能な履歴はシステム内に限定される。
 オンライン広告に見られるアドネットワークやオーディエンスデータの利用により、横断した行動を特定できる。
-しかしながら、これらのcookieなどを用いた名寄せに関してはプライバシー保護意識の高まりもあり、代替手段を検討すべきである（要リファレンス）。</p><p>「2. 適切なデータ構造が不明」について、利用者の素性(feature)となり得る要因は無限に検討可能なことから、これを全てのシステムで共通に管理することは困難である。
-例えば、訪問したサイトを利用者の素性として扱うとして、多次元のベクトルデータで表現すると、各次元とサイトの紐付けやサイトの追加削除を管理しなければならない。</p><p>「3. プライバシー保護が必要」について、人口統計的な情報だけでなく、行動データを含む利用者の素性は多くのセンシティブな情報を含むことから、利用者側が開示するにあたって内容の制限が求められるであろう。</p><h3 id=対象-content-への反応-reaction-の伝達の課題>対象(content)への反応(reaction)の伝達の課題</h3><ol><li>システム内に限定された利用者の嗜好</li><li>プライバシー保護が必要</li></ol><p>「1. システム内に限定された利用者の嗜好」について、前述の通り、プロファイルの登録や履歴蓄積のための労力的な負担が発生する。
+しかしながら、これらのcookieなどを用いた名寄せに関してはプライバシー保護意識の高まりもあり、代替手段を検討すべきである（要リファレンス）。</p>
+<p>「2. 適切なデータ構造が不明」について、利用者の素性(feature)となり得る要因は無限に検討可能なことから、これを全てのシステムで共通に管理することは困難である。
+例えば、訪問したサイトを利用者の素性として扱うとして、多次元のベクトルデータで表現すると、各次元とサイトの紐付けやサイトの追加削除を管理しなければならない。</p>
+<p>「3. プライバシー保護が必要」について、人口統計的な情報だけでなく、行動データを含む利用者の素性は多くのセンシティブな情報を含むことから、利用者側が開示するにあたって内容の制限が求められるであろう。</p>
+<h3 id=対象contentへの反応reactionの伝達の課題>対象(content)への反応(reaction)の伝達の課題</h3>
+<ol>
+<li>システム内に限定された利用者の嗜好</li>
+<li>プライバシー保護が必要</li>
+</ol>
+<p>「1. システム内に限定された利用者の嗜好」について、前述の通り、プロファイルの登録や履歴蓄積のための労力的な負担が発生する。
 対象(content)はシステム内に限定されるため、システムごとにその反応を提示しなければならない。
-この時、利用者の嗜好をより知るためには、できるだけ多くの対象(content)に対する反応(reaction)を示せることが望ましいが、労力的な負担は比例して増加する。</p><p>「2. プライバシー保護が必要」について、利用者の嗜好傾向は（素性と比較して間接的ではあるものの）センシティブな情報を含むことから、利用者側が開示するにあたって内容の制限が求められるであろう。</p><h2 id=嗜好伝達コミュニケーションの効率化の検討>嗜好伝達コミュニケーションの効率化の検討</h2><h3 id=利用者の素性-feature-の伝達の効率化>利用者の素性(feature)の伝達の効率化</h3><p>本研究では、利用者の素性(feature)の伝達の効率化のため、人口統計的な情報だけでなく、システムを横断した行動データを局所管理するアプローチを検討する。
+この時、利用者の嗜好をより知るためには、できるだけ多くの対象(content)に対する反応(reaction)を示せることが望ましいが、労力的な負担は比例して増加する。</p>
+<p>「2. プライバシー保護が必要」について、利用者の嗜好傾向は（素性と比較して間接的ではあるものの）センシティブな情報を含むことから、利用者側が開示するにあたって内容の制限が求められるであろう。</p>
+<h2 id=嗜好伝達コミュニケーションの効率化の検討>嗜好伝達コミュニケーションの効率化の検討</h2>
+<h3 id=利用者の素性featureの伝達の効率化>利用者の素性(feature)の伝達の効率化</h3>
+<p>本研究では、利用者の素性(feature)の伝達の効率化のため、人口統計的な情報だけでなく、システムを横断した行動データを局所管理するアプローチを検討する。
 無限に検討可能な要因を共通して扱うため、Key-Value形式のデータ構造を採用する。
 また、システムへの提示時に、このKey-Value形式のデータをBloomFilterに変換することでプライバシー保護を試みる。
 すなわち、BloomFilterの偽陽性に着目した素性であるKeyを断定することができない特性を利用する。
-また、BloomFilterが保存する要素数に依存しない特性を利用して、無限に検討可能な利用者の素性の要因を固定次元で扱うことができる。</p><p>なお、あるシステムに提示されるBloomFilterのパラメータは全ての利用者が同じものを用いる必要があるが、これらの共有方式についてはここでは検討しない。</p><h3 id=対象-content-への反応-reaction-の伝達の効率化>対象(content)への反応(reaction)の伝達の効率化</h3><p>本研究では、対象(content)への反応(reaction)の伝達の効率化のため、嗜好モデルを局所管理するアプローチを検討する。
+また、BloomFilterが保存する要素数に依存しない特性を利用して、無限に検討可能な利用者の素性の要因を固定次元で扱うことができる。</p>
+<p>なお、あるシステムに提示されるBloomFilterのパラメータは全ての利用者が同じものを用いる必要があるが、これらの共有方式についてはここでは検討しない。</p>
+<h3 id=対象contentへの反応reactionの伝達の効率化>対象(content)への反応(reaction)の伝達の効率化</h3>
+<p>本研究では、対象(content)への反応(reaction)の伝達の効率化のため、嗜好モデルを局所管理するアプローチを検討する。
 提案手法では、システムを横断した行動データから、嗜好モデルを構築するローカルエージェントを設ける。
 構築される嗜好モデルはこれまでの行動データから、未知の対象(content)への反応(reaction)を精度よく推測する。
 ローカルエージェントは、このモデルを使い、システムに対する対象(content)への反応(reaction)の伝達を代理する。
 具体的には、利用者が新しいシステムへのアクセスする際に、（システムが対応していれば）この嗜好モデルを使って、先方のシステムから示された大量の対象(content)への反応(reaction)を回答する。
 先方のシステムは、十分な量のコミュニケーションを終え、利用者に利便性の高い状態から利用を開始してもらうことができる。
-また、予めローカルエージェントの嗜好提示範囲に制限を持たせておくことで、プライバシー管理も行えると考える。</p><p>なお、これらの方式は検討段階であり、ローカルエージェント、嗜好モデルの具体的な実装はこれから検討していく。</p><h2 id=評価>評価</h2><h3 id=利用者の素性-feature-の伝達の効率化の評価>利用者の素性(feature)の伝達の効率化の評価</h3><p>提案手法の有効性を判断するため、BloomFilterに変換した素性によって嗜好情報の伝達能力を評価した。
+また、予めローカルエージェントの嗜好提示範囲に制限を持たせておくことで、プライバシー管理も行えると考える。</p>
+<p>なお、これらの方式は検討段階であり、ローカルエージェント、嗜好モデルの具体的な実装はこれから検討していく。</p>
+<h2 id=評価>評価</h2>
+<h3 id=利用者の素性featureの伝達の効率化の評価>利用者の素性(feature)の伝達の効率化の評価</h3>
+<p>提案手法の有効性を判断するため、BloomFilterに変換した素性によって嗜好情報の伝達能力を評価した。
 評価として、素性を特徴量として用いた多腕バンディットのシミュレーションを行った。
-元の素性と比較して提案手法の素性で、どの程度精度に変化があったかを確認した。</p><p>以下は、腕の数が30、密度（＊後述）10倍の実験設定の時の、BloomFilterの次元数と精度の変化を表している。
-ここで、精度の変化とは、元の素性を使ったシミュレーションで選定された腕と同じ腕を選定できた割合を言う。</p><pre><code>1: 1.0
+元の素性と比較して提案手法の素性で、どの程度精度に変化があったかを確認した。</p>
+<p>以下は、腕の数が30、密度（＊後述）10倍の実験設定の時の、BloomFilterの次元数と精度の変化を表している。
+ここで、精度の変化とは、元の素性を使ったシミュレーションで選定された腕と同じ腕を選定できた割合を言う。</p>
+<pre tabindex=0><code>1: 1.0
 2: 0.60425
 3: 0.424515
 4: 0.38845
@@ -68,7 +156,55 @@ ECサイトのシステムであれば、利用者の嗜好を把握すること
 また、多腕バンディットでは腕の本数の増加に従い、不確実な状況において偶然当たる確率が下がる。
 これらを考慮して、100次元のコンテキスト情報を10次元へ圧縮、30本の腕という問題設定でベストな腕を選択できた割合をサンプリングによって求めた。
 結果として正しい腕を選択できたのは33%程度であった。
-現実の推薦システムにおいてあり得る程度のスケールでも精度に対して大きな影響が発生することがわかった。</p><h3 id=対象-content-への反応-reaction-の伝達の効率化の評価>対象(content)への反応(reaction)の伝達の効率化の評価</h3><p>今後、実装と評価を行っていく。</p><h1 id=発表スライド>発表スライド</h1><script async class=speakerdeck-embed data-id=204ceec869d6488ea6a62fbe31e02c19 data-ratio=1.77777777777778 src=//speakerdeck.com/assets/embed.js></script><p>発表後の議論では、アプローチに対する新規性や有用性について、また、Webサービスへの適用のアイディアについても話すことができ、今後にとって非常に有意義なものとなった。</p><h1 id=発表を終えて>発表を終えて</h1><p>今回のWSA研では、最初のアプローチの失敗で終わらず、やりたいことに立ち返り、より良いと思われるアプローチも検討できた点が良かったと思う。
-長期間続く研究であればこそ、個々の結果に一喜一憂ではなく全体として進んでいけるよう全てを糧にしていきたい。</p><p>そして、このような研究のアイディア段階から前向きに意見を出し合うことができる機会を定期的に設けることができるWSA研はとても良いコンセプトの研究会だと思う。
-何よりその時間はとても楽しい。</p><p>Webシステムアーキテクチャに関する運用知見を研究的アプローチで前進させること興味がある方は次回開催の参加を検討してみてはいかがでしょうか。</p><p><blockquote class=twitter-tweet><p lang=ja dir=ltr><a href="https://twitter.com/hashtag/wsa%E7%A0%94?src=hash&amp;ref_src=twsrc%5Etfw">#wsa研</a> 7回目も無事おわり。半年ごとにアイディアを形にする良い機会になってるし、みんなの多様な取り組みを聞くのも興味深い。なにより、自分の夢中になってることを一緒に盛り上がって話せる場は貴重だよなあ。ありがとうございます。連続発表記録も更新していくぞう</p>&mdash; モノクロメガネ研究員 (@monochromegane) <a href="https://twitter.com/monochromegane/status/1327251443728875525?ref_src=twsrc%5Etfw">November 13, 2020</a></blockquote><script async src=https://platform.twitter.com/widgets.js></script></p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/wsa%E7%A0%94>WSA研</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2020/11/17/wsa7-local-preference/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','twitter-wjs');</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-38374674-1','auto');ga('send','pageview');</script></body></html>
+現実の推薦システムにおいてあり得る程度のスケールでも精度に対して大きな影響が発生することがわかった。</p>
+<h3 id=対象contentへの反応reactionの伝達の効率化の評価>対象(content)への反応(reaction)の伝達の効率化の評価</h3>
+<p>今後、実装と評価を行っていく。</p>
+<h1 id=発表スライド>発表スライド</h1>
+<p>発表後の議論では、アプローチに対する新規性や有用性について、また、Webサービスへの適用のアイディアについても話すことができ、今後にとって非常に有意義なものとなった。</p>
+<h1 id=発表を終えて>発表を終えて</h1>
+<p>今回のWSA研では、最初のアプローチの失敗で終わらず、やりたいことに立ち返り、より良いと思われるアプローチも検討できた点が良かったと思う。
+長期間続く研究であればこそ、個々の結果に一喜一憂ではなく全体として進んでいけるよう全てを糧にしていきたい。</p>
+<p>そして、このような研究のアイディア段階から前向きに意見を出し合うことができる機会を定期的に設けることができるWSA研はとても良いコンセプトの研究会だと思う。
+何よりその時間はとても楽しい。</p>
+<p>Webシステムアーキテクチャに関する運用知見を研究的アプローチで前進させること興味がある方は次回開催の参加を検討してみてはいかがでしょうか。</p>
+</div>
+<footer class=tag>
+<i class="fa fa-tags tag-icon"></i>
+<ul>
+<li><a class=tag-link href=/tags/wsa%E7%A0%94>WSA研</a></li>
+</ul>
+<div class=clear></div>
+</footer>
+</div>
+</article>
+<div class=social-btn>
+<div>
+<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2020/11/17/wsa7-local-preference/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
+</div>
+<div>
+<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
+</div>
+</div>
+</div>
+<footer class=footer>
+<div class=author></div>
+<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
+<p>monochromegane (モノクロめがね) と申します。</p>
+<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+<ul class=social>
+<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
+<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
+<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
+</ul>
+<p class=copyright>
+<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
+</p>
+</footer>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
+<script>hljs.initHighlightingOnLoad()</script>
+<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
+</body>
+</html>

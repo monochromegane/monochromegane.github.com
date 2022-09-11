@@ -1,14 +1,114 @@
-<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>ちょっと便利なvagrant sshのコマンドオプション &middot; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="vagrant sshにはコマンドオプションがあり、sshで仮想マシンにログインしなくても実行結果を取得することができます。
+<!doctype html><html>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width">
+<meta name=author content>
+<title>ちょっと便利なvagrant sshのコマンドオプション &#183; THINKING MEGANE</title>
+<meta name=twitter:card content="summary">
+<meta name=twitter:site content="@monochromegane">
+<meta property="og:description" content="vagrant sshにはコマンドオプションがあり、sshで仮想マシンにログインしなくても実行結果を取得することができます。
 コマンドオプション vagrant ssh のコマンドオプションは-c commandです。 -cオプションを使うことで、SSHコマンドを直接実行することができます。
-例えば、こんな使い方。 
-DHCPな仮想マシンのIPアドレスを知る $ vagrant ssh -c ifconfig  grepなりで取得結果を整形すれば、仮想マシンのWebサーバへのブラウザアクセスなどに利用できます。
- Chef-Soloのレシピを個別に実行する Vagrant &#43; Chef-Solo環境であれば、以下のコマンドで個別にレシピを実行することができます
-# Vagrantfileで定義したレシピを全て実行 $ vagrant ssh -c &#34;cd /tmp/vagrant-chef-1 &amp;&amp; sudo chef-solo -c solo.rb -j dna.json&#34; # レシピを指定して実行 $ vagrant ssh -c &#34;cd /tmp/vagrant-chef-1 &amp;&amp; sudo chef-solo -c solo.rb -o cookbookName::recipeName&#34;   ログインの手間を省けるので、ちょっとした確認などに便利ではないでしょうか。"><meta property="og:title" content="ちょっと便利なvagrant sshのコマンドオプション"><meta property="og:url" content="https://blog.monochromegane.com/blog/2013/05/13/vagrant-ssh-command/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2013/05/13/vagrant-ssh-command/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:true},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:true}}});</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2013/05/13/vagrant-ssh-command/>ちょっと便利なvagrant sshのコマンドオプション</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2013-05-13</div></time></header><div class=post-inner><p><code>vagrant ssh</code>にはコマンドオプションがあり、sshで仮想マシンにログインしなくても実行結果を取得することができます。</p><h3 id=コマンドオプション>コマンドオプション</h3><p>vagrant ssh のコマンドオプションは<code>-c command</code>です。
-<code>-c</code>オプションを使うことで、SSHコマンドを直接実行することができます。</p><p>例えば、こんな使い方。<hr></p><h3 id=dhcpな仮想マシンのipアドレスを知る>DHCPな仮想マシンのIPアドレスを知る</h3><pre><code class=language-sh>$ vagrant ssh -c ifconfig
-</code></pre><p>grepなりで取得結果を整形すれば、仮想マシンのWebサーバへのブラウザアクセスなどに利用できます。</p><hr><h3 id=chef-soloのレシピを個別に実行する>Chef-Soloのレシピを個別に実行する</h3><p>Vagrant + Chef-Solo環境であれば、以下のコマンドで個別にレシピを実行することができます</p><pre><code class=language-sh># Vagrantfileで定義したレシピを全て実行
-$ vagrant ssh -c &quot;cd /tmp/vagrant-chef-1 &amp;&amp; sudo chef-solo -c solo.rb -j dna.json&quot;
+例えば、こんな使い方。
+DHCPな仮想マシンのIPアドレスを知る $ vagrant ssh -c ifconfig grepなりで取得結果を整形すれば、仮想マシンのWebサーバへのブラウザアクセスなどに利用できます。
+Chef-Soloのレシピを個別に実行する Vagrant + Chef-Solo環境であれば、以下のコマンドで個別にレシピを実行することができます
+# Vagrantfileで定義したレシピを全て実行 $ vagrant ssh -c &#34;cd /tmp/vagrant-chef-1 && sudo chef-solo -c solo.rb -j dna.json&#34; # レシピを指定して実行 $ vagrant ssh -c &#34;cd /tmp/vagrant-chef-1 && sudo chef-solo -c solo.rb -o cookbookName::recipeName&#34; ">
+<meta property="og:title" content="ちょっと便利なvagrant sshのコマンドオプション">
+<meta property="og:url" content="https://blog.monochromegane.com/blog/2013/05/13/vagrant-ssh-command/">
+<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+<link rel=stylesheet href=/css/reset.css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
+<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
+<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
+<link rel=stylesheet href=/css/text.css>
+<link rel=stylesheet href=/css/color.css>
+<link rel=stylesheet href=/css/layout.css>
+<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
+<link rel="shortcut icon" href=/images/favicon.ico>
+<link rel=canonical href=https://blog.monochromegane.com/blog/2013/05/13/vagrant-ssh-command/>
+<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
+</head>
+<body>
+<div class=header>
+<header>
+<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
+<nav>
+<ul class=menu>
+<li><a href=/self-introduction/>Home</a></li>
+<li><a href=/post/>Archives</a></li>
+<li><a href=/diary/>Diary</a></li>
+<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
+</ul>
+</nav>
+</header>
+</div>
+<div class=container>
+<article>
+<div class=post>
+<header>
+<h1><a href=https://blog.monochromegane.com/blog/2013/05/13/vagrant-ssh-command/>ちょっと便利なvagrant sshのコマンドオプション</a></h1>
+<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2013-05-13</div></time>
+</header>
+<div class=post-inner>
+<p><code>vagrant ssh</code>にはコマンドオプションがあり、sshで仮想マシンにログインしなくても実行結果を取得することができます。</p>
+<h3 id=コマンドオプション>コマンドオプション</h3>
+<p>vagrant ssh のコマンドオプションは<code>-c command</code>です。
+<code>-c</code>オプションを使うことで、SSHコマンドを直接実行することができます。</p>
+<p>例えば、こんな使い方。</p>
+<h3 id=dhcpな仮想マシンのipアドレスを知る>DHCPな仮想マシンのIPアドレスを知る</h3>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ vagrant ssh -c ifconfig
+</code></pre></div><p>grepなりで取得結果を整形すれば、仮想マシンのWebサーバへのブラウザアクセスなどに利用できます。</p>
+<h3 id=chef-soloのレシピを個別に実行する>Chef-Soloのレシピを個別に実行する</h3>
+<p>Vagrant + Chef-Solo環境であれば、以下のコマンドで個別にレシピを実行することができます</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=color:#75715e># Vagrantfileで定義したレシピを全て実行</span>
+$ vagrant ssh -c <span style=color:#e6db74>&#34;cd /tmp/vagrant-chef-1 &amp;&amp; sudo chef-solo -c solo.rb -j dna.json&#34;</span>
 
-# レシピを指定して実行
-$ vagrant ssh -c &quot;cd /tmp/vagrant-chef-1 &amp;&amp; sudo chef-solo -c solo.rb -o cookbookName::recipeName&quot;
-</code></pre><hr><p>ログインの手間を省けるので、ちょっとした確認などに便利ではないでしょうか。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/vagrant>vagrant</a></li><li><a class=tag-link href=/tags/chef>chef</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/05/13/vagrant-ssh-command/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','twitter-wjs');</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-38374674-1','auto');ga('send','pageview');</script></body></html>
+<span style=color:#75715e># レシピを指定して実行</span>
+$ vagrant ssh -c <span style=color:#e6db74>&#34;cd /tmp/vagrant-chef-1 &amp;&amp; sudo chef-solo -c solo.rb -o cookbookName::recipeName&#34;</span>
+</code></pre></div>
+</div>
+<footer class=tag>
+<i class="fa fa-tags tag-icon"></i>
+<ul>
+<li><a class=tag-link href=/tags/vagrant>vagrant</a></li>
+<li><a class=tag-link href=/tags/chef>chef</a></li>
+</ul>
+<div class=clear></div>
+</footer>
+</div>
+</article>
+<div class=social-btn>
+<div>
+<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/05/13/vagrant-ssh-command/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
+</div>
+<div>
+<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
+</div>
+</div>
+</div>
+<footer class=footer>
+<div class=author></div>
+<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
+<p>monochromegane (モノクロめがね) と申します。</p>
+<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+<ul class=social>
+<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
+<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
+<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
+</ul>
+<p class=copyright>
+<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
+</p>
+</footer>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
+<script>hljs.initHighlightingOnLoad()</script>
+<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
+</body>
+</html>

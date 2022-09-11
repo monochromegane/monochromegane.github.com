@@ -1,22 +1,175 @@
-<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>goimportsを高速化するdragon-importsコマンドをつくった &middot; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="goimportsはコードのフォーマットに加えてインポート行の追加・削除を行ってくれる便利なコマンドですが、GOPATH配下に大量のリポジトリが存在するとインポートの解決に時間がかかるようになってしまいます。いつでも素早くインポートしたい！ということでdragon-importsというコマンドをつくってみました。
-&lt;a href=&#34;https://github.com/monochromegane/dragon-imports&#34;&gt;monochromegane/dragon-imports&lt;/a&gt; 使い方 インストールしてdragon-importsコマンドを実行するだけです。
-$ go get github.com/monochromegane/dragon-imports/... $ dragon-imports  コマンド実行後、goimportsコマンドが高速化されます。GOPATH/srcに230リポジトリある環境での実行時間の差は以下の通りです。
-goimports の実行時間(秒)
+<!doctype html><html>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width">
+<meta name=author content>
+<title>goimportsを高速化するdragon-importsコマンドをつくった &#183; THINKING MEGANE</title>
+<meta name=twitter:card content="summary">
+<meta name=twitter:site content="@monochromegane">
+<meta property="og:description" content="goimportsはコードのフォーマットに加えてインポート行の追加・削除を行ってくれる便利なコマンドですが、GOPATH配下に大量のリポジトリが存在するとインポートの解決に時間がかかるようになってしまいます。いつでも素早くインポートしたい！ということでdragon-importsというコマンドをつくってみました。
+使い方 インストールしてdragon-importsコマンドを実行するだけです。
+$ go get github.com/monochromegane/dragon-imports/... $ dragon-imports コマンド実行後、goimportsコマンドが高速化されます。GOPATH/srcに230リポジトリある環境での実行時間の差は以下の通りです。
+ goimports の実行時間(秒)
    before after     0.893 0.019    体感では全く結果を待つ必要がなくなりました！
 どうやって高速化するのか goimportsの動作 goimportsは標準パッケージのシンボルとインポートパスのマッピングを内部に保持しているため、それらに対するインポートパスの解決は即座に行われます。
 ここで解決できなかった場合は、GOPATH/src配下に対する探査が発生してしまうため、GOPATH配下に大量にリポジトリがある場合は、時間がかかるようになります（複数回インポートパスを追加する場合でも探査自体は一度しかしないようです）。
 dragon-importsはどう解決するか dragon-importsは既存のgoimportsコマンドを上書きします。
 dragon-importsはGOPATH/src配下にあるエクスポートされた関数や型を上述のマッピングに追加して、時間のかかる探査自体を発生させないようにします。具体的には
- 1. GOROOT/api配下の定義から標準パッケージのマッピングを取得 2. GOPATH/src配下のパッケージからエクスポートされた関数や型のマッピングを生成 3. 上記1.と2.をあわせてgoimportsのマッピング定義を上書き(zstdlib.go) 4. goimportsを再度インストール(go install -a)  を行っています。
-以上、GOPATH爆発問題をちょっと強気に解決するdragon-importsを紹介させていただきました。 現状使っている分には特に困っていないですが、やり方がやり方なだけにご利用は自己責任でお願いします。
+   GOROOT/api配下の定義から標準パッケージのマッピングを取得    GOPATH/src配下のパッケージからエクスポートされた関数や型のマッピングを生成    上記1.と2.をあわせてgoimportsのマッピング定義を上書き(zstdlib.go)    goimportsを再度インストール(go install -a)    を行っています。
+ 以上、GOPATH爆発問題をちょっと強気に解決するdragon-importsを紹介させていただきました。 現状使っている分には特に困っていないですが、やり方がやり方なだけにご利用は自己責任でお願いします。
 それでも普段使うGOPATH配下のパッケージがストレスなくインポートされるのはやはり気持ちがよいですね。
 やっぱりコワいんですけど 安心してください、戻せますよ。
-$ cd $GOPATH/src/golang.org/x/tools $ git checkout imports/zstdlib.go $ cd $GOPATH/src/golang.org/x/tools/cmd/goimports $ go install -a ."><meta property="og:title" content="goimportsを高速化するdragon-importsコマンドをつくった"><meta property="og:url" content="https://blog.monochromegane.com/blog/2015/12/23/dragon-imports/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2015/12/23/dragon-imports/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:true},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:true}}});</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2015/12/23/dragon-imports/>goimportsを高速化するdragon-importsコマンドをつくった</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2015-12-23</div></time></header><div class=post-inner><p><code>goimports</code>はコードのフォーマットに加えてインポート行の追加・削除を行ってくれる便利なコマンドですが、GOPATH配下に大量のリポジトリが存在するとインポートの解決に時間がかかるようになってしまいます。いつでも素早くインポートしたい！ということでdragon-importsというコマンドをつくってみました。</p><iframe src="//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fdragon-imports" title=monochromegane/dragon-imports class="embed-card embed-webcard" scrolling=no frame border=0 style="width:100%;height:155px;max-width:500px;margin:10px 0">&lt;a href="https://github.com/monochromegane/dragon-imports"&gt;monochromegane/dragon-imports&lt;/a&gt;</iframe><h2 id=使い方>使い方</h2><p>インストールして<code>dragon-imports</code>コマンドを実行するだけです。</p><pre><code class=language-sh>$ go get github.com/monochromegane/dragon-imports/...
+$ cd $GOPATH/src/golang.org/x/tools $ git checkout imports/zstdlib.go $ cd $GOPATH/src/golang.">
+<meta property="og:title" content="goimportsを高速化するdragon-importsコマンドをつくった">
+<meta property="og:url" content="https://blog.monochromegane.com/blog/2015/12/23/dragon-imports/">
+<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+<link rel=stylesheet href=/css/reset.css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
+<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
+<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
+<link rel=stylesheet href=/css/text.css>
+<link rel=stylesheet href=/css/color.css>
+<link rel=stylesheet href=/css/layout.css>
+<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
+<link rel="shortcut icon" href=/images/favicon.ico>
+<link rel=canonical href=https://blog.monochromegane.com/blog/2015/12/23/dragon-imports/>
+<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
+</head>
+<body>
+<div class=header>
+<header>
+<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
+<nav>
+<ul class=menu>
+<li><a href=/self-introduction/>Home</a></li>
+<li><a href=/post/>Archives</a></li>
+<li><a href=/diary/>Diary</a></li>
+<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
+</ul>
+</nav>
+</header>
+</div>
+<div class=container>
+<article>
+<div class=post>
+<header>
+<h1><a href=https://blog.monochromegane.com/blog/2015/12/23/dragon-imports/>goimportsを高速化するdragon-importsコマンドをつくった</a></h1>
+<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2015-12-23</div></time>
+</header>
+<div class=post-inner>
+<p><code>goimports</code>はコードのフォーマットに加えてインポート行の追加・削除を行ってくれる便利なコマンドですが、GOPATH配下に大量のリポジトリが存在するとインポートの解決に時間がかかるようになってしまいます。いつでも素早くインポートしたい！ということでdragon-importsというコマンドをつくってみました。</p>
+<h2 id=使い方>使い方</h2>
+<p>インストールして<code>dragon-imports</code>コマンドを実行するだけです。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ go get github.com/monochromegane/dragon-imports/...
 $ dragon-imports
-</code></pre><p>コマンド実行後、<code>goimports</code>コマンドが高速化されます。<code>GOPATH/src</code>に230リポジトリある環境での実行時間の差は以下の通りです。</p><hr><p><strong>goimports の実行時間(秒)</strong></p><table><thead><tr><th align=right>before</th><th align=right>after</th></tr></thead><tbody><tr><td align=right>0.893</td><td align=right>0.019</td></tr></tbody></table><p>体感では全く結果を待つ必要がなくなりました！</p><h2 id=どうやって高速化するのか>どうやって高速化するのか</h2><h3 id=goimportsの動作>goimportsの動作</h3><p><code>goimports</code>は標準パッケージのシンボルとインポートパスのマッピングを内部に保持しているため、それらに対するインポートパスの解決は即座に行われます。</p><p>ここで解決できなかった場合は、<code>GOPATH/src</code>配下に対する探査が発生してしまうため、GOPATH配下に大量にリポジトリがある場合は、時間がかかるようになります（複数回インポートパスを追加する場合でも探査自体は一度しかしないようです）。</p><h3 id=dragon-importsはどう解決するか>dragon-importsはどう解決するか</h3><p><code>dragon-imports</code>は既存の<code>goimports</code>コマンドを上書きします。</p><p><code>dragon-imports</code>は<code>GOPATH/src</code>配下にあるエクスポートされた関数や型を上述のマッピングに追加して、時間のかかる探査自体を発生させないようにします。具体的には</p><ul><li>1. <code>GOROOT/api</code>配下の定義から標準パッケージのマッピングを取得</li><li>2. <code>GOPATH/src</code>配下のパッケージからエクスポートされた関数や型のマッピングを生成</li><li>3. 上記1.と2.をあわせて<code>goimports</code>のマッピング定義を上書き(zstdlib.go)</li><li>4. <code>goimports</code>を再度インストール(go install -a)</li></ul><p>を行っています。</p><hr><p>以上、GOPATH爆発問題をちょっと強気に解決するdragon-importsを紹介させていただきました。
-現状使っている分には特に困っていないですが、やり方がやり方なだけにご利用は自己責任でお願いします。</p><p>それでも普段使うGOPATH配下のパッケージがストレスなくインポートされるのはやはり気持ちがよいですね。</p><h3 id=やっぱりコワいんですけど>やっぱりコワいんですけど</h3><p>安心してください、戻せますよ。</p><pre><code class=language-sh>$ cd $GOPATH/src/golang.org/x/tools
+</code></pre></div><p>コマンド実行後、<code>goimports</code>コマンドが高速化されます。<code>GOPATH/src</code>に230リポジトリある環境での実行時間の差は以下の通りです。</p>
+<hr>
+<p><strong>goimports の実行時間(秒)</strong></p>
+<table>
+<thead>
+<tr>
+<th style=text-align:right>before</th>
+<th style=text-align:right>after</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style=text-align:right>0.893</td>
+<td style=text-align:right>0.019</td>
+</tr>
+</tbody>
+</table>
+<p>体感では全く結果を待つ必要がなくなりました！</p>
+<h2 id=どうやって高速化するのか>どうやって高速化するのか</h2>
+<h3 id=goimportsの動作>goimportsの動作</h3>
+<p><code>goimports</code>は標準パッケージのシンボルとインポートパスのマッピングを内部に保持しているため、それらに対するインポートパスの解決は即座に行われます。</p>
+<p>ここで解決できなかった場合は、<code>GOPATH/src</code>配下に対する探査が発生してしまうため、GOPATH配下に大量にリポジトリがある場合は、時間がかかるようになります（複数回インポートパスを追加する場合でも探査自体は一度しかしないようです）。</p>
+<h3 id=dragon-importsはどう解決するか>dragon-importsはどう解決するか</h3>
+<p><code>dragon-imports</code>は既存の<code>goimports</code>コマンドを上書きします。</p>
+<p><code>dragon-imports</code>は<code>GOPATH/src</code>配下にあるエクスポートされた関数や型を上述のマッピングに追加して、時間のかかる探査自体を発生させないようにします。具体的には</p>
+<ul>
+<li>
+<ol>
+<li><code>GOROOT/api</code>配下の定義から標準パッケージのマッピングを取得</li>
+</ol>
+</li>
+<li>
+<ol start=2>
+<li><code>GOPATH/src</code>配下のパッケージからエクスポートされた関数や型のマッピングを生成</li>
+</ol>
+</li>
+<li>
+<ol start=3>
+<li>上記1.と2.をあわせて<code>goimports</code>のマッピング定義を上書き(zstdlib.go)</li>
+</ol>
+</li>
+<li>
+<ol start=4>
+<li><code>goimports</code>を再度インストール(go install -a)</li>
+</ol>
+</li>
+</ul>
+<p>を行っています。</p>
+<hr>
+<p>以上、GOPATH爆発問題をちょっと強気に解決するdragon-importsを紹介させていただきました。
+現状使っている分には特に困っていないですが、やり方がやり方なだけにご利用は自己責任でお願いします。</p>
+<p>それでも普段使うGOPATH配下のパッケージがストレスなくインポートされるのはやはり気持ちがよいですね。</p>
+<h3 id=やっぱりコワいんですけど>やっぱりコワいんですけど</h3>
+<p>安心してください、戻せますよ。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ cd $GOPATH/src/golang.org/x/tools
 $ git checkout imports/zstdlib.go
 $ cd $GOPATH/src/golang.org/x/tools/cmd/goimports
 $ go install -a .
-</code></pre><h2 id=todo>TODO</h2><ul><li>パッケージの変更を検知してdragon-importsをバックグラウンドで実行する仕組み</li><li>dragon-importsの対象から除外するオプション</li><li>vim-goの<code>g:go_fmt_command = &quot;goimports&quot;</code>でもう少し速度向上を実感できるようにする</li></ul></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/golang>golang</a></li><li><a class=tag-link href=/tags/goimports>goimports</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2015/12/23/dragon-imports/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','twitter-wjs');</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-38374674-1','auto');ga('send','pageview');</script></body></html>
+</code></pre></div><h2 id=todo>TODO</h2>
+<ul>
+<li>パッケージの変更を検知してdragon-importsをバックグラウンドで実行する仕組み</li>
+<li>dragon-importsの対象から除外するオプション</li>
+<li>vim-goの<code>g:go_fmt_command = "goimports"</code>でもう少し速度向上を実感できるようにする</li>
+</ul>
+</div>
+<footer class=tag>
+<i class="fa fa-tags tag-icon"></i>
+<ul>
+<li><a class=tag-link href=/tags/golang>golang</a></li>
+<li><a class=tag-link href=/tags/goimports>goimports</a></li>
+</ul>
+<div class=clear></div>
+</footer>
+</div>
+</article>
+<div class=social-btn>
+<div>
+<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2015/12/23/dragon-imports/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
+</div>
+<div>
+<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
+</div>
+</div>
+</div>
+<footer class=footer>
+<div class=author></div>
+<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
+<p>monochromegane (モノクロめがね) と申します。</p>
+<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+<ul class=social>
+<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
+<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
+<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
+</ul>
+<p class=copyright>
+<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
+</p>
+</footer>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
+<script>hljs.initHighlightingOnLoad()</script>
+<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
+</body>
+</html>

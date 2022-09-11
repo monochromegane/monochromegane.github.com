@@ -1,60 +1,189 @@
-<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>Go言語でシミュレーション用のシンプルなフレームワークStageをつくった &middot; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="時系列に対するコンピュータシミュレーションを開発する機会が増えてきたので、共通する処理の流れをフレームワーク化した。
-&lt;a href=&#34;https://github.com/monochromegane/stage&#34;&gt;monochromegane/stage&lt;/a&gt; コンピュータシミュレーション 状況に応じたクリック数の最大化や変化点検出のような、システムの適応的な振る舞いを検証するために、時系列に対するコンピュータシミュレーションを行うことがある。 また、実環境で発生するランダムな誤差を表現する場合、乱数を用いたシミュレーション技法であるモンテカルロ法も利用することになる。
+<!doctype html><html>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width">
+<meta name=author content>
+<title>Go言語でシミュレーション用のシンプルなフレームワークStageをつくった &#183; THINKING MEGANE</title>
+<meta name=twitter:card content="summary">
+<meta name=twitter:site content="@monochromegane">
+<meta property="og:description" content="時系列に対するコンピュータシミュレーションを開発する機会が増えてきたので、共通する処理の流れをフレームワーク化した。
+コンピュータシミュレーション 状況に応じたクリック数の最大化や変化点検出のような、システムの適応的な振る舞いを検証するために、時系列に対するコンピュータシミュレーションを行うことがある。 また、実環境で発生するランダムな誤差を表現する場合、乱数を用いたシミュレーション技法であるモンテカルロ法も利用することになる。
 このようなシミュレーションのプログラムでは、変化する時系列を入力に、振る舞いのシミュレーション結果を出力するだけではなく、乱数によって発生する誤差を均すためにシミュレーションを数百〜数千回繰り返す必要がある。
 Stage Stageは、これらの一連の流れの実行とこれに伴う煩雑な処理（シミュレーションの並列化、乱数の管理、進捗の監視、ログ出力）を開発者から隠蔽する。 開発者は、時系列や振る舞い、ログフォーマットをGo言語で記述するだけで良い。
 Stageで行っているメイン処理の「疑似コード」は以下の通りシンプルである。
-for i := 0; i &lt; iter; i&#43;&#43; { sem &lt;- struct{}{} go func() { scenario := NewScenarioFn(rnd.Int63()) actor := NewActorFn(rnd.Int63()) for scenario.Scan() { action, _ := actor.Act(scenario.Line()) w.Write(action.String()) } &lt;-sem }() }  このフレームワークでは、メタファーとして劇場(Stage)を採用した。 劇場は、劇を開催する。 その劇は台本(Scenario)があり、演者(Actor)は台本の1行づつのセリフ(Line)に沿って演技を行い、結果(Action)を出力する、といった形だ。 そして劇は何度も繰り返される。
+for i := 0; i < iter; i++ { sem <- struct{}{} go func() { scenario := NewScenarioFn(rnd.Int63()) actor := NewActorFn(rnd.Int63()) for scenario.Scan() { action, _ := actor.Act(scenario.Line()) w.Write(action.String()) } <-sem }() } このフレームワークでは、メタファーとして劇場(Stage)を採用した。 劇場は、劇を開催する。 その劇は台本(Scenario)があり、演者(Actor)は台本の1行づつのセリフ(Line)に沿って演技を行い、結果(Action)を出力する、といった形だ。 そして劇は何度も繰り返される。
 開発者は、時系列や振る舞いをそれぞれ、ScenarioとActorのinterfaceを実装によって記述する。 また、ログフォーマットもAction interfaceで指定するだけで良い。
-type Scenario interface { Scan() bool Line() Line } type Actor interface { Act(Line) (Action, error) } type Action interface { String() string }  あとは実装したScenarioとActorを生成する関数を指定して必要な回数実行。"><meta property="og:title" content="Go言語でシミュレーション用のシンプルなフレームワークStageをつくった"><meta property="og:url" content="https://blog.monochromegane.com/blog/2020/05/31/simulation-framework-stage/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2020/05/31/simulation-framework-stage/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:true},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:true}}});</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2020/05/31/simulation-framework-stage/>Go言語でシミュレーション用のシンプルなフレームワークStageをつくった</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2020-05-31</div></time></header><div class=post-inner><p>時系列に対するコンピュータシミュレーションを開発する機会が増えてきたので、共通する処理の流れをフレームワーク化した。</p><iframe src="//hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmonochromegane%2Fstage" title=monochromegane/stage class="embed-card embed-webcard" scrolling=no frame border=0 style="width:100%;height:155px;max-width:500px;margin:10px 0">&lt;a href="https://github.com/monochromegane/stage"&gt;monochromegane/stage&lt;/a&gt;</iframe><h2 id=コンピュータシミュレーション>コンピュータシミュレーション</h2><p>状況に応じたクリック数の最大化や変化点検出のような、システムの適応的な振る舞いを検証するために、時系列に対するコンピュータシミュレーションを行うことがある。
-また、実環境で発生するランダムな誤差を表現する場合、乱数を用いたシミュレーション技法であるモンテカルロ法も利用することになる。</p><p>このようなシミュレーションのプログラムでは、変化する時系列を入力に、振る舞いのシミュレーション結果を出力するだけではなく、乱数によって発生する誤差を均すためにシミュレーションを数百〜数千回繰り返す必要がある。</p><h2 id=stage>Stage</h2><p>Stageは、これらの一連の流れの実行とこれに伴う煩雑な処理（シミュレーションの並列化、乱数の管理、進捗の監視、ログ出力）を開発者から隠蔽する。
-開発者は、時系列や振る舞い、ログフォーマットをGo言語で記述するだけで良い。</p><p>Stageで行っているメイン処理の「疑似コード」は以下の通りシンプルである。</p><pre><code class=language-go>for i := 0; i &lt; iter; i++ {
-    sem &lt;- struct{}{}
+type Scenario interface { Scan() bool Line() Line } type Actor interface { Act(Line) (Action, error) } type Action interface { String() string } あとは実装したScenarioとActorを生成する関数を指定して必要な回数実行。">
+<meta property="og:title" content="Go言語でシミュレーション用のシンプルなフレームワークStageをつくった">
+<meta property="og:url" content="https://blog.monochromegane.com/blog/2020/05/31/simulation-framework-stage/">
+<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+<link rel=stylesheet href=/css/reset.css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
+<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
+<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
+<link rel=stylesheet href=/css/text.css>
+<link rel=stylesheet href=/css/color.css>
+<link rel=stylesheet href=/css/layout.css>
+<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
+<link rel="shortcut icon" href=/images/favicon.ico>
+<link rel=canonical href=https://blog.monochromegane.com/blog/2020/05/31/simulation-framework-stage/>
+<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
+</head>
+<body>
+<div class=header>
+<header>
+<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
+<nav>
+<ul class=menu>
+<li><a href=/self-introduction/>Home</a></li>
+<li><a href=/post/>Archives</a></li>
+<li><a href=/diary/>Diary</a></li>
+<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
+</ul>
+</nav>
+</header>
+</div>
+<div class=container>
+<article>
+<div class=post>
+<header>
+<h1><a href=https://blog.monochromegane.com/blog/2020/05/31/simulation-framework-stage/>Go言語でシミュレーション用のシンプルなフレームワークStageをつくった</a></h1>
+<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2020-05-31</div></time>
+</header>
+<div class=post-inner>
+<p>時系列に対するコンピュータシミュレーションを開発する機会が増えてきたので、共通する処理の流れをフレームワーク化した。</p>
+<h2 id=コンピュータシミュレーション>コンピュータシミュレーション</h2>
+<p>状況に応じたクリック数の最大化や変化点検出のような、システムの適応的な振る舞いを検証するために、時系列に対するコンピュータシミュレーションを行うことがある。
+また、実環境で発生するランダムな誤差を表現する場合、乱数を用いたシミュレーション技法であるモンテカルロ法も利用することになる。</p>
+<p>このようなシミュレーションのプログラムでは、変化する時系列を入力に、振る舞いのシミュレーション結果を出力するだけではなく、乱数によって発生する誤差を均すためにシミュレーションを数百〜数千回繰り返す必要がある。</p>
+<h2 id=stage>Stage</h2>
+<p>Stageは、これらの一連の流れの実行とこれに伴う煩雑な処理（シミュレーションの並列化、乱数の管理、進捗の監視、ログ出力）を開発者から隠蔽する。
+開発者は、時系列や振る舞い、ログフォーマットをGo言語で記述するだけで良い。</p>
+<p>Stageで行っているメイン処理の「疑似コード」は以下の通りシンプルである。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#66d9ef>for</span> <span style=color:#a6e22e>i</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span>; <span style=color:#a6e22e>i</span> &lt; <span style=color:#a6e22e>iter</span>; <span style=color:#a6e22e>i</span><span style=color:#f92672>++</span> {
+    <span style=color:#a6e22e>sem</span> <span style=color:#f92672>&lt;-</span> <span style=color:#66d9ef>struct</span>{}{}
 
-    go func() {
-        scenario := NewScenarioFn(rnd.Int63())
-        actor := NewActorFn(rnd.Int63())
+    <span style=color:#66d9ef>go</span> <span style=color:#66d9ef>func</span>() {
+        <span style=color:#a6e22e>scenario</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>NewScenarioFn</span>(<span style=color:#a6e22e>rnd</span>.<span style=color:#a6e22e>Int63</span>())
+        <span style=color:#a6e22e>actor</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>NewActorFn</span>(<span style=color:#a6e22e>rnd</span>.<span style=color:#a6e22e>Int63</span>())
 
-        for scenario.Scan() {
-            action, _ := actor.Act(scenario.Line())
-            w.Write(action.String())
+        <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>scenario</span>.<span style=color:#a6e22e>Scan</span>() {
+            <span style=color:#a6e22e>action</span>, <span style=color:#a6e22e>_</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>actor</span>.<span style=color:#a6e22e>Act</span>(<span style=color:#a6e22e>scenario</span>.<span style=color:#a6e22e>Line</span>())
+            <span style=color:#a6e22e>w</span>.<span style=color:#a6e22e>Write</span>(<span style=color:#a6e22e>action</span>.<span style=color:#a6e22e>String</span>())
         }
-        &lt;-sem
+        <span style=color:#f92672>&lt;-</span><span style=color:#a6e22e>sem</span>
     }()
 }
-</code></pre><p>このフレームワークでは、メタファーとして劇場(Stage)を採用した。
+</code></pre></div><p>このフレームワークでは、メタファーとして劇場(Stage)を採用した。
 劇場は、劇を開催する。
 その劇は台本(Scenario)があり、演者(Actor)は台本の1行づつのセリフ(Line)に沿って演技を行い、結果(Action)を出力する、といった形だ。
-そして劇は何度も繰り返される。</p><p>開発者は、時系列や振る舞いをそれぞれ、ScenarioとActorのinterfaceを実装によって記述する。
-また、ログフォーマットもAction interfaceで指定するだけで良い。</p><pre><code class=language-go>type Scenario interface {
-	Scan() bool
-	Line() Line
+そして劇は何度も繰り返される。</p>
+<p>開発者は、時系列や振る舞いをそれぞれ、ScenarioとActorのinterfaceを実装によって記述する。
+また、ログフォーマットもAction interfaceで指定するだけで良い。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Scenario</span> <span style=color:#66d9ef>interface</span> {
+	<span style=color:#a6e22e>Scan</span>() <span style=color:#66d9ef>bool</span>
+	<span style=color:#a6e22e>Line</span>() <span style=color:#a6e22e>Line</span>
 }
 
-type Actor interface {
-	Act(Line) (Action, error)
+<span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Actor</span> <span style=color:#66d9ef>interface</span> {
+	<span style=color:#a6e22e>Act</span>(<span style=color:#a6e22e>Line</span>) (<span style=color:#a6e22e>Action</span>, <span style=color:#66d9ef>error</span>)
 }
 
-type Action interface {
-	String() string
+<span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Action</span> <span style=color:#66d9ef>interface</span> {
+	<span style=color:#a6e22e>String</span>() <span style=color:#66d9ef>string</span>
 }
-</code></pre><p>あとは実装したScenarioとActorを生成する関数を指定して必要な回数実行。</p><pre><code class=language-go>dir := &quot;log&quot;                    // Directory for output
-concurrency := runtime.NumCPU() // Number of concurrency for scenario
-seed := 1                       // Seed for random
-iter := 3                       // Number of iteration
-
-s := stage.New(dir, concurrency, seed)
-s.Run(iter, NewActorFn, NewScenarioFn, stage.NoOpeCallbackFn)
-</code></pre><p>結果は、指定したログディレクトに出力され、実行日時や利用した乱数シードも確認することができる。</p><pre><code class=language-sh>log
-└── 20200530184234-1 # Timestamp-Seed
-    ├── iter_00-a_7947919477105006377-s_5355116748216652230.log # Iteration log files
-    ├── iter_01-a_4846631296614585111-s_2007235010091403794.log #   with seed for actor(a)
-    └── iter_02-a_0610076349056253918-s_3540139325796113853.log #   and  seed for scenario(s)
-</code></pre><p>なお、出力後の解析、グラフ出力については、Stageでは取り扱わない。
-任意のフォーマットで出力できるのでお好みの言語やツールで操作して欲しい。</p><p>各インターフェースの具体的な実装方法については<a href=https://github.com/monochromegane/stage/blob/master/README.md>README</a>を参照のこと。</p><h2 id=複数のシナリオを持つシミュレーション例>複数のシナリオを持つシミュレーション例</h2><p>例えば、以下の青線のような変化の仕方が異なるシナリオを切り替えて、橙の線のような振る舞いの違いをシミュレーションすることができる。</p><table><thead><tr><th>Abrupt changes</th><th>Gradual changes</th></tr></thead><tbody><tr><td><img src=https://user-images.githubusercontent.com/1845486/83343338-f8bcbe00-a333-11ea-983b-81ba9a6f8b08.png alt=example_adwin_abrupt></td><td><img src=https://user-images.githubusercontent.com/1845486/83343344-10944200-a334-11ea-9364-b4d4cedcdff6.png alt=example_adwin_gradual></td></tr></tbody></table><ul><li><a href=https://github.com/monochromegane/stage/tree/master/_examples/adwin>複数シナリオの実装例</a></li></ul><h2 id=長時間かかるシミュレーション例>長時間かかるシミュレーション例</h2><p>また、シミュレーションに時間がかかる場合は、各シナリオの完了時に呼ばれるCallback関数を指定することで、進捗の監視もできる。
-お好みのProgress barライブラリを使えば進捗バーも表示できる。</p><pre><code class=language-sh>$ go run _examples/progress/main.go
-180 / 200 [----------------------------&gt;___] 90.00% 40 p/s
-</code></pre><ul><li><a href=https://github.com/monochromegane/stage/tree/master/_examples/progress>プログレスバーの実装例</a></li></ul><h1 id=まとめ>まとめ</h1><p>普段よりアルゴリズムの理解を深めるため手に馴染んだGo言語で実装を試みるので、必然的にシミュレーションもGoで書くことが多くなったことからGo言語での実装となった。
+</code></pre></div><p>あとは実装したScenarioとActorを生成する関数を指定して必要な回数実行。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#a6e22e>dir</span> <span style=color:#f92672>:=</span> <span style=color:#e6db74>&#34;log&#34;</span>                    <span style=color:#75715e>// Directory for output
+</span><span style=color:#75715e></span><span style=color:#a6e22e>concurrency</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>runtime</span>.<span style=color:#a6e22e>NumCPU</span>() <span style=color:#75715e>// Number of concurrency for scenario
+</span><span style=color:#75715e></span><span style=color:#a6e22e>seed</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>1</span>                       <span style=color:#75715e>// Seed for random
+</span><span style=color:#75715e></span><span style=color:#a6e22e>iter</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>3</span>                       <span style=color:#75715e>// Number of iteration
+</span><span style=color:#75715e></span>
+<span style=color:#a6e22e>s</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>stage</span>.<span style=color:#a6e22e>New</span>(<span style=color:#a6e22e>dir</span>, <span style=color:#a6e22e>concurrency</span>, <span style=color:#a6e22e>seed</span>)
+<span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>Run</span>(<span style=color:#a6e22e>iter</span>, <span style=color:#a6e22e>NewActorFn</span>, <span style=color:#a6e22e>NewScenarioFn</span>, <span style=color:#a6e22e>stage</span>.<span style=color:#a6e22e>NoOpeCallbackFn</span>)
+</code></pre></div><p>結果は、指定したログディレクトに出力され、実行日時や利用した乱数シードも確認することができる。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>log
+└── 20200530184234-1 <span style=color:#75715e># Timestamp-Seed</span>
+    ├── iter_00-a_7947919477105006377-s_5355116748216652230.log <span style=color:#75715e># Iteration log files</span>
+    ├── iter_01-a_4846631296614585111-s_2007235010091403794.log <span style=color:#75715e>#   with seed for actor(a)</span>
+    └── iter_02-a_0610076349056253918-s_3540139325796113853.log <span style=color:#75715e>#   and  seed for scenario(s)</span>
+</code></pre></div><p>なお、出力後の解析、グラフ出力については、Stageでは取り扱わない。
+任意のフォーマットで出力できるのでお好みの言語やツールで操作して欲しい。</p>
+<p>各インターフェースの具体的な実装方法については<a href=https://github.com/monochromegane/stage/blob/master/README.md>README</a>を参照のこと。</p>
+<h2 id=複数のシナリオを持つシミュレーション例>複数のシナリオを持つシミュレーション例</h2>
+<p>例えば、以下の青線のような変化の仕方が異なるシナリオを切り替えて、橙の線のような振る舞いの違いをシミュレーションすることができる。</p>
+<table>
+<thead>
+<tr>
+<th>Abrupt changes</th>
+<th>Gradual changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src=https://user-images.githubusercontent.com/1845486/83343338-f8bcbe00-a333-11ea-983b-81ba9a6f8b08.png alt=example_adwin_abrupt></td>
+<td><img src=https://user-images.githubusercontent.com/1845486/83343344-10944200-a334-11ea-9364-b4d4cedcdff6.png alt=example_adwin_gradual></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><a href=https://github.com/monochromegane/stage/tree/master/_examples/adwin>複数シナリオの実装例</a></li>
+</ul>
+<h2 id=長時間かかるシミュレーション例>長時間かかるシミュレーション例</h2>
+<p>また、シミュレーションに時間がかかる場合は、各シナリオの完了時に呼ばれるCallback関数を指定することで、進捗の監視もできる。
+お好みのProgress barライブラリを使えば進捗バーも表示できる。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ go run _examples/progress/main.go
+<span style=color:#ae81ff>180</span> / <span style=color:#ae81ff>200</span> <span style=color:#f92672>[</span>----------------------------&gt;___<span style=color:#f92672>]</span> 90.00% <span style=color:#ae81ff>40</span> p/s
+</code></pre></div><ul>
+<li><a href=https://github.com/monochromegane/stage/tree/master/_examples/progress>プログレスバーの実装例</a></li>
+</ul>
+<h1 id=まとめ>まとめ</h1>
+<p>普段よりアルゴリズムの理解を深めるため手に馴染んだGo言語で実装を試みるので、必然的にシミュレーションもGoで書くことが多くなったことからGo言語での実装となった。
 完全に自分用途でつくったフレームワークではあるが、各シミュレーションにおいてシナリオとアクターという要素のみを意識すればよくなり実装の効率が格段に上がりコードの見通しもよくなった。
 また、Go言語を使うことで並列化が容易に実装できシンプルなフレームワークでありながら十分に安定して高速化を達成できていると思う。
-付加的な利点として、ログ構成などが統一されたことで後段の解析やグラフ化のスクリプトも共通化が進んでおり、個人的に満足度が高いものができたと思う。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/golang>golang</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2020/05/31/simulation-framework-stage/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','twitter-wjs');</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-38374674-1','auto');ga('send','pageview');</script></body></html>
+付加的な利点として、ログ構成などが統一されたことで後段の解析やグラフ化のスクリプトも共通化が進んでおり、個人的に満足度が高いものができたと思う。</p>
+</div>
+<footer class=tag>
+<i class="fa fa-tags tag-icon"></i>
+<ul>
+<li><a class=tag-link href=/tags/golang>golang</a></li>
+</ul>
+<div class=clear></div>
+</footer>
+</div>
+</article>
+<div class=social-btn>
+<div>
+<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2020/05/31/simulation-framework-stage/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
+</div>
+<div>
+<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
+</div>
+</div>
+</div>
+<footer class=footer>
+<div class=author></div>
+<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
+<p>monochromegane (モノクロめがね) と申します。</p>
+<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+<ul class=social>
+<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
+<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
+<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
+</ul>
+<p class=copyright>
+<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
+</p>
+</footer>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
+<script>hljs.initHighlightingOnLoad()</script>
+<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
+</body>
+</html>

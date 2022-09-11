@@ -1,91 +1,224 @@
-<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>gonum/matパッケージを直感的に操作するMatrix Adapterをつくった &middot; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="gonum/matによる行列計算を幾分か直感的に扱える薄いラッパーを作りました。 具体的には、計算結果用に空の行列を予め用意するのではなく、計算結果を戻り値で受け取れるように統一します。
+<!doctype html><html>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width">
+<meta name=author content>
+<title>gonum/matパッケージを直感的に操作するMatrix Adapterをつくった &#183; THINKING MEGANE</title>
+<meta name=twitter:card content="summary">
+<meta name=twitter:site content="@monochromegane">
+<meta property="og:description" content="gonum/matによる行列計算を幾分か直感的に扱える薄いラッパーを作りました。 具体的には、計算結果用に空の行列を予め用意するのではなく、計算結果を戻り値で受け取れるように統一します。
  Matrix Adapter: Small adapter which provides method signatures that allow intuitive operation with fewer lines of code for gonum/mat.  背景と課題感 GonumプロジェクトのmatパッケージはGo言語での行列計算ライブラリを提供してくれています。 こういった正確さと速度の求められる数値計算の処理には、（趣味は別として）自作ではなく、多くの人に使われ実績のあるライブラリを採用したいことから、このパッケージを利用しています。
 非常に便利に使わせていただいている一方で、自分の場合、スムーズに書けないことがありました。 理由としては、計算結果の受け取り方法に対する一貫性の崩れがあるだろうと考えています。
 matパッケージでは、予め空の行列を用意し、これをレシーバーとして計算対象となる行列を引数で渡します。
-var c mat.Dense c.Product(a, b)  元の行列が維持されるこの設計は非常にありがたいです。 しかしながら、一部の関数（例えば Dense.T）は結果が戻り値として得られます。
-ct := c.T()  この一貫性の崩れは不変と可変の混在にあるのではないかと考えています。 gonum/matパッケージでは、引数で渡す行列は計算操作に対して不変とされています。 これは、関数のパラメータの方が、mat.Matrixインターフェースであることからも読み取れます。 実際、このインターフェースには、Dims(), At()といった参照系かレシーバーを壊さないT()のみが用意されています。
+var c mat.Dense c.Product(a, b) 元の行列が維持されるこの設計は非常にありがたいです。 しかしながら、一部の関数（例えば Dense.T）は結果が戻り値として得られます。
+ct := c.T() この一貫性の崩れは不変と可変の混在にあるのではないかと考えています。 gonum/matパッケージでは、引数で渡す行列は計算操作に対して不変とされています。 これは、関数のパラメータの方が、mat.Matrixインターフェースであることからも読み取れます。 実際、このインターフェースには、Dims(), At()といった参照系かレシーバーを壊さないT()のみが用意されています。
 一方で、このインターフェースを実装したmat.Denseなどは自身をレシーバーとして内容を変更する操作を認めています。 この差異により、mat.Matrixインターフェースのシグネチャの一つであるT()は戻り値を返すが、Denseの関数ではレシーバーを変更するという振る舞いの違いがあるのではないかと思われました。
 gonum/matパッケージではほとんどの関数が空の行列を予め用意する方式に従っているため、慣れれば問題ない程度ではありますが、久しぶりに使う場合など、多少まごつくことが何度かありました。 個人的に、Go言語で何か書くときは迷わず書きたいという欲求があり、迷わないため一貫性のあるラッパーを作ることとしました。
 Matrix Adapter 今回は、計算結果を戻り値で受け取れるように統一します。 これにより、利用側からはDenseらも不変であるかのように扱え、一貫性という側面から認知負荷が減ると考えるためです。
 Matrix Adapterを適用した場合、先ほどの例は以下のようになります。 cがレシーバーではなく、先ほどは引数となっていたaがレシーバーとなっていることに注意してください。 cは戻り値として受け取ることになりました。
-c := a.Product(b)  実装と使い方 Adapterの実装は単純明快で、元の構造体を埋め込み（embedding）し、結果を戻り値で返すように関数のシグネチャを変更しました。 変更が不要なものは移譲されます。 いわゆるGoFのデザインパターンにおけるAdapterパターンというやつです。
-type Dense struct { *mat."><meta property="og:title" content="gonum/matパッケージを直感的に操作するMatrix Adapterをつくった"><meta property="og:url" content="https://blog.monochromegane.com/blog/2022/07/02/matrix-adapter/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css><link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2022/07/02/matrix-adapter/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:true},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:true}}});</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2022/07/02/matrix-adapter/>gonum/matパッケージを直感的に操作するMatrix Adapterをつくった</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2022-07-02</div></time></header><div class=post-inner><p>gonum/matによる行列計算を幾分か直感的に扱える薄いラッパーを作りました。
-具体的には、計算結果用に空の行列を予め用意するのではなく、計算結果を戻り値で受け取れるように統一します。</p><ul><li><a href=https://github.com/monochromegane/mat>Matrix Adapter</a>: Small adapter which provides method signatures that allow intuitive operation with fewer lines of code for gonum/mat.</li></ul><h1 id=背景と課題感>背景と課題感</h1><p><a href=https://github.com/gonum/gonum/tree/master/mat>Gonumプロジェクトのmatパッケージ</a>はGo言語での行列計算ライブラリを提供してくれています。
-こういった正確さと速度の求められる数値計算の処理には、（趣味は別として）自作ではなく、多くの人に使われ実績のあるライブラリを採用したいことから、このパッケージを利用しています。</p><p>非常に便利に使わせていただいている一方で、自分の場合、スムーズに書けないことがありました。
-理由としては、計算結果の受け取り方法に対する一貫性の崩れがあるだろうと考えています。</p><p>matパッケージでは、予め空の行列を用意し、これをレシーバーとして計算対象となる行列を引数で渡します。</p><pre><code class=language-go>var c mat.Dense
-c.Product(a, b)
-</code></pre><p>元の行列が維持されるこの設計は非常にありがたいです。
-しかしながら、一部の関数（例えば <code>Dense.T</code>）は結果が戻り値として得られます。</p><pre><code class=language-go>ct := c.T()
-</code></pre><p>この一貫性の崩れは不変と可変の混在にあるのではないかと考えています。
+c := a.Product(b) 実装と使い方 Adapterの実装は単純明快で、元の構造体を埋め込み（embedding）し、結果を戻り値で返すように関数のシグネチャを変更しました。 変更が不要なものは移譲されます。 いわゆるGoFのデザインパターンにおけるAdapterパターンというやつです。
+type Dense struct { *mat.Dense } func (m *Dense) Add(b mat.">
+<meta property="og:title" content="gonum/matパッケージを直感的に操作するMatrix Adapterをつくった">
+<meta property="og:url" content="https://blog.monochromegane.com/blog/2022/07/02/matrix-adapter/">
+<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
+<link rel=stylesheet href=/css/reset.css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
+<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
+<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
+<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
+<link rel=stylesheet href=/css/text.css>
+<link rel=stylesheet href=/css/color.css>
+<link rel=stylesheet href=/css/layout.css>
+<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
+<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
+<link rel="shortcut icon" href=/images/favicon.ico>
+<link rel=canonical href=https://blog.monochromegane.com/blog/2022/07/02/matrix-adapter/>
+<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
+</head>
+<body>
+<div class=header>
+<header>
+<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
+<nav>
+<ul class=menu>
+<li><a href=/self-introduction/>Home</a></li>
+<li><a href=/post/>Archives</a></li>
+<li><a href=/diary/>Diary</a></li>
+<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
+</ul>
+</nav>
+</header>
+</div>
+<div class=container>
+<article>
+<div class=post>
+<header>
+<h1><a href=https://blog.monochromegane.com/blog/2022/07/02/matrix-adapter/>gonum/matパッケージを直感的に操作するMatrix Adapterをつくった</a></h1>
+<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2022-07-02</div></time>
+</header>
+<div class=post-inner>
+<p>gonum/matによる行列計算を幾分か直感的に扱える薄いラッパーを作りました。
+具体的には、計算結果用に空の行列を予め用意するのではなく、計算結果を戻り値で受け取れるように統一します。</p>
+<ul>
+<li><a href=https://github.com/monochromegane/mat>Matrix Adapter</a>: Small adapter which provides method signatures that allow intuitive operation with fewer lines of code for gonum/mat.</li>
+</ul>
+<h1 id=背景と課題感>背景と課題感</h1>
+<p><a href=https://github.com/gonum/gonum/tree/master/mat>Gonumプロジェクトのmatパッケージ</a>はGo言語での行列計算ライブラリを提供してくれています。
+こういった正確さと速度の求められる数値計算の処理には、（趣味は別として）自作ではなく、多くの人に使われ実績のあるライブラリを採用したいことから、このパッケージを利用しています。</p>
+<p>非常に便利に使わせていただいている一方で、自分の場合、スムーズに書けないことがありました。
+理由としては、計算結果の受け取り方法に対する一貫性の崩れがあるだろうと考えています。</p>
+<p>matパッケージでは、予め空の行列を用意し、これをレシーバーとして計算対象となる行列を引数で渡します。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>c</span> <span style=color:#a6e22e>mat</span>.<span style=color:#a6e22e>Dense</span>
+<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>Product</span>(<span style=color:#a6e22e>a</span>, <span style=color:#a6e22e>b</span>)
+</code></pre></div><p>元の行列が維持されるこの設計は非常にありがたいです。
+しかしながら、一部の関数（例えば <code>Dense.T</code>）は結果が戻り値として得られます。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#a6e22e>ct</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>T</span>()
+</code></pre></div><p>この一貫性の崩れは不変と可変の混在にあるのではないかと考えています。
 gonum/matパッケージでは、<a href=https://pkg.go.dev/gonum.org/v1/gonum/mat#hdr-Invariants>引数で渡す行列は計算操作に対して不変</a>とされています。
 これは、関数のパラメータの方が、<code>mat.Matrix</code>インターフェースであることからも読み取れます。
-実際、このインターフェースには、<code>Dims()</code>, <code>At()</code>といった参照系かレシーバーを壊さない<code>T()</code>のみが用意されています。</p><p>一方で、このインターフェースを実装した<code>mat.Dense</code>などは自身をレシーバーとして内容を変更する操作を認めています。
-この差異により、mat.Matrixインターフェースのシグネチャの一つである<code>T()</code>は戻り値を返すが、Denseの関数ではレシーバーを変更するという振る舞いの違いがあるのではないかと思われました。</p><p>gonum/matパッケージではほとんどの関数が空の行列を予め用意する方式に従っているため、慣れれば問題ない程度ではありますが、久しぶりに使う場合など、多少まごつくことが何度かありました。
-個人的に、Go言語で何か書くときは迷わず書きたいという欲求があり、迷わないため一貫性のあるラッパーを作ることとしました。</p><h1 id=matrix-adapter>Matrix Adapter</h1><p>今回は、計算結果を戻り値で受け取れるように統一します。
-これにより、利用側からはDenseらも不変であるかのように扱え、一貫性という側面から認知負荷が減ると考えるためです。</p><p>Matrix Adapterを適用した場合、先ほどの例は以下のようになります。
+実際、このインターフェースには、<code>Dims()</code>, <code>At()</code>といった参照系かレシーバーを壊さない<code>T()</code>のみが用意されています。</p>
+<p>一方で、このインターフェースを実装した<code>mat.Dense</code>などは自身をレシーバーとして内容を変更する操作を認めています。
+この差異により、mat.Matrixインターフェースのシグネチャの一つである<code>T()</code>は戻り値を返すが、Denseの関数ではレシーバーを変更するという振る舞いの違いがあるのではないかと思われました。</p>
+<p>gonum/matパッケージではほとんどの関数が空の行列を予め用意する方式に従っているため、慣れれば問題ない程度ではありますが、久しぶりに使う場合など、多少まごつくことが何度かありました。
+個人的に、Go言語で何か書くときは迷わず書きたいという欲求があり、迷わないため一貫性のあるラッパーを作ることとしました。</p>
+<h1 id=matrix-adapter>Matrix Adapter</h1>
+<p>今回は、計算結果を戻り値で受け取れるように統一します。
+これにより、利用側からはDenseらも不変であるかのように扱え、一貫性という側面から認知負荷が減ると考えるためです。</p>
+<p>Matrix Adapterを適用した場合、先ほどの例は以下のようになります。
 <code>c</code>がレシーバーではなく、先ほどは引数となっていた<code>a</code>がレシーバーとなっていることに注意してください。
-<code>c</code>は戻り値として受け取ることになりました。</p><pre><code class=language-go>c := a.Product(b)
-</code></pre><h2 id=実装と使い方>実装と使い方</h2><p>Adapterの実装は単純明快で、元の構造体を埋め込み（embedding）し、結果を戻り値で返すように関数のシグネチャを変更しました。
+<code>c</code>は戻り値として受け取ることになりました。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#a6e22e>c</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>a</span>.<span style=color:#a6e22e>Product</span>(<span style=color:#a6e22e>b</span>)
+</code></pre></div><h2 id=実装と使い方>実装と使い方</h2>
+<p>Adapterの実装は単純明快で、元の構造体を埋め込み（embedding）し、結果を戻り値で返すように関数のシグネチャを変更しました。
 変更が不要なものは移譲されます。
-いわゆるGoFのデザインパターンにおけるAdapterパターンというやつです。</p><pre><code class=language-go>type Dense struct {
-	*mat.Dense
+いわゆるGoFのデザインパターンにおけるAdapterパターンというやつです。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Dense</span> <span style=color:#66d9ef>struct</span> {
+	<span style=color:#f92672>*</span><span style=color:#a6e22e>mat</span>.<span style=color:#a6e22e>Dense</span>
 }
 
-func (m *Dense) Add(b mat.Matrix) *Dense {
-	var dense mat.Dense
-	dense.Add(m.Dense, b)
-	return &amp;Dense{&amp;dense}
+<span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>m</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Dense</span>) <span style=color:#a6e22e>Add</span>(<span style=color:#a6e22e>b</span> <span style=color:#a6e22e>mat</span>.<span style=color:#a6e22e>Matrix</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>Dense</span> {
+	<span style=color:#66d9ef>var</span> <span style=color:#a6e22e>dense</span> <span style=color:#a6e22e>mat</span>.<span style=color:#a6e22e>Dense</span>
+	<span style=color:#a6e22e>dense</span>.<span style=color:#a6e22e>Add</span>(<span style=color:#a6e22e>m</span>.<span style=color:#a6e22e>Dense</span>, <span style=color:#a6e22e>b</span>)
+	<span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>Dense</span>{<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>dense</span>}
 }
-</code></pre><p>現状、DenseとVecDenseに対するAdapterを提供しています。
-既存と同名の<code>NewDense()</code>と<code>NewVecDense()</code>を使って、ラップされたDenseやVecDenseを作成できます。</p><pre><code class=language-go>package main
+</code></pre></div><p>現状、DenseとVecDenseに対するAdapterを提供しています。
+既存と同名の<code>NewDense()</code>と<code>NewVecDense()</code>を使って、ラップされたDenseやVecDenseを作成できます。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>
 
-import (
-	&quot;fmt&quot;
+<span style=color:#f92672>import</span> (
+	<span style=color:#e6db74>&#34;fmt&#34;</span>
 
-	&quot;github.com/monochromegane/mat/adapter&quot;
+	<span style=color:#e6db74>&#34;github.com/monochromegane/mat/adapter&#34;</span>
 )
 
-func main() {
-	m := adapter.NewDense(2, 2, []float64{1.0, 2.0, 3.0, 4.0})
-	fmt.Printf(&quot;%v\n&quot;, m)
-	// ⎡1  2⎤
-	// ⎣3  4⎦
-}
-</code></pre><p>ちなみに、提供されるDenseとVecDenseは<code>fmt.Stringer</code>インターフェースを実装し、行列の内容を整形して出力するようにしています。</p><p>ここで、少し実践的な例として、リッジ回帰によるパラメータ推定（$\hat{\theta} = (X^{\top}X + \lambda I)^{-1} X^{\top}Y$）を実装し、比較してみます。</p><h3 id=matrix-adapterでの実装>Matrix Adapterでの実装</h3><pre><code class=language-go>	X, Y := syntheticData(N, theta) // Return adapter.Dense
+<span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+	<span style=color:#a6e22e>m</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>adapter</span>.<span style=color:#a6e22e>NewDense</span>(<span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>2</span>, []<span style=color:#66d9ef>float64</span>{<span style=color:#ae81ff>1.0</span>, <span style=color:#ae81ff>2.0</span>, <span style=color:#ae81ff>3.0</span>, <span style=color:#ae81ff>4.0</span>})
+	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;%v\n&#34;</span>, <span style=color:#a6e22e>m</span>)
+	<span style=color:#75715e>// ⎡1  2⎤
+</span><span style=color:#75715e></span>	<span style=color:#75715e>// ⎣3  4⎦
+</span><span style=color:#75715e></span>}
+</code></pre></div><p>ちなみに、提供されるDenseとVecDenseは<code>fmt.Stringer</code>インターフェースを実装し、行列の内容を整形して出力するようにしています。</p>
+<p>ここで、少し実践的な例として、リッジ回帰によるパラメータ推定（$\hat{\theta} = (X^{\top}X + \lambda I)^{-1} X^{\top}Y$）を実装し、比較してみます。</p>
+<h3 id=matrix-adapterでの実装>Matrix Adapterでの実装</h3>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go>	<span style=color:#a6e22e>X</span>, <span style=color:#a6e22e>Y</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>syntheticData</span>(<span style=color:#a6e22e>N</span>, <span style=color:#a6e22e>theta</span>) <span style=color:#75715e>// Return adapter.Dense
+</span><span style=color:#75715e></span>
+	<span style=color:#a6e22e>I</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>mat</span>.<span style=color:#a6e22e>NewDiagDense</span>(<span style=color:#ae81ff>3</span>, []<span style=color:#66d9ef>float64</span>{<span style=color:#ae81ff>1.0</span>, <span style=color:#ae81ff>1.0</span>, <span style=color:#ae81ff>1.0</span>})
+	<span style=color:#a6e22e>reg</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>DenseCopyOf</span>(<span style=color:#a6e22e>I</span>).<span style=color:#a6e22e>Scale</span>(<span style=color:#a6e22e>lambda</span>)
 
-	I := mat.NewDiagDense(3, []float64{1.0, 1.0, 1.0})
-	reg := DenseCopyOf(I).Scale(lambda)
+	<span style=color:#a6e22e>XTXinv</span>, <span style=color:#a6e22e>_</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>X</span>.<span style=color:#a6e22e>Transpose</span>().<span style=color:#a6e22e>Product</span>(<span style=color:#a6e22e>X</span>).<span style=color:#a6e22e>Add</span>(<span style=color:#a6e22e>reg</span>).<span style=color:#a6e22e>Inverse</span>()
+	<span style=color:#a6e22e>XTY</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>X</span>.<span style=color:#a6e22e>Transpose</span>().<span style=color:#a6e22e>Product</span>(<span style=color:#a6e22e>Y</span>)
 
-	XTXinv, _ := X.Transpose().Product(X).Add(reg).Inverse()
-	XTY := X.Transpose().Product(Y)
+	<span style=color:#a6e22e>estimated</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>XTXinv</span>.<span style=color:#a6e22e>Product</span>(<span style=color:#a6e22e>XTY</span>)
+</code></pre></div><h3 id=gonummatでの実装>gonum/matでの実装</h3>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go>	<span style=color:#a6e22e>X</span>, <span style=color:#a6e22e>Y</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>syntheticData</span>(<span style=color:#a6e22e>N</span>, <span style=color:#a6e22e>theta</span>) <span style=color:#75715e>// Return adapter.Dense
+</span><span style=color:#75715e></span>
+	<span style=color:#a6e22e>XTXinv</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>mat</span>.<span style=color:#a6e22e>NewDense</span>(<span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>3</span>, <span style=color:#66d9ef>nil</span>)
+	<span style=color:#a6e22e>XTXinv</span>.<span style=color:#a6e22e>Product</span>(<span style=color:#a6e22e>X</span>.<span style=color:#a6e22e>T</span>(), <span style=color:#a6e22e>X</span>)
 
-	estimated := XTXinv.Product(XTY)
-</code></pre><h3 id=gonum-matでの実装>gonum/matでの実装</h3><pre><code class=language-go>	X, Y := syntheticData(N, theta) // Return adapter.Dense
+	<span style=color:#a6e22e>I</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>mat</span>.<span style=color:#a6e22e>NewDiagDense</span>(<span style=color:#ae81ff>3</span>, []<span style=color:#66d9ef>float64</span>{<span style=color:#ae81ff>1.0</span>, <span style=color:#ae81ff>1.0</span>, <span style=color:#ae81ff>1.0</span>})
+	<span style=color:#a6e22e>reg</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>mat</span>.<span style=color:#a6e22e>DenseCopyOf</span>(<span style=color:#a6e22e>I</span>)
+	<span style=color:#a6e22e>reg</span>.<span style=color:#a6e22e>Scale</span>(<span style=color:#a6e22e>lambda</span>, <span style=color:#a6e22e>reg</span>)
 
-	XTXinv := mat.NewDense(3, 3, nil)
-	XTXinv.Product(X.T(), X)
+	<span style=color:#a6e22e>XTXinv</span>.<span style=color:#a6e22e>Add</span>(<span style=color:#a6e22e>XTXinv</span>, <span style=color:#a6e22e>reg</span>)
+	<span style=color:#a6e22e>XTXinv</span>.<span style=color:#a6e22e>Inverse</span>(<span style=color:#a6e22e>XTXinv</span>)
 
-	I := mat.NewDiagDense(3, []float64{1.0, 1.0, 1.0})
-	reg := mat.DenseCopyOf(I)
-	reg.Scale(lambda, reg)
+	<span style=color:#a6e22e>XTY</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>mat</span>.<span style=color:#a6e22e>NewDense</span>(<span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>1</span>, <span style=color:#66d9ef>nil</span>)
+	<span style=color:#a6e22e>XTY</span>.<span style=color:#a6e22e>Product</span>(<span style=color:#a6e22e>X</span>.<span style=color:#a6e22e>T</span>(), <span style=color:#a6e22e>Y</span>)
 
-	XTXinv.Add(XTXinv, reg)
-	XTXinv.Inverse(XTXinv)
-
-	XTY := mat.NewDense(3, 1, nil)
-	XTY.Product(X.T(), Y)
-
-	estimated := mat.NewDense(3, 1, nil)
-	estimated.Product(XTXinv, XTY)
-</code></pre><p>この例では、gonum/matでの実装に比べてMatrix Adapterでの実装が、結果用の<code>Dense</code>の準備が省略できたこと、各関数で受け取る引数が減ったことなどから、幾分か簡潔に記述できているかと思います。</p><p>なお、Adapterでの実装では、Method Chainによる行数の短縮も見てとれます。
+	<span style=color:#a6e22e>estimated</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>mat</span>.<span style=color:#a6e22e>NewDense</span>(<span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>1</span>, <span style=color:#66d9ef>nil</span>)
+	<span style=color:#a6e22e>estimated</span>.<span style=color:#a6e22e>Product</span>(<span style=color:#a6e22e>XTXinv</span>, <span style=color:#a6e22e>XTY</span>)
+</code></pre></div><p>この例では、gonum/matでの実装に比べてMatrix Adapterでの実装が、結果用の<code>Dense</code>の準備が省略できたこと、各関数で受け取る引数が減ったことなどから、幾分か簡潔に記述できているかと思います。</p>
+<p>なお、Adapterでの実装では、Method Chainによる行数の短縮も見てとれます。
 これについては、戻り値を返す実装としたことで副次的に得られた、本Adapterの特徴です。
 Go言語におけるMethod Chainは、errorを含む多値の戻り値との相性から、積極的に採用されていないと認識しています。
 ただ、今回は元のパッケージが各計算においてerrorを返さないものが多く、多値にならない関数が多くできたため、結果としてMethod Chainがつながる場合ができています（<code>Inverse()</code>などerrorを返すものもあるため全部は繋げません）。
-この辺りのエラー処理については、一考の価値があると思いますが、現時点で本Adapterの対象外（従来パッケージを踏襲）としています。</p><h2 id=相互運用性>相互運用性</h2><p>Adapterの提供する関数でも、引数は<code>mat.Matrix</code>（や<code>mat.Vector</code>）を使うため、既存のラップしていないものを入力として受け取れます。
+この辺りのエラー処理については、一考の価値があると思いますが、現時点で本Adapterの対象外（従来パッケージを踏襲）としています。</p>
+<h2 id=相互運用性>相互運用性</h2>
+<p>Adapterの提供する関数でも、引数は<code>mat.Matrix</code>（や<code>mat.Vector</code>）を使うため、既存のラップしていないものを入力として受け取れます。
 また、これらのAdapterは、<code>mat.Dense</code>（や<code>mat.VecDense</code>）構造体を埋め込んでいるため、<code>mat.Matrix</code>（や<code>mat.Vector</code>）の実装を満たします。
-よって、ラップされた<code>adapter.Dense</code>（や<code>adapter.VecDense</code>）を既存の関数の入力として渡すことができます。</p><p>また、<code>T()</code>は<code>mat.Matrix</code>として維持しなければならない関数であることから、同等の<code>Transpose()</code>を提供しています。
-これにより、転置行列がレシーバーとなるような呼び出しであっても、<code>adapter.Dense</code>として振る舞うことができるようになり、Matrix Adapterとの親和性が向上します。</p><pre><code class=language-go>// X.T().Product(Y) is invalid due to mat.Matrix has no method Product.
-XTY := X.Transpose().Product(Y) // Valid
-</code></pre><h1 id=まとめ>まとめ</h1><p>本エントリでは、gonum/matパッケージを直感的に操作するための<a href=https://github.com/monochromegane/mat>Matrix Adapter</a>を紹介しました。
-本Adapterの作成とエントリ執筆において、「直感的でない」と主観的に感じる理由について、不変と可変の混在に起因するものではないかなと言語化できたのがよかったかなあと思います。</p><p>自分の利用範囲だと、DenseとVecDenseで事足りる場合が多いのですが、必要に応じて対象を増やしていこうかと思います。</p><h1 id=参考>参考</h1><ul><li><a href=https://po3rin.com/blog/gonum>Go + Gonum を使った行列計算まとめ</a><ul><li>関数の直感性を上げるための独自関数や、行列のフォーマットなどを参考にさせていただきました。</li></ul></li><li><a href=https://github.com/gorgonia/tensor>gorgonia/tensor</a><ul><li>gonum/matではないGo言語の行列計算パッケージ。戻り値で結果を受け取れたりerrorも返すので本Adapterの目指すところに近いとは思います。速度含めて検証が必要なのもあり、今回は慣れて使っている方が多いであろうgonum/matをラップする方式を採用しました。</li></ul></li></ul></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/golang>golang</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2022/07/02/matrix-adapter/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','twitter-wjs');</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad();</script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-38374674-1','auto');ga('send','pageview');</script></body></html>
+よって、ラップされた<code>adapter.Dense</code>（や<code>adapter.VecDense</code>）を既存の関数の入力として渡すことができます。</p>
+<p>また、<code>T()</code>は<code>mat.Matrix</code>として維持しなければならない関数であることから、同等の<code>Transpose()</code>を提供しています。
+これにより、転置行列がレシーバーとなるような呼び出しであっても、<code>adapter.Dense</code>として振る舞うことができるようになり、Matrix Adapterとの親和性が向上します。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#75715e>// X.T().Product(Y) is invalid due to mat.Matrix has no method Product.
+</span><span style=color:#75715e></span><span style=color:#a6e22e>XTY</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>X</span>.<span style=color:#a6e22e>Transpose</span>().<span style=color:#a6e22e>Product</span>(<span style=color:#a6e22e>Y</span>) <span style=color:#75715e>// Valid
+</span></code></pre></div><h1 id=まとめ>まとめ</h1>
+<p>本エントリでは、gonum/matパッケージを直感的に操作するための<a href=https://github.com/monochromegane/mat>Matrix Adapter</a>を紹介しました。
+本Adapterの作成とエントリ執筆において、「直感的でない」と主観的に感じる理由について、不変と可変の混在に起因するものではないかなと言語化できたのがよかったかなあと思います。</p>
+<p>自分の利用範囲だと、DenseとVecDenseで事足りる場合が多いのですが、必要に応じて対象を増やしていこうかと思います。</p>
+<h1 id=参考>参考</h1>
+<ul>
+<li><a href=https://po3rin.com/blog/gonum>Go + Gonum を使った行列計算まとめ</a>
+<ul>
+<li>関数の直感性を上げるための独自関数や、行列のフォーマットなどを参考にさせていただきました。</li>
+</ul>
+</li>
+<li><a href=https://github.com/gorgonia/tensor>gorgonia/tensor</a>
+<ul>
+<li>gonum/matではないGo言語の行列計算パッケージ。戻り値で結果を受け取れたりerrorも返すので本Adapterの目指すところに近いとは思います。速度含めて検証が必要なのもあり、今回は慣れて使っている方が多いであろうgonum/matをラップする方式を採用しました。</li>
+</ul>
+</li>
+</ul>
+</div>
+<footer class=tag>
+<i class="fa fa-tags tag-icon"></i>
+<ul>
+<li><a class=tag-link href=/tags/golang>golang</a></li>
+</ul>
+<div class=clear></div>
+</footer>
+</div>
+</article>
+<div class=social-btn>
+<div>
+<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2022/07/02/matrix-adapter/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
+</div>
+<div>
+<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
+</div>
+</div>
+</div>
+<footer class=footer>
+<div class=author></div>
+<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
+<p>monochromegane (モノクロめがね) と申します。</p>
+<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
+<ul class=social>
+<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
+<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
+<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
+</ul>
+<p class=copyright>
+<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
+</p>
+</footer>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
+<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
+<script>hljs.initHighlightingOnLoad()</script>
+<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
+</body>
+</html>
