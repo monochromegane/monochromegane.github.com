@@ -1,4 +1,263 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>書評 on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/%E6%9B%B8%E8%A9%95/</link><description>Recent content in 書評 on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 11 Sep 2016 13:32:45 +0900</lastBuildDate><atom:link href="/tags/%E6%9B%B8%E8%A9%95/" rel="self" type="application/rss+xml"/><item><title>gonum/matパッケージを直感的に操作するMatrix Adapterをつくった</title><link>https://blog.monochromegane.com/blog/2022/07/02/matrix-adapter/</link><pubDate>Sat, 02 Jul 2022 11:59:22 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2022/07/02/matrix-adapter/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>書評 on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/%E6%9B%B8%E8%A9%95/</link><description>Recent content in 書評 on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 11 Sep 2016 13:32:45 +0900</lastBuildDate><atom:link href="/tags/%E6%9B%B8%E8%A9%95/" rel="self" type="application/rss+xml"/><item><title>カーネルリッジ回帰 入門</title><link>https://blog.monochromegane.com/blog/2022/09/11/kernel-ridge-regression/</link><pubDate>Sun, 11 Sep 2022 12:00:00 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2022/09/11/kernel-ridge-regression/</guid><description>
+&lt;p&gt;基底関数を用いた線形回帰モデルのように入力に非線形な変換を施してモデルの表現力の向上を図る手法では、以下の2つの問題が発生する。
+1. 特徴ベクトルの次元数の増加に伴う計算量の増加
+1. 予測に有用な基底関数の選定&lt;/p&gt;
+&lt;p&gt;カーネルリッジ回帰は、カーネル関数を用いて上記の課題を解決する。
+このエントリは、このカーネルリッジ回帰を最初に学んだ際の内容を自分なりにまとめたものである。&lt;/p&gt;
+&lt;p&gt;以下では、はじめに、記法の整理を兼ねて基本的な線形回帰モデルを説明する。
+次に、カーネル法を用いた線形回帰であるカーネルリッジ回帰の説明を通して上記の課題の解決アプローチを学ぶ。
+最後に、カーネル法における計算量の課題を解決するためのアプローチである、Random Fourier Featuresも紹介する。&lt;/p&gt;
+&lt;h2 id=&#34;1-線形回帰モデル&#34;&gt;1. 線形回帰モデル&lt;/h2&gt;
+&lt;p&gt;線形回帰モデルの問題設定と解法について述べる。
+いま、$N$個の入力$X=(\boldsymbol{x}_1,\ldots,\boldsymbol{x}_N)^{\top} \in \mathbb{R}^{N \times D}$と出力$\boldsymbol{y}=(y_1,\ldots,y_N)^{\top} \in \mathbb{R}^{N}$が与えられている。
+このとき、$y$は$\boldsymbol{x}$を入力とした線形回帰モデル$\hat{y} = \boldsymbol{w}^{\top}\boldsymbol{\phi}(\boldsymbol{x})$の出力として得られると仮定する。
+ここで、$\boldsymbol{\phi}(\boldsymbol{x}) = (\phi_1(\boldsymbol{x}),\ldots,\phi_F(\boldsymbol{x}))^{\top} \in \mathbb{R}^{F}$は$F$個の基底関数$\phi: \mathbb{R}^{D} \rightarrow \mathbb{R}$からなる特徴ベクトル、$\boldsymbol{w} \in \mathbb{R}^{F}$はこれに対応する係数ベクトルである。
+このとき、この係数ベクトル$\boldsymbol{w}$を推定することが本問題の目標である。&lt;/p&gt;
+&lt;p&gt;推定には最小二乗法を用いる。
+なお、実用上は汎化性能の考慮から正則化を施すことが多いと思われるので、これを適用した&lt;strong&gt;リッジ回帰&lt;/strong&gt;を行う。
+すなわち、$\Phi = (\boldsymbol{\phi}(\boldsymbol{x}_1),\ldots,\boldsymbol{\phi}(\boldsymbol{x}_N))^{\top} \in \mathbb{R}^{N \times F}$としたとき、学習データに対する誤差の二乗和（に正則化項を加えたもの）$E(\boldsymbol{w}) = \| \Phi \boldsymbol{w} - \boldsymbol{y} \|^2 + \lambda \| \boldsymbol{w} \|^2$を最小化する$\boldsymbol{w}$を求める。&lt;/p&gt;
+&lt;p&gt;このために、まず$E(\boldsymbol{w})$を次のように整理する。&lt;/p&gt;
+&lt;p&gt;\begin{align}
+\begin{split}
+E(\boldsymbol{w}) &amp;amp;= (\Phi \boldsymbol{w} - \boldsymbol{y})^{\top}(\Phi \boldsymbol{w} - \boldsymbol{y}) + \lambda\boldsymbol{w}^{\top}\boldsymbol{w} \&lt;br /&gt;
+&amp;amp;= ((\Phi \boldsymbol{w})^{\top} - \boldsymbol{y}^{\top})(\Phi \boldsymbol{w} - \boldsymbol{y}) + \lambda\boldsymbol{w}^{\top}\boldsymbol{w}\&lt;br /&gt;
+&amp;amp;= ( \boldsymbol{w}^{\top}\Phi^{\top} - \boldsymbol{y}^{\top})(\Phi \boldsymbol{w} - \boldsymbol{y}) + \lambda\boldsymbol{w}^{\top}\boldsymbol{w}\&lt;br /&gt;
+&amp;amp;= \boldsymbol{w}^{\top}\Phi^{\top}\Phi\boldsymbol{w} - \boldsymbol{w}^{\top}\Phi^{\top}\boldsymbol{y} - \boldsymbol{y}^{\top}\Phi\boldsymbol{w} + \boldsymbol{y}^{\top}\boldsymbol{y} + \lambda\boldsymbol{w}^{\top}\boldsymbol{w}\&lt;br /&gt;
+&amp;amp;= \boldsymbol{w}^{\top}\Phi^{\top}\Phi\boldsymbol{w} - \boldsymbol{w}^{\top}\Phi^{\top}\boldsymbol{y} - \boldsymbol{w}^{\top}\Phi^{\top}\boldsymbol{y} + \boldsymbol{y}^{\top}\boldsymbol{y} + \lambda\boldsymbol{w}^{\top}\boldsymbol{w}\&lt;br /&gt;
+&amp;amp;= \boldsymbol{w}^{\top}\Phi^{\top}\Phi\boldsymbol{w} - 2\boldsymbol{w}^{\top}\Phi^{\top}\boldsymbol{y} + \boldsymbol{y}^{\top}\boldsymbol{y} + \lambda\boldsymbol{w}^{\top}\boldsymbol{w}.
+\label{eq:ew}
+\end{split}
+\end{align}&lt;/p&gt;
+&lt;p&gt;整理には、行列の定理$(AB)^{\top}=B^{\top}A^{\top}$と、スカラーは転置しても値が同じであることを利用した（$\boldsymbol{y}^{\top}\Phi\boldsymbol{w} = (\boldsymbol{y}^{\top}\Phi\boldsymbol{w})^{\top} = \boldsymbol{w}^{\top}\Phi^{\top}\boldsymbol{y}$）。&lt;/p&gt;
+&lt;p&gt;次に、$E(\boldsymbol{w})$を最小化する$\boldsymbol{w}$を求めるために$\boldsymbol{w}$について偏微分して0とおく。&lt;/p&gt;
+&lt;p&gt;\begin{align}
+\frac{\partial E(\boldsymbol{w})}{\partial \boldsymbol{w}} &amp;amp;= 2\Phi^{\top}\Phi\boldsymbol{w} -2\Phi^{\top}\boldsymbol{y} + 0 + 2\lambda\boldsymbol{w} = 0.
+\end{align}&lt;/p&gt;
+&lt;p&gt;偏微分には、対称行列（$A=\Phi^{\top}\Phi=A^{\top}$）に対する二次形式（$\boldsymbol{w}^{\top}A\boldsymbol{w}$）の$\boldsymbol{w}$の偏微分が$(A + A^{\top})\boldsymbol{w} = 2A\boldsymbol{w}$であること、$\boldsymbol{w}^{\top}\boldsymbol{a}, \boldsymbol{a}=\Phi^{\top}\boldsymbol{y}$としたときの$\boldsymbol{w}$の偏微分が$\boldsymbol{a}$であることを利用した。&lt;/p&gt;
+&lt;p&gt;最後に、$\boldsymbol{w}$について整理する。&lt;/p&gt;
+&lt;p&gt;\begin{align}
+\begin{split}
+2\Phi^{\top}\Phi\boldsymbol{w} -2\Phi^{\top}\boldsymbol{y} + 2\lambda\boldsymbol{w} &amp;amp;= 0\&lt;br /&gt;
+2\Phi^{\top}\Phi\boldsymbol{w} + 2\lambda\boldsymbol{w} &amp;amp;= 2\Phi^{\top}\boldsymbol{y}\&lt;br /&gt;
+\Phi^{\top}\Phi\boldsymbol{w} + \lambda\boldsymbol{w} &amp;amp;= \Phi^{\top}\boldsymbol{y}\&lt;br /&gt;
+(\Phi^{\top}\Phi + \lambda I_F)\boldsymbol{w} &amp;amp;= \Phi^{\top}\boldsymbol{y}\&lt;br /&gt;
+\boldsymbol{w} &amp;amp;= (\Phi^{\top}\Phi + \lambda I_F)^{-1}\Phi^{\top}\boldsymbol{y}.
+\label{eq:w}
+\end{split}
+\end{align}&lt;/p&gt;
+&lt;p&gt;ここでは、行列のサイズが$F \times F$の単位行列を$I_{F}$と表記した。&lt;/p&gt;
+&lt;p&gt;新しい入力$\boldsymbol{x}$に対する出力は推定した$\boldsymbol{w}$を用いて、$\hat{y} = \boldsymbol{w}^{\top}\boldsymbol{\phi}(\boldsymbol{x})$と予測できる。&lt;/p&gt;
+&lt;h2 id=&#34;2-カーネル法による線形回帰モデル&#34;&gt;2. カーネル法による線形回帰モデル&lt;/h2&gt;
+&lt;p&gt;上述の線形回帰モデルを利用する際には、基底関数を増やし多くの特徴量の候補から予測に有用なものに重み付けできれば良いと考えられることから、特徴ベクトルの次元数$F$を増やすアプローチが検討される。
+しかしながら、この場合、パラメータ$\boldsymbol{w}$の推定や出力$\hat{y}$の予測に必要な計算量も同時に増加してしまう。
+そこで、カーネル法による線形回帰モデルでは、パラメータの次元数を$N$に抑えるようなアプローチをとる。
+これは、学習データ数$N$が特徴ベクトルの次元数$F$よりも少ない場合に有効である。
+また、線形回帰モデルにはもう一つ、予測に対して有用な基底関数の種類や数が明らかではないという課題がある。
+これに対しカーネル法による線形回帰モデルは、カーネル関数を導入することで、基底関数の選定を省略することができる。&lt;/p&gt;
+&lt;p&gt;以下、上述のリッジ回帰にカーネル法を適用した&lt;strong&gt;カーネルリッジ回帰&lt;/strong&gt;を説明する。&lt;/p&gt;
+&lt;h3 id=&#34;2-1-線形回帰モデルの双対表現&#34;&gt;2.1. 線形回帰モデルの双対表現&lt;/h3&gt;
+&lt;p&gt;パラメータの次元数を$N$に抑えるため、$F$次元の$\boldsymbol{w}$についての線形モデル$\hat{y} = \boldsymbol{w}^{\top}\boldsymbol{\phi}(\boldsymbol{x})$を、$N$個の学習データ$\Phi$に対応するパラメータ$\boldsymbol{\alpha} \in \mathbb{R}^{N}$で表現することを考える。&lt;/p&gt;
+&lt;p&gt;そのために、式\eqref{eq:w}の3行目以降の変形を以下のように進める。&lt;/p&gt;
+&lt;p&gt;\begin{align}
+\begin{split}
+\Phi^{\top}\Phi\boldsymbol{w} + \lambda\boldsymbol{w} &amp;amp;= \Phi^{\top}\boldsymbol{y}\&lt;br /&gt;
+\lambda\boldsymbol{w} &amp;amp;= - \Phi^{\top}\Phi\boldsymbol{w} + \Phi^{\top}\boldsymbol{y}\&lt;br /&gt;
+\lambda\boldsymbol{w} &amp;amp;= - \Phi^{\top}(\Phi\boldsymbol{w} - \boldsymbol{y})\&lt;br /&gt;
+\boldsymbol{w} &amp;amp;= - \frac{1}{\lambda} \Phi^{\top}(\Phi\boldsymbol{w} - \boldsymbol{y}).
+\end{split}
+\end{align}&lt;/p&gt;
+&lt;p&gt;ここで$\boldsymbol{\alpha} = - \frac{1}{\lambda}(\Phi\boldsymbol{w} - \boldsymbol{y})$とすると、$\boldsymbol{w} = \Phi^{\top}\boldsymbol{\alpha}$となる。
+これにより、元の線形回帰モデルを$\hat{y} = (\Phi^{\top}\boldsymbol{\alpha})^{\top}\phi(\boldsymbol{x})$と、（右辺にも$\boldsymbol{w}$は含まれるが）見かけ上は$\boldsymbol{w}$を含まない形で表現できるようになった（&lt;strong&gt;双対表現&lt;/strong&gt;）。&lt;/p&gt;
+&lt;p&gt;この双対表現の線形回帰モデルについて、最小二乗法を用いて$\boldsymbol{\alpha}$を推定する。
+これは上述の$E(\boldsymbol{w})$を双対表現の線形回帰モデルで記述し、解を求めることと同等である。&lt;/p&gt;
+&lt;p&gt;このために、式\eqref{eq:ew}に$\boldsymbol{w} = \Phi^{\top}\boldsymbol{\alpha}$を代入し$\boldsymbol{\alpha}$についての関数$E(\boldsymbol{\alpha})$とした上で、以下のように整理する。&lt;/p&gt;
+&lt;p&gt;\begin{align}
+\begin{split}
+E(\boldsymbol{\alpha}) &amp;amp;= (\Phi^{\top}\boldsymbol{\alpha})^{\top}\Phi^{\top}\Phi(\Phi^{\top}\boldsymbol{\alpha}) - 2(\Phi^{\top}\boldsymbol{\alpha})^{\top}\Phi^{\top}\boldsymbol{y} + \boldsymbol{y}^{\top}\boldsymbol{y} + \lambda(\Phi^{\top}\boldsymbol{\alpha})^{\top}(\Phi^{\top}\boldsymbol{\alpha})\&lt;br /&gt;
+&amp;amp;= \boldsymbol{\alpha}^{\top}\Phi\Phi^{\top}\Phi\Phi^{\top}\boldsymbol{\alpha} - 2\boldsymbol{\alpha}^{\top}\Phi\Phi^{\top}\boldsymbol{y} + \boldsymbol{y}^{\top}\boldsymbol{y} + \lambda\boldsymbol{\alpha}^{\top}\Phi\Phi^{\top}\boldsymbol{\alpha}\&lt;br /&gt;
+&amp;amp;= \boldsymbol{\alpha}^{\top}KK\boldsymbol{\alpha} - 2\boldsymbol{\alpha}^{\top}K\boldsymbol{y} + \boldsymbol{y}^{\top}\boldsymbol{y} + \lambda\boldsymbol{\alpha}^{\top}K\boldsymbol{\alpha}.
+\end{split}
+\end{align}&lt;/p&gt;
+&lt;p&gt;なお、
+\[
+K = \Phi\Phi^{\top} =
+\begin{pmatrix}
+\boldsymbol{\phi}(\boldsymbol{x}_1)^{\top}\boldsymbol{\phi}(\boldsymbol{x}_1) &amp;amp; \ldots &amp;amp; \boldsymbol{\phi}(\boldsymbol{x}_1)^{\top}\boldsymbol{\phi}(\boldsymbol{x}_N) \&lt;br /&gt;
+\vdots &amp;amp; \ddots &amp;amp; \vdots \&lt;br /&gt;
+\boldsymbol{\phi}(\boldsymbol{x}_N)^{\top}\boldsymbol{\phi}(\boldsymbol{x}_1) &amp;amp; \ldots &amp;amp; \boldsymbol{\phi}(\boldsymbol{x}_N)^{\top}\boldsymbol{\phi}(\boldsymbol{x}_N)
+\end{pmatrix} =
+\begin{pmatrix}
+k(\boldsymbol{x}_1,\boldsymbol{x}_1) &amp;amp; \ldots &amp;amp; k(\boldsymbol{x}_1,\boldsymbol{x}_N) \&lt;br /&gt;
+\vdots &amp;amp; \ddots &amp;amp; \vdots \&lt;br /&gt;
+k(\boldsymbol{x}_N,\boldsymbol{x}_1) &amp;amp; \ldots &amp;amp; k(\boldsymbol{x}_N,\boldsymbol{x}_N)
+\end{pmatrix}
+\in \mathbb{R}^{N \times N}
+\]
+とした。
+ここで、入力$\boldsymbol{p}$と$\boldsymbol{q}$を$\boldsymbol{\phi}$によって特徴ベクトルに変換し内積をとる操作である$k(\boldsymbol{p},\boldsymbol{q})$をカーネル関数と呼ぶ。
+また、学習データ$X$に対する全ての組み合わせである$K$をグラム行列と呼ぶ。&lt;/p&gt;
+&lt;p&gt;次に、$E(\boldsymbol{\alpha})$を最小化する$\boldsymbol{\alpha}$を求めるために$\boldsymbol{\alpha}$について偏微分して0とおく。&lt;/p&gt;
+&lt;p&gt;\begin{align}
+\begin{split}
+\frac{\partial E(\boldsymbol{\alpha})}{\partial \boldsymbol{\alpha}} &amp;amp;= 2KK\boldsymbol{\alpha} - 2K\boldsymbol{y} + 0 + 2\lambda K\boldsymbol{\alpha}= 0.
+\end{split}
+\end{align}&lt;/p&gt;
+&lt;p&gt;最後に、$\boldsymbol{\alpha}$について整理する。&lt;/p&gt;
+&lt;p&gt;\begin{align}
+\begin{split}
+2KK\boldsymbol{\alpha} - 2K\boldsymbol{y} + 2\lambda K\boldsymbol{\alpha} &amp;amp;= 0\&lt;br /&gt;
+KK\boldsymbol{\alpha} - K\boldsymbol{y} + \lambda K\boldsymbol{\alpha} &amp;amp;= 0\&lt;br /&gt;
+KK\boldsymbol{\alpha} + \lambda K\boldsymbol{\alpha} &amp;amp;= K\boldsymbol{y}\&lt;br /&gt;
+K\boldsymbol{\alpha} + \lambda \boldsymbol{\alpha} &amp;amp;= \boldsymbol{y}\&lt;br /&gt;
+(K + \lambda I_N)\boldsymbol{\alpha} &amp;amp;= \boldsymbol{y}\&lt;br /&gt;
+\boldsymbol{\alpha} &amp;amp;= (K + \lambda I_N)^{-1}\boldsymbol{y}.
+\label{eq:alpha}
+\end{split}
+\end{align}&lt;/p&gt;
+&lt;p&gt;新しい入力$\boldsymbol{x}$に対する出力は、推定した$\boldsymbol{\alpha}$を用いて以下のように予測できる。&lt;/p&gt;
+&lt;p&gt;\begin{align}
+\begin{split}
+\hat{y} &amp;amp;= (\Phi^{\top}\boldsymbol{\alpha})^{\top}\boldsymbol{\phi}(\boldsymbol{x}) \&lt;br /&gt;
+&amp;amp;= \boldsymbol{\alpha}^{\top}\Phi\boldsymbol{\phi}(\boldsymbol{x}) \&lt;br /&gt;
+&amp;amp;= \sum&lt;em&gt;{n=1}^{N} \alpha_n \boldsymbol{\phi}(\boldsymbol{x}_n)^{\top}\boldsymbol{\phi}(\boldsymbol{x}) \&lt;br /&gt;
+&amp;amp;= \sum&lt;/em&gt;{n=1}^{N} \alpha_n k(\boldsymbol{x}_n, \boldsymbol{x}).
+\label{eq:yk}
+\end{split}
+\end{align}&lt;/p&gt;
+&lt;p&gt;すなわち、$F$次元の$\boldsymbol{w}$を用いず、学習データ数$N$を次元とする$\boldsymbol{\alpha}$で予測できるようになった。&lt;/p&gt;
+&lt;h3 id=&#34;2-2-カーネル関数の構成&#34;&gt;2.2. カーネル関数の構成&lt;/h3&gt;
+&lt;p&gt;ここまで、$F$個の基底関数$\phi$を用いた特徴ベクトルとしての$\boldsymbol{\phi}$同士の内積として、カーネル関数をボトムアップ的に定義した。&lt;/p&gt;
+&lt;p&gt;この場合、どのような基底関数を選定するかという線形回帰モデルのもう一つの課題が残る。
+カーネル法を用いた線形回帰モデルでは、発想を逆転させ、カーネル関数をトップダウン的に先に直接定義することで、その内部の基底関数を陽に知らずにすませるというアプローチをとる。&lt;/p&gt;
+&lt;p&gt;ただし、この場合は定義したカーネル関数が正定値性を満たす必要がある。
+すなわち、任意の$M$個の点から計算される、定義したカーネル関数による$M \times M$のグラム行列$K$の2次形式が常に非負（任意の$\boldsymbol{\mu} \in \mathbb{R}^M$に対して$\boldsymbol{\mu}^{\top}K\boldsymbol{\mu} \geq 0$）となる必要がある。&lt;/p&gt;
+&lt;p&gt;このような条件を満たすカーネル関数を直接定義できたならば、これはなんらかの特徴ベクトル同士の内積と考えることができる。
+ありがたいことに、式\eqref{eq:yk}は基底関数$\phi$を使わず全てカーネル関数$k$で表現できているため、直接定義したカーネル関数があれば、基底関数の選定が不要となる（&lt;strong&gt;カーネルトリック&lt;/strong&gt;）。&lt;/p&gt;
+&lt;p&gt;幸い、さまざまなカーネル関数が考案されているため、まずはそれらのカーネル関数を利用することとなる。
+以下、多項式カーネルとガウスカーネルを紹介する。&lt;/p&gt;
+&lt;h4 id=&#34;多項式カーネル&#34;&gt;多項式カーネル&lt;/h4&gt;
+&lt;p&gt;多項式カーネルは$k(\boldsymbol{p}, \boldsymbol{q}) = (\boldsymbol{p}^{\top}\boldsymbol{q} + c)^{m}$の形をとるカーネル関数である。
+上述のカーネルリッジ回帰を利用するにあたってはどのような特徴ベクトルが利用されているのかを陽に知る必要はないが、例えば$m=2,\boldsymbol{p},\boldsymbol{q} \in \mathbb{R}^2$であれば次のような特徴ベクトルが対応することが分かる。&lt;/p&gt;
+&lt;p&gt;対応する特徴ベクトルを調べるために、多項式カーネルを特徴ベクトルの内積$\boldsymbol{\phi}(\boldsymbol{p})^{\top}\boldsymbol{\phi}(\boldsymbol{q})$に変形する。&lt;/p&gt;
+&lt;p&gt;\begin{align}
+\begin{split}
+k(\boldsymbol{p}, \boldsymbol{q}) &amp;amp;= (\boldsymbol{p}^{\top}\boldsymbol{q} + c)^{2} \&lt;br /&gt;
+&amp;amp;= ((p_1, p_2)^{\top}(q_1, q_2) + c)^2 \&lt;br /&gt;
+&amp;amp;= (p_1q_1 + p_2q_2 + c)^2 \&lt;br /&gt;
+&amp;amp;= p_1^2q_1^2 + p_2^2q_2^2 + c^2 + 2p_1q_1p_2q_2 + 2cp_2q_2 + 2cp_1q_1\&lt;br /&gt;
+&amp;amp;= p_1^2q_1^2 + p_2^2q_2^2 + c^2 + 2p_1p_2q_1q_2 + 2cp_2q_2 + 2cp_1q_1\&lt;br /&gt;
+&amp;amp;= p_1^2q_1^2 + p_2^2q_2^2 + c^2 + \sqrt{2}p_1p_2\sqrt{2}q_1q_2 + \sqrt{2c}p_2\sqrt{2c}q_2 + \sqrt{2c}p_1\sqrt{2c}q_1\&lt;br /&gt;
+&amp;amp;= (p_1^2, p_2^2, c, \sqrt{2}p_1p_2, \sqrt{2c}p_2, \sqrt{2c}p_1)^{\top}(q_1^2, q_2^2, c, \sqrt{2}q_1q_2, \sqrt{2c}q_2, \sqrt{2c}q_1).
+\end{split}
+\end{align}&lt;/p&gt;
+&lt;p&gt;つまり、今回の例では、特徴ベクトルが$\boldsymbol{\phi}(\boldsymbol{x}) = (x_1^2, x_2^2, c, \sqrt{2}x_1x_2, \sqrt{2c}x_2, \sqrt{2c}x_1)$として扱われていたことが分かる。
+言葉を返せば、多項式カーネルを用いると、このような変換を行う6つの基底関数を明示的に選定して地道に内積を取った場合と同様の結果を得られる。&lt;/p&gt;
+&lt;p&gt;なお、多項式カーネルの$m=1,c=0$の場合、これを線形カーネルと呼び、この時の特徴ベクトルは入力と等しい（$\boldsymbol{\phi}(\boldsymbol{x}) = \boldsymbol{x}$）。&lt;/p&gt;
+&lt;h4 id=&#34;ガウスカーネル&#34;&gt;ガウスカーネル&lt;/h4&gt;
+&lt;p&gt;ガウスカーネルは$k(\boldsymbol{p}, \boldsymbol{q}) = \exp(-\frac{\| \boldsymbol{p} - \boldsymbol{q}\|^2}{2\sigma^2})$の形をとるカーネル関数である。&lt;/p&gt;
+&lt;p&gt;以下では、ガウスカーネルにどのような特徴ベクトルが対応するかを確認する。
+まず、ガウスカーネルを以下のように展開、変形する。&lt;/p&gt;
+&lt;p&gt;\begin{align}
+\begin{split}
+k(\boldsymbol{p}, \boldsymbol{q}) &amp;amp;= \exp(-\frac{\| \boldsymbol{p} - \boldsymbol{q}\|^2}{2\sigma^2}) \&lt;br /&gt;
+&amp;amp;= \exp(-\frac{(\boldsymbol{p} - \boldsymbol{q})^{\top}(\boldsymbol{p} - \boldsymbol{q})}{2\sigma^2}) \&lt;br /&gt;
+&amp;amp;= \exp(-\frac{(\boldsymbol{p}^{\top} - \boldsymbol{q}^{\top})(\boldsymbol{p} - \boldsymbol{q})}{2\sigma^2}) \&lt;br /&gt;
+&amp;amp;= \exp(-\frac{\boldsymbol{p}^{\top}\boldsymbol{p} - \boldsymbol{q}^{\top}\boldsymbol{p} - \boldsymbol{p}^{\top}\boldsymbol{q} + \boldsymbol{q}^{\top}\boldsymbol{q}}{2\sigma^2}) \&lt;br /&gt;
+&amp;amp;= \exp(-\frac{\boldsymbol{p}^{\top}\boldsymbol{p} - (\boldsymbol{q}^{\top}\boldsymbol{p})^{\top} - \boldsymbol{p}^{\top}\boldsymbol{q} + \boldsymbol{q}^{\top}\boldsymbol{q}}{2\sigma^2}) \&lt;br /&gt;
+&amp;amp;= \exp(-\frac{\boldsymbol{p}^{\top}\boldsymbol{p} - \boldsymbol{p}^{\top}\boldsymbol{q} - \boldsymbol{p}^{\top}\boldsymbol{q} + \boldsymbol{q}^{\top}\boldsymbol{q}}{2\sigma^2}) \&lt;br /&gt;
+&amp;amp;= \exp(-\frac{\boldsymbol{p}^{\top}\boldsymbol{p} - 2\boldsymbol{p}^{\top}\boldsymbol{q} + \boldsymbol{q}^{\top}\boldsymbol{q}}{2\sigma^2}) \&lt;br /&gt;
+&amp;amp;= \exp(\frac{-\boldsymbol{p}^{\top}\boldsymbol{p}}{2\sigma^2} + \frac{\boldsymbol{p}^{\top}\boldsymbol{q}}{\sigma^2} + \frac{-\boldsymbol{q}^{\top}\boldsymbol{q}}{2\sigma^2}) \&lt;br /&gt;
+&amp;amp;= \exp(\frac{-\boldsymbol{p}^{\top}\boldsymbol{p}}{2\sigma^2})\exp(\frac{\boldsymbol{p}^{\top}\boldsymbol{q}}{\sigma^2})\exp(\frac{-\boldsymbol{q}^{\top}\boldsymbol{q}}{2\sigma^2}) \&lt;br /&gt;
+&amp;amp;= \rho\exp(\frac{\boldsymbol{p}^{\top}\boldsymbol{q}}{\sigma^2})\psi \&lt;br /&gt;
+&amp;amp;= \rho\psi\exp(\frac{\boldsymbol{p}^{\top}\boldsymbol{q}}{\sigma^2}).
+\end{split}
+\end{align}&lt;/p&gt;
+&lt;p&gt;最後の2行では以降の展開を見やすくするため、$\rho=\exp(\frac{-\boldsymbol{p}^{\top}\boldsymbol{p}}{2\sigma^2}), \psi=\exp(\frac{-\boldsymbol{q}^{\top}\boldsymbol{q}}{2\sigma^2})$とおいた。&lt;/p&gt;
+&lt;p&gt;次に、$e^x$のマクローリン展開の公式（$e^x = \sum_{i=0}^{\infty} \frac{x^i}{i!} = 1 + x + \frac{x^2}{2} + \frac{x^3}{6} + \cdots$）を使い、特徴ベクトルの内積$\boldsymbol{\phi}(\boldsymbol{p})^{\top}\boldsymbol{\phi}(\boldsymbol{q})$に変形する。&lt;/p&gt;
+&lt;p&gt;簡単のため$\sigma=1$とすると、次のような式が得られる。&lt;/p&gt;
+&lt;p&gt;\begin{align}
+\begin{split}
+\rho\psi\exp(\boldsymbol{p}^{\top}\boldsymbol{q}) &amp;amp;= \rho\psi \left(1 + (\boldsymbol{p}^{\top}\boldsymbol{q})^1 + \frac{(\boldsymbol{p}^{\top}\boldsymbol{q})^2}{2} + \frac{(\boldsymbol{p}^{\top}\boldsymbol{q})^3}{6} + \ldots \right).
+\end{split}
+\end{align}&lt;/p&gt;
+&lt;p&gt;これは$c=0$の多項式カーネルを次数$m$を増やしながら無限回足したものである。
+よって例えば、$\boldsymbol{p},\boldsymbol{q} \in \mathbb{R}^2$では、次のような&lt;strong&gt;無限次元&lt;/strong&gt;の特徴ベクトルが対応することが分かる。&lt;/p&gt;
+&lt;p&gt;\begin{align}
+\begin{split}
+\rho\psi\exp(\boldsymbol{p}^{\top}\boldsymbol{q}) &amp;amp;= \rho\psi \left(1 + (\boldsymbol{p}^{\top}\boldsymbol{q})^1 + \frac{(\boldsymbol{p}^{\top}\boldsymbol{q})^2}{2} + \frac{(\boldsymbol{p}^{\top}\boldsymbol{q})^3}{6} + \ldots \right) \&lt;br /&gt;
+&amp;amp;= \rho\psi \left(1 + (p_1q_1 + p_2q_2) + \frac{p_1^2q_1^2 + p_2^2q_2^2 + \sqrt{2}p_1p_2\sqrt{2}q_1q_2}{2} + \frac{p_1^3q_1^3 + p_2^3q_2^3 + \sqrt{3}p_1^2p_2\sqrt{3}q_1^2q_2 + \sqrt{3}p_1p_2^2\sqrt{3}q_1q_2^2}{6} + \ldots \right) \&lt;br /&gt;
+&amp;amp;= \rho\left(1, p_1, p_2, \frac{p_1^2}{\sqrt{2}}, \frac{p_2^2}{\sqrt{2}}, \frac{\sqrt{2}p_1p_2}{\sqrt{2}}, \frac{p_1^3}{\sqrt{6}}, \frac{p_2^3}{\sqrt{6}}, \frac{\sqrt{3}p_1^2p_2}{\sqrt{6}}, \frac{\sqrt{3}p_1p_2^2}{\sqrt{6}}, \ldots \right)^{\top}\psi\left(1, q_1, q_2, \frac{q_1^2}{\sqrt{2}}, \frac{q_2^2}{\sqrt{2}}, \frac{\sqrt{2}q_1q_2}{\sqrt{2}}, \frac{q_1^3}{\sqrt{6}}, \frac{q_2^3}{\sqrt{6}}, \frac{\sqrt{3}q_1^2q_2}{\sqrt{6}}, \frac{\sqrt{3}q_1q_2^2}{\sqrt{6}},\ldots \right) \&lt;br /&gt;
+&amp;amp;= \rho\left(1, p_1, p_2, \frac{p_1^2}{\sqrt{2}}, \frac{p_2^2}{\sqrt{2}}, p_1p_2, \frac{p_1^3}{\sqrt{6}}, \frac{p_2^3}{\sqrt{6}}, \frac{p_1^2p_2}{\sqrt{2}}, \frac{p_1p_2^2}{\sqrt{2}}, \ldots \right)^{\top}\psi\left(1, q_1, q_2, \frac{q_1^2}{\sqrt{2}}, \frac{q_2^2}{\sqrt{2}}, q_1q_2, \frac{q_1^3}{\sqrt{6}}, \frac{q_2^3}{\sqrt{6}}, \frac{q_1^2q_2}{\sqrt{2}}, \frac{q_1q_2^2}{\sqrt{2}},\ldots \right).
+\end{split}
+\end{align}&lt;/p&gt;
+&lt;p&gt;ガウスカーネルでは、このような無限個の基底関数を用意して内積を地道に計算した結果が、$k(\boldsymbol{p}, \boldsymbol{q}) = \exp(-\frac{\| \boldsymbol{p} - \boldsymbol{q}\|^2}{2\sigma^2})$のみの計算から得られるとも考えられる。&lt;/p&gt;
+&lt;h2 id=&#34;3-random-fourier-features-乱択化フーリエ特徴&#34;&gt;3. Random Fourier Features（乱択化フーリエ特徴）&lt;/h2&gt;
+&lt;p&gt;カーネルリッジ回帰による入力$\boldsymbol{x}$に対する予測は式\eqref{eq:alpha}\eqref{eq:yk}より、$\hat{y} = \sum_{n=1}^{N} \alpha_n k(\boldsymbol{x}_n, \boldsymbol{x}), \boldsymbol{\alpha} = (K + \lambda I_N)^{-1}\boldsymbol{y}$となるのであった。
+カーネルリッジ回帰では、$F \gg N$となるような学習データ数$N$に対し十分大きい$F$個の基底関数を用いる場合に、双対表現によってパラメータ数を$N$に抑えつつ、カーネル関数の導入によって$F$次元の特徴ベクトルの直接的な算出を回避できた。&lt;/p&gt;
+&lt;p&gt;しかしながら、カーネルリッジ回帰は、学習データ数$N$に対して計算量が指数的に増加してしまう課題がある。
+これは、グラム行列$K$のサイズが$N \times N$であるため、$\boldsymbol{\alpha}$の計算にあたって、必要なカーネル関数の計算が$N^2$のオーダーで増加することからも分かる。
+また、逆行列の計算も$K$のサイズに応じて計算量が増加する。
+加えて、$\hat{y}$の計算にあたっても、新しい入力$\boldsymbol{x}$に対して$N$回のカーネル関数の計算が都度必要となってしまう。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Random Fourier Features&lt;/strong&gt;は、ある確率分布からのサンプリング結果でカーネル関数とグラム行列を近似することで、上述の課題を解決する、高速化のための手法である。&lt;/p&gt;
+&lt;p&gt;この手法では、$\mathbb{R}^D$上のカーネル関数$k(\boldsymbol{p},\boldsymbol{q})$が$\boldsymbol{p}-\boldsymbol{q}$の形で表せるとき、このカーネル関数が、ある確率密度関数$p(\boldsymbol{\omega})$のフーリエ変換で表せることを利用する。&lt;/p&gt;
+&lt;p&gt;\begin{align}
+\begin{split}
+k(\boldsymbol{p},\boldsymbol{q}) &amp;amp;= k(\boldsymbol{p} - \boldsymbol{q})\&lt;br /&gt;
+&amp;amp;= \int&lt;em&gt;{\mathbb{R}^{D}} p(\boldsymbol{\omega}) \exp(i \boldsymbol{\omega}^{\top}(\boldsymbol{p} - \boldsymbol{q}))d\boldsymbol{\omega} \&lt;br /&gt;
+&amp;amp;= \mathbb{E}_{\boldsymbol{\omega}}[\exp(i \boldsymbol{\omega}^{\top}(\boldsymbol{p} - \boldsymbol{q}))] \&lt;br /&gt;
+&amp;amp;= \mathbb{E}_{\boldsymbol{\omega}}[\cos(\boldsymbol{\omega}^{\top}(\boldsymbol{p} - \boldsymbol{q}))] \&lt;br /&gt;
+&amp;amp;= \mathbb{E}_{\boldsymbol{\omega},b}[\sqrt{2}\cos(\boldsymbol{\omega}^{\top}\boldsymbol{p} + b) \cdot \sqrt{2}\cos(\boldsymbol{\omega}^{\top}\boldsymbol{q} + b)] \&lt;br /&gt;
+&amp;amp;\approx \frac{1}{R} \sum&lt;/em&gt;{r=1}^{R} \sqrt{2}\cos(\boldsymbol{\omega}_r^{\top}\boldsymbol{p} + b_r) \cdot \sqrt{2}\cos(\boldsymbol{\omega}_r^{\top}\boldsymbol{q} + b_r).
+\end{split}
+\end{align}&lt;/p&gt;
+&lt;p&gt;ここで、$\boldsymbol{\omega} \sim p(\boldsymbol{\omega}), b \sim \text{Uniform}(0, 2\pi)$である。
+なお、$p(\boldsymbol{\omega})$は利用するカーネル関数によって異なるが、ガウスカーネルの場合、$\boldsymbol{w} = (w_d)^{1 \leq d \leq D}, w_d \sim \mathcal{N}(0, \sigma^2)$となる。&lt;/p&gt;
+&lt;p&gt;最後の行は、この確率分布の期待値（$=$カーネル関数の結果）を$R$個のサンプリング結果の平均で近似することを示している。&lt;/p&gt;
+&lt;p&gt;すなわち、各サンプルから求めた結果を、$z_r(\boldsymbol{x}) = \cos(\boldsymbol{\omega}_{r}^{\top}\boldsymbol{x} + b_r)$、$R$個の$z_r$を$\boldsymbol{z}(\boldsymbol{x}) = \sqrt{\frac{2}{R}}(z_1(\boldsymbol{x}),\ldots,z_R(\boldsymbol{x}))^{\top}$とおくと、カーネル関数$k$の近似$\hat{k}$が$\hat{k}(\boldsymbol{p},\boldsymbol{q}) = \boldsymbol{z}(\boldsymbol{p})^{\top}\boldsymbol{z}(\boldsymbol{q})$のように得られる。
+また、学習データ$X$に対する$\boldsymbol{z}$の集合を$Z = (\boldsymbol{z}(\boldsymbol{x}_1)^{\top}, \ldots, \boldsymbol{z}(\boldsymbol{x}_N)^{\top})^{\top} \in \mathbb{R}^{N \times R}$とすると、$\hat{K} = ZZ^{\top}$の操作によって$N \times N$行列の各要素がカーネル関数$k$の近似$\hat{k}(\boldsymbol{x}_i, \boldsymbol{x}_j) = \boldsymbol{z}(\boldsymbol{x}_i)^{\top}\boldsymbol{z}(\boldsymbol{x}_j)$となるグラム行列$K$の近似$\hat{K}$を得られる。&lt;/p&gt;
+&lt;p&gt;よって、これらの近似を用いたカーネルリッジ回帰のパラメータ$\boldsymbol{\alpha}$の近似$\hat{\boldsymbol{\alpha}}$は、$\hat{\boldsymbol{\alpha}} = (\hat{K} + \lambda I_{N})^{-1}\boldsymbol{y}$となる。
+ただし、この手法では、$\hat{K} = ZZ^{\top}$であることを利用して、計算量を学習データ数$N$ではなくサンプリング数$R$のオーダーに変えることができる。
+そのため、$R \ll N$であるならば、非常に効率よく予測が可能となる。&lt;/p&gt;
+&lt;p&gt;以下に、$\hat{K}$や$\hat{\boldsymbol{\alpha}}$を消去していく経過と合わせて、この手法における予測式を示す。&lt;/p&gt;
+&lt;p&gt;\begin{align}
+\begin{split}
+\hat{y} &amp;amp;= \sum&lt;em&gt;{n=1}^{N} \hat{\alpha}_n \hat{k}(\boldsymbol{x}_n, \boldsymbol{x}) \&lt;br /&gt;
+&amp;amp;= \sum&lt;/em&gt;{n=1}^{N} \hat{\alpha}_n \hat{k}(\boldsymbol{x}, \boldsymbol{x}_n) \&lt;br /&gt;
+&amp;amp;= \sum&lt;em&gt;{n=1}^{N} \hat{\alpha}_n \boldsymbol{z}(\boldsymbol{x})^{\top}\boldsymbol{z}(\boldsymbol{x}_n) \&lt;br /&gt;
+&amp;amp;= \boldsymbol{z}(\boldsymbol{x})^{\top} \sum&lt;/em&gt;{n=1}^{N} \hat{\alpha}_n \boldsymbol{z}(\boldsymbol{x}_n) \&lt;br /&gt;
+&amp;amp;= \boldsymbol{z}(\boldsymbol{x})^{\top} Z^{\top} \hat{\boldsymbol{\alpha}} \&lt;br /&gt;
+&amp;amp;= \boldsymbol{z}(\boldsymbol{x})^{\top} Z^{\top} (\hat{K} + \lambda I_{N})^{-1}\boldsymbol{y} \&lt;br /&gt;
+&amp;amp;= \boldsymbol{z}(\boldsymbol{x})^{\top} Z^{\top} (ZZ^{\top} + \lambda I_{N})^{-1}\boldsymbol{y} \&lt;br /&gt;
+&amp;amp;= \boldsymbol{z}(\boldsymbol{x})^{\top} (Z^{\top}Z + \lambda I_{R})^{-1}Z^{\top} \boldsymbol{y}.
+\end{split}
+\end{align}&lt;/p&gt;
+&lt;p&gt;よって、$A=(Z^{\top}Z + \lambda I_{R}) \in \mathbb{R}^{R \times R}$、$\boldsymbol{b} = (Z^{\top} \boldsymbol{y}) \in \mathbb{R}^{R}$、$\boldsymbol{\beta} = A^{-1}\boldsymbol{b}$として、$\hat{y} = \boldsymbol{z}(\boldsymbol{x})^{\top} \boldsymbol{\beta}$と予測できる。
+$Z$は$N \times R$であるものの、逆行列のサイズは$R \times R$となること、$\hat{y}$の計算も、新しい入力$\boldsymbol{x}$に対して$R$回の計算で済む$\boldsymbol{z}(\boldsymbol{x})$のみで良いことから、計算量が抑えられることが分かる。&lt;/p&gt;
+&lt;p&gt;なお、最後の行では逆行列の補題（$P(I_N + QP)^{-1} = (I_R +PQ)^{-1}P, P \in \mathbb{R}^{R \times N}, Q \in \mathbb{R}^{N \times R}$）を用いた。&lt;/p&gt;
+&lt;h2 id=&#34;参考&#34;&gt;参考&lt;/h2&gt;
+&lt;h3 id=&#34;線形回帰モデル&#34;&gt;線形回帰モデル&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://manabitimes.jp/math/1128&#34;&gt;正規方程式の導出と計算例&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.kspub.co.jp/book/detail/5161968.html&#34;&gt;スタンフォード　ベクトル・行列からはじめる最適化数学&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.kspub.co.jp/book/detail/1529267.html&#34;&gt;ガウス過程と機械学習&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;カーネル法による線形回帰モデル&#34;&gt;カーネル法による線形回帰モデル&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://qiita.com/wsuzume/items/09a59036c8944fd563ff&#34;&gt;線形な手法とカーネル法（回帰分析）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://qiita.com/kilometer/items/66e6116cc661019ead59&#34;&gt;カーネルトリック&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.slideshare.net/KeisukeSugawara/slide0629&#34;&gt;PRML第６章「カーネル法」&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.slideshare.net/hagino_3000/prml-61-17081123&#34;&gt;PRML 6.1章 カーネル法と双対表現&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.iwanami.co.jp/book/b257891.html&#34;&gt;カーネル多変量解析 非線形データ解析の新しい展開&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://towardsdatascience.com/truly-understanding-the-kernel-trick-1aeb11560769&#34;&gt;Understanding the Kernel Trick with fundamentals&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Radial_basis_function_kernel&#34;&gt;Radial basis function kernel&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;random-fourier-features&#34;&gt;Random Fourier Features&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://qiita.com/githug0906/items/448daec79fac2ffd82a0&#34;&gt;乱択化フーリエ特徴を用いたリッジ回帰&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.kyoritsu-pub.co.jp/book/b10003381.html&#34;&gt;機械学習のためのカーネル100問 with Python&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://gregorygundersen.com/blog/2019/12/23/random-fourier-features/&#34;&gt;Random Fourier Features&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://proceedings.neurips.cc/paper/2007/hash/013a006f03dbc5392effeb8f18fda755-Abstract.html&#34;&gt;Rahimi, Ali, and Benjamin Recht. &amp;ldquo;Random features for large-scale kernel machines.&amp;rdquo; Advances in neural information processing systems 20 (2007).&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>gonum/matパッケージを直感的に操作するMatrix Adapterをつくった</title><link>https://blog.monochromegane.com/blog/2022/07/02/matrix-adapter/</link><pubDate>Sat, 02 Jul 2022 11:59:22 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2022/07/02/matrix-adapter/</guid><description>
 &lt;p&gt;gonum/matによる行列計算を幾分か直感的に扱える薄いラッパーを作りました。
 具体的には、計算結果用に空の行列を予め用意するのではなく、計算結果を戻り値で受け取れるように統一します。&lt;/p&gt;
 &lt;ul&gt;
@@ -1086,41 +1345,4 @@ Pr \left[x^*_j \geq \overline{x}_j + \sqrt{\frac{2\ln{n}}{n_j}}\right] \leq \fra
 &lt;li&gt;&lt;a href=&#34;https://research.miidas.jp/2020/02/%E3%83%90%E3%83%B3%E3%83%87%E3%82%A3%E3%83%83%E3%83%88%E3%82%A2%E3%83%AB%E3%82%B4%E3%83%AA%E3%82%BA%E3%83%A0%E3%81%AE%E7%B6%9A%E3%81%8D/&#34;&gt;バンディットアルゴリズムの続き&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://www.slideshare.net/nishio/1-70974083&#34;&gt;強化学習その1&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://www.amazon.co.jp/dp/406152917X/&#34;&gt;バンディット問題の理論とアルゴリズム (機械学習プロフェッショナルシリーズ)&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>なぜ勉強会「だった」のか</title><link>https://blog.monochromegane.com/blog/2020/04/29/why-fukuokago/</link><pubDate>Wed, 29 Apr 2020 23:14:37 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/04/29/why-fukuokago/</guid><description>
-&lt;p&gt;主催するFukuoka.goでは2〜3ヶ月に一度の割合で登壇形式の勉強会を開催している。
-昨今の状況を受けて前回こそYouTubeを使ってリアルタイム配信を行ったものの、この状況が続くあるいは当たり前になるならば、地域言語コミュニティをどう運営していくべきか考えないといけないだろうなと思う。&lt;/p&gt;
-&lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;Fukuoka.go#16 をそろそろやろうかなと思いつつ、オンライン開催が前提で、もはや地理的な制約もない中で、このコミュニティで本当に実現したいことを改めて考えてみるなど。さて、どう楽しみますかねえ&lt;/p&gt;&amp;mdash; モノクロメガネ研究員 (@monochromegane) &lt;a href=&#34;https://twitter.com/monochromegane/status/1255359093058961412?ref_src=twsrc%5Etfw&#34;&gt;April 29, 2020&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
-&lt;p&gt;このエントリは、これまでの勉強会やカンファレンスではなぜ物理的に集合するのか、を自分の中で整理した上で、オンライン開催のありようを考える材料を見つけようとするものです。&lt;/p&gt;
-&lt;h1 id=&#34;なぜ物理的に集合するのか&#34;&gt;なぜ物理的に集合するのか&lt;/h1&gt;
-&lt;p&gt;これまでの勉強会やカンファレンスではなぜ物理的に集合していたのか。&lt;/p&gt;
-&lt;p&gt;今年、オンラインでの開催を余儀なくされた様々な勉強会やカンファレンスでは（それなりの運営の苦労はありつつも）比較的スムーズに移行できており、これはそのようなインフラが整っていたということに他ならない。
-一方で、これだけのインフラがある中、必要に迫られるまでは物理的に集合していたということは、この行為になんらかの利点があると考えるのが妥当だと思う。&lt;/p&gt;
-&lt;p&gt;物理的に集合する勉強会やカンファレンスでは、登壇者の発表を聞き、質疑があり、飲食の機会が提供される。
-同じ場に集ってリアルタイムに同時多発的に発生した議論によって、場には総体として大きくなった知が形成される。
-参加者は、場によって増幅された知を様々な形で受け取る。
-あるひとは有意義な情報として、あるひとはモチベーションとして。
-想定より多くの量を得ることができる人もいれば、あまり得るものがなかった人もいるかもしれない。
-主催者は、なるべくその機会を増やすべく、趣向を凝らす。&lt;/p&gt;
-&lt;p&gt;勉強会やカンファレンスというのは、興味関心を同じくするものの初対面の人たちを含む集団が限られた時間で効率よく、知の増幅を場に形成するための枠組みであると言える。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;発表者が資料を用意して丁寧に説明することで、「同じ事」を、&lt;/li&gt;
-&lt;li&gt;日程や会場を揃えることで、「同じタイミング」で、&lt;/li&gt;
-&lt;li&gt;質疑応答の機会や飲食による雰囲気を使って、「同じ立場」で、&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;参加者は一緒に考え、場を作っていく。&lt;/p&gt;
-&lt;p&gt;これまでは、物理的な集合を伴う勉強会やカンファレンスを開催することで、自然とこの枠組みに乗って、知の増幅を場に形成する機会を提供できていた。
-物理的な集合を伴わないオンライン開催が前提になれば、これらを達成するための仕組みを意識的に演出しなければならない（あるいは目的自体を変える？）&lt;/p&gt;
-&lt;h1 id=&#34;オンライン開催は代替となるのか&#34;&gt;オンライン開催は代替となるのか&lt;/h1&gt;
-&lt;p&gt;せっかくオンラインでやれるのだから、漠然とこれまでの勉強会の代替ではなく、目的を明確にした上で技術的に解決できるといいなと思っている。&lt;/p&gt;
-&lt;p&gt;知の増幅を場に形成するのであれば、物理的な集合を伴わないオンライン開催であっても、登壇のリアルタイム配信によって参加者が、同じことを同じタイミングで考えることは有効だろう。
-実際、難しいのは、「同じ立場」の部分だと思う。&lt;/p&gt;
-&lt;p&gt;興味関心を同じくするものの初対面の人たちが短時間で気兼ねなく議論できる状態を作りたい。
-明示的な質疑応答の機会はもちろん必要だろう。
-それでも、議論が深くなるとき、もしくは個別化しそうな時、同じミーティングルーム内で即座に個別かつ双方向に話せるだろうか。
-昨年、登壇したGopherConでは、発表後はもちろんのこと、廊下でのすれ違うタイミングで感想や質問をたくさん受けた。そういうことを再現できないだろうか。&lt;/p&gt;
-&lt;p&gt;問題意識の方向性やレベル感が同じくする人を積極的に見つけて、同じ立場の中でクラスタリングされて、その問題を本当に考えたい人が凝縮して、それぞれの知を増幅して、総体として大きくなった知が形成される。&lt;/p&gt;
-&lt;p&gt;この辺りの、集団から始まって最終的に、個と個をダイナミックにつなげる部分をなんとか解決していきたいと思う。&lt;/p&gt;
-&lt;h1 id=&#34;fukuoka-goはどうするのか&#34;&gt;Fukuoka.goはどうするのか&lt;/h1&gt;
-&lt;p&gt;どうしよう。&lt;/p&gt;
-&lt;p&gt;Fukuoka.goは長期的にみて知の増幅を地域に形成できる（といいな）というあたりを狙っているので、主催者が楽しんで継続できることを大切にしています。
-色々それらしきことを述べてみたものの、主催者のモチベは単純には「僕の最近のGo取り組みで面白かったものを聞いてください。よければご飯もどうですか」だったりもするので、オンライン飲みの余興で発表、とか、登壇を動画で配信とかでもいいのかもしれない。&lt;/p&gt;</description></item></channel></rss>
+&lt;/ul&gt;</description></item></channel></rss>
