@@ -200,7 +200,7 @@ k(\boldsymbol{p}, \boldsymbol{q}) &amp;amp;= \exp(-\frac{\| \boldsymbol{p} - \bo
 また、逆行列の計算も$K$のサイズに応じて計算量が増加する。
 加えて、$\hat{y}$の計算にあたっても、新しい入力$\boldsymbol{x}$に対して$N$回のカーネル関数の計算が都度必要となってしまう。&lt;/p>
 &lt;p>&lt;strong>Random Fourier Features&lt;/strong>は、ある確率分布からのサンプリング結果でカーネル関数とグラム行列を近似することで、上述の課題を解決する、高速化のための手法である。&lt;/p>
-&lt;p>この手法では、$\mathbb{R}^D$上のカーネル関数$k(\boldsymbol{p},\boldsymbol{q})$が$\boldsymbol{p}-\boldsymbol{q}$の形で表せるとき、このカーネル関数が、ある確率密度関数$p(\boldsymbol{\omega})$のフーリエ変換で表せることを利用する。&lt;/p>
+&lt;p>この手法では、$\mathbb{R}^D$上のカーネル関数$k(\boldsymbol{p},\boldsymbol{q})$が$\boldsymbol{p}$と$\boldsymbol{q}$の差の形（$k(\boldsymbol{p}-\boldsymbol{q})$）で表せるとき、このカーネル関数が、ある確率密度関数$p(\boldsymbol{\omega})$のフーリエ変換で表せることを利用する。&lt;/p>
 &lt;p>\begin{align}
 \begin{split}
 k(\boldsymbol{p},\boldsymbol{q}) &amp;amp;= k(\boldsymbol{p} - \boldsymbol{q})\\
