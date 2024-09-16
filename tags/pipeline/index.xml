@@ -1,4 +1,105 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>pipeline on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/pipeline/</link><description>Recent content in pipeline on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sat, 07 Sep 2013 00:00:00 +0000</lastBuildDate><atom:link href="/tags/pipeline/" rel="self" type="application/rss+xml"/><item><title>社会人大学院生の七転び八起き国際会議奮闘記</title><link>https://blog.monochromegane.com/blog/2023/12/30/international-conference-struggles/</link><pubDate>Sat, 30 Dec 2023 10:23:08 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2023/12/30/international-conference-struggles/</guid><description>&lt;p>2023年10月に初めてのアカデミックな国際会議での発表を終えました。
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>pipeline on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/pipeline/</link><description>Recent content in pipeline on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sat, 07 Sep 2013 00:00:00 +0000</lastBuildDate><atom:link href="/tags/pipeline/" rel="self" type="application/rss+xml"/><item><title>ターミナルフレンドリーなAIコマンド、afaを作った</title><link>https://blog.monochromegane.com/blog/2024/09/16/afa/</link><pubDate>Mon, 16 Sep 2024 10:48:05 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2024/09/16/afa/</guid><description>&lt;p>Go言語で、AIモデルに対する推論をコマンドラインで実行する&lt;a href="https://github.com/monochromegane/afa">afa&lt;/a>というツールを作りました。入出力としてテキストストリームを前提としており、パイプやリダイレクトを用いて他のコマンドと連携しやすいのが特徴です。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">$ echo $ERROR_MESSAGE | afa new -p &lt;span style="color:#e6db74">&amp;#34;What is happening?&amp;#34;&lt;/span> /path/to/file1 /path/to/file2
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>与えるプロンプトやコンテキスト情報によってAIモデルが柔軟に振る舞いを変えてくれるので、これまでの個別ツールでは対応が難しかった用途における自動化にも有用でしょう。
+また、テキストストリームを扱えるリッチなTUIのコマンド&lt;a href="https://github.com/monochromegane/afa-tui">afa-tui&lt;/a>も別途提供しているので、ターミナル上でのチャットも快適です。&lt;/p>
+&lt;h2 id="デモ">デモ&lt;/h2>
+&lt;h3 id="リッチtuiによるチャット">リッチTUIによるチャット&lt;/h3>
+&lt;p>快適なインタラクティブチャットのため、Markdownを装飾して描画しつつ、&lt;code>less&lt;/code>コマンド相当の操作感のページャーと、プロンプトの入力欄を持つViewerと連携できます。&lt;/p>
+&lt;p>&lt;img src="https://blog.monochromegane.com/images/2024/09/chat.gif" alt="Chat">&lt;/p>
+&lt;h3 id="zsh-line-editorzleを用いたターミナル上でのコマンド提案">Zsh Line Editor(ZLE)を用いたターミナル上でのコマンド提案&lt;/h3>
+&lt;p>ZLEと連携すれば、コマンドライン上でのプロンプトをそのまま提案されたコマンドに置き換えて実行できます。&lt;/p>
+&lt;p>&lt;img src="https://blog.monochromegane.com/images/2024/09/command_suggestion.gif" alt="Command Suggestions">&lt;/p>
+&lt;h3 id="vim上でのコード提案">Vim上でのコード提案&lt;/h3>
+&lt;p>Vimと連携すれば、選択範囲のコードを提案されたものに置換できます。使い慣れたエディタであればdiff表示や差分の部分反映もお手のものですね。&lt;/p>
+&lt;p>&lt;img src="https://blog.monochromegane.com/images/2024/09/code_suggestion.gif" alt="Code Suggestions">&lt;/p>
+&lt;h2 id="機能一覧">機能一覧&lt;/h2>
+&lt;ul>
+&lt;li>ターミナルフレンドリーなAIコマンドとして機能します。&lt;/li>
+&lt;li>リッチなターミナルユーザーインターフェース（TUI）を持つチャットクライアントとして機能します。&lt;/li>
+&lt;li>システムとユーザーのための文脈に応じたプロンプトをテンプレートを使用してサポートします。&lt;/li>
+&lt;li>プロンプト、標準入力、およびファイルパスを文脈として受け付けます。&lt;/li>
+&lt;li>セッションを管理し、&lt;code>resume&lt;/code> サブコマンドを介して迅速に再開できるようにします。&lt;/li>
+&lt;li>安全にエスケープされたJSONオプションで構造化された出力をサポートし、他のコマンドとの統合を容易にします。&lt;/li>
+&lt;li>コアアプリケーションはサードパーティライブラリに依存せずに独立して動作します。&lt;/li>
+&lt;li>AIモデルとして&lt;code>OpenAI&lt;/code>をサポートします（他のAIモデルのサポートは将来計画されています）。&lt;/li>
+&lt;/ul>
+&lt;p>なお、この文章は、英語で書かれたafaのREADMEのFeatures項目をコピーして、&lt;code>pbpaste | afa new -script -p &amp;quot;翻訳して&amp;quot; | pbcopy&lt;/code>で貼り付けました。便利ですね。&lt;/p>
+&lt;h2 id="基本的な使い方">基本的な使い方&lt;/h2>
+&lt;p>Viewerを使用しないシンプルなチャットを起動する。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">$ afa new
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Viewerを使用してチャットを起動する。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">$ afa new -V
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>コンテキスト情報を加えてチャットを起動する。コンテキスト情報には「標準入力」「プロンプトメッセージ(-pオプションによるもの)」、そして「ファイルパス」を与えることができる。
+ただし、仕様上、標準入力を与えるとキーボードからの入力を継続できないため、インタラクティブなチャットはできない。この場合は、プロセス置換（&lt;code>&amp;lt;()&lt;/code>）をファイルパスとして与えることを検討されたい。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">$ echo $ERROR_MESSAGE | afa new -p &lt;span style="color:#e6db74">&amp;#34;What is happening?&amp;#34;&lt;/span> /path/to/file1 /path/to/file2
+&lt;span style="color:#75715e"># Please be cautious; when standard input is provided, interactive mode is disabled.&lt;/span>
+&lt;span style="color:#75715e"># Consider using process substitution.&lt;/span>
+&lt;span style="color:#75715e">#=&amp;gt; afa new -p &amp;#34;What is happening?&amp;#34; /path/to/file1 /path/to/file2 &amp;lt;( echo $ERROR_MESSAGE )&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>直近のセッションを再開する。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">$ afa resume
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>指定したセッションを再開する。なお、&lt;code>afa list&lt;/code>コマンドでセッション一覧を表示できる。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">&lt;span style="color:#75715e"># The command `afa list` displays past sessions.&lt;/span>
+$ afa source -l SESSION_NAME
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>ユーザープロンプトを指定する。ユーザープロンプトは、Go言語のテンプレート形式であり、テンプレート内ではプリセットの値としてコンテキスト情報に対応する、&lt;code>Message&lt;/code>、&lt;code>MessageStdin&lt;/code>、そして &lt;code>Name&lt;/code>と&lt;code>Content&lt;/code>をメンバとする&lt;code>File&lt;/code>構造体のリストである&lt;code>Files&lt;/code>を以下のように呼べる。これにより動的なプロンプトの生成が可能となる。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">&lt;span style="color:#75715e"># `Message`, `MessageStdin`, and `Files` that include `File` with `Name` and `Content` members can be used in the template file.&lt;/span>
+$ echo &lt;span style="color:#e6db74">&amp;#34;Please explain the following.\n{{ (index .Files 0).Content }}&amp;#34;&lt;/span> &amp;gt; CONFIG_PATH/templates/user/explain.tmpl
+afa -u explain /path/to/file
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>スクリプトモードを指定して起動する。コマンドライン実行に適したモードのオプション設定を一括で行う&lt;code>-script&lt;/code>オプションを指定することで、他のコマンドとの連携が容易になる。具体的には&lt;code>-I=false -H=false -S=false -V=false -L=false&lt;/code>が設定される。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">pbpaste | afa new -script -p &lt;span style="color:#e6db74">&amp;#34;Transrate this&amp;#34;&lt;/span> | pbcopy
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>OpenAI&lt;/code>の独自機能として提供される&lt;code>Structured Output&lt;/code>用のスキーマを指定できる。これは指定したJSON構造体に沿うような出力を強制する機能である。例えば、余分な説明が不要なコマンド提案などに適している。
+クオート文字のエスケープを担う&lt;code>-Q&lt;/code>オプションと合わせて使うことで&lt;code>jq&lt;/code>による整形が容易になるので活用されたい。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">$ cat &lt;span style="color:#f92672">&amp;lt;&amp;lt;&amp;lt;&lt;/span> EOS &amp;gt; CONFIG_PATH/schemas/command_suggestion.json
+&lt;span style="color:#f92672">{&lt;/span>
+&lt;span style="color:#e6db74">&amp;#34;type&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;object&amp;#34;&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;properties&amp;#34;&lt;/span>: &lt;span style="color:#f92672">{&lt;/span>
+&lt;span style="color:#e6db74">&amp;#34;suggested_command&amp;#34;&lt;/span>: &lt;span style="color:#f92672">{&lt;/span>
+&lt;span style="color:#e6db74">&amp;#34;type&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;string&amp;#34;&lt;/span>
+&lt;span style="color:#f92672">}&lt;/span>
+&lt;span style="color:#f92672">}&lt;/span>,
+&lt;span style="color:#e6db74">&amp;#34;additionalProperties&amp;#34;&lt;/span>: false,
+&lt;span style="color:#e6db74">&amp;#34;required&amp;#34;&lt;/span>: &lt;span style="color:#f92672">[&lt;/span>
+&lt;span style="color:#e6db74">&amp;#34;suggested_command&amp;#34;&lt;/span>
+&lt;span style="color:#f92672">]&lt;/span>
+&lt;span style="color:#f92672">}&lt;/span>
+EOS
+$ P&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;List Go files from the directory named &amp;#39;internal&amp;#39; and print the first line of each file.&amp;#34;&lt;/span>
+$ afa new -script -Q -j command_suggestion -p $P | jq &lt;span style="color:#e6db74">&amp;#39;. | fromjson&amp;#39;&lt;/span> | jq -r &lt;span style="color:#e6db74">&amp;#39;.suggested_command&amp;#39;&lt;/span>
+&lt;span style="color:#75715e">#=&amp;gt; find internal -name &amp;#39;*.go&amp;#39; -exec head -n 1 {} \;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="実践例">実践例&lt;/h2>
+&lt;p>実践例を列挙します。
+もし使いたい例があれば、GitHubのリポジトリの&lt;a href="https://github.com/monochromegane/afa?tab=readme-ov-file#practical-examples">README&lt;/a>にプロンプトや設定例と共に載せているので参考にしてみてください。&lt;/p>
+&lt;ul>
+&lt;li>Zsh Line Editor(ZLE)を用いたターミナル上でのコマンド提案
+&lt;ul>
+&lt;li>デモで紹介したものです&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Vim上でのコード提案
+&lt;ul>
+&lt;li>これもデモで紹介したものです&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>ターミナルに表示されたエラーメッセージの分析
+&lt;ul>
+&lt;li>&lt;code>tmux&lt;/code>の&lt;code>capture-pane&lt;/code>を使って直近の実行結果を分析できます。複数行にわたるエラーメッセージのコピペの手間が省けて便利ですね&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>GitHubのプルリクエストの自動生成
+&lt;ul>
+&lt;li>&lt;code>git diff&lt;/code>と&lt;code>git log&lt;/code>の情報を元にタイトルと要約を生成してプルリクエストを開きます。ZLEを想定しているので背景情報も踏まえて考えてもらえるようになっています。また、既存のテンプレートの上に要約を差し込む形にしているので、どのリポジトリでも使いやすいかなと思います。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>pecoを用いたセッションの絞り込みと読み込み
+&lt;ul>
+&lt;li>インタラクティブな絞り込みで素早く過去のセッションにアクセスできます。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="afa">AFA&lt;/h2>
+&lt;p>AFAは&lt;code>AI for All&lt;/code>の略で、あらゆるコマンドラインツールに対して連携可能（$\forall x \in X , \exists \mathrm{AI}(x)$、つまりコマンドラインツールの集合&lt;code>X&lt;/code>の全ての要素&lt;code>x&lt;/code>に対し、その結果を入力とする&lt;code>AI(x)&lt;/code>な組み合わせが存在する）なAIコマンドになるといいなと思って付けた名前です。&lt;/p>
+&lt;p>現時点でもまだViewerの入力欄が不調になることがあったりWindowsでの動作確認ができていないなど課題はありますが、通常使う分には十分な品質になったと思うので公開しました。よく使うオプションセットをconfigに設定し、いくつかのユーザープロンプトを登録しておいて&lt;code>alias af='afa new'&lt;/code>とするだけで、個人的には、調べ物やチャットを含め、ブラウザの利用頻度がかなり減ったことを実感しています。&lt;/p>
+&lt;p>Homebrewによるインストール&lt;code>brew install monochromegane/tap/afa monochromegane/tap/afa-tui&lt;/code>も提供していますので、よければ使ってみてください。&lt;/p>
+&lt;p>将来的には、サーバー上での異常検知のような定式化の難易度が高いタスクでの適用も検討しています（サードパーティー製ライブラリへの非依存とViewerツールとの分離は、そのためでもあります）。AFAであれば、他のコマンドラインツールとの親和性を活かして、通知やロギングは従来の仕組みも活用できると考えています。適用例など共有してもらえたら嬉しいです。&lt;/p></description></item><item><title>社会人大学院生の七転び八起き国際会議奮闘記</title><link>https://blog.monochromegane.com/blog/2023/12/30/international-conference-struggles/</link><pubDate>Sat, 30 Dec 2023 10:23:08 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2023/12/30/international-conference-struggles/</guid><description>&lt;p>2023年10月に初めてのアカデミックな国際会議での発表を終えました。
 社会人博士課程に進学後、2021年5月の初投稿から丸2年、7回目の挑戦にしてようやくの採択ということで、自慢できるものではないのですが、同様に博士課程において日々挑戦している方々に何かの参考になればと思い、まとめておきます。&lt;/p>
 &lt;h1 id="略歴と背景">略歴と背景&lt;/h1>
 &lt;p>2017年から&lt;a href="https://rand.pepabo.com/">ペパボ研究所&lt;/a>で研究開発職に従事しています。
@@ -1258,90 +1359,4 @@ A) 大学を卒業し，大学，研究所等において，２年以上研究�
 &lt;li>&lt;a href="https://blog.monochromegane.com/blog/2018/06/30/first-half-2018/">First Half of 2018&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://blog.monochromegane.com/blog/2018/08/16/reason/">理性の人&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://blog.monochromegane.com/blog/2019/12/31/2019/">2019&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>Go言語でシミュレーション用のシンプルなフレームワークStageをつくった</title><link>https://blog.monochromegane.com/blog/2020/05/31/simulation-framework-stage/</link><pubDate>Sun, 31 May 2020 12:16:27 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/05/31/simulation-framework-stage/</guid><description>&lt;p>時系列に対するコンピュータシミュレーションを開発する機会が増えてきたので、共通する処理の流れをフレームワーク化した。&lt;/p>
-&lt;!-- raw HTML omitted -->
-&lt;h2 id="コンピュータシミュレーション">コンピュータシミュレーション&lt;/h2>
-&lt;p>状況に応じたクリック数の最大化や変化点検出のような、システムの適応的な振る舞いを検証するために、時系列に対するコンピュータシミュレーションを行うことがある。
-また、実環境で発生するランダムな誤差を表現する場合、乱数を用いたシミュレーション技法であるモンテカルロ法も利用することになる。&lt;/p>
-&lt;p>このようなシミュレーションのプログラムでは、変化する時系列を入力に、振る舞いのシミュレーション結果を出力するだけではなく、乱数によって発生する誤差を均すためにシミュレーションを数百〜数千回繰り返す必要がある。&lt;/p>
-&lt;h2 id="stage">Stage&lt;/h2>
-&lt;p>Stageは、これらの一連の流れの実行とこれに伴う煩雑な処理（シミュレーションの並列化、乱数の管理、進捗の監視、ログ出力）を開発者から隠蔽する。
-開発者は、時系列や振る舞い、ログフォーマットをGo言語で記述するだけで良い。&lt;/p>
-&lt;p>Stageで行っているメイン処理の「疑似コード」は以下の通りシンプルである。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; &lt;span style="color:#a6e22e">i&lt;/span> &amp;lt; &lt;span style="color:#a6e22e">iter&lt;/span>; &lt;span style="color:#a6e22e">i&lt;/span>&lt;span style="color:#f92672">++&lt;/span> {
-&lt;span style="color:#a6e22e">sem&lt;/span> &lt;span style="color:#f92672">&amp;lt;-&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span>{}{}
-&lt;span style="color:#66d9ef">go&lt;/span> &lt;span style="color:#66d9ef">func&lt;/span>() {
-&lt;span style="color:#a6e22e">scenario&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">NewScenarioFn&lt;/span>(&lt;span style="color:#a6e22e">rnd&lt;/span>.&lt;span style="color:#a6e22e">Int63&lt;/span>())
-&lt;span style="color:#a6e22e">actor&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">NewActorFn&lt;/span>(&lt;span style="color:#a6e22e">rnd&lt;/span>.&lt;span style="color:#a6e22e">Int63&lt;/span>())
-&lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#a6e22e">scenario&lt;/span>.&lt;span style="color:#a6e22e">Scan&lt;/span>() {
-&lt;span style="color:#a6e22e">action&lt;/span>, &lt;span style="color:#a6e22e">_&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">actor&lt;/span>.&lt;span style="color:#a6e22e">Act&lt;/span>(&lt;span style="color:#a6e22e">scenario&lt;/span>.&lt;span style="color:#a6e22e">Line&lt;/span>())
-&lt;span style="color:#a6e22e">w&lt;/span>.&lt;span style="color:#a6e22e">Write&lt;/span>(&lt;span style="color:#a6e22e">action&lt;/span>.&lt;span style="color:#a6e22e">String&lt;/span>())
-}
-&lt;span style="color:#f92672">&amp;lt;-&lt;/span>&lt;span style="color:#a6e22e">sem&lt;/span>
-}()
-}
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>このフレームワークでは、メタファーとして劇場(Stage)を採用した。
-劇場は、劇を開催する。
-その劇は台本(Scenario)があり、演者(Actor)は台本の1行づつのセリフ(Line)に沿って演技を行い、結果(Action)を出力する、といった形だ。
-そして劇は何度も繰り返される。&lt;/p>
-&lt;p>開発者は、時系列や振る舞いをそれぞれ、ScenarioとActorのinterfaceを実装によって記述する。
-また、ログフォーマットもAction interfaceで指定するだけで良い。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">Scenario&lt;/span> &lt;span style="color:#66d9ef">interface&lt;/span> {
-&lt;span style="color:#a6e22e">Scan&lt;/span>() &lt;span style="color:#66d9ef">bool&lt;/span>
-&lt;span style="color:#a6e22e">Line&lt;/span>() &lt;span style="color:#a6e22e">Line&lt;/span>
-}
-&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">Actor&lt;/span> &lt;span style="color:#66d9ef">interface&lt;/span> {
-&lt;span style="color:#a6e22e">Act&lt;/span>(&lt;span style="color:#a6e22e">Line&lt;/span>) (&lt;span style="color:#a6e22e">Action&lt;/span>, &lt;span style="color:#66d9ef">error&lt;/span>)
-}
-&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">Action&lt;/span> &lt;span style="color:#66d9ef">interface&lt;/span> {
-&lt;span style="color:#a6e22e">String&lt;/span>() &lt;span style="color:#66d9ef">string&lt;/span>
-}
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>あとは実装したScenarioとActorを生成する関数を指定して必要な回数実行。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-go" data-lang="go">&lt;span style="color:#a6e22e">dir&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;log&amp;#34;&lt;/span> &lt;span style="color:#75715e">// Directory for output
-&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">concurrency&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">runtime&lt;/span>.&lt;span style="color:#a6e22e">NumCPU&lt;/span>() &lt;span style="color:#75715e">// Number of concurrency for scenario
-&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">seed&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span> &lt;span style="color:#75715e">// Seed for random
-&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">iter&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#ae81ff">3&lt;/span> &lt;span style="color:#75715e">// Number of iteration
-&lt;/span>&lt;span style="color:#75715e">&lt;/span>
-&lt;span style="color:#a6e22e">s&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">stage&lt;/span>.&lt;span style="color:#a6e22e">New&lt;/span>(&lt;span style="color:#a6e22e">dir&lt;/span>, &lt;span style="color:#a6e22e">concurrency&lt;/span>, &lt;span style="color:#a6e22e">seed&lt;/span>)
-&lt;span style="color:#a6e22e">s&lt;/span>.&lt;span style="color:#a6e22e">Run&lt;/span>(&lt;span style="color:#a6e22e">iter&lt;/span>, &lt;span style="color:#a6e22e">NewActorFn&lt;/span>, &lt;span style="color:#a6e22e">NewScenarioFn&lt;/span>, &lt;span style="color:#a6e22e">stage&lt;/span>.&lt;span style="color:#a6e22e">NoOpeCallbackFn&lt;/span>)
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>結果は、指定したログディレクトに出力され、実行日時や利用した乱数シードも確認することができる。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">log
-└── 20200530184234-1 &lt;span style="color:#75715e"># Timestamp-Seed&lt;/span>
-├── iter_00-a_7947919477105006377-s_5355116748216652230.log &lt;span style="color:#75715e"># Iteration log files&lt;/span>
-├── iter_01-a_4846631296614585111-s_2007235010091403794.log &lt;span style="color:#75715e"># with seed for actor(a)&lt;/span>
-└── iter_02-a_0610076349056253918-s_3540139325796113853.log &lt;span style="color:#75715e"># and seed for scenario(s)&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>なお、出力後の解析、グラフ出力については、Stageでは取り扱わない。
-任意のフォーマットで出力できるのでお好みの言語やツールで操作して欲しい。&lt;/p>
-&lt;p>各インターフェースの具体的な実装方法については&lt;a href="https://github.com/monochromegane/stage/blob/master/README.md">README&lt;/a>を参照のこと。&lt;/p>
-&lt;h2 id="複数のシナリオを持つシミュレーション例">複数のシナリオを持つシミュレーション例&lt;/h2>
-&lt;p>例えば、以下の青線のような変化の仕方が異なるシナリオを切り替えて、橙の線のような振る舞いの違いをシミュレーションすることができる。&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>Abrupt changes&lt;/th>
-&lt;th>Gradual changes&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>&lt;img src="https://user-images.githubusercontent.com/1845486/83343338-f8bcbe00-a333-11ea-983b-81ba9a6f8b08.png" alt="example_adwin_abrupt">&lt;/td>
-&lt;td>&lt;img src="https://user-images.githubusercontent.com/1845486/83343344-10944200-a334-11ea-9364-b4d4cedcdff6.png" alt="example_adwin_gradual">&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;ul>
-&lt;li>&lt;a href="https://github.com/monochromegane/stage/tree/master/_examples/adwin">複数シナリオの実装例&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="長時間かかるシミュレーション例">長時間かかるシミュレーション例&lt;/h2>
-&lt;p>また、シミュレーションに時間がかかる場合は、各シナリオの完了時に呼ばれるCallback関数を指定することで、進捗の監視もできる。
-お好みのProgress barライブラリを使えば進捗バーも表示できる。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-sh" data-lang="sh">$ go run _examples/progress/main.go
-&lt;span style="color:#ae81ff">180&lt;/span> / &lt;span style="color:#ae81ff">200&lt;/span> &lt;span style="color:#f92672">[&lt;/span>----------------------------&amp;gt;___&lt;span style="color:#f92672">]&lt;/span> 90.00% &lt;span style="color:#ae81ff">40&lt;/span> p/s
-&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
-&lt;li>&lt;a href="https://github.com/monochromegane/stage/tree/master/_examples/progress">プログレスバーの実装例&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h1 id="まとめ">まとめ&lt;/h1>
-&lt;p>普段よりアルゴリズムの理解を深めるため手に馴染んだGo言語で実装を試みるので、必然的にシミュレーションもGoで書くことが多くなったことからGo言語での実装となった。
-完全に自分用途でつくったフレームワークではあるが、各シミュレーションにおいてシナリオとアクターという要素のみを意識すればよくなり実装の効率が格段に上がりコードの見通しもよくなった。
-また、Go言語を使うことで並列化が容易に実装できシンプルなフレームワークでありながら十分に安定して高速化を達成できていると思う。
-付加的な利点として、ログ構成などが統一されたことで後段の解析やグラフ化のスクリプトも共通化が進んでおり、個人的に満足度が高いものができたと思う。&lt;/p></description></item></channel></rss>
+&lt;/ul></description></item></channel></rss>

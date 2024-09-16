@@ -47,6 +47,126 @@
 <article>
 <div class=post>
 <header>
+<h1><a href=https://blog.monochromegane.com/blog/2024/09/16/afa/>ターミナルフレンドリーなAIコマンド、afaを作った</a></h1>
+<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2024-09-16</div></time>
+</header>
+<div class=post-inner>
+<p>Go言語で、AIモデルに対する推論をコマンドラインで実行する<a href=https://github.com/monochromegane/afa>afa</a>というツールを作りました。入出力としてテキストストリームを前提としており、パイプやリダイレクトを用いて他のコマンドと連携しやすいのが特徴です。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ echo $ERROR_MESSAGE | afa new -p <span style=color:#e6db74>&#34;What is happening?&#34;</span> /path/to/file1 /path/to/file2
+</code></pre></div><p>与えるプロンプトやコンテキスト情報によってAIモデルが柔軟に振る舞いを変えてくれるので、これまでの個別ツールでは対応が難しかった用途における自動化にも有用でしょう。
+また、テキストストリームを扱えるリッチなTUIのコマンド<a href=https://github.com/monochromegane/afa-tui>afa-tui</a>も別途提供しているので、ターミナル上でのチャットも快適です。</p>
+<h2 id=デモ>デモ</h2>
+<h3 id=リッチtuiによるチャット>リッチTUIによるチャット</h3>
+<p>快適なインタラクティブチャットのため、Markdownを装飾して描画しつつ、<code>less</code>コマンド相当の操作感のページャーと、プロンプトの入力欄を持つViewerと連携できます。</p>
+<p><img src=/images/2024/09/chat.gif alt=Chat></p>
+<h3 id=zsh-line-editorzleを用いたターミナル上でのコマンド提案>Zsh Line Editor(ZLE)を用いたターミナル上でのコマンド提案</h3>
+<p>ZLEと連携すれば、コマンドライン上でのプロンプトをそのまま提案されたコマンドに置き換えて実行できます。</p>
+<p><img src=/images/2024/09/command_suggestion.gif alt="Command Suggestions"></p>
+<h3 id=vim上でのコード提案>Vim上でのコード提案</h3>
+<p>Vimと連携すれば、選択範囲のコードを提案されたものに置換できます。使い慣れたエディタであればdiff表示や差分の部分反映もお手のものですね。</p>
+<p><img src=/images/2024/09/code_suggestion.gif alt="Code Suggestions"></p>
+<h2 id=機能一覧>機能一覧</h2>
+<ul>
+<li>ターミナルフレンドリーなAIコマンドとして機能します。</li>
+<li>リッチなターミナルユーザーインターフェース（TUI）を持つチャットクライアントとして機能します。</li>
+<li>システムとユーザーのための文脈に応じたプロンプトをテンプレートを使用してサポートします。</li>
+<li>プロンプト、標準入力、およびファイルパスを文脈として受け付けます。</li>
+<li>セッションを管理し、<code>resume</code> サブコマンドを介して迅速に再開できるようにします。</li>
+<li>安全にエスケープされたJSONオプションで構造化された出力をサポートし、他のコマンドとの統合を容易にします。</li>
+<li>コアアプリケーションはサードパーティライブラリに依存せずに独立して動作します。</li>
+<li>AIモデルとして<code>OpenAI</code>をサポートします（他のAIモデルのサポートは将来計画されています）。</li>
+</ul>
+<p>なお、この文章は、英語で書かれたafaのREADMEのFeatures項目をコピーして、<code>pbpaste | afa new -script -p "翻訳して" | pbcopy</code>で貼り付けました。便利ですね。</p>
+<h2 id=基本的な使い方>基本的な使い方</h2>
+<p>Viewerを使用しないシンプルなチャットを起動する。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ afa new
+</code></pre></div><p>Viewerを使用してチャットを起動する。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ afa new -V
+</code></pre></div><p>コンテキスト情報を加えてチャットを起動する。コンテキスト情報には「標準入力」「プロンプトメッセージ(-pオプションによるもの)」、そして「ファイルパス」を与えることができる。
+ただし、仕様上、標準入力を与えるとキーボードからの入力を継続できないため、インタラクティブなチャットはできない。この場合は、プロセス置換（<code>&lt;()</code>）をファイルパスとして与えることを検討されたい。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ echo $ERROR_MESSAGE | afa new -p <span style=color:#e6db74>&#34;What is happening?&#34;</span> /path/to/file1 /path/to/file2
+<span style=color:#75715e># Please be cautious; when standard input is provided, interactive mode is disabled.</span>
+<span style=color:#75715e># Consider using process substitution.</span>
+<span style=color:#75715e>#=&gt; afa new -p &#34;What is happening?&#34; /path/to/file1 /path/to/file2 &lt;( echo $ERROR_MESSAGE )</span>
+</code></pre></div><p>直近のセッションを再開する。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ afa resume
+</code></pre></div><p>指定したセッションを再開する。なお、<code>afa list</code>コマンドでセッション一覧を表示できる。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=color:#75715e># The command `afa list` displays past sessions.</span>
+$ afa source -l SESSION_NAME
+</code></pre></div><p>ユーザープロンプトを指定する。ユーザープロンプトは、Go言語のテンプレート形式であり、テンプレート内ではプリセットの値としてコンテキスト情報に対応する、<code>Message</code>、<code>MessageStdin</code>、そして <code>Name</code>と<code>Content</code>をメンバとする<code>File</code>構造体のリストである<code>Files</code>を以下のように呼べる。これにより動的なプロンプトの生成が可能となる。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=color:#75715e># `Message`, `MessageStdin`, and `Files` that include `File` with `Name` and `Content` members can be used in the template file.</span>
+$ echo <span style=color:#e6db74>&#34;Please explain the following.\n{{ (index .Files 0).Content }}&#34;</span> &gt; CONFIG_PATH/templates/user/explain.tmpl
+afa -u explain /path/to/file
+</code></pre></div><p>スクリプトモードを指定して起動する。コマンドライン実行に適したモードのオプション設定を一括で行う<code>-script</code>オプションを指定することで、他のコマンドとの連携が容易になる。具体的には<code>-I=false -H=false -S=false -V=false -L=false</code>が設定される。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>pbpaste | afa new -script -p <span style=color:#e6db74>&#34;Transrate this&#34;</span> | pbcopy
+</code></pre></div><p><code>OpenAI</code>の独自機能として提供される<code>Structured Output</code>用のスキーマを指定できる。これは指定したJSON構造体に沿うような出力を強制する機能である。例えば、余分な説明が不要なコマンド提案などに適している。
+クオート文字のエスケープを担う<code>-Q</code>オプションと合わせて使うことで<code>jq</code>による整形が容易になるので活用されたい。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ cat <span style=color:#f92672>&lt;&lt;&lt;</span> EOS &gt; CONFIG_PATH/schemas/command_suggestion.json
+<span style=color:#f92672>{</span>
+  <span style=color:#e6db74>&#34;type&#34;</span>: <span style=color:#e6db74>&#34;object&#34;</span>,
+  <span style=color:#e6db74>&#34;properties&#34;</span>: <span style=color:#f92672>{</span>
+    <span style=color:#e6db74>&#34;suggested_command&#34;</span>: <span style=color:#f92672>{</span>
+      <span style=color:#e6db74>&#34;type&#34;</span>: <span style=color:#e6db74>&#34;string&#34;</span>
+    <span style=color:#f92672>}</span>
+  <span style=color:#f92672>}</span>,
+  <span style=color:#e6db74>&#34;additionalProperties&#34;</span>: false,
+  <span style=color:#e6db74>&#34;required&#34;</span>: <span style=color:#f92672>[</span>
+    <span style=color:#e6db74>&#34;suggested_command&#34;</span>
+  <span style=color:#f92672>]</span>
+<span style=color:#f92672>}</span>
+EOS
+
+$ P<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;List Go files from the directory named &#39;internal&#39; and print the first line of each file.&#34;</span>
+$ afa new -script -Q -j command_suggestion -p $P | jq <span style=color:#e6db74>&#39;. | fromjson&#39;</span> | jq -r <span style=color:#e6db74>&#39;.suggested_command&#39;</span>
+<span style=color:#75715e>#=&gt; find internal -name &#39;*.go&#39; -exec head -n 1 {} \;</span>
+</code></pre></div><h2 id=実践例>実践例</h2>
+<p>実践例を列挙します。
+もし使いたい例があれば、GitHubのリポジトリの<a href="https://github.com/monochromegane/afa?tab=readme-ov-file#practical-examples">README</a>にプロンプトや設定例と共に載せているので参考にしてみてください。</p>
+<ul>
+<li>Zsh Line Editor(ZLE)を用いたターミナル上でのコマンド提案
+<ul>
+<li>デモで紹介したものです</li>
+</ul>
+</li>
+<li>Vim上でのコード提案
+<ul>
+<li>これもデモで紹介したものです</li>
+</ul>
+</li>
+<li>ターミナルに表示されたエラーメッセージの分析
+<ul>
+<li><code>tmux</code>の<code>capture-pane</code>を使って直近の実行結果を分析できます。複数行にわたるエラーメッセージのコピペの手間が省けて便利ですね</li>
+</ul>
+</li>
+<li>GitHubのプルリクエストの自動生成
+<ul>
+<li><code>git diff</code>と<code>git log</code>の情報を元にタイトルと要約を生成してプルリクエストを開きます。ZLEを想定しているので背景情報も踏まえて考えてもらえるようになっています。また、既存のテンプレートの上に要約を差し込む形にしているので、どのリポジトリでも使いやすいかなと思います。</li>
+</ul>
+</li>
+<li>pecoを用いたセッションの絞り込みと読み込み
+<ul>
+<li>インタラクティブな絞り込みで素早く過去のセッションにアクセスできます。</li>
+</ul>
+</li>
+</ul>
+<h2 id=afa>AFA</h2>
+<p>AFAは<code>AI for All</code>の略で、あらゆるコマンドラインツールに対して連携可能（$\forall x \in X , \exists \mathrm{AI}(x)$、つまりコマンドラインツールの集合<code>X</code>の全ての要素<code>x</code>に対し、その結果を入力とする<code>AI(x)</code>な組み合わせが存在する）なAIコマンドになるといいなと思って付けた名前です。</p>
+<p>現時点でもまだViewerの入力欄が不調になることがあったりWindowsでの動作確認ができていないなど課題はありますが、通常使う分には十分な品質になったと思うので公開しました。よく使うオプションセットをconfigに設定し、いくつかのユーザープロンプトを登録しておいて<code>alias af='afa new'</code>とするだけで、個人的には、調べ物やチャットを含め、ブラウザの利用頻度がかなり減ったことを実感しています。</p>
+<p>Homebrewによるインストール<code>brew install monochromegane/tap/afa monochromegane/tap/afa-tui</code>も提供していますので、よければ使ってみてください。</p>
+<p>将来的には、サーバー上での異常検知のような定式化の難易度が高いタスクでの適用も検討しています（サードパーティー製ライブラリへの非依存とViewerツールとの分離は、そのためでもあります）。AFAであれば、他のコマンドラインツールとの親和性を活かして、通知やロギングは従来の仕組みも活用できると考えています。適用例など共有してもらえたら嬉しいです。</p>
+</div>
+<footer class=tag>
+<i class="fa fa-tags tag-icon"></i>
+<ul>
+<li><a class=tag-link href=/tags/></a></li>
+</ul>
+<div class=clear></div>
+</footer>
+</div>
+</article>
+<article>
+<div class=post>
+<header>
 <h1><a href=https://blog.monochromegane.com/blog/2023/12/30/international-conference-struggles/>社会人大学院生の七転び八起き国際会議奮闘記</a></h1>
 <time><div class=day><i class="fa fa-calendar-o day-icon"></i>2023-12-30</div></time>
 </header>
@@ -856,113 +976,6 @@ RSSフィード的なインプットの方法を探したい。</p>
 <i class="fa fa-tags tag-icon"></i>
 <ul>
 <li><a class=tag-link href=/tags/%E8%AB%96%E6%96%87>論文</a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/blog/2020/12/31/2020/>2020</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2020-12-31</div></time>
-</header>
-<div class=post-inner>
-<p>今年は、なんと言っても、6月の初めてのジャーナル論文採録が文句なしに一番嬉しかった出来事だった。
-ペパボ研究所に入って3年半。
-本当に長かったし苦しかった。
-それでもこの期間にたくさん自分自身や研究と向き合うことで、多くのものを得ることができたと思う。
-今は、ただただ「巨人の肩に乗ることから逃げずに真摯に向き合い一歩づつ精進して」いる。</p>
-<p>10月には、博士後期課程に挑戦し、無事に入学することができた。
-12月のインターネットと運用技術シンポジウムではジャーナル論文の研究を発展させる手法が採録され、優秀プレゼンテーション賞も受賞することができた。
-来年は国際会議に挑戦する。</p>
-<p>長い暗中模索を抜けたが、スタートラインにやっと立てたとも言える。
-遅れを取り戻すことを動機とはしないが、2021年は、可能な限り、適切な粒度で継続的に分野への貢献を出していきたい。
-また、その貢献を通して周りの人へ直接的間接的に良い影響を与えたいと思う。</p>
-<p>そのためにも、習慣と計画をうまく使い、仕組みによって淡々と自分を駆動していきたい。
-2020年は1月末からリモートワークに完全移行したが、毎朝の論文読み会によって生活リズムが崩れることはなく研究に取り組めた。
-毎日の業務後に進めるよう計画していた、大学基礎数学の参考書は、微分積分、線形代数、確率統計を一通りこなすことができた。
-一方で、研究開発において、習慣と計画は適用が難しいと感じている。
-研究には終わりがないため、どこまでの試行錯誤を区切りとするのか判断がつきにくい。
-また、アイディアは無限にあるため、いろいろなことをやりたくなり、優先順位の判断がつきにくい。
-つまり、全体をブレイクダウンしてルーティーンに落とし込むところに苦労している。
-ここに関しては、研究日誌のような短期のアウトプットに加えて、もう少しだけ長い視点での判断をする機会を計画や習慣として組み込んでいきたい。
-まずは、その観点でも指導教官や研究所のみんなにも相手になってもらおう。</p>
-<p>2020年は光が見えた年だった。
-2021年からは、この成果を普段から出せるよう、そして一つ上を目指せるようにしていこうと思う。
-そして、その成果から行動の意義が伝わるような良い影響を与えられるようになりたいと思う。
-来年もよろしくお願いします。</p>
-<h1 id=実績>実績</h1>
-<p>以下、実績を列挙する。</p>
-<h2 id=表彰>表彰</h2>
-<p>2020年は2回の表彰があった。
-コミュニティ活動と研究活動の両面で表彰をいただくことができて、非常に嬉しい。</p>
-<ul>
-<li><a href=https://www.iot.ipsj.or.jp/awards/symposium/>IOTS2020 優秀プレゼンテーション賞</a>, 三宅 悠介, 栗林 健太郎, 変化検出と要約データ構造を用いた利用者の嗜好の変化に迅速に追従する多腕バンディット手法, 2020年12月.</li>
-<li><a href=https://efc.fukuoka.jp/information/3116>エンジニアフレンドリーシティ福岡アワード コミュニティ部門</a>, 三宅 悠介,小田 知央, Fukuoka.go, 2020年1月.</li>
-</ul>
-<h2 id=論文>論文</h2>
-<p>国内ジャーナル論文1本、査読付き論文1本。研究報告については第一著者のものが1本。
-また、今年は研究報告のラストオーサーを2本務めた。</p>
-<ol>
-<li>三宅 悠介, 峯 恒憲, <a href="https://search.ieice.org/bin/summary.php?id=j103-d_11_764">Synapse: 文脈に応じて継続的に推薦手法の選択を最適化する推薦システム</a>, 電子情報通信学会論文誌D, Vol.J103-D, No.11, pp.764-775, Nov 2020.</li>
-<li>三宅 悠介, 栗林 健太郎, <a href=http://id.nii.ac.jp/1001/00208105/>変化検出と要約データ構造を用いた利用者の嗜好の変化に迅速に追従する多腕バンディット手法</a>, インターネットと運用技術シンポジウム論文集, 2020, pp.1-8, Nov 2020. <a href=https://speakerdeck.com/monochromegane/iots2020-adaptive-linear-mab>[発表資料]</a></li>
-<li>三宅 悠介, 栗林 健太郎, <a href=http://id.nii.ac.jp/1001/00206029/>非定常な多腕バンディット問題における変化検出アプローチの線形モデルへの拡張</a>, 研究報告インターネットと運用技術（IOT）, Vol.2020-IOT-50, pp.1-8, July 2020.<a href=http://localhost:4567/papers/iot50-miyakey.pdf>[論文]</a> <a href=https://speakerdeck.com/monochromegane/extension-of-change-detection-method-for-non-stationary-linear-multi-armed-bandit>[発表資料]</a></li>
-</ol>
-<h2 id=国内発表>国内発表</h2>
-<p>技術イベント、研究会での発表で計６回（学会の研究会、シンポジウムを除く）。
-Fukuoka.go、WSA研究会といったお馴染みのところに加え、GMOのテックカンファレンス、エンジニアフレンドリーシティ福岡のような声をかけていただいた登壇もあり、バランスは良かったと思う。
-来年は、国際カンファレンス登壇が最初の目標だが、国内でも参加したことがない技術カンファレンスや勉強会なども挑戦してみたい。</p>
-<ol>
-<li>三宅 悠介 <a href=https://blog.monochromegane.com/blog/2020/11/17/wsa7-local-preference/>嗜好伝達コミュニケーションの効率化を目指した伝達方式の検討</a>, <a href=https://wsa.connpass.com/event/187128/>Web System Architecture 研究会 (WSA研) #7</a>, 2020年11月.</li>
-<li>三宅 悠介 <a href=https://speakerdeck.com/monochromegane/coherently-fittable-system>なめらかなシステムの実現に向けて</a>, <a href=https://www.gmo.jp/developersday/>GMO Developers Day 2020</a>, 2020年7月. [<a href=https://youtu.be/KW-YKuM1ndI>動画</a>]</li>
-<li>三宅 悠介 <a href=https://speakerdeck.com/monochromegane/fukuokago-stage>Go言語でシミュレーション用のシンプルなフレームワークStageをつくった</a>, <a href=https://fukuokago.connpass.com/event/180414/>Fukuoka.go#16(オンライン開催)</a>, 2020年7月.</li>
-<li>三宅 悠介 <a href=https://speakerdeck.com/monochromegane/wsa6-sifter>軽量なインデックス機構を用いた全文検索ツールの高速化の検討</a>, <a href=https://websystemarchitecture.hatenablog.jp/entry/2019/12/11/165624>Web System Architecture 研究会 (WSA研) #6</a>, 2020年4月.</li>
-<li>三宅 悠介 <a href=https://speakerdeck.com/monochromegane/fukuokago15-adwin-exphist>Adaptiveなウィンドウを求めて 〜サーベイと実装 Go言語編〜</a>, <a href=https://fukuokago.connpass.com/event/164350/>Fukuoka.go#15 + 鹿児島Gophers(オンライン開催)</a>, 2020年3月.</li>
-<li>三宅 悠介, 田中 孝明, 白石 憲正, 浜崎 陽一郎, 松口 健司 <a href=https://efc.fukuoka.jp/information/2562#day2_7>トークセッション / エンジニアと企業が描く未来のかたち</a>, <a href=https://efc.fukuoka.jp/information/2562>エンジニアフレンドリーシティ福岡フェスティバル</a>, 2020年2月.</li>
-</ol>
-<h2 id=oss>OSS</h2>
-<p>変化検出の手法をはじめ、シミュレーションのフレームワークなど研究開発で取り組む分野の実装が増えてきた。</p>
-<ul>
-<li><a href=https://github.com/monochromegane/adwin-v>ADWIN-V</a>: ADWIN-V is an adaptive windowing algorithm for vector data.</li>
-<li><a href=https://github.com/monochromegane/stage>stage</a>: Simple and flexible simulation framework for Go.</li>
-<li><a href=https://github.com/monochromegane/sifter>sifter</a>: A lightweight index for full text search tools using bloom filter.</li>
-<li><a href=https://github.com/monochromegane/adwin>adwin</a>: Adwin is an adaptive windowing algorithm.</li>
-<li><a href=https://github.com/monochromegane/exponential-histograms>exponential-histograms</a>: Exponential histograms is a data structure for sliding windows.</li>
-<li><a href=https://github.com/monochromegane/random_multivariate_normal>random_multivariate_normal</a>: Random number generator from a multivariate normal distribution.</li>
-</ul>
-<h2 id=コミュニティ活動>コミュニティ活動</h2>
-<p>昨年度の活動や昨今の状況でのオンラインでの活動が評価され、表彰やインタビューを受ける機会をいただき非常にありがたいことであった。
-一方で、Fukuoka.go自体の活動実績は2回と例年に比べかなり少なめであった。
-オンライン開催での主催者側のモチベーションをどう維持するかも課題である。</p>
-<ul>
-<li>小田 知央,三宅 悠介,清家 史郎 <a href=https://efc.fukuoka.jp/interview/3704>勉強会はパーティーだ! ビール片手に楽しくGo言語を学ぶコミュニティ「Fukuoka.go」</a>, <a href=https://efc.fukuoka.jp/interview>ENGINEER INTERVIEW - Engineer Friendly City Fukuoka</a>, 2020年8月.</li>
-<li><a href=https://fukuokago.connpass.com/event/180414/>Fukuoka.go#16 (オンライン開催)</a></li>
-<li><a href=https://fukuokago.connpass.com/event/164350/>Fukuoka.go#15 + 鹿児島Gophers(オンライン開催)</a></li>
-<li>三宅 悠介,小田 知央 <a href=https://dayori.city.fukuoka.lg.jp/129892/>エンジニアの技術向上に取り組むコミュニティ･企業を表彰 エンジニアフレンドリーシティ福岡アワード</a>, <a href=https://dayori.city.fukuoka.lg.jp/>福岡市政だより</a>, 2020年3月.</li>
-</ul>
-<h2 id=ブログ>ブログ</h2>
-<p>13本。結果だけでなく、どうしてその考えに至ったかなど、その経緯、考えをまとめるカタチの文章をいくつか出すことができた。特に論文執筆のエントリのような自分なりのまとめは定期的に書いていきたいと思う。</p>
-<ul>
-<li><a href=https://blog.monochromegane.com/blog/2020/11/17/wsa7-local-preference/>嗜好伝達コミュニケーションの効率化を目指した伝達方式の検討</a></li>
-<li><a href=https://blog.monochromegane.com/blog/2020/10/14/pen-tablet/>ペンタブレットでリモートワークのコミュニケーションを改善する</a></li>
-<li><a href=https://blog.monochromegane.com/blog/2020/09/23/structure-of-research-paper/>構造を意識した抜け漏れがなく主張点が明確な論文執筆</a></li>
-<li><a href=https://blog.monochromegane.com/blog/2020/09/21/isee-kyushu-u/>九州大学大学院システム情報科学府博士後期課程に入学します</a></li>
-<li><a href=https://blog.monochromegane.com/blog/2020/06/28/my-first-journal/>ペパ研から研究をはじめてジャーナルでのアクセプトまでいけた日</a></li>
-<li><a href=https://blog.monochromegane.com/blog/2020/05/31/simulation-framework-stage/>Go言語でシミュレーション用のシンプルなフレームワークStageをつくった</a></li>
-<li><a href=https://blog.monochromegane.com/blog/2020/05/16/bandit-algorithm-ucb1/>多腕バンディット問題におけるUCB方策を理解する</a></li>
-<li><a href=https://blog.monochromegane.com/blog/2020/04/29/why-fukuokago/>なぜ勉強会「だった」のか</a></li>
-<li><a href=https://blog.monochromegane.com/blog/2020/04/29/wsa6_sifter/>軽量なインデックス機構を用いた全文検索ツールの高速化の検討</a></li>
-<li><a href=https://blog.monochromegane.com/blog/2020/03/11/dynamic-gamma-poisson/>Dynamic Gamma-Poisson modelを試す</a></li>
-<li><a href=https://blog.monochromegane.com/blog/2020/03/03/minimum-start-for-online-event/>勉強会をオンライン配信するための必要最小限な環境構築</a></li>
-<li><a href=https://blog.monochromegane.com/blog/2020/01/30/memo-getting-start-reinformation-learning-algorithm/>『強化学習アルゴリズム入門』第1章〜第2章の学習メモ</a></li>
-<li><a href=https://blog.monochromegane.com/blog/2020/01/26/exhalation-and-coherently-fittable-system/>テッド・チャン『息吹』と「なめらかなシステム」</a></li>
-</ul>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/%E3%81%B5%E3%82%8A%E3%81%8B%E3%81%88%E3%82%8A>ふりかえり</a></li>
 </ul>
 <div class=clear></div>
 </footer>
