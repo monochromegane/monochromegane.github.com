@@ -1,4 +1,58 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>peco on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/peco/</link><description>Recent content in peco on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Mon, 08 Sep 2014 00:00:00 +0000</lastBuildDate><atom:link href="/tags/peco/" rel="self" type="application/rss+xml"/><item><title>みんなと仲良くすること</title><link>https://blog.monochromegane.com/blog/2024/12/23/nakayoku/</link><pubDate>Mon, 23 Dec 2024 10:36:20 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2024/12/23/nakayoku/</guid><description>&lt;p>ここ数ヶ月、思うように成果が出なかったことに対するボスからのフィードバックを中心に自分なりに来年の仕事の指針としてまとめておく。&lt;/p>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>peco on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/peco/</link><description>Recent content in peco on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Mon, 08 Sep 2014 00:00:00 +0000</lastBuildDate><atom:link href="/tags/peco/" rel="self" type="application/rss+xml"/><item><title>2024</title><link>https://blog.monochromegane.com/blog/2024/12/31/2024/</link><pubDate>Tue, 31 Dec 2024 18:54:15 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2024/12/31/2024/</guid><description>&lt;p>今年は、九州大学大学院システム情報科学府博士後期課程を修了し、博士（情報科学）の学位を授与されたことが、一番のハイライトだった。
+指導くださった先生方、ペパボ研究所の皆さんをはじめとする同僚、切磋琢磨した社会人学生の皆さん、そして家族へ、改めて心から感謝したい。&lt;/p>
+&lt;p>達成感でいっぱいであるものの、年度中の博士論文執筆と事業への貢献の両立は、想像以上に大変だった。
+研究においては元々、事業への貢献も求められるため、自身の専門領域から様々な分析や提案、実装を並行して進めていたが、博士論文の執筆中は、その複雑さと膨大さゆえに脳内のリソースを極限まで使い続ける日々であり、これまで以上に研究と実務の両立の難易度が高かったように思う。
+それでも、最後までやり切ることができたことに、今はただ安堵している。
+一方で、これらの分析や提案については、伝え方や巻き込む人々の選定をもっと考えることで、より事業成果につなげられたのではないかという反省もある。&lt;/p>
+&lt;p>来年は博士として、今の専門性に加え、さらに高い期待が寄せられる立場となるはずである。
+不確実で混沌とした課題領域において、比較・体系化・言語化を通じて、誰もがその課題を共有し、迅速かつ効果的な対策を講じられる基盤を整えることが求められる。
+このスキルを活かし、事業に携わる人々が互いの専門性を最大限に発揮し、成果につながる環境を作り上げることを目指していきたい。&lt;/p>
+&lt;p>振り返れば、多忙の連続であった一年で、正直なところ鮮明な記憶が残っていない。
+それでも、この積み重ねや振り返りが今後の糧になると信じ、今後も一歩一歩進んでいきたい。
+来年もどうぞよろしくお願いいたします。&lt;/p>
+&lt;h1 id="実績">実績&lt;/h1>
+&lt;p>以下、実績を列挙する。&lt;/p>
+&lt;h2 id="論文">論文&lt;/h2>
+&lt;p>博論と国際会議論文1本。本数としては少なくなってしまったが博論と並行して国際会議に投稿・発表し、博論の質を向上させることができたのは自身を褒めてあげたい。
+来年はより水準の高い会議へも挑戦していきたい。&lt;/p>
+&lt;ul>
+&lt;li>三宅 悠介, 多様かつ継続的に変化する環境に適応する情報システム, 九州大学博士学位論文, 2024. &lt;a href="https://speakerdeck.com/monochromegane/thesis-defense-presentation">[発表資料]&lt;/a>&lt;/li>
+&lt;li>Yusuke Miyake, Ryuji Watanabe, Tsunenori Mine, &lt;a href="https://ieeexplore.ieee.org/document/10633680">Online Nonstationary and Nonlinear Bandits with Recursive Weighted Gaussian Process&lt;/a>, The 48th IEEE International Conference on Computers, Software, and Applications (COMPSAC 2024), pp.11-20, Jul 2024. &lt;a href="https://speakerdeck.com/monochromegane/online-nonstationary-and-nonlinear-bandits-with-recursive-weighted-gaussian-process">[発表資料]&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="国内発表">国内発表&lt;/h2>
+&lt;p>福岡で開催した技術イベントで1回（博論の公聴会を除く）。
+来年は全国規模の技術イベントへの復帰を果たしたいところ。&lt;/p>
+&lt;ul>
+&lt;li>三宅 悠介 &lt;a href="https://speakerdeck.com/monochromegane/fukuokago20-afa">Go言語でターミナルフレンドリーなAIコマンド、afaを作った&lt;/a>, &lt;a href="https://fukuokago.connpass.com/event/330951/">Fukuoka.go#20&lt;/a>, 2024年10月.&lt;/li>
+&lt;/ul>
+&lt;h2 id="oss">OSS&lt;/h2>
+&lt;p>AIを開発環境に取り込んでいくためのツール群を整えた。来年はもう一歩先の統合を目指したい。&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/monochromegane/afa">AFA - AFA is a terminal-friendly AI command.&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/monochromegane/afa-tui">AFA-TUI - AFA-TUI is a rich Text User Interface for AFA.&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="コミュニティ活動">コミュニティ活動&lt;/h2>
+&lt;p>Fukuoka.goを再開できたのがよかった。いつの間にか10周年だったので来年3月ごろにお祝い的な会も開催を考えている。学会系では、研究会の運営委員を継続している。&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://fukuokago.connpass.com/event/330951/">Fukuoka.go#20&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="ブログ">ブログ&lt;/h2>
+&lt;p>3本。ここ数年に比べると増えた。OSS紹介、思い出、考えのまとめなど雑多な内容だが、博士課程が終わってとにかく思いついたら書くことができているので来年も継続的に書いていきたい。&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://blog.monochromegane.com/blog/2024/09/16/afa/">ターミナルフレンドリーなAIコマンド、afaを作った&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://blog.monochromegane.com/blog/2024/10/05/doctor-information-science/">ペパボに入って12年が経った。気付けば博士になっていた&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://blog.monochromegane.com/blog/2024/12/23/nakayoku/">みんなと仲良くすること&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="その他">その他&lt;/h2>
+&lt;p>研究所で開催した社内向けの勉強会の記事。来年はAI前提を踏まえこれらを事業にどんどん適用していく。&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://rand.pepabo.com/article/2024/03/28/ai/">AIを前提とした体験の実現に向けての勉強会を開催しました&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>国際会議採択のニュースリリース。
+来年はプレスリリース目指して頑張りたい。&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://pepabo.com/news/information/202404231200/?_gl=1*19uunue*_ga*MTM3Mjc5NzQyMC4xNzEzODUwNzk1*_ga_LER6JRTV8K*MTczNTY1MzAwMS42MC4xLjE3MzU2NTQ4MzcuMC4wLjA.#_ga=2.198738415.1525457293.1735640790-1372797420.1713850795">ペパボ研究所の論文がIEEEの国際会議「COMPSAC 2024」に採択&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>みんなと仲良くすること</title><link>https://blog.monochromegane.com/blog/2024/12/23/nakayoku/</link><pubDate>Mon, 23 Dec 2024 10:36:20 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2024/12/23/nakayoku/</guid><description>&lt;p>ここ数ヶ月、思うように成果が出なかったことに対するボスからのフィードバックを中心に自分なりに来年の仕事の指針としてまとめておく。&lt;/p>
 &lt;p>多くの事業では、環境の変化へ追従するためにプロジェクトの優先順位は目まぐるしく整理・最適化されていく。
 また、近年では、データ駆動な意思決定、機械学習やAIのような新しい自動化の導入によって、事業に求められる水準も高度化している。
 このような質・量ともに認知負荷の高い状況に対処するため、専門性を高めた分業やチーム体制が出来上がるのは必然である。
@@ -1291,110 +1345,4 @@ macOS Catalinaですが、ワコムのサイトに公開されている最新の
 &lt;p>Google MeetからJamboardを開いて参加者にリンクを共有できるようになり、便利になりました。
 利用までの手間を小さくできるよう、常時接続型のシンプルなタブレットを導入することで、Jamboardを積極的に利用することができ、手書きの気軽さと表現力を活かしたコミュニケーションの改善につながっていると感じます。&lt;/p>
 &lt;p>今後改善したいところとしては、ペンのボタンへのアクション割り当てなのですが、Jamboardの消しゴムやレーザーポインタ切り替えにショートカットがなく、まだ実現できていない状態です（フィードバック送ろう）。&lt;/p>
-&lt;p>まだまだリモートワークも続くでしょうから、引き続き、入力機器の構成や工夫など進めていきたいと思います。&lt;/p></description></item><item><title>構造を意識した抜け漏れがなく主張点が明確な論文執筆</title><link>https://blog.monochromegane.com/blog/2020/09/23/structure-of-research-paper/</link><pubDate>Wed, 23 Sep 2020 13:36:25 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/09/23/structure-of-research-paper/</guid><description>&lt;h1 id="はじめに">はじめに&lt;/h1>
-&lt;p>研究者は、自身の研究の有用性を主張するため論文を発表する。
-しかしながら、研究の有用性を主張するために、抜け漏れがなく主張点が明確な文章を書くのは、慣れないうちは難しい（慣れても難しい）。
-本エントリでは、論文の構造を見出だす工程とその構造を書き下す工程を明示的に分離することで、抜け漏れがなく主張点が明確な論文執筆を行う方法を検討する。&lt;/p>
-&lt;h1 id="論文執筆の課題">論文執筆の課題&lt;/h1>
-&lt;p>前述の通り、研究の有用性を主張するために、抜け漏れがなく主張点が明確な文章を書くのは、慣れないうちは難しい。
-これは、主張の整理と文章の生成を頭の中で同時にやろうとしていることが原因であるように思う。&lt;/p>
-&lt;p>第一に、主張の整理は複雑なタスクである。
-研究の有用性の主張は、いくつかの課題や提案、評価といった複数の要素と、要素同士の関係性のあり方、すなわち「構造」を持つ。
-要素やその関係性の増加に伴い、構造は複雑になるため、頭の中だけで網羅しつつ整合性を取り続けるのは困難である。&lt;/p>
-&lt;p>第二に、主張の構造を文章に落とし込むのは複雑なタスクである。
-文章は連続した文から構成され、逐次的に記述される。
-そのため、要素同士の関係性を含む主張の構造を書き下すためには、文同士の局所的な繋がりに加え、段落や接続詞による大局的な繋がりを表現しなければならない。
-頭の中の主張の構造を余さずに正確に文章へと変換するのは困難である。
-主張の構造が明らかでない段階では尚更である。&lt;/p>
-&lt;h1 id="抜け漏れがなく主張点が明確な論文を書く">抜け漏れがなく主張点が明確な論文を書く&lt;/h1>
-&lt;p>論文執筆が難しい理由は、主張の構造を見出だすこと、この構造を文章に落とし込むことという複雑なタスクを同時に行うためだと解釈した。
-そこで、これらのタスクを明示的に分離する方法を考える。
-この時、主張の構造を見出だすタスクの成果物を文章としてしまっては、主張の構造を文章に落とし込むタスクを兼ねてしまう。
-主張の構造を見出だすタスクには必要な要素を文単位で表し、これらの関係性を表現できる形式が望ましい。
-本エントリでは、このタスクをつなぐ中間表現を論文ストラクチャーと名付ける。
-提案する論文ストラクチャーを以下に示す。&lt;/p>
-&lt;p>&lt;img src="https://blog.monochromegane.com/images/2020/09/research_paper_structure.jpeg" alt="structure">&lt;/p>
-&lt;p>提案する論文執筆では、この論文ストラクチャーを埋めていく工程と、論文ストラクチャーをもとに主張を文章に落とし込む工程を繰り返すことで執筆を行う。&lt;/p>
-&lt;h2 id="主張の構造を見出だす論文ストラクチャーを埋める">主張の構造を見出だす（論文ストラクチャーを埋める）&lt;/h2>
-&lt;p>以下、埋めるべき内容について簡単に説明する。
-はじめに②と⑤から主張を明確にし、その主張をストーリー立てて仕上げるよう残りの項目を埋めていくと良い。
-なお、③④⑥はリスト形式かつ対応づけを行えるため、ストーリー内の根拠の抜け漏れを防ぐことができる。&lt;/p>
-&lt;h3 id="-やりたいこと">② やりたいこと&lt;/h3>
-&lt;p>⑤と合わせて、&lt;strong>主張を明確にするために重要な要素&lt;/strong>。
-リサーチクエスチョンとして、何を解決したいのか、達成したいのかを一文で述べる。&lt;/p>
-&lt;p>システム・ソフトウェア開発の論文では、提案手法によって、どのような理想の世界に近づくのかを示す。&lt;/p>
-&lt;ul>
-&lt;li>例）実行環境の変化に素早く適応する &lt;!-- raw HTML omitted -->[*1]&lt;!-- raw HTML omitted -->&lt;/li>
-&lt;li>例）文脈に応じて継続的に推薦手法の選択を最適化する &lt;!-- raw HTML omitted -->[*2]&lt;!-- raw HTML omitted -->&lt;/li>
-&lt;/ul>
-&lt;h3 id="-やったこと">⑤ やったこと&lt;/h3>
-&lt;p>②と合わせて、&lt;strong>主張を明確にするために重要な要素&lt;/strong>。
-リサーチクエスチョンをどのようなアプローチ、着眼点をもって解決、達成したかを一文で述べる。&lt;/p>
-&lt;p>システム・ソフトウェア開発の論文では、開発したシステムやソフトウェア、アーキテクチャなどの特徴を示す。&lt;/p>
-&lt;ul>
-&lt;li>例）恒常性を持つシステムアーキテクチャ（を提案・開発）&lt;!-- raw HTML omitted -->[*1]&lt;!-- raw HTML omitted -->&lt;/li>
-&lt;li>例）多腕バンディットを用いたメタ推薦システム（を開発）&lt;!-- raw HTML omitted -->[*2]&lt;!-- raw HTML omitted -->&lt;/li>
-&lt;/ul>
-&lt;h3 id="-なぜやりたいのか">① なぜ、やりたいのか&lt;/h3>
-&lt;p>②への導入となる要素。
-その研究の価値や意義を述べる。&lt;/p>
-&lt;p>システム・ソフトウェア開発の論文では、提案手法によって、どうして、そのような理想の世界に近づけたいのかを示す。
-世間一般的に解決すべき課題として位置付けるも良いし、これまで世間が気づけていなかったけれども見方を変えて課題として捉え直した、のようにしても良いと思う。&lt;/p>
-&lt;h3 id="-なぜできないのか">③ なぜ、できないのか&lt;/h3>
-&lt;p>②に対しての課題であり、⑤のアプローチへの導入となる要素。
-理想となる世界に対しての（主に）技術的な課題を述べる。
-多くの研究では、従来の研究成果で未解決、もしくは改善が必要とされる領域についてサーベイ結果が該当する。&lt;/p>
-&lt;p>なお、ここは複数の要素が挙げられるため、論文ストラクチャー上は「A、B、C&amp;hellip;」とリスト形式で記述する。&lt;/p>
-&lt;h3 id="-どうやって解決したのか">④ どうやって、解決したのか&lt;/h3>
-&lt;p>③の複数の課題に対する個々の解決手段であり、⑤の詳細となる要素。
-提案手法である⑤がどのような方法で課題を解決するのかを述べる。&lt;/p>
-&lt;p>ここは対応づけを行うことでストーリー内での根拠の抜け漏れを防ぐことが目的であるため、③の個々の課題に対する解決手段を「A'、B'、C'&amp;hellip;」とリスト形式で記述する。&lt;/p>
-&lt;h3 id="-本当にできたのか">⑥ 本当に、できたのか&lt;/h3>
-&lt;p>③の課題を④の手法で解決できたことを示す要素。
-評価とその結果を述べる。&lt;/p>
-&lt;p>ここも対応づけによる抜け漏れを防ぐことが目的であるため、③④の個々の課題、手法に対する評価内容を「A''、B''、C''&amp;hellip;」とリスト形式で記述する。&lt;/p>
-&lt;h2 id="構造を文章に落とし込む論文ストラクチャーから文章を作る">構造を文章に落とし込む（論文ストラクチャーから文章を作る）&lt;/h2>
-&lt;p>論文ストラクチャーを埋めたら、各項目を使って論文の文章の雛形を作っていく。&lt;/p>
-&lt;h3 id="タイトル">タイトル&lt;/h3>
-&lt;p>②と⑤を組み合わせることは主張を端的に表現したタイトル案を作ることができる。
-よく使われるパターンは「⑤を用いた②」「②が可能な⑤」などであろう。&lt;/p>
-&lt;h3 id="概要">概要&lt;/h3>
-&lt;p>①から⑥を順番に並べることで抜け漏れのない概要案を作ることができる。
-典型的な例では以下のようにつながれる。&lt;/p>
-&lt;ul>
-&lt;li>①の状況になっている&lt;/li>
-&lt;li>そのため②が求められている、必要となる&lt;/li>
-&lt;li>一方で③A&amp;hellip;の課題がある&lt;/li>
-&lt;li>本研究では⑤を提案する&lt;/li>
-&lt;li>提案手法では④A'&amp;hellip;を用いて課題を解決した&lt;/li>
-&lt;li>評価では⑤A''&amp;hellip;によって有効性を確認した&lt;/li>
-&lt;/ul>
-&lt;h3 id="1-はじめに">1. はじめに&lt;/h3>
-&lt;p>概要と同じく①から⑥を順番に並べることで案を作ることができる。
-ここでは、パラグラフのトピックセンテンスが論文ストラクチャーの各項目になるように配置し、各パラグラフに説明とリファレンスを追加していくと良い。&lt;/p>
-&lt;h3 id="2-関連研究">2. 関連研究&lt;/h3>
-&lt;p>③の各課題を単位とする節やパラグラフを並べることで案を作ることができる。
-ここでは、各課題がなぜ発生するのか、解決できていないのかを説明するために、従来手法の説明を加えるのが一般的である。&lt;/p>
-&lt;h3 id="3-提案手法">3. 提案手法&lt;/h3>
-&lt;p>④の各手法を単位とする節やパラグラフを並べることで案を作ることができる。
-ここでは、③との対応づけが明らかになるようにできるだけ順序を維持し、また対応する課題について明記すべきである。
-また、⑤を用いて提案手法全体の概要と達成できる事柄について導入部分で触れておくと良い。&lt;/p>
-&lt;h3 id="4-評価">4. 評価&lt;/h3>
-&lt;p>⑥の各評価を単位とする節やパラグラフを並べることで案を作ることができる。
-ここでも、③や④との対応づけが明らかになるようにできるだけ順序を維持し、また対応する課題、手法について明記すべきである。&lt;/p>
-&lt;h3 id="5-まとめ">5. まとめ&lt;/h3>
-&lt;p>②と⑤からリサーチクエスチョンとこれに対する提案をまとめる。
-また、⑥の結果を踏まえ解決した③を明記する。
-最後に研究を発展させるための今後の予定を述べる。&lt;/p>
-&lt;h1 id="おわりに">おわりに&lt;/h1>
-&lt;p>本エントリでは、抜け漏れがなく主張点が明確な論文執筆のために、論文執筆の複雑なタスクを分離し、主張の構造を見出だすタスクと、この構造を文章に落とし込むタスクという二つのタスクを交互に行う方式を提案した。
-また、このために論文ストラクチャーと名付けた主張の構造の整理に適した表現形式を提案した。&lt;/p>
-&lt;p>提案手法によって、論文の品質を一定に保ちつつ初稿までの執筆時間を短縮する。
-加えて、論文ストラクチャーを通した研究成果共有によって共著者との早期の意思疎通が容易になり、手戻りを防ぐ効果が期待できる。&lt;/p>
-&lt;p>あとは良い研究をするだけである（それもまた難しいのであった）。&lt;/p>
-&lt;hr>
-&lt;h3 id="参照">参照&lt;/h3>
-&lt;ul>
-&lt;li>*1: 松本 亮介, 近藤 宇智朗, 三宅 悠介, 力武 健次, 栗林 健太郎, FastContainer: 実行環境の変化に素早く適応できる恒常性を持つシステムアーキテクチャ, インターネットと運用技術シンポジウム2017論文集，2017，89-97（2017-11-30）, Nov 2017&lt;/li>
-&lt;li>*2: 三宅 悠介, 峯 恒憲, Synapse: 文脈に応じて継続的に推薦手法の選択を最適化する推薦システム, 電子情報通信学会論文誌D, Vol.J103-D,No.11,pp.-,Nov. 2020. (to appear)&lt;/li>
-&lt;/ul></description></item></channel></rss>
+&lt;p>まだまだリモートワークも続くでしょうから、引き続き、入力機器の構成や工夫など進めていきたいと思います。&lt;/p></description></item></channel></rss>
