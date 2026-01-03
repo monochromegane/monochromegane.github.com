@@ -1,114 +1,30 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width">
-<meta name=author content>
-<title>2019年11月1日 &#183; THINKING MEGANE</title>
-<meta name=twitter:card content="summary">
-<meta name=twitter:site content="@monochromegane">
-<meta property="og:description" content="健康診断 午前中、健康診断。 午後はベイズ推定関連の基礎知識をつけていた。 バリウムは健康診断の後も終日大変なのであまり生産性は高くなかったかもしれない。 来年は胃カメラ、鼻からでやってみるかなあ。
-喩えと例え 自分の場合、ベイズ推定なり数式を含む新しい概念を獲得するには身の丈にあった入門書を複数こなすことで、違った角度から見比べてその概念を掴んでいく。 ただ、入門書は結構当たり外れがあるのが悩ましい。
-良い本を見つけるため最近は、説明の「喩え」よりも「例え（ば）」を重視している。 手元の辞書によると「喩え」は「たとえること。たとえとして引かれた事柄」とあり、「例えば」は「前文に述べた主旨を客観的に証明するに足る例をあげることを表す。」とある。 学びたい概念を「喩え」る入門書は、読者の知る身近な事柄でこれを説明する。 一方、「例えば」の入門書は、その概念の構成要素やそれらが成立する仕組みを裏付ける例を通して理解を助ける。
-「喩え」に頼りすぎてしまってると感じた本の読後は、分かったような分からないような感じが多い。 対して、簡潔な「例えば」が十分な量で用意されていた本は、なるほどそういう理由・仕組みだったのかと理解が深まったと感じる。 この辺を区分できるようになって、ハズレはつかまなくなったかなあと思う。 もちろん、適切な「喩え」が理解を助けることもあるのであくまでも重視する方という意味合いで。
-ところで、簡潔に概念を説明できる「例えば」を作るためにはその概念に対する深い理解が必要である。 論文であっても手法であっても、ある概念を相手に説明する際に「喩え」が出るか、複雑な「例えば」が出るか、簡潔な「例えば」を出せるかで自分の理解を問うていきたい。">
-<meta property="og:title" content="2019年11月1日">
-<meta property="og:url" content="https://blog.monochromegane.com/diary/20191101/">
-<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-<link rel=stylesheet href=/css/reset.css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
-<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
-<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
-<link rel=stylesheet href=/css/text.css>
-<link rel=stylesheet href=/css/color.css>
-<link rel=stylesheet href=/css/layout.css>
-<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
-<link rel="shortcut icon" href=/images/favicon.ico>
-<link rel=canonical href=https://blog.monochromegane.com/diary/20191101/>
-<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
-</head>
-<body>
-<div class=header>
-<header>
-<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
-<nav>
-<ul class=menu>
-<li><a href=/self-introduction/>Home</a></li>
-<li><a href=/post/>Archives</a></li>
-<li><a href=/diary/>Diary</a></li>
-<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
-</ul>
-</nav>
-</header>
-</div>
-<div class=container>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/diary/20191101/>2019年11月1日</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2019-11-02</div></time>
-</header>
-<div class=post-inner>
-<h2 id=健康診断>健康診断</h2>
-<p>午前中、健康診断。
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>2019年11月1日 &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="健康診断
+午前中、健康診断。
 午後はベイズ推定関連の基礎知識をつけていた。
 バリウムは健康診断の後も終日大変なのであまり生産性は高くなかったかもしれない。
-来年は胃カメラ、鼻からでやってみるかなあ。</p>
-<h2 id=喩えと例え>喩えと例え</h2>
-<p>自分の場合、ベイズ推定なり数式を含む新しい概念を獲得するには身の丈にあった入門書を複数こなすことで、違った角度から見比べてその概念を掴んでいく。
-ただ、入門書は結構当たり外れがあるのが悩ましい。</p>
-<p>良い本を見つけるため最近は、説明の「喩え」よりも「例え（ば）」を重視している。
+来年は胃カメラ、鼻からでやってみるかなあ。
+喩えと例え
+自分の場合、ベイズ推定なり数式を含む新しい概念を獲得するには身の丈にあった入門書を複数こなすことで、違った角度から見比べてその概念を掴んでいく。
+ただ、入門書は結構当たり外れがあるのが悩ましい。
+良い本を見つけるため最近は、説明の「喩え」よりも「例え（ば）」を重視している。
 手元の辞書によると「喩え」は「たとえること。たとえとして引かれた事柄」とあり、「例えば」は「前文に述べた主旨を客観的に証明するに足る例をあげることを表す。」とある。
 学びたい概念を「喩え」る入門書は、読者の知る身近な事柄でこれを説明する。
-一方、「例えば」の入門書は、その概念の構成要素やそれらが成立する仕組みを裏付ける例を通して理解を助ける。</p>
-<p>「喩え」に頼りすぎてしまってると感じた本の読後は、分かったような分からないような感じが多い。
+一方、「例えば」の入門書は、その概念の構成要素やそれらが成立する仕組みを裏付ける例を通して理解を助ける。
+「喩え」に頼りすぎてしまってると感じた本の読後は、分かったような分からないような感じが多い。
 対して、簡潔な「例えば」が十分な量で用意されていた本は、なるほどそういう理由・仕組みだったのかと理解が深まったと感じる。
 この辺を区分できるようになって、ハズレはつかまなくなったかなあと思う。
-もちろん、適切な「喩え」が理解を助けることもあるのであくまでも重視する方という意味合いで。</p>
-<p>ところで、簡潔に概念を説明できる「例えば」を作るためにはその概念に対する深い理解が必要である。
-論文であっても手法であっても、ある概念を相手に説明する際に「喩え」が出るか、複雑な「例えば」が出るか、簡潔な「例えば」を出せるかで自分の理解を問うていきたい。</p>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/diary>diary</a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<div class=social-btn>
-<div>
-<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/diary/20191101/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
-</div>
-<div>
-<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
-</div>
-</div>
-</div>
-<footer class=footer>
-<div class=author></div>
-<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
-<p>monochromegane (モノクロめがね) と申します。</p>
-<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-<ul class=social>
-<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
-<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
-<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
-</ul>
-<p class=copyright>
-<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
-</p>
-</footer>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
-<script>hljs.initHighlightingOnLoad()</script>
-<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
-</body>
-</html>
+もちろん、適切な「喩え」が理解を助けることもあるのであくまでも重視する方という意味合いで。
+ところで、簡潔に概念を説明できる「例えば」を作るためにはその概念に対する深い理解が必要である。
+論文であっても手法であっても、ある概念を相手に説明する際に「喩え」が出るか、複雑な「例えば」が出るか、簡潔な「例えば」を出せるかで自分の理解を問うていきたい。"><meta property="og:title" content="2019年11月1日"><meta property="og:url" content="https://blog.monochromegane.com/diary/20191101/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/diary/20191101/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/diary/20191101/>2019年11月1日</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2019-11-02</div></time></header><div class=post-inner><h2 id=健康診断>健康診断</h2><p>午前中、健康診断。
+午後はベイズ推定関連の基礎知識をつけていた。
+バリウムは健康診断の後も終日大変なのであまり生産性は高くなかったかもしれない。
+来年は胃カメラ、鼻からでやってみるかなあ。</p><h2 id=喩えと例え>喩えと例え</h2><p>自分の場合、ベイズ推定なり数式を含む新しい概念を獲得するには身の丈にあった入門書を複数こなすことで、違った角度から見比べてその概念を掴んでいく。
+ただ、入門書は結構当たり外れがあるのが悩ましい。</p><p>良い本を見つけるため最近は、説明の「喩え」よりも「例え（ば）」を重視している。
+手元の辞書によると「喩え」は「たとえること。たとえとして引かれた事柄」とあり、「例えば」は「前文に述べた主旨を客観的に証明するに足る例をあげることを表す。」とある。
+学びたい概念を「喩え」る入門書は、読者の知る身近な事柄でこれを説明する。
+一方、「例えば」の入門書は、その概念の構成要素やそれらが成立する仕組みを裏付ける例を通して理解を助ける。</p><p>「喩え」に頼りすぎてしまってると感じた本の読後は、分かったような分からないような感じが多い。
+対して、簡潔な「例えば」が十分な量で用意されていた本は、なるほどそういう理由・仕組みだったのかと理解が深まったと感じる。
+この辺を区分できるようになって、ハズレはつかまなくなったかなあと思う。
+もちろん、適切な「喩え」が理解を助けることもあるのであくまでも重視する方という意味合いで。</p><p>ところで、簡潔に概念を説明できる「例えば」を作るためにはその概念に対する深い理解が必要である。
+論文であっても手法であっても、ある概念を相手に説明する際に「喩え」が出るか、複雑な「例えば」が出るか、簡潔な「例えば」を出せるかで自分の理解を問うていきたい。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/diary>diary</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/diary/20191101/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

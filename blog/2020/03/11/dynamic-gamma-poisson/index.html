@@ -1,195 +1,74 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width">
-<meta name=author content>
-<title>Dynamic Gamma-Poisson modelを試す &#183; THINKING MEGANE</title>
-<meta name=twitter:card content="summary">
-<meta name=twitter:site content="@monochromegane">
-<meta property="og:description" content="以前のADWINのように、変化する環境において適応的に振る舞うための仕組みについて調べる中で以下の論文で紹介されていたDynamic Gamma-Poissonモデルについてベイズ推定の理解を兼ねて試してみたのでメモ。
- Agarwal, Deepak, Bee-Chung Chen, and Pradheep Elango. &ldquo;Spatio-temporal models for estimating click-through rate.&rdquo; Proceedings of the 18th international conference on World wide web. 2009.  ベイズ推定 統計モデルとは
- 「ある確率変数$Y$の実現値$y=\{y_1,y_2,..,y_n\}$から、$Y$が本来従う確率分布（真の分布）を推定するためのもの」
- とされている。 ベイズ推定はベイズの定理に基づいて観測したデータと過去の情報からデータの本来従う確率分布を推定する。
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>Dynamic Gamma-Poisson modelを試す &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="以前のADWINのように、変化する環境において適応的に振る舞うための仕組みについて調べる中で以下の論文で紹介されていたDynamic Gamma-Poissonモデルについてベイズ推定の理解を兼ねて試してみたのでメモ。
+
+Agarwal, Deepak, Bee-Chung Chen, and Pradheep Elango. &ldquo;Spatio-temporal models for estimating click-through rate.&rdquo; Proceedings of the 18th international conference on World wide web. 2009.
+
+ベイズ推定
+統計モデルとは
+
+「ある確率変数$Y$の実現値$y=\{y_1,y_2,..,y_n\}$から、$Y$が本来従う確率分布（真の分布）を推定するためのもの」
+
+とされている。
+ベイズ推定はベイズの定理に基づいて観測したデータと過去の情報からデータの本来従う確率分布を推定する。
 ベイズの定理 $p(\theta \mid y) \propto p(y \mid \theta)p(y)$ に対して右辺（尤度x事前確率）が具体的な確率値でかつ分布が数え上げられるような単純な場合は理解は比較的容易。
- ベイズ推定の簡単な例と利点  一方で、データの確率分布がパラメタによって変動するような確率質量関数や確率密度関数に従う場合、そのパラメタ（母数）の分布を推定することで、（分布の種類が分かっていればパラメタの推定が分布の特定になるので）データの従う確率分布を推定できる。 この時、データの分布の種類に応じた事前分布を選択することで事後分布が求めやすくなる（共役事前分布）。
+
+ベイズ推定の簡単な例と利点
+
+一方で、データの確率分布がパラメタによって変動するような確率質量関数や確率密度関数に従う場合、そのパラメタ（母数）の分布を推定することで、（分布の種類が分かっていればパラメタの推定が分布の特定になるので）データの従う確率分布を推定できる。
+この時、データの分布の種類に応じた事前分布を選択することで事後分布が求めやすくなる（共役事前分布）。
 このようなパラメタを推定するようなベイズ推定に関しては以下の資料が理解の助けになる。
- ベイズ統計学入門 ベイズ推定の初歩 二項分布を例に Parameter Estimation Fitting Probability Distributions Bayesian Approach  以下、ポアソン分布のパラメタ推定を例にベイズ推定の理解を深め、これを拡張したDynamic Gamma-Poissonモデルを説明する。
-ポアソン分布 単位時間に平均$\lambda$回起きる事象が単位時間に$k$回発生する分布。
+
+ベイズ統計学入門
+ベイズ推定の初歩 二項分布を例に
+Parameter Estimation Fitting Probability Distributions Bayesian Approach
+
+以下、ポアソン分布のパラメタ推定を例にベイズ推定の理解を深め、これを拡張したDynamic Gamma-Poissonモデルを説明する。
+ポアソン分布
+単位時間に平均$\lambda$回起きる事象が単位時間に$k$回発生する分布。
 平均が$\lambda$のポアソン分布を表す確率質量関数は\[P(X=k)=\frac{\lambda^{k}}{k!}\cdot e^{-\lambda}\]であり平均$E[X]$は$\lambda$となる。
-ポアソン分布のパラメタ$\lambda$を推定する Parameter Estimation Fitting Probability Distributions Bayesian Approachのp.">
-<meta property="og:title" content="Dynamic Gamma-Poisson modelを試す">
-<meta property="og:url" content="https://blog.monochromegane.com/blog/2020/03/11/dynamic-gamma-poisson/">
-<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-<link rel=stylesheet href=/css/reset.css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
-<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
-<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
-<link rel=stylesheet href=/css/text.css>
-<link rel=stylesheet href=/css/color.css>
-<link rel=stylesheet href=/css/layout.css>
-<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
-<link rel="shortcut icon" href=/images/favicon.ico>
-<link rel=canonical href=https://blog.monochromegane.com/blog/2020/03/11/dynamic-gamma-poisson/>
-<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
-</head>
-<body>
-<div class=header>
-<header>
-<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
-<nav>
-<ul class=menu>
-<li><a href=/self-introduction/>Home</a></li>
-<li><a href=/post/>Archives</a></li>
-<li><a href=/diary/>Diary</a></li>
-<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
-</ul>
-</nav>
-</header>
-</div>
-<div class=container>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/blog/2020/03/11/dynamic-gamma-poisson/>Dynamic Gamma-Poisson modelを試す</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2020-03-11</div></time>
-</header>
-<div class=post-inner>
-<p><a href=https://speakerdeck.com/monochromegane/fukuokago15-adwin-exphist>以前のADWINのように</a>、変化する環境において適応的に振る舞うための仕組みについて調べる中で以下の論文で紹介されていたDynamic Gamma-Poissonモデルについてベイズ推定の理解を兼ねて試してみたのでメモ。</p>
-<ul>
-<li><a href=http://www2009.wwwconference.org/proceedings/pdf/p21.pdf>Agarwal, Deepak, Bee-Chung Chen, and Pradheep Elango. &ldquo;Spatio-temporal models for estimating click-through rate.&rdquo; Proceedings of the 18th international conference on World wide web. 2009.</a></li>
-</ul>
-<h1 id=ベイズ推定>ベイズ推定</h1>
-<p>統計モデルとは</p>
-<blockquote>
-<p>「ある確率変数$Y$の実現値$y=\{y_1,y_2,..,y_n\}$から、$Y$が本来従う確率分布（真の分布）を推定するためのもの」</p>
-</blockquote>
-<p>とされている。
-ベイズ推定はベイズの定理に基づいて観測したデータと過去の情報からデータの本来従う確率分布を推定する。</p>
-<p>ベイズの定理 $p(\theta \mid y) \propto p(y \mid \theta)p(y)$ に対して右辺（尤度x事前確率）が具体的な確率値でかつ分布が数え上げられるような単純な場合は理解は比較的容易。</p>
-<ul>
-<li><a href=https://mathtrain.jp/bayesinfer>ベイズ推定の簡単な例と利点</a></li>
-</ul>
-<p>一方で、データの確率分布がパラメタによって変動するような確率質量関数や確率密度関数に従う場合、<strong>そのパラメタ（母数）の分布を推定する</strong>ことで、（分布の種類が分かっていればパラメタの推定が分布の特定になるので）データの従う確率分布を推定できる。
-この時、データの分布の種類に応じた事前分布を選択することで事後分布が求めやすくなる（共役事前分布）。</p>
-<p>このようなパラメタを推定するようなベイズ推定に関しては以下の資料が理解の助けになる。</p>
-<ul>
-<li><a href=https://www.slideshare.net/miyoshiyuya/ss>ベイズ統計学入門</a></li>
-<li><a href=https://mutopsy.net/pdf/note_sta_bayesian01.pdf>ベイズ推定の初歩 二項分布を例に</a></li>
-<li><a href=https://ocw.mit.edu/courses/mathematics/18-443-statistics-for-applications-spring-2015/lecture-notes/MIT18_443S15_LEC8.pdf>Parameter Estimation Fitting Probability Distributions Bayesian Approach</a></li>
-</ul>
-<p>以下、ポアソン分布のパラメタ推定を例にベイズ推定の理解を深め、これを拡張したDynamic Gamma-Poissonモデルを説明する。</p>
-<h2 id=ポアソン分布>ポアソン分布</h2>
-<p>単位時間に平均$\lambda$回起きる事象が単位時間に$k$回発生する分布。</p>
-<p>平均が$\lambda$のポアソン分布を表す確率質量関数は\[P(X=k)=\frac{\lambda^{k}}{k!}\cdot e^{-\lambda}\]であり平均$E[X]$は$\lambda$となる。</p>
-<h2 id=ポアソン分布のパラメタlambdaを推定する>ポアソン分布のパラメタ$\lambda$を推定する</h2>
-<p><a href=https://ocw.mit.edu/courses/mathematics/18-443-statistics-for-applications-spring-2015/lecture-notes/MIT18_443S15_LEC8.pdf>Parameter Estimation Fitting Probability Distributions Bayesian Approach</a>のp.19の例を元に説明する。</p>
-<ul>
-<li>$X_1,X_2,..,X_n$ $i.i.d.$ $Poisson(\lambda)$
-<ul>
-<li>単位時間に平均$\lambda$回起きる分布に従う確率変数の実現値を$n$回観測</li>
-<li>$X_i$は0以上の整数値</li>
-</ul>
-</li>
-<li>$lik(\lambda) = f(x_1, x_2,..,x_n \mid \lambda) = \prod_{i=1}^n f(x_i \mid \lambda)$
-<ul>
-<li>尤度はパラメタ$\lambda$において観測した値が得られる確率（この場合は上述したポアソン分布の確率質量関数$P(X=x_i)$）</li>
-<li>複数回観測した場合はその同時確率</li>
-</ul>
-</li>
-<li>$\lambda \sim Gamma(\alpha, \nu)$
-<ul>
-<li>事前分布、つまり、$\lambda$が「ある値（の範囲）」を取る確率</li>
-<li>今回は事前分布にガンマ分布を仮定する（ポアソン分布の共役事前分布）</li>
-<li>$\pi(\lambda)$</li>
-</ul>
-</li>
-<li>$\pi(\lambda \mid x) \propto lik(\lambda) \times \pi(\lambda)$
-<ul>
-<li>ベイズの定理より事後分布は尤度x事前分布で求められる</li>
-<li>$P(x\mid\lambda)P(\lambda)$なので、$\lambda$の分布から観測値$x$が得られる確率と言える</li>
-</ul>
-</li>
-<li>$Gamma(\alpha^*,\nu^*)$ with $\alpha^*=\alpha+\sum_{1}^n x_i$ and $\nu^*=\nu+n$
-<ul>
-<li>上を計算すると事後分布は観測された$x$の値の合計を$\alpha$に、観測回数$n$を$\nu$に加えたものをパラメタとするガンマ分布とみなせる</li>
-<li>観測したデータから$\lambda$の分布（確率変数が従う確率分布（分布の種類はわかっているのでそのパラメタ））を推定した</li>
-</ul>
-</li>
-</ul>
-<h1 id=dynamic-gamma-poissonモデル>Dynamic Gamma-Poissonモデル</h1>
-<p>論文3.1によれば、クリック数$c$、閲覧数$v$、CTRを$\theta$としたときに、</p>
-<ul>
-<li>平均$v\theta$(=$\lambda$)である$Poisson(\lambda)$に従い観測されたクリック数から</li>
-<li>$\theta$の事前分布に平均が$\alpha/\gamma$、分散が$\alpha/\gamma^2$である$Gamma(\alpha,\gamma)$を仮定して</li>
-<li>$\theta$の事後分布を$Gamma(\alpha+c,\gamma+v)$として得られるとしている</li>
-</ul>
-<p>ただし、実際はこの推定は$\lambda$の推定であるため、CTRとして考えるために以下のように考える。</p>
-<ul>
-<li>$\lambda$を1閲覧($v$)の間の平均回数と考える（つまり$\lambda=1*\theta$）</li>
-<li>1閲覧に該当する期間を閲覧数分、観測した</li>
-<li>これによって推定された$\lambda$は$\theta$と等しくなる</li>
-</ul>
-<p>ここで、$Gamma$のパラメタはこれまでのクリック総数と閲覧総数であることから、$\lambda$の値が変化する場合に過去のデータに引きづられてしまい、速やかな追従を行うことができない。
+ポアソン分布のパラメタ$\lambda$を推定する
+Parameter Estimation Fitting Probability Distributions Bayesian Approachのp.19の例を元に説明する。
+
+$X_1,X_2,..,X_n$ $i.i.d.$ $Poisson(\lambda)$
+
+単位時間に平均$\lambda$回起きる分布に従う確率変数の実現値を$n$回観測
+$X_i$は0以上の整数値
+
+
+$lik(\lambda) = f(x_1, x_2,..,x_n \mid \lambda) = \prod_{i=1}^n f(x_i \mid \lambda)$
+
+尤度はパラメタ$\lambda$において観測した値が得られる確率（この場合は上述したポアソン分布の確率質量関数$P(X=x_i)$）
+複数回観測した場合はその同時確率
+
+
+$\lambda \sim Gamma(\alpha, \nu)$
+
+事前分布、つまり、$\lambda$が「ある値（の範囲）」を取る確率
+今回は事前分布にガンマ分布を仮定する（ポアソン分布の共役事前分布）
+$\pi(\lambda)$
+
+
+$\pi(\lambda \mid x) \propto lik(\lambda) \times \pi(\lambda)$
+
+ベイズの定理より事後分布は尤度x事前分布で求められる
+$P(x\mid\lambda)P(\lambda)$なので、$\lambda$の分布から観測値$x$が得られる確率と言える
+
+
+$Gamma(\alpha^*,\nu^*)$ with $\alpha^*=\alpha+\sum_{1}^n x_i$ and $\nu^*=\nu+n$
+
+上を計算すると事後分布は観測された$x$の値の合計を$\alpha$に、観測回数$n$を$\nu$に加えたものをパラメタとするガンマ分布とみなせる
+観測したデータから$\lambda$の分布（確率変数が従う確率分布（分布の種類はわかっているのでそのパラメタ））を推定した
+
+
+
+Dynamic Gamma-Poissonモデル
+論文3.1によれば、クリック数$c$、閲覧数$v$、CTRを$\theta$としたときに、"><meta property="og:title" content="Dynamic Gamma-Poisson modelを試す"><meta property="og:url" content="https://blog.monochromegane.com/blog/2020/03/11/dynamic-gamma-poisson/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2020/03/11/dynamic-gamma-poisson/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2020/03/11/dynamic-gamma-poisson/>Dynamic Gamma-Poisson modelを試す</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2020-03-11</div></time></header><div class=post-inner><p><a href=https://speakerdeck.com/monochromegane/fukuokago15-adwin-exphist>以前のADWINのように</a>、変化する環境において適応的に振る舞うための仕組みについて調べる中で以下の論文で紹介されていたDynamic Gamma-Poissonモデルについてベイズ推定の理解を兼ねて試してみたのでメモ。</p><ul><li><a href=http://www2009.wwwconference.org/proceedings/pdf/p21.pdf>Agarwal, Deepak, Bee-Chung Chen, and Pradheep Elango. &ldquo;Spatio-temporal models for estimating click-through rate.&rdquo; Proceedings of the 18th international conference on World wide web. 2009.</a></li></ul><h1 id=ベイズ推定>ベイズ推定</h1><p>統計モデルとは</p><blockquote><p>「ある確率変数$Y$の実現値$y=\{y_1,y_2,..,y_n\}$から、$Y$が本来従う確率分布（真の分布）を推定するためのもの」</p></blockquote><p>とされている。
+ベイズ推定はベイズの定理に基づいて観測したデータと過去の情報からデータの本来従う確率分布を推定する。</p><p>ベイズの定理 $p(\theta \mid y) \propto p(y \mid \theta)p(y)$ に対して右辺（尤度x事前確率）が具体的な確率値でかつ分布が数え上げられるような単純な場合は理解は比較的容易。</p><ul><li><a href=https://mathtrain.jp/bayesinfer>ベイズ推定の簡単な例と利点</a></li></ul><p>一方で、データの確率分布がパラメタによって変動するような確率質量関数や確率密度関数に従う場合、<strong>そのパラメタ（母数）の分布を推定する</strong>ことで、（分布の種類が分かっていればパラメタの推定が分布の特定になるので）データの従う確率分布を推定できる。
+この時、データの分布の種類に応じた事前分布を選択することで事後分布が求めやすくなる（共役事前分布）。</p><p>このようなパラメタを推定するようなベイズ推定に関しては以下の資料が理解の助けになる。</p><ul><li><a href=https://www.slideshare.net/miyoshiyuya/ss>ベイズ統計学入門</a></li><li><a href=https://mutopsy.net/pdf/note_sta_bayesian01.pdf>ベイズ推定の初歩 二項分布を例に</a></li><li><a href=https://ocw.mit.edu/courses/mathematics/18-443-statistics-for-applications-spring-2015/lecture-notes/MIT18_443S15_LEC8.pdf>Parameter Estimation Fitting Probability Distributions Bayesian Approach</a></li></ul><p>以下、ポアソン分布のパラメタ推定を例にベイズ推定の理解を深め、これを拡張したDynamic Gamma-Poissonモデルを説明する。</p><h2 id=ポアソン分布>ポアソン分布</h2><p>単位時間に平均$\lambda$回起きる事象が単位時間に$k$回発生する分布。</p><p>平均が$\lambda$のポアソン分布を表す確率質量関数は\[P(X=k)=\frac{\lambda^{k}}{k!}\cdot e^{-\lambda}\]であり平均$E[X]$は$\lambda$となる。</p><h2 id=ポアソン分布のパラメタlambdaを推定する>ポアソン分布のパラメタ$\lambda$を推定する</h2><p><a href=https://ocw.mit.edu/courses/mathematics/18-443-statistics-for-applications-spring-2015/lecture-notes/MIT18_443S15_LEC8.pdf>Parameter Estimation Fitting Probability Distributions Bayesian Approach</a>のp.19の例を元に説明する。</p><ul><li>$X_1,X_2,..,X_n$ $i.i.d.$ $Poisson(\lambda)$<ul><li>単位時間に平均$\lambda$回起きる分布に従う確率変数の実現値を$n$回観測</li><li>$X_i$は0以上の整数値</li></ul></li><li>$lik(\lambda) = f(x_1, x_2,..,x_n \mid \lambda) = \prod_{i=1}^n f(x_i \mid \lambda)$<ul><li>尤度はパラメタ$\lambda$において観測した値が得られる確率（この場合は上述したポアソン分布の確率質量関数$P(X=x_i)$）</li><li>複数回観測した場合はその同時確率</li></ul></li><li>$\lambda \sim Gamma(\alpha, \nu)$<ul><li>事前分布、つまり、$\lambda$が「ある値（の範囲）」を取る確率</li><li>今回は事前分布にガンマ分布を仮定する（ポアソン分布の共役事前分布）</li><li>$\pi(\lambda)$</li></ul></li><li>$\pi(\lambda \mid x) \propto lik(\lambda) \times \pi(\lambda)$<ul><li>ベイズの定理より事後分布は尤度x事前分布で求められる</li><li>$P(x\mid\lambda)P(\lambda)$なので、$\lambda$の分布から観測値$x$が得られる確率と言える</li></ul></li><li>$Gamma(\alpha^*,\nu^*)$ with $\alpha^*=\alpha+\sum_{1}^n x_i$ and $\nu^*=\nu+n$<ul><li>上を計算すると事後分布は観測された$x$の値の合計を$\alpha$に、観測回数$n$を$\nu$に加えたものをパラメタとするガンマ分布とみなせる</li><li>観測したデータから$\lambda$の分布（確率変数が従う確率分布（分布の種類はわかっているのでそのパラメタ））を推定した</li></ul></li></ul><h1 id=dynamic-gamma-poissonモデル>Dynamic Gamma-Poissonモデル</h1><p>論文3.1によれば、クリック数$c$、閲覧数$v$、CTRを$\theta$としたときに、</p><ul><li>平均$v\theta$(=$\lambda$)である$Poisson(\lambda)$に従い観測されたクリック数から</li><li>$\theta$の事前分布に平均が$\alpha/\gamma$、分散が$\alpha/\gamma^2$である$Gamma(\alpha,\gamma)$を仮定して</li><li>$\theta$の事後分布を$Gamma(\alpha+c,\gamma+v)$として得られるとしている</li></ul><p>ただし、実際はこの推定は$\lambda$の推定であるため、CTRとして考えるために以下のように考える。</p><ul><li>$\lambda$を1閲覧($v$)の間の平均回数と考える（つまり$\lambda=1*\theta$）</li><li>1閲覧に該当する期間を閲覧数分、観測した</li><li>これによって推定された$\lambda$は$\theta$と等しくなる</li></ul><p>ここで、$Gamma$のパラメタはこれまでのクリック総数と閲覧総数であることから、$\lambda$の値が変化する場合に過去のデータに引きづられてしまい、速やかな追従を行うことができない。
 論文では、Dynamic Gamma-Poissonモデルとして過去の観測結果に対する割引の概念を導入することでこれを解決する。
 実現はシンプルで、割引率$(0&lt; \delta \leq1)$を導入し、事後分布を$Gamma(\delta\alpha_{t-1}+c_t,\delta\gamma_{t-1}+v_t)$のように求める。
 これによって累積された過去の総数を減らし、直近のデータに重み付けが行われる。
-論文中では0.95から1の間ぐらいが良い結果を得たとしている。</p>
-<p>以下、実際に同じ条件での$\lambda$の推定を通常のGamma-PoissonモデルとDynamic Gamma-Poissonモデルで行ったものを比較する。
+論文中では0.95から1の間ぐらいが良い結果を得たとしている。</p><p>以下、実際に同じ条件での$\lambda$の推定を通常のGamma-PoissonモデルとDynamic Gamma-Poissonモデルで行ったものを比較する。
 評価では、CTRが0.4のアイテムに対して1ステップごとに7回の閲覧が行われた際のクリック数を観測データとした。
-また、20ステップ目にCTRが半分の0.2になっている。</p>
-<p><img src=/images/2020/03/dgp.gif alt=dgp></p>
-<p>評価期間内では通常の推定の期待値0.3程度までの追従に止まったが、Dynamicな手法ではより早く実際のCTRである0.2に近づけたことが分かる。</p>
-<h1 id=動作確認用のコード>動作確認用のコード</h1>
-<p>動作確認用のコードは以下にある．</p>
-<ul>
-<li><a href=https://gist.github.com/monochromegane/942444fdf89735e7e273d5c7126df449>dgp.py</a></li>
-</ul>
-<p>このような感じで利用できる．</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>python dgp.py --lambda_ 0.4 --view <span style=color:#ae81ff>7</span> --delta 0.9
-</code></pre></div>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/></a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<div class=social-btn>
-<div>
-<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2020/03/11/dynamic-gamma-poisson/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
-</div>
-<div>
-<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
-</div>
-</div>
-</div>
-<footer class=footer>
-<div class=author></div>
-<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
-<p>monochromegane (モノクロめがね) と申します。</p>
-<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-<ul class=social>
-<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
-<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
-<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
-</ul>
-<p class=copyright>
-<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
-</p>
-</footer>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
-<script>hljs.initHighlightingOnLoad()</script>
-<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
-</body>
-</html>
+また、20ステップ目にCTRが半分の0.2になっている。</p><p><img src=/images/2020/03/dgp.gif alt=dgp></p><p>評価期間内では通常の推定の期待値0.3程度までの追従に止まったが、Dynamicな手法ではより早く実際のCTRである0.2に近づけたことが分かる。</p><h1 id=動作確認用のコード>動作確認用のコード</h1><p>動作確認用のコードは以下にある．</p><ul><li><a href=https://gist.github.com/monochromegane/942444fdf89735e7e273d5c7126df449>dgp.py</a></li></ul><p>このような感じで利用できる．</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>python dgp.py --lambda_ 0.4 --view <span style=color:#ae81ff>7</span> --delta 0.9
+</span></span></code></pre></div></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/></a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2020/03/11/dynamic-gamma-poisson/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

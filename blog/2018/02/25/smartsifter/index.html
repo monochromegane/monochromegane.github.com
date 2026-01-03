@@ -1,138 +1,45 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width">
-<meta name=author content>
-<title>Go言語でオンライン外れ値検出エンジンSmartSifterを実装した &#183; THINKING MEGANE</title>
-<meta name=twitter:card content="summary">
-<meta name=twitter:site content="@monochromegane">
-<meta property="og:description" content="推薦システムにおける被推薦者の文脈把握に向けて確率的な手法での行動分析を検討している．そこで，データマイニングによる異常検知で紹介されていたオンライン外れ値検出エンジンであるSmartSifterの理解を深めるため実装してみた．
-SmartSifter  On-line Unsupervised Outlier Detection Using Finite Mixtures with Discounting Learning Algorithms. This method is proposed by Yamanishi, K., Takeuchi, J., Williams, G. et al. (2004)
-  refs: http://cs.fit.edu/~pkc/id/related/yamanishi-kdd00.pdf
- SmartSifterはデータの発生分布が時間とともに非定常に変化していくことを考慮した外れ値検出の手法である．離散値と連続値のベクトルを入力とし，離散値はヒストグラム型の確率密度関数で，連続値は混合ガウスモデルで表し，これをデータから推定する．実際にはオンライン対応のために忘却型学習アルゴリズムとしてそれぞれ拡張されたSDLEとSDEMと呼ばれるアルゴリズムが利用される．また，パラメトリックなモデルを用いるSDEMアルゴリズムはノンパラメトリックなSPDUアルゴリズムと交換することが可能である．外れ値のスコアリングには対数損失またはヘリンジャースコアを利用することができる．詳細は上記論文を参照されたい．
-外れ値検出 Old Faithful Geyser Dataとして公開されている間欠泉に関するデータを用いてオンライン外れ値検出を試みる．
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>Go言語でオンライン外れ値検出エンジンSmartSifterを実装した &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content='推薦システムにおける被推薦者の文脈把握に向けて確率的な手法での行動分析を検討している．そこで，データマイニングによる異常検知で紹介されていたオンライン外れ値検出エンジンであるSmartSifterの理解を深めるため実装してみた．
+
+SmartSifter
+
+On-line Unsupervised Outlier Detection Using Finite Mixtures with Discounting Learning Algorithms. This method is proposed by Yamanishi, K., Takeuchi, J., Williams, G. et al. (2004)
+
+
+refs: http://cs.fit.edu/~pkc/id/related/yamanishi-kdd00.pdf
+
+SmartSifterはデータの発生分布が時間とともに非定常に変化していくことを考慮した外れ値検出の手法である．離散値と連続値のベクトルを入力とし，離散値はヒストグラム型の確率密度関数で，連続値は混合ガウスモデルで表し，これをデータから推定する．実際にはオンライン対応のために忘却型学習アルゴリズムとしてそれぞれ拡張されたSDLEとSDEMと呼ばれるアルゴリズムが利用される．また，パラメトリックなモデルを用いるSDEMアルゴリズムはノンパラメトリックなSPDUアルゴリズムと交換することが可能である．外れ値のスコアリングには対数損失またはヘリンジャースコアを利用することができる．詳細は上記論文を参照されたい．
+外れ値検出
+Old Faithful Geyser Dataとして公開されている間欠泉に関するデータを用いてオンライン外れ値検出を試みる．
+
 x軸がeruptionsで，y軸がwaiting．各軸は標準化N(0,1)で標準化済みとする．このデータを順番に入力し，各入力でオンライン学習されたSmartSifterの外れ値スコアを全エリアで確認した．スコアが高い（=外れ値の確率が高い）ほど黄色に近付く．
 入力が進むごとにデータの分布に大まかに沿うようにスコアリングされていることが確認できる．
-離散値を含んだ外れ値検出 SmartSifterは離散値ベクトルを排反な集合に分類したセルごとに混合ガウスモデルを学習する．標準化後の間欠泉のデータからxが正か負,yが正か負かの4象限をセルとしてオンライン外れ値検出を試みる．
+離散値を含んだ外れ値検出
+SmartSifterは離散値ベクトルを排反な集合に分類したセルごとに混合ガウスモデルを学習する．標準化後の間欠泉のデータからxが正か負,yが正か負かの4象限をセルとしてオンライン外れ値検出を試みる．
+
 各セルごとにスコアが異なることが見て取れる．実運用ではsource-IPaddressなど，各セルごとに連続値側の振る舞いが異なることが想定されるようなものが与えられるだろう．
-実装 実装は論文に準じているが，$\overline{\mu}_i^{(t)}$と$\overline{\Lambda}_i^{(t)}$については論文中に初期値が与えられていなかったので，それぞれ$\mu_i^{(t)}$と$\Lambda_i^{(t)}$から求めた．また，$\Lambda_i^{(0)}$は単位行列とした．
+実装
+実装は論文に準じているが，$\overline{\mu}_i^{(t)}$と$\overline{\Lambda}_i^{(t)}$については論文中に初期値が与えられていなかったので，それぞれ$\mu_i^{(t)}$と$\Lambda_i^{(t)}$から求めた．また，$\Lambda_i^{(0)}$は単位行列とした．
 現状，Golangからは以下のように利用することができる．
-r := 0.1 // Discounting parameter. alpha := 1.5 // Hyper parameter for continuous variables. beta := 1.0 // Hyper parameter for categorical variables.">
-<meta property="og:title" content="Go言語でオンライン外れ値検出エンジンSmartSifterを実装した">
-<meta property="og:url" content="https://blog.monochromegane.com/blog/2018/02/25/smartsifter/">
-<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-<link rel=stylesheet href=/css/reset.css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
-<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
-<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
-<link rel=stylesheet href=/css/text.css>
-<link rel=stylesheet href=/css/color.css>
-<link rel=stylesheet href=/css/layout.css>
-<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
-<link rel="shortcut icon" href=/images/favicon.ico>
-<link rel=canonical href=https://blog.monochromegane.com/blog/2018/02/25/smartsifter/>
-<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
-</head>
-<body>
-<div class=header>
-<header>
-<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
-<nav>
-<ul class=menu>
-<li><a href=/self-introduction/>Home</a></li>
-<li><a href=/post/>Archives</a></li>
-<li><a href=/diary/>Diary</a></li>
-<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
-</ul>
-</nav>
-</header>
-</div>
-<div class=container>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/blog/2018/02/25/smartsifter/>Go言語でオンライン外れ値検出エンジンSmartSifterを実装した</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2018-02-25</div></time>
-</header>
-<div class=post-inner>
-<p>推薦システムにおける被推薦者の文脈把握に向けて確率的な手法での行動分析を検討している．そこで，<a href="https://www.amazon.co.jp/gp/product/4320018826/ref=as_li_qf_asin_il_tl?ie=UTF8&tag=monochromeg03-22&creative=1211&linkCode=as2&creativeASIN=4320018826&linkId=9ef342a0d75794d32bcc7a18b8641e4d">データマイニングによる異常検知</a>で紹介されていたオンライン外れ値検出エンジンである<code>SmartSifter</code>の理解を深めるため実装してみた．</p>
-<h1 id=smartsifter>SmartSifter</h1>
-<blockquote>
-<p>On-line Unsupervised Outlier Detection Using Finite Mixtures with Discounting Learning Algorithms. This method is proposed by Yamanishi, K., Takeuchi, J., Williams, G. et al. (2004)</p>
-</blockquote>
-<blockquote>
-<p>refs: <a href=http://cs.fit.edu/~pkc/id/related/yamanishi-kdd00.pdf>http://cs.fit.edu/~pkc/id/related/yamanishi-kdd00.pdf</a></p>
-</blockquote>
-<p>SmartSifterはデータの発生分布が時間とともに非定常に変化していくことを考慮した外れ値検出の手法である．離散値と連続値のベクトルを入力とし，離散値はヒストグラム型の確率密度関数で，連続値は混合ガウスモデルで表し，これをデータから推定する．実際にはオンライン対応のために忘却型学習アルゴリズムとしてそれぞれ拡張されたSDLEとSDEMと呼ばれるアルゴリズムが利用される．また，パラメトリックなモデルを用いるSDEMアルゴリズムはノンパラメトリックなSPDUアルゴリズムと交換することが可能である．外れ値のスコアリングには対数損失またはヘリンジャースコアを利用することができる．詳細は上記論文を参照されたい．</p>
-<h1 id=外れ値検出>外れ値検出</h1>
-<p><a href="http://www.stat.cmu.edu/~larry/all-of-statistics/=data/faithful.dat">Old Faithful Geyser Data</a>として公開されている間欠泉に関するデータを用いてオンライン外れ値検出を試みる．</p>
-<p><img src=https://user-images.githubusercontent.com/1845486/36640826-93e5ab9a-1a69-11e8-8672-7b59116528ad.gif alt=smartsifter></p>
-<p>x軸が<code>eruptions</code>で，y軸が<code>waiting</code>．各軸は標準化N(0,1)で標準化済みとする．このデータを順番に入力し，各入力でオンライン学習されたSmartSifterの外れ値スコアを全エリアで確認した．スコアが高い（=外れ値の確率が高い）ほど黄色に近付く．</p>
-<p>入力が進むごとにデータの分布に大まかに沿うようにスコアリングされていることが確認できる．</p>
-<h1 id=離散値を含んだ外れ値検出>離散値を含んだ外れ値検出</h1>
-<p>SmartSifterは離散値ベクトルを排反な集合に分類したセルごとに混合ガウスモデルを学習する．標準化後の間欠泉のデータからxが正か負,yが正か負かの4象限をセルとしてオンライン外れ値検出を試みる．</p>
-<p><img src=https://user-images.githubusercontent.com/1845486/36641381-247afd9c-1a72-11e8-9fe2-2303e3f67b4a.gif alt=smartsifter_2></p>
-<p>各セルごとにスコアが異なることが見て取れる．実運用ではsource-IPaddressなど，各セルごとに連続値側の振る舞いが異なることが想定されるようなものが与えられるだろう．</p>
-<h1 id=実装>実装</h1>
-<p>実装は論文に準じているが，$\overline{\mu}_i^{(t)}$と$\overline{\Lambda}_i^{(t)}$については論文中に初期値が与えられていなかったので，それぞれ$\mu_i^{(t)}$と$\Lambda_i^{(t)}$から求めた．また，$\Lambda_i^{(0)}$は単位行列とした．</p>
-<p>現状，Golangからは以下のように利用することができる．</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#a6e22e>r</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0.1</span> <span style=color:#75715e>// Discounting parameter.
-</span><span style=color:#75715e></span><span style=color:#a6e22e>alpha</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>1.5</span> <span style=color:#75715e>// Hyper parameter for continuous variables.
-</span><span style=color:#75715e></span><span style=color:#a6e22e>beta</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>1.0</span> <span style=color:#75715e>// Hyper parameter for categorical variables.
-</span><span style=color:#75715e></span><span style=color:#a6e22e>cellNum</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span> <span style=color:#75715e>// Only continuous variables.
-</span><span style=color:#75715e></span><span style=color:#a6e22e>mixtureNum</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>2</span> <span style=color:#75715e>// Number of mixtures for GMM.
-</span><span style=color:#75715e></span><span style=color:#a6e22e>dim</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>2</span> <span style=color:#75715e>// Number of dimentions for GMM.
-</span><span style=color:#75715e></span>
-<span style=color:#a6e22e>ss</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>smartsifter</span>.<span style=color:#a6e22e>NewSmartSifter</span>(<span style=color:#a6e22e>r</span>, <span style=color:#a6e22e>alpha</span>, <span style=color:#a6e22e>beta</span>, <span style=color:#a6e22e>cellNum</span>, <span style=color:#a6e22e>mixtureNum</span>, <span style=color:#a6e22e>dim</span>)
-<span style=color:#a6e22e>logLoss</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>ss</span>.<span style=color:#a6e22e>Input</span>(<span style=color:#66d9ef>nil</span>, []<span style=color:#66d9ef>float64</span>{<span style=color:#ae81ff>0.1</span>, <span style=color:#ae81ff>0.2</span>}, <span style=color:#66d9ef>true</span>)
-<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Score using logLoss: %f\n&#34;</span>, <span style=color:#a6e22e>logLoss</span>)
-</code></pre></div><h1 id=まとめ>まとめ</h1>
-<p>こういった確率モデルに従うようなアルゴリズムの勉強のため，今回はSmartSifterを実装した．実運用ではハイパーパラメータの調整が必要になってくると思われるが，今回のような単純なデータであれば想定した結果を得られることがわかった．</p>
-<p>現状，ヘリンジャースコアやノンパラメトリックなアルゴリズム(SPDU)は実装していない．また，CLIも用意していないので今後必要になれば順次実装していく．</p>
-<p>また，今後は独立モデルとしての外れ値検出だけでなく時系列モデルや行動モデルを仮定していく異常検出も試していきたい．</p>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/golang>golang</a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<div class=social-btn>
-<div>
-<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2018/02/25/smartsifter/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
-</div>
-<div>
-<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
-</div>
-</div>
-</div>
-<footer class=footer>
-<div class=author></div>
-<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
-<p>monochromegane (モノクロめがね) と申します。</p>
-<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-<ul class=social>
-<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
-<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
-<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
-</ul>
-<p class=copyright>
-<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
-</p>
-</footer>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
-<script>hljs.initHighlightingOnLoad()</script>
-<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
-</body>
-</html>
+r := 0.1 // Discounting parameter.
+alpha := 1.5 // Hyper parameter for continuous variables.
+beta := 1.0 // Hyper parameter for categorical variables.
+cellNum := 0 // Only continuous variables.
+mixtureNum := 2 // Number of mixtures for GMM.
+dim := 2 // Number of dimentions for GMM.
+
+ss := smartsifter.NewSmartSifter(r, alpha, beta, cellNum, mixtureNum, dim)
+logLoss := ss.Input(nil, []float64{0.1, 0.2}, true)
+fmt.Println("Score using logLoss: %f\n", logLoss)
+まとめ
+こういった確率モデルに従うようなアルゴリズムの勉強のため，今回はSmartSifterを実装した．実運用ではハイパーパラメータの調整が必要になってくると思われるが，今回のような単純なデータであれば想定した結果を得られることがわかった．'><meta property="og:title" content="Go言語でオンライン外れ値検出エンジンSmartSifterを実装した"><meta property="og:url" content="https://blog.monochromegane.com/blog/2018/02/25/smartsifter/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2018/02/25/smartsifter/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2018/02/25/smartsifter/>Go言語でオンライン外れ値検出エンジンSmartSifterを実装した</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2018-02-25</div></time></header><div class=post-inner><p>推薦システムにおける被推薦者の文脈把握に向けて確率的な手法での行動分析を検討している．そこで，<a href="https://www.amazon.co.jp/gp/product/4320018826/ref=as_li_qf_asin_il_tl?ie=UTF8&amp;tag=monochromeg03-22&amp;creative=1211&amp;linkCode=as2&amp;creativeASIN=4320018826&amp;linkId=9ef342a0d75794d32bcc7a18b8641e4d">データマイニングによる異常検知</a>で紹介されていたオンライン外れ値検出エンジンである<code>SmartSifter</code>の理解を深めるため実装してみた．</p><h1 id=smartsifter>SmartSifter</h1><blockquote><p>On-line Unsupervised Outlier Detection Using Finite Mixtures with Discounting Learning Algorithms. This method is proposed by Yamanishi, K., Takeuchi, J., Williams, G. et al. (2004)</p></blockquote><blockquote><p>refs: <a href=http://cs.fit.edu/~pkc/id/related/yamanishi-kdd00.pdf>http://cs.fit.edu/~pkc/id/related/yamanishi-kdd00.pdf</a></p></blockquote><p>SmartSifterはデータの発生分布が時間とともに非定常に変化していくことを考慮した外れ値検出の手法である．離散値と連続値のベクトルを入力とし，離散値はヒストグラム型の確率密度関数で，連続値は混合ガウスモデルで表し，これをデータから推定する．実際にはオンライン対応のために忘却型学習アルゴリズムとしてそれぞれ拡張されたSDLEとSDEMと呼ばれるアルゴリズムが利用される．また，パラメトリックなモデルを用いるSDEMアルゴリズムはノンパラメトリックなSPDUアルゴリズムと交換することが可能である．外れ値のスコアリングには対数損失またはヘリンジャースコアを利用することができる．詳細は上記論文を参照されたい．</p><h1 id=外れ値検出>外れ値検出</h1><p><a href="http://www.stat.cmu.edu/~larry/all-of-statistics/=data/faithful.dat">Old Faithful Geyser Data</a>として公開されている間欠泉に関するデータを用いてオンライン外れ値検出を試みる．</p><p><img src=https://user-images.githubusercontent.com/1845486/36640826-93e5ab9a-1a69-11e8-8672-7b59116528ad.gif alt=smartsifter></p><p>x軸が<code>eruptions</code>で，y軸が<code>waiting</code>．各軸は標準化N(0,1)で標準化済みとする．このデータを順番に入力し，各入力でオンライン学習されたSmartSifterの外れ値スコアを全エリアで確認した．スコアが高い（=外れ値の確率が高い）ほど黄色に近付く．</p><p>入力が進むごとにデータの分布に大まかに沿うようにスコアリングされていることが確認できる．</p><h1 id=離散値を含んだ外れ値検出>離散値を含んだ外れ値検出</h1><p>SmartSifterは離散値ベクトルを排反な集合に分類したセルごとに混合ガウスモデルを学習する．標準化後の間欠泉のデータからxが正か負,yが正か負かの4象限をセルとしてオンライン外れ値検出を試みる．</p><p><img src=https://user-images.githubusercontent.com/1845486/36641381-247afd9c-1a72-11e8-9fe2-2303e3f67b4a.gif alt=smartsifter_2></p><p>各セルごとにスコアが異なることが見て取れる．実運用ではsource-IPaddressなど，各セルごとに連続値側の振る舞いが異なることが想定されるようなものが与えられるだろう．</p><h1 id=実装>実装</h1><p>実装は論文に準じているが，$\overline{\mu}_i^{(t)}$と$\overline{\Lambda}_i^{(t)}$については論文中に初期値が与えられていなかったので，それぞれ$\mu_i^{(t)}$と$\Lambda_i^{(t)}$から求めた．また，$\Lambda_i^{(0)}$は単位行列とした．</p><p>現状，Golangからは以下のように利用することができる．</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#a6e22e>r</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0.1</span> <span style=color:#75715e>// Discounting parameter.</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>alpha</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>1.5</span> <span style=color:#75715e>// Hyper parameter for continuous variables.</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>beta</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>1.0</span> <span style=color:#75715e>// Hyper parameter for categorical variables.</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>cellNum</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span> <span style=color:#75715e>// Only continuous variables.</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>mixtureNum</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>2</span> <span style=color:#75715e>// Number of mixtures for GMM.</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>dim</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>2</span> <span style=color:#75715e>// Number of dimentions for GMM.</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>ss</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>smartsifter</span>.<span style=color:#a6e22e>NewSmartSifter</span>(<span style=color:#a6e22e>r</span>, <span style=color:#a6e22e>alpha</span>, <span style=color:#a6e22e>beta</span>, <span style=color:#a6e22e>cellNum</span>, <span style=color:#a6e22e>mixtureNum</span>, <span style=color:#a6e22e>dim</span>)
+</span></span><span style=display:flex><span><span style=color:#a6e22e>logLoss</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>ss</span>.<span style=color:#a6e22e>Input</span>(<span style=color:#66d9ef>nil</span>, []<span style=color:#66d9ef>float64</span>{<span style=color:#ae81ff>0.1</span>, <span style=color:#ae81ff>0.2</span>}, <span style=color:#66d9ef>true</span>)
+</span></span><span style=display:flex><span><span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Score using logLoss: %f\n&#34;</span>, <span style=color:#a6e22e>logLoss</span>)
+</span></span></code></pre></div><h1 id=まとめ>まとめ</h1><p>こういった確率モデルに従うようなアルゴリズムの勉強のため，今回はSmartSifterを実装した．実運用ではハイパーパラメータの調整が必要になってくると思われるが，今回のような単純なデータであれば想定した結果を得られることがわかった．</p><p>現状，ヘリンジャースコアやノンパラメトリックなアルゴリズム(SPDU)は実装していない．また，CLIも用意していないので今後必要になれば順次実装していく．</p><p>また，今後は独立モデルとしての外れ値検出だけでなく時系列モデルや行動モデルを仮定していく異常検出も試していきたい．</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/golang>golang</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2018/02/25/smartsifter/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

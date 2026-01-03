@@ -1,178 +1,66 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width">
-<meta name=author content>
-<title>Chef-Solo + Knife-Solo + Berkshelf 環境のつくりかた &#183; THINKING MEGANE</title>
-<meta name=twitter:card content="summary">
-<meta name=twitter:site content="@monochromegane">
-<meta property="og:description" content="Chef-Solo + Knife-Solo + Berkshelf 環境を構築するときに少しはまったので、まとめておきます。
-ブログ投稿時点（2013/08/20）では knife-solo のバージョンだけ気をつけておけば大丈夫です。 knife-solo のバージョンが古いと2回目以降の実行時にうまくいかないためです。 その他の構築自体は難しくありません。
-以下、構築手順です。
-1. 前提 構築対象となるリモート側のサーバへはすでにSSHによるログインが可能であるものとします。
-2. chef, knife-solo, berkshelf のインストール 以下のGemfileを用意してbundle installを行います。
-Gemfile
-source &#34;https://rubygems.org&#34; gem 'chef' gem 'knife-solo', '>= 0.3.0.pre5' gem 'berkshelf' ** knife-solo のバージョンについて **
-指定しない場合、0.2.0系がインストールされますが、2回目以降の実行時にエラーとなります。 原因などはこちらが詳しいです。
-Hack like a rolling stone - knife-solo 0.2.0 で rsync エラーによって苦しまないためのたったひとつの方法
-3. cookbookの準備 Chefのリポジトリをつくる $ knife solo init chef-repo chef-repo内に以下の構成が生成されます。必要に応じてGit管理を行ってください。
-$ tree chef-repo/ chef-repo/ ├── cookbooks ├── data_bags ├── nodes ├── roles └── site-cookbooks ** Cookbookを置く場所について **">
-<meta property="og:title" content="Chef-Solo + Knife-Solo + Berkshelf  環境のつくりかた">
-<meta property="og:url" content="https://blog.monochromegane.com/blog/2013/08/20/chef-solo-knife-solo-berkshelf/">
-<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-<link rel=stylesheet href=/css/reset.css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
-<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
-<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
-<link rel=stylesheet href=/css/text.css>
-<link rel=stylesheet href=/css/color.css>
-<link rel=stylesheet href=/css/layout.css>
-<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
-<link rel="shortcut icon" href=/images/favicon.ico>
-<link rel=canonical href=https://blog.monochromegane.com/blog/2013/08/20/chef-solo-knife-solo-berkshelf/>
-<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
-</head>
-<body>
-<div class=header>
-<header>
-<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
-<nav>
-<ul class=menu>
-<li><a href=/self-introduction/>Home</a></li>
-<li><a href=/post/>Archives</a></li>
-<li><a href=/diary/>Diary</a></li>
-<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
-</ul>
-</nav>
-</header>
-</div>
-<div class=container>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/blog/2013/08/20/chef-solo-knife-solo-berkshelf/>Chef-Solo + Knife-Solo + Berkshelf 環境のつくりかた</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2013-08-20</div></time>
-</header>
-<div class=post-inner>
-<p>Chef-Solo + Knife-Solo + Berkshelf 環境を構築するときに少しはまったので、まとめておきます。</p>
-<p>ブログ投稿時点（2013/08/20）では knife-solo のバージョンだけ気をつけておけば大丈夫です。
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>Chef-Solo + Knife-Solo + Berkshelf 環境のつくりかた &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="Chef-Solo + Knife-Solo + Berkshelf 環境を構築するときに少しはまったので、まとめておきます。
+ブログ投稿時点（2013/08/20）では knife-solo のバージョンだけ気をつけておけば大丈夫です。
 knife-solo のバージョンが古いと2回目以降の実行時にうまくいかないためです。
-その他の構築自体は難しくありません。</p>
-<p>以下、構築手順です。</p>
-<h1 id=1-前提>1. 前提</h1>
-<p>構築対象となるリモート側のサーバへはすでにSSHによるログインが可能であるものとします。</p>
-<h1 id=2-chef-knife-solo-berkshelf-のインストール>2. chef, knife-solo, berkshelf のインストール</h1>
-<p>以下のGemfileを用意して<code>bundle install</code>を行います。</p>
-<p><code>Gemfile</code></p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby>source <span style=color:#e6db74>&#34;https://rubygems.org&#34;</span>
+その他の構築自体は難しくありません。
+以下、構築手順です。
+1. 前提
+構築対象となるリモート側のサーバへはすでにSSHによるログインが可能であるものとします。
+2. chef, knife-solo, berkshelf のインストール
+以下のGemfileを用意してbundle installを行います。
+Gemfile
+source &#34;https://rubygems.org&#34;
 
-gem <span style=color:#e6db74>&#39;chef&#39;</span>
-gem <span style=color:#e6db74>&#39;knife-solo&#39;</span>, <span style=color:#e6db74>&#39;&gt;= 0.3.0.pre5&#39;</span>
-gem <span style=color:#e6db74>&#39;berkshelf&#39;</span>
-</code></pre></div><p>** knife-solo のバージョンについて **</p>
-<p>指定しない場合、0.2.0系がインストールされますが、2回目以降の実行時にエラーとなります。
-原因などはこちらが詳しいです。</p>
-<p><a href=http://tk0miya.hatenablog.com/entry/2013/04/18/011339>Hack like a rolling stone - knife-solo 0.2.0 で rsync エラーによって苦しまないためのたったひとつの方法</a></p>
-<h1 id=3-cookbookの準備>3. cookbookの準備</h1>
-<h2 id=chefのリポジトリをつくる>Chefのリポジトリをつくる</h2>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ knife solo init chef-repo
-</code></pre></div><p>chef-repo内に以下の構成が生成されます。必要に応じてGit管理を行ってください。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh> $ tree chef-repo/
+gem 'chef'
+gem 'knife-solo', '>= 0.3.0.pre5'
+gem 'berkshelf'
+** knife-solo のバージョンについて **
+指定しない場合、0.2.0系がインストールされますが、2回目以降の実行時にエラーとなります。
+原因などはこちらが詳しいです。
+Hack like a rolling stone - knife-solo 0.2.0 で rsync エラーによって苦しまないためのたったひとつの方法
+3. cookbookの準備
+Chefのリポジトリをつくる
+$ knife solo init chef-repo
+chef-repo内に以下の構成が生成されます。必要に応じてGit管理を行ってください。
+ $ tree chef-repo/
  chef-repo/
  ├── cookbooks
  ├── data_bags
  ├── nodes
  ├── roles
  └── site-cookbooks
-</code></pre></div><p>** Cookbookを置く場所について **</p>
-<p>自分でつくるCookbookは<code>site-cookbooks</code>以下に、公開Cookbookは<code>cookbooks</code>以下に置きます。</p>
-<p>knife-soloでは<code>cookbooks</code>配下は<code>.gitignore</code>で除外対象となっており、後述のBerkshelfなどの利用を前提としているようです。</p>
-<p>** knife-solo はsshコマンドのオプションが使えます。証明書の指定などがある場合に便利です。 **</p>
-<h1 id=4-cookbookの作成>4. Cookbookの作成</h1>
-<h2 id=自分でcookbookをつくる場合>自分でCookbookをつくる場合</h2>
-<p>今回は環境構築をメインにするので、雛形作成の手順のみ。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ knife cookbook create xxx -o site-cookbooks/
-</code></pre></div><h2 id=公開cookbookを利用する場合>公開Cookbookを利用する場合</h2>
-<p>リポジトリ直下に<code>Berksfile</code>を作成する</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby>site <span style=color:#e6db74>:opscode</span>
-cookbook <span style=color:#e6db74>&#34;public_cookbook_name&#34;</span>
-</code></pre></div><h1 id=5-リモート側でchef-soloを実行する>5. リモート側でChef-Soloを実行する</h1>
-<h2 id=実行するレシピの指定>実行するレシピの指定</h2>
-<p><code>nodes</code>以下に<code>severname.json</code>が作成されているので、run_list に実行したいレシピを指定する。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>{
-  <span style=color:#f92672>&#34;run_list&#34;</span>: [
-    <span style=color:#e6db74>&#34;public_cookbook_name::recipe_name&#34;</span>, <span style=color:#e6db74>&#34;cookbook_name::recipe_name&#34;</span>
-  ]
-}
-</code></pre></div><p>** 公開Cookbookも忘れずに追加しておきます **</p>
-<h2 id=リモート側でのchef-solo実行準備>リモート側でのChef-Solo実行準備</h2>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ knife solo prepare username@servername
-</code></pre></div><p>これにより、リモート側にChefがインストールされます。</p>
-<h2 id=リモート側でのchef-solo実行>リモート側でのChef-Solo実行</h2>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ knife cook username@servername
-</code></pre></div><p>これによりリモート側にCookbookが送信され、run_listで指定したレシピが実行されます。</p>
-<h1 id=6-tipsなど>6. Tipsなど</h1>
-<h2 id=knife-soloでattributesを使う>knife-soloでattributesを使う</h2>
-<p>nodes/servername.jsonに追加</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>{
-  <span style=color:#f92672>&#34;run_list&#34;</span>: [
-    <span style=color:#e6db74>&#34;cookbook_name::recipe_name&#34;</span>
-  ],
-  <span style=color:#f92672>&#34;hoge&#34;</span>: {
-    <span style=color:#f92672>&#34;fuga&#34;</span>: <span style=color:#e6db74>&#34;piyo&#34;</span>
-  }
-}
-</code></pre></div><p>この例ではrecipe内で<code>node.hoge.fuga</code>として値を利用できます。</p>
-<hr>
-<p>Vagrant + Chef-Solo の環境構築は手軽にできますが、いざVagrant以外に適用しようとすると意外と面倒です。</p>
-<p>今回のようにknife-soloをかませておくことで、対象のサーバを選ばずにChef-Soloを実行でき、とても便利です。</p>
-<p>環境構築を行うときは、Berkshelfによる公開Cookbookの管理とあわせた今回の構成をおすすめします。</p>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/chef>chef</a></li>
-<li><a class=tag-link href=/tags/chef-solo>chef-solo</a></li>
-<li><a class=tag-link href=/tags/knife-solo>knife-solo</a></li>
-<li><a class=tag-link href=/tags/berkshelf>berkshelf</a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<div class=social-btn>
-<div>
-<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/08/20/chef-solo-knife-solo-berkshelf/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
-</div>
-<div>
-<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
-</div>
-</div>
-</div>
-<footer class=footer>
-<div class=author></div>
-<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
-<p>monochromegane (モノクロめがね) と申します。</p>
-<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-<ul class=social>
-<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
-<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
-<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
-</ul>
-<p class=copyright>
-<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
-</p>
-</footer>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
-<script>hljs.initHighlightingOnLoad()</script>
-<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
-</body>
-</html>
+** Cookbookを置く場所について **"><meta property="og:title" content="Chef-Solo + Knife-Solo + Berkshelf  環境のつくりかた"><meta property="og:url" content="https://blog.monochromegane.com/blog/2013/08/20/chef-solo-knife-solo-berkshelf/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2013/08/20/chef-solo-knife-solo-berkshelf/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2013/08/20/chef-solo-knife-solo-berkshelf/>Chef-Solo + Knife-Solo + Berkshelf 環境のつくりかた</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2013-08-20</div></time></header><div class=post-inner><p>Chef-Solo + Knife-Solo + Berkshelf 環境を構築するときに少しはまったので、まとめておきます。</p><p>ブログ投稿時点（2013/08/20）では knife-solo のバージョンだけ気をつけておけば大丈夫です。
+knife-solo のバージョンが古いと2回目以降の実行時にうまくいかないためです。
+その他の構築自体は難しくありません。</p><p>以下、構築手順です。</p><h1 id=1-前提>1. 前提</h1><p>構築対象となるリモート側のサーバへはすでにSSHによるログインが可能であるものとします。</p><h1 id=2-chef-knife-solo-berkshelf-のインストール>2. chef, knife-solo, berkshelf のインストール</h1><p>以下のGemfileを用意して<code>bundle install</code>を行います。</p><p><code>Gemfile</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=display:flex><span>source <span style=color:#e6db74>&#34;https://rubygems.org&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>gem <span style=color:#e6db74>&#39;chef&#39;</span>
+</span></span><span style=display:flex><span>gem <span style=color:#e6db74>&#39;knife-solo&#39;</span>, <span style=color:#e6db74>&#39;&gt;= 0.3.0.pre5&#39;</span>
+</span></span><span style=display:flex><span>gem <span style=color:#e6db74>&#39;berkshelf&#39;</span>
+</span></span></code></pre></div><p>** knife-solo のバージョンについて **</p><p>指定しない場合、0.2.0系がインストールされますが、2回目以降の実行時にエラーとなります。
+原因などはこちらが詳しいです。</p><p><a href=http://tk0miya.hatenablog.com/entry/2013/04/18/011339>Hack like a rolling stone - knife-solo 0.2.0 で rsync エラーによって苦しまないためのたったひとつの方法</a></p><h1 id=3-cookbookの準備>3. cookbookの準備</h1><h2 id=chefのリポジトリをつくる>Chefのリポジトリをつくる</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ knife solo init chef-repo
+</span></span></code></pre></div><p>chef-repo内に以下の構成が生成されます。必要に応じてGit管理を行ってください。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span> $ tree chef-repo/
+</span></span><span style=display:flex><span> chef-repo/
+</span></span><span style=display:flex><span> ├── cookbooks
+</span></span><span style=display:flex><span> ├── data_bags
+</span></span><span style=display:flex><span> ├── nodes
+</span></span><span style=display:flex><span> ├── roles
+</span></span><span style=display:flex><span> └── site-cookbooks
+</span></span></code></pre></div><p>** Cookbookを置く場所について **</p><p>自分でつくるCookbookは<code>site-cookbooks</code>以下に、公開Cookbookは<code>cookbooks</code>以下に置きます。</p><p>knife-soloでは<code>cookbooks</code>配下は<code>.gitignore</code>で除外対象となっており、後述のBerkshelfなどの利用を前提としているようです。</p><p>** knife-solo はsshコマンドのオプションが使えます。証明書の指定などがある場合に便利です。 **</p><h1 id=4-cookbookの作成>4. Cookbookの作成</h1><h2 id=自分でcookbookをつくる場合>自分でCookbookをつくる場合</h2><p>今回は環境構築をメインにするので、雛形作成の手順のみ。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ knife cookbook create xxx -o site-cookbooks/
+</span></span></code></pre></div><h2 id=公開cookbookを利用する場合>公開Cookbookを利用する場合</h2><p>リポジトリ直下に<code>Berksfile</code>を作成する</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=display:flex><span>site <span style=color:#e6db74>:opscode</span>
+</span></span><span style=display:flex><span>cookbook <span style=color:#e6db74>&#34;public_cookbook_name&#34;</span>
+</span></span></code></pre></div><h1 id=5-リモート側でchef-soloを実行する>5. リモート側でChef-Soloを実行する</h1><h2 id=実行するレシピの指定>実行するレシピの指定</h2><p><code>nodes</code>以下に<code>severname.json</code>が作成されているので、run_list に実行したいレシピを指定する。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&#34;run_list&#34;</span>: [
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;public_cookbook_name::recipe_name&#34;</span>, <span style=color:#e6db74>&#34;cookbook_name::recipe_name&#34;</span>
+</span></span><span style=display:flex><span>  ]
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>** 公開Cookbookも忘れずに追加しておきます **</p><h2 id=リモート側でのchef-solo実行準備>リモート側でのChef-Solo実行準備</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ knife solo prepare username@servername
+</span></span></code></pre></div><p>これにより、リモート側にChefがインストールされます。</p><h2 id=リモート側でのchef-solo実行>リモート側でのChef-Solo実行</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ knife cook username@servername
+</span></span></code></pre></div><p>これによりリモート側にCookbookが送信され、run_listで指定したレシピが実行されます。</p><h1 id=6-tipsなど>6. Tipsなど</h1><h2 id=knife-soloでattributesを使う>knife-soloでattributesを使う</h2><p>nodes/servername.jsonに追加</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&#34;run_list&#34;</span>: [
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;cookbook_name::recipe_name&#34;</span>
+</span></span><span style=display:flex><span>  ],
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&#34;hoge&#34;</span>: {
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;fuga&#34;</span>: <span style=color:#e6db74>&#34;piyo&#34;</span>
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>この例ではrecipe内で<code>node.hoge.fuga</code>として値を利用できます。</p><hr><p>Vagrant + Chef-Solo の環境構築は手軽にできますが、いざVagrant以外に適用しようとすると意外と面倒です。</p><p>今回のようにknife-soloをかませておくことで、対象のサーバを選ばずにChef-Soloを実行でき、とても便利です。</p><p>環境構築を行うときは、Berkshelfによる公開Cookbookの管理とあわせた今回の構成をおすすめします。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/chef>chef</a></li><li><a class=tag-link href=/tags/chef-solo>chef-solo</a></li><li><a class=tag-link href=/tags/knife-solo>knife-solo</a></li><li><a class=tag-link href=/tags/berkshelf>berkshelf</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/08/20/chef-solo-knife-solo-berkshelf/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

@@ -1,201 +1,96 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width">
-<meta name=author content>
-<title>Kaburaya: CPU負荷に応じて継続的に上限値を最適化する動的セマフォ &#183; THINKING MEGANE</title>
-<meta name=twitter:card content="summary">
-<meta name=twitter:site content="@monochromegane">
-<meta property="og:description" content="このエントリは、第三回 Web System Architecture 研究会 (WSA研)の予稿です。
-はじめに マルチコア時代において，単一のマシンで処理性能を最大化するため処理の並行化が行われる． ノンブロッキングな処理方式の採用によってCPUを効率的に使用する場合には最適な並行数はCPUコア数と等しくなる． しかしノンブロッキングを実現するランタイム実装の限界から，もしくはノンブロッキングを採用していない場合のような，全体的もしくは部分的にブロッキングが発生する状況においては，最適な並行数の決定は依然として開発者の経験と地道なチューニングに依存している． このような最適な並行数を求める例としてnginx, unicornのworker_processes，Sidekiqのconcurrency，Goroutineの起動数などが挙げられる． これらは、実行される処理の負荷や特性がアプリケーションごとに異なるため実行される処理の特性とランタイムやスケジューリングの特性を考慮したチューニングが必要になる． このような複雑な系に対する普遍的なチューニング手法の発見は困難であることから，これらをブラックボックスとして扱い汎用的に調整できる手法が求められる．
-三宅らは仮想サーバの予測的オートスケーリングにおいて，アプリケーションの処理内容ではなく運用経験から得られたサーバ単位のスループットを指標として，これを予測するモデルによってサーバ台数調整機能を実現した． また，「全自動パラメータチューニングさん」ではメトリクスを一点に絞りスループットが最大化する値を探索的に求める． これらの手法は指標を限定しても充分な成果が得られることを示した．一方でその求め方は予測的または探索的であり，Webサーバープロセスのように比較的長期稼働する場合に適用可能である． しかしながらCLIのような短期稼働かつ性能が求められるようなプロセスにおいては予測や探索は利用できない． これらの利用用途に対応するため，指標の限定に加え，反応的かつ誤差が少なく指標へ追従する手法が必要である．
-本研究では，処理やランタイムの特性に依存せずに，マシンの負荷に応じて反応的かつ継続的に，並行数を最適化する手法を検討する． まず，最適な並行数を求めるために，最適化の手法としてフィードバック制御を用いる．指標にはノンブロッキングな処理方式がCPUを効率的に利用することに着目し，CPU使用率を採用する． 次に，並行数の制御にはセマフォを採用することで提案手法に汎用性を持たせる． 本報告では，ノンブロッキングな処理方式をランタイムとして採用するGo言語において，CPU負荷に応じて継続的に上限値を最適化する動的セマフォを実現するライブラリを開発し，これを評価する．
-実装 フィードバック制御を用いてGoroutineの起動数を動的に調整する手法を実装するためには，ある時点で最適なGoroutineの起動数をフィードバック制御によって決定する仕組みと，その起動数を制約としてGoroutineの起動数を制御する仕組みが必要となる． このような並行処理の起動数を制御する仕組みには一般的にセマフォが利用される．Go言語ではセマフォとしてバッファ付きチャンネルを用いるのが定石となっている． そこで本研究では，最適なセマフォの値をフィードバック制御によって動的に変更可能な仕組みを構築した．なおこの実装はOSSのkaburayaとして公開している．
-制御器 本研究では，ある時点で最適なGoroutineの起動数をフィードバック制御によって決定する仕組みを制御器と呼ぶ． 今回，制御器の設計についてはGoroutine起動数が制御可能な入力となる．これによって対象のスループットを最大化するのが目的である．しかしながら実行される処理の負荷や特性が異なっても共通に採用できる固定値のスループット値は事前に求めることはできないため別の指標を用いる必要がある． 本研究ではいくつかの制御器の評価を通して効果的な制御器を求める． 以降，Go言語ランタイムがI/Oブロッキングな処理についてもGoroutineの切り替えにより、その負荷をCPU側に移動させることから，CPU負荷が安定になることが一つの上限とみなせると仮定していくつかの制御器を設計する．
- 初期値からワーカー数を変えないFixController (比較用) CPU使用率100%を目標値とし，不足した場合は workerを1ずつ増加させる SimpleController CPU使用率100%を目標とし，目標との差分のK倍を加える PController(比例制御) 3.のCPU使用率の目標値を90%としたもの 直近3観測点の平均を目標値として3観測ごとにPControllerの目標値を変化させるDynamicController 一定期間のCPU使用率の標準偏差をとってそれが一定の値以下だったら安定したとみなして，workerを減らしていくStabilityController CPU使用率ではなくてCPU使用率の変化率を元に制御するRateController 5.のDynamicControllerを元に定期ではなく大きな変動ごとに目標値を見直す方式 8.のDynamicControllerを元に定常時の不要なworkerを削減する方式 9.のDynamicControllerを元に変動の精度と速度を向上させるために積分微分制御を導入する方式  セマフォ 本研究では，制御器によって決定された起動数を制約としてGoroutineの起動数を制御する仕組みをセマフォと呼ぶ． 今回のセマフォの要件としてはセマフォの上限値が動的に変更可能であること，そして通常のセマフォと同様にP操作において値が負になる場合に実行がブロックされる．またこれらの値の変更がアトミックに行われる必要がある．
-これらはGo言語では二つのチャンネルを組み合わせることで実現可能である．すなわち，それぞれのチャンネルからの入力と出力でセマフォの値を更新し，必要に応じて内部でチャンネルへの操作の有効無効を切り替えることで結果的に利用者側に対するブロック処理を実現する．
-評価 本研究では，設計した制御器の出力する起動数が最適であることを検証する．ここで最適であるとは，処理対象のタスク全体を，最低限の，のべ起動数で，最短の時間で処理できる起動数を指す． 評価には，汎用性と再現可能性を高めるため，以下の機能を持つシミュレーターを用いる．
- シミュレータは実時間ではなく，単位時間をステップとみなす JobはWorkloadを持ち，ステップごとのCPU利用率を定義する Workloadが0のステップはブロッキング処理を表現する シミュレータはステップごとに任意の数のジョブを投入する シミュレータはステップごとに起動可能なワーカー数を制御器から取得する ワーカーはシミュレータで利用可能なCPU利用率までジョブの該当ステップのWorkloadを消費する 消費できなかったWorkloadは次回のステップに回される Workloadが0のステップはCPU資源を消費しないため無条件にステップを進める   現状はスイッチングコストがシミュレータに反映できていない．  JobにはCPUビジーとなる処理，多くのシステムコールが発生する処理，ネットワークのような長期間のブロッキングが発生する処理などを再現したものを投入する．
-設計した制御器に対する主な評価結果は以下のとおり">
-<meta property="og:title" content="Kaburaya: CPU負荷に応じて継続的に上限値を最適化する動的セマフォ">
-<meta property="og:url" content="https://blog.monochromegane.com/blog/2018/11/25/wsa_3_kaburaya/">
-<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-<link rel=stylesheet href=/css/reset.css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
-<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
-<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
-<link rel=stylesheet href=/css/text.css>
-<link rel=stylesheet href=/css/color.css>
-<link rel=stylesheet href=/css/layout.css>
-<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
-<link rel="shortcut icon" href=/images/favicon.ico>
-<link rel=canonical href=https://blog.monochromegane.com/blog/2018/11/25/wsa_3_kaburaya/>
-<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
-</head>
-<body>
-<div class=header>
-<header>
-<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
-<nav>
-<ul class=menu>
-<li><a href=/self-introduction/>Home</a></li>
-<li><a href=/post/>Archives</a></li>
-<li><a href=/diary/>Diary</a></li>
-<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
-</ul>
-</nav>
-</header>
-</div>
-<div class=container>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/blog/2018/11/25/wsa_3_kaburaya/>Kaburaya: CPU負荷に応じて継続的に上限値を最適化する動的セマフォ</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2018-11-25</div></time>
-</header>
-<div class=post-inner>
-<p>このエントリは、<a href=https://websystemarchitecture.hatenablog.jp/entry/2018/10/09/231937>第三回 Web System Architecture 研究会 (WSA研)</a>の予稿です。</p>
-<h1 id=はじめに>はじめに</h1>
-<p>マルチコア時代において，単一のマシンで処理性能を最大化するため処理の並行化が行われる．
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>Kaburaya: CPU負荷に応じて継続的に上限値を最適化する動的セマフォ &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="このエントリは、第三回 Web System Architecture 研究会 (WSA研)の予稿です。
+はじめに
+マルチコア時代において，単一のマシンで処理性能を最大化するため処理の並行化が行われる．
 ノンブロッキングな処理方式の採用によってCPUを効率的に使用する場合には最適な並行数はCPUコア数と等しくなる．
 しかしノンブロッキングを実現するランタイム実装の限界から，もしくはノンブロッキングを採用していない場合のような，全体的もしくは部分的にブロッキングが発生する状況においては，最適な並行数の決定は依然として開発者の経験と地道なチューニングに依存している．
 このような最適な並行数を求める例としてnginx, unicornのworker_processes，Sidekiqのconcurrency，Goroutineの起動数などが挙げられる．
 これらは、実行される処理の負荷や特性がアプリケーションごとに異なるため実行される処理の特性とランタイムやスケジューリングの特性を考慮したチューニングが必要になる．
-このような複雑な系に対する普遍的なチューニング手法の発見は困難であることから，これらをブラックボックスとして扱い汎用的に調整できる手法が求められる．</p>
-<p>三宅らは<a href=https://www.ipsj.or.jp/event/fit/fit2018/FIT2018_program_web/data/html/abstract/CL-002.html>仮想サーバの予測的オートスケーリング</a>において，アプリケーションの処理内容ではなく運用経験から得られたサーバ単位のスループットを指標として，これを予測するモデルによってサーバ台数調整機能を実現した．
+このような複雑な系に対する普遍的なチューニング手法の発見は困難であることから，これらをブラックボックスとして扱い汎用的に調整できる手法が求められる．
+三宅らは仮想サーバの予測的オートスケーリングにおいて，アプリケーションの処理内容ではなく運用経験から得られたサーバ単位のスループットを指標として，これを予測するモデルによってサーバ台数調整機能を実現した．
+また，「全自動パラメータチューニングさん」ではメトリクスを一点に絞りスループットが最大化する値を探索的に求める．
+これらの手法は指標を限定しても充分な成果が得られることを示した．一方でその求め方は予測的または探索的であり，Webサーバープロセスのように比較的長期稼働する場合に適用可能である．
+しかしながらCLIのような短期稼働かつ性能が求められるようなプロセスにおいては予測や探索は利用できない．
+これらの利用用途に対応するため，指標の限定に加え，反応的かつ誤差が少なく指標へ追従する手法が必要である．
+本研究では，処理やランタイムの特性に依存せずに，マシンの負荷に応じて反応的かつ継続的に，並行数を最適化する手法を検討する．
+まず，最適な並行数を求めるために，最適化の手法としてフィードバック制御を用いる．指標にはノンブロッキングな処理方式がCPUを効率的に利用することに着目し，CPU使用率を採用する．
+次に，並行数の制御にはセマフォを採用することで提案手法に汎用性を持たせる．
+本報告では，ノンブロッキングな処理方式をランタイムとして採用するGo言語において，CPU負荷に応じて継続的に上限値を最適化する動的セマフォを実現するライブラリを開発し，これを評価する．
+実装
+フィードバック制御を用いてGoroutineの起動数を動的に調整する手法を実装するためには，ある時点で最適なGoroutineの起動数をフィードバック制御によって決定する仕組みと，その起動数を制約としてGoroutineの起動数を制御する仕組みが必要となる．
+このような並行処理の起動数を制御する仕組みには一般的にセマフォが利用される．Go言語ではセマフォとしてバッファ付きチャンネルを用いるのが定石となっている．
+そこで本研究では，最適なセマフォの値をフィードバック制御によって動的に変更可能な仕組みを構築した．なおこの実装はOSSのkaburayaとして公開している．
+制御器
+本研究では，ある時点で最適なGoroutineの起動数をフィードバック制御によって決定する仕組みを制御器と呼ぶ．
+今回，制御器の設計についてはGoroutine起動数が制御可能な入力となる．これによって対象のスループットを最大化するのが目的である．しかしながら実行される処理の負荷や特性が異なっても共通に採用できる固定値のスループット値は事前に求めることはできないため別の指標を用いる必要がある．
+本研究ではいくつかの制御器の評価を通して効果的な制御器を求める．
+以降，Go言語ランタイムがI/Oブロッキングな処理についてもGoroutineの切り替えにより、その負荷をCPU側に移動させることから，CPU負荷が安定になることが一つの上限とみなせると仮定していくつかの制御器を設計する．
+
+初期値からワーカー数を変えないFixController (比較用)
+CPU使用率100%を目標値とし，不足した場合は workerを1ずつ増加させる SimpleController
+CPU使用率100%を目標とし，目標との差分のK倍を加える PController(比例制御)
+3.のCPU使用率の目標値を90%としたもの
+直近3観測点の平均を目標値として3観測ごとにPControllerの目標値を変化させるDynamicController
+一定期間のCPU使用率の標準偏差をとってそれが一定の値以下だったら安定したとみなして，workerを減らしていくStabilityController
+CPU使用率ではなくてCPU使用率の変化率を元に制御するRateController
+5.のDynamicControllerを元に定期ではなく大きな変動ごとに目標値を見直す方式
+8.のDynamicControllerを元に定常時の不要なworkerを削減する方式
+9.のDynamicControllerを元に変動の精度と速度を向上させるために積分微分制御を導入する方式
+
+セマフォ
+本研究では，制御器によって決定された起動数を制約としてGoroutineの起動数を制御する仕組みをセマフォと呼ぶ．
+今回のセマフォの要件としてはセマフォの上限値が動的に変更可能であること，そして通常のセマフォと同様にP操作において値が負になる場合に実行がブロックされる．またこれらの値の変更がアトミックに行われる必要がある．
+これらはGo言語では二つのチャンネルを組み合わせることで実現可能である．すなわち，それぞれのチャンネルからの入力と出力でセマフォの値を更新し，必要に応じて内部でチャンネルへの操作の有効無効を切り替えることで結果的に利用者側に対するブロック処理を実現する．
+評価
+本研究では，設計した制御器の出力する起動数が最適であることを検証する．ここで最適であるとは，処理対象のタスク全体を，最低限の，のべ起動数で，最短の時間で処理できる起動数を指す．
+評価には，汎用性と再現可能性を高めるため，以下の機能を持つシミュレーターを用いる．
+
+シミュレータは実時間ではなく，単位時間をステップとみなす
+JobはWorkloadを持ち，ステップごとのCPU利用率を定義する
+Workloadが0のステップはブロッキング処理を表現する
+シミュレータはステップごとに任意の数のジョブを投入する
+シミュレータはステップごとに起動可能なワーカー数を制御器から取得する
+ワーカーはシミュレータで利用可能なCPU利用率までジョブの該当ステップのWorkloadを消費する
+消費できなかったWorkloadは次回のステップに回される
+Workloadが0のステップはCPU資源を消費しないため無条件にステップを進める
+
+
+現状はスイッチングコストがシミュレータに反映できていない．
+
+JobにはCPUビジーとなる処理，多くのシステムコールが発生する処理，ネットワークのような長期間のブロッキングが発生する処理などを再現したものを投入する．
+設計した制御器に対する主な評価結果は以下のとおり
+シミュレーション1
+初期値からワーカー数を変えないFixControllerによって固定値での最適なワーカー数を求めた．今回のシミュレーションではworker:7 ぐらいが最適と考えられる．
+
+シミュレーション2
+CPU使用率100%を目標値とし，不足した場合はworkerを1ずつ増加させるSimpleControllerでは，ジョブが多く投入される初期段階においてワーカー数の増加が追いつかないことからジョブ全体の処理がシミュレーション1と比較して長くなってしまっている．"><meta property="og:title" content="Kaburaya: CPU負荷に応じて継続的に上限値を最適化する動的セマフォ"><meta property="og:url" content="https://blog.monochromegane.com/blog/2018/11/25/wsa_3_kaburaya/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2018/11/25/wsa_3_kaburaya/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2018/11/25/wsa_3_kaburaya/>Kaburaya: CPU負荷に応じて継続的に上限値を最適化する動的セマフォ</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2018-11-25</div></time></header><div class=post-inner><p>このエントリは、<a href=https://websystemarchitecture.hatenablog.jp/entry/2018/10/09/231937>第三回 Web System Architecture 研究会 (WSA研)</a>の予稿です。</p><h1 id=はじめに>はじめに</h1><p>マルチコア時代において，単一のマシンで処理性能を最大化するため処理の並行化が行われる．
+ノンブロッキングな処理方式の採用によってCPUを効率的に使用する場合には最適な並行数はCPUコア数と等しくなる．
+しかしノンブロッキングを実現するランタイム実装の限界から，もしくはノンブロッキングを採用していない場合のような，全体的もしくは部分的にブロッキングが発生する状況においては，最適な並行数の決定は依然として開発者の経験と地道なチューニングに依存している．
+このような最適な並行数を求める例としてnginx, unicornのworker_processes，Sidekiqのconcurrency，Goroutineの起動数などが挙げられる．
+これらは、実行される処理の負荷や特性がアプリケーションごとに異なるため実行される処理の特性とランタイムやスケジューリングの特性を考慮したチューニングが必要になる．
+このような複雑な系に対する普遍的なチューニング手法の発見は困難であることから，これらをブラックボックスとして扱い汎用的に調整できる手法が求められる．</p><p>三宅らは<a href=https://www.ipsj.or.jp/event/fit/fit2018/FIT2018_program_web/data/html/abstract/CL-002.html>仮想サーバの予測的オートスケーリング</a>において，アプリケーションの処理内容ではなく運用経験から得られたサーバ単位のスループットを指標として，これを予測するモデルによってサーバ台数調整機能を実現した．
 また，<a href=https://blog.mirakui.com/entry/2013/02/20/003401>「全自動パラメータチューニングさん」</a>ではメトリクスを一点に絞りスループットが最大化する値を探索的に求める．
 これらの手法は指標を限定しても充分な成果が得られることを示した．一方でその求め方は予測的または探索的であり，Webサーバープロセスのように比較的長期稼働する場合に適用可能である．
 しかしながらCLIのような短期稼働かつ性能が求められるようなプロセスにおいては予測や探索は利用できない．
-これらの利用用途に対応するため，指標の限定に加え，反応的かつ誤差が少なく指標へ追従する手法が必要である．</p>
-<p>本研究では，処理やランタイムの特性に依存せずに，マシンの負荷に応じて反応的かつ継続的に，並行数を最適化する手法を検討する．
+これらの利用用途に対応するため，指標の限定に加え，反応的かつ誤差が少なく指標へ追従する手法が必要である．</p><p>本研究では，処理やランタイムの特性に依存せずに，マシンの負荷に応じて反応的かつ継続的に，並行数を最適化する手法を検討する．
 まず，最適な並行数を求めるために，最適化の手法としてフィードバック制御を用いる．指標にはノンブロッキングな処理方式がCPUを効率的に利用することに着目し，CPU使用率を採用する．
 次に，並行数の制御にはセマフォを採用することで提案手法に汎用性を持たせる．
-本報告では，ノンブロッキングな処理方式をランタイムとして採用するGo言語において，CPU負荷に応じて継続的に上限値を最適化する動的セマフォを実現するライブラリを開発し，これを評価する．</p>
-<h1 id=実装>実装</h1>
-<p>フィードバック制御を用いてGoroutineの起動数を動的に調整する手法を実装するためには，ある時点で最適なGoroutineの起動数をフィードバック制御によって決定する仕組みと，その起動数を制約としてGoroutineの起動数を制御する仕組みが必要となる．
+本報告では，ノンブロッキングな処理方式をランタイムとして採用するGo言語において，CPU負荷に応じて継続的に上限値を最適化する動的セマフォを実現するライブラリを開発し，これを評価する．</p><h1 id=実装>実装</h1><p>フィードバック制御を用いてGoroutineの起動数を動的に調整する手法を実装するためには，ある時点で最適なGoroutineの起動数をフィードバック制御によって決定する仕組みと，その起動数を制約としてGoroutineの起動数を制御する仕組みが必要となる．
 このような並行処理の起動数を制御する仕組みには一般的にセマフォが利用される．Go言語ではセマフォとしてバッファ付きチャンネルを用いるのが定石となっている．
-そこで本研究では，最適なセマフォの値をフィードバック制御によって動的に変更可能な仕組みを構築した．なおこの実装はOSSの<a href=https://github.com/monochromegane/kaburaya>kaburaya</a>として公開している．</p>
-<h2 id=制御器>制御器</h2>
-<p>本研究では，ある時点で最適なGoroutineの起動数をフィードバック制御によって決定する仕組みを制御器と呼ぶ．
+そこで本研究では，最適なセマフォの値をフィードバック制御によって動的に変更可能な仕組みを構築した．なおこの実装はOSSの<a href=https://github.com/monochromegane/kaburaya>kaburaya</a>として公開している．</p><h2 id=制御器>制御器</h2><p>本研究では，ある時点で最適なGoroutineの起動数をフィードバック制御によって決定する仕組みを制御器と呼ぶ．
 今回，制御器の設計についてはGoroutine起動数が制御可能な入力となる．これによって対象のスループットを最大化するのが目的である．しかしながら実行される処理の負荷や特性が異なっても共通に採用できる固定値のスループット値は事前に求めることはできないため別の指標を用いる必要がある．
 本研究ではいくつかの制御器の評価を通して効果的な制御器を求める．
-以降，Go言語ランタイムがI/Oブロッキングな処理についてもGoroutineの切り替えにより、その負荷をCPU側に移動させることから，CPU負荷が安定になることが一つの上限とみなせると仮定していくつかの制御器を設計する．</p>
-<ol>
-<li>初期値からワーカー数を変えないFixController (比較用)</li>
-<li>CPU使用率100%を目標値とし，不足した場合は workerを1ずつ増加させる SimpleController</li>
-<li>CPU使用率100%を目標とし，目標との差分のK倍を加える PController(比例制御)</li>
-<li>3.のCPU使用率の目標値を90%としたもの</li>
-<li>直近3観測点の平均を目標値として3観測ごとにPControllerの目標値を変化させるDynamicController</li>
-<li>一定期間のCPU使用率の標準偏差をとってそれが一定の値以下だったら安定したとみなして，workerを減らしていくStabilityController</li>
-<li>CPU使用率ではなくてCPU使用率の変化率を元に制御するRateController</li>
-<li>5.のDynamicControllerを元に定期ではなく大きな変動ごとに目標値を見直す方式</li>
-<li>8.のDynamicControllerを元に定常時の不要なworkerを削減する方式</li>
-<li>9.のDynamicControllerを元に変動の精度と速度を向上させるために積分微分制御を導入する方式</li>
-</ol>
-<h2 id=セマフォ>セマフォ</h2>
-<p>本研究では，制御器によって決定された起動数を制約としてGoroutineの起動数を制御する仕組みをセマフォと呼ぶ．
-今回のセマフォの要件としてはセマフォの上限値が動的に変更可能であること，そして通常のセマフォと同様にP操作において値が負になる場合に実行がブロックされる．またこれらの値の変更がアトミックに行われる必要がある．</p>
-<p>これらはGo言語では二つのチャンネルを組み合わせることで実現可能である．すなわち，それぞれのチャンネルからの入力と出力でセマフォの値を更新し，必要に応じて内部でチャンネルへの操作の有効無効を切り替えることで結果的に利用者側に対するブロック処理を実現する．</p>
-<h1 id=評価>評価</h1>
-<p>本研究では，設計した制御器の出力する起動数が最適であることを検証する．ここで最適であるとは，処理対象のタスク全体を，最低限の，のべ起動数で，最短の時間で処理できる起動数を指す．
-評価には，汎用性と再現可能性を高めるため，以下の機能を持つシミュレーターを用いる．</p>
-<ul>
-<li>シミュレータは実時間ではなく，単位時間をステップとみなす</li>
-<li>JobはWorkloadを持ち，ステップごとのCPU利用率を定義する</li>
-<li>Workloadが0のステップはブロッキング処理を表現する</li>
-<li>シミュレータはステップごとに任意の数のジョブを投入する</li>
-<li>シミュレータはステップごとに起動可能なワーカー数を制御器から取得する</li>
-<li>ワーカーはシミュレータで利用可能なCPU利用率までジョブの該当ステップのWorkloadを消費する</li>
-<li>消費できなかったWorkloadは次回のステップに回される</li>
-<li>Workloadが0のステップはCPU資源を消費しないため無条件にステップを進める</li>
-</ul>
-<ul>
-<li>現状はスイッチングコストがシミュレータに反映できていない．</li>
-</ul>
-<p>JobにはCPUビジーとなる処理，多くのシステムコールが発生する処理，ネットワークのような長期間のブロッキングが発生する処理などを再現したものを投入する．</p>
-<p>設計した制御器に対する主な評価結果は以下のとおり</p>
-<h2 id=シミュレーション1>シミュレーション1</h2>
-<p>初期値からワーカー数を変えないFixControllerによって固定値での最適なワーカー数を求めた．今回のシミュレーションではworker:7 ぐらいが最適と考えられる．</p>
-<p><img src=https://user-images.githubusercontent.com/1845486/48418118-d4bc7a80-e797-11e8-8ec1-7eb3456aedc5.png alt=result></p>
-<h2 id=シミュレーション2>シミュレーション2</h2>
-<p>CPU使用率100%を目標値とし，不足した場合はworkerを1ずつ増加させるSimpleControllerでは，ジョブが多く投入される初期段階においてワーカー数の増加が追いつかないことからジョブ全体の処理がシミュレーション1と比較して長くなってしまっている．</p>
-<p><img src=https://user-images.githubusercontent.com/1845486/48418271-3250c700-e798-11e8-884b-0b7ba7be65ff.png alt=result></p>
-<h2 id=シミュレーション4>シミュレーション4</h2>
-<p>CPU上限を目標値とした場合に制御器の出力が負にならないため，ワーカー数を削減することができない．そこでCPU使用率90%を目標とした．CPU上限に達した場合に不要なワーカー数を削減する一方で，目標値が固定のため，ジョブが完了し，CPU使用率が低下した場合にも反応してしまった．</p>
-<p><img src=https://user-images.githubusercontent.com/1845486/48418723-57920500-e799-11e8-8cf8-4a06837bfb1e.png alt=result></p>
-<h2 id=シミュレーション5>シミュレーション5</h2>
-<p>目標値が固定であることからジョブ完了後にワーカー数を増加し続けてしまう問題に対応するためCPU使用率の目標値自体を変動させることとする．
-本シミュレーションでは，CPU使用率が均衡する時点をワーカー数の上限であると仮定し，直近3観測点の平均を目標値として3観測ごとに制御器の目標値を変化させるDynamicControllerを実装評価した．</p>
-<p><img src=https://user-images.githubusercontent.com/1845486/48453796-39a7bd00-e7f8-11e8-9d00-5332f3a94450.png alt=result></p>
-<h2 id=シミュレーション9>シミュレーション9</h2>
-<p>CPU使用率やジョブ実行状況にできるだけ速く追従するため，一定間隔ごとに目標値を見直すのではなく，CPU使用率の変動があった時点で目標値を変更する．
-大きな増減を契機に調整していく仕組みになったことで，CPU安定時に積極的にワーカーを削減することができるようになった</p>
-<p>以下では目標値の変動を赤でプロットしている．</p>
-<p><img src=https://user-images.githubusercontent.com/1845486/48612283-e9815400-e9cb-11e8-884a-955a73006986.png alt=result></p>
-<h2 id=シミュレーション11>シミュレーション11</h2>
-<p>頻繁に変更される目標値に高速かつ誤差が少なく適応していくため古典的制御手法であるPID制御を導入した．
-調整の結果，本シミュレーションではPID制御のゲインとしてKp: 0.1, Ki: 0.5, Kd: 0.5が有効であった．</p>
-<p><img src=https://user-images.githubusercontent.com/1845486/48614179-ff454800-e9d0-11e8-8c39-ad66450984f8.png alt=result></p>
-<p><img src=https://user-images.githubusercontent.com/1845486/48614371-6ebb3780-e9d1-11e8-84f3-8a73dc4670e3.png alt=result></p>
-<h2 id=その他のシミュレーション>その他のシミュレーション</h2>
-<p>検討段階の各シミュレーション結果については<a href=https://gist.github.com/monochromegane/5e9fc94371a9b2385eedd38d98341e6b#gistcomment-2758500>こちら以降のコメント欄</a>を参照のこと．
-制御器の実装の番号とシミュレーション番号が同じにしている．</p>
-<p>また，実環境で同様のジョブを用いた評価結果について今回は間に合わず未評価である．</p>
-<h1 id=まとめ>まとめ</h1>
-<p>本研究では，処理やランタイムの特性に依存せずに，マシンの負荷に応じて反応的かつ継続的に，並行数を最適化する手法として，CPU負荷に応じて継続的に上限値を最適化する動的セマフォを提案した．
+以降，Go言語ランタイムがI/Oブロッキングな処理についてもGoroutineの切り替えにより、その負荷をCPU側に移動させることから，CPU負荷が安定になることが一つの上限とみなせると仮定していくつかの制御器を設計する．</p><ol><li>初期値からワーカー数を変えないFixController (比較用)</li><li>CPU使用率100%を目標値とし，不足した場合は workerを1ずつ増加させる SimpleController</li><li>CPU使用率100%を目標とし，目標との差分のK倍を加える PController(比例制御)</li><li>3.のCPU使用率の目標値を90%としたもの</li><li>直近3観測点の平均を目標値として3観測ごとにPControllerの目標値を変化させるDynamicController</li><li>一定期間のCPU使用率の標準偏差をとってそれが一定の値以下だったら安定したとみなして，workerを減らしていくStabilityController</li><li>CPU使用率ではなくてCPU使用率の変化率を元に制御するRateController</li><li>5.のDynamicControllerを元に定期ではなく大きな変動ごとに目標値を見直す方式</li><li>8.のDynamicControllerを元に定常時の不要なworkerを削減する方式</li><li>9.のDynamicControllerを元に変動の精度と速度を向上させるために積分微分制御を導入する方式</li></ol><h2 id=セマフォ>セマフォ</h2><p>本研究では，制御器によって決定された起動数を制約としてGoroutineの起動数を制御する仕組みをセマフォと呼ぶ．
+今回のセマフォの要件としてはセマフォの上限値が動的に変更可能であること，そして通常のセマフォと同様にP操作において値が負になる場合に実行がブロックされる．またこれらの値の変更がアトミックに行われる必要がある．</p><p>これらはGo言語では二つのチャンネルを組み合わせることで実現可能である．すなわち，それぞれのチャンネルからの入力と出力でセマフォの値を更新し，必要に応じて内部でチャンネルへの操作の有効無効を切り替えることで結果的に利用者側に対するブロック処理を実現する．</p><h1 id=評価>評価</h1><p>本研究では，設計した制御器の出力する起動数が最適であることを検証する．ここで最適であるとは，処理対象のタスク全体を，最低限の，のべ起動数で，最短の時間で処理できる起動数を指す．
+評価には，汎用性と再現可能性を高めるため，以下の機能を持つシミュレーターを用いる．</p><ul><li>シミュレータは実時間ではなく，単位時間をステップとみなす</li><li>JobはWorkloadを持ち，ステップごとのCPU利用率を定義する</li><li>Workloadが0のステップはブロッキング処理を表現する</li><li>シミュレータはステップごとに任意の数のジョブを投入する</li><li>シミュレータはステップごとに起動可能なワーカー数を制御器から取得する</li><li>ワーカーはシミュレータで利用可能なCPU利用率までジョブの該当ステップのWorkloadを消費する</li><li>消費できなかったWorkloadは次回のステップに回される</li><li>Workloadが0のステップはCPU資源を消費しないため無条件にステップを進める</li></ul><ul><li>現状はスイッチングコストがシミュレータに反映できていない．</li></ul><p>JobにはCPUビジーとなる処理，多くのシステムコールが発生する処理，ネットワークのような長期間のブロッキングが発生する処理などを再現したものを投入する．</p><p>設計した制御器に対する主な評価結果は以下のとおり</p><h2 id=シミュレーション1>シミュレーション1</h2><p>初期値からワーカー数を変えないFixControllerによって固定値での最適なワーカー数を求めた．今回のシミュレーションではworker:7 ぐらいが最適と考えられる．</p><p><img src=https://user-images.githubusercontent.com/1845486/48418118-d4bc7a80-e797-11e8-8ec1-7eb3456aedc5.png alt=result></p><h2 id=シミュレーション2>シミュレーション2</h2><p>CPU使用率100%を目標値とし，不足した場合はworkerを1ずつ増加させるSimpleControllerでは，ジョブが多く投入される初期段階においてワーカー数の増加が追いつかないことからジョブ全体の処理がシミュレーション1と比較して長くなってしまっている．</p><p><img src=https://user-images.githubusercontent.com/1845486/48418271-3250c700-e798-11e8-884b-0b7ba7be65ff.png alt=result></p><h2 id=シミュレーション4>シミュレーション4</h2><p>CPU上限を目標値とした場合に制御器の出力が負にならないため，ワーカー数を削減することができない．そこでCPU使用率90%を目標とした．CPU上限に達した場合に不要なワーカー数を削減する一方で，目標値が固定のため，ジョブが完了し，CPU使用率が低下した場合にも反応してしまった．</p><p><img src=https://user-images.githubusercontent.com/1845486/48418723-57920500-e799-11e8-8cf8-4a06837bfb1e.png alt=result></p><h2 id=シミュレーション5>シミュレーション5</h2><p>目標値が固定であることからジョブ完了後にワーカー数を増加し続けてしまう問題に対応するためCPU使用率の目標値自体を変動させることとする．
+本シミュレーションでは，CPU使用率が均衡する時点をワーカー数の上限であると仮定し，直近3観測点の平均を目標値として3観測ごとに制御器の目標値を変化させるDynamicControllerを実装評価した．</p><p><img src=https://user-images.githubusercontent.com/1845486/48453796-39a7bd00-e7f8-11e8-9d00-5332f3a94450.png alt=result></p><h2 id=シミュレーション9>シミュレーション9</h2><p>CPU使用率やジョブ実行状況にできるだけ速く追従するため，一定間隔ごとに目標値を見直すのではなく，CPU使用率の変動があった時点で目標値を変更する．
+大きな増減を契機に調整していく仕組みになったことで，CPU安定時に積極的にワーカーを削減することができるようになった</p><p>以下では目標値の変動を赤でプロットしている．</p><p><img src=https://user-images.githubusercontent.com/1845486/48612283-e9815400-e9cb-11e8-884a-955a73006986.png alt=result></p><h2 id=シミュレーション11>シミュレーション11</h2><p>頻繁に変更される目標値に高速かつ誤差が少なく適応していくため古典的制御手法であるPID制御を導入した．
+調整の結果，本シミュレーションではPID制御のゲインとしてKp: 0.1, Ki: 0.5, Kd: 0.5が有効であった．</p><p><img src=https://user-images.githubusercontent.com/1845486/48614179-ff454800-e9d0-11e8-8c39-ad66450984f8.png alt=result></p><p><img src=https://user-images.githubusercontent.com/1845486/48614371-6ebb3780-e9d1-11e8-84f3-8a73dc4670e3.png alt=result></p><h2 id=その他のシミュレーション>その他のシミュレーション</h2><p>検討段階の各シミュレーション結果については<a href=https://gist.github.com/monochromegane/5e9fc94371a9b2385eedd38d98341e6b#gistcomment-2758500>こちら以降のコメント欄</a>を参照のこと．
+制御器の実装の番号とシミュレーション番号が同じにしている．</p><p>また，実環境で同様のジョブを用いた評価結果について今回は間に合わず未評価である．</p><h1 id=まとめ>まとめ</h1><p>本研究では，処理やランタイムの特性に依存せずに，マシンの負荷に応じて反応的かつ継続的に，並行数を最適化する手法として，CPU負荷に応じて継続的に上限値を最適化する動的セマフォを提案した．
 また，シミュレーション環境においてではあるが，ノンブロッキングな処理方式を前提とする場合に有効なCPU使用率の目標値を負荷情報に応じて変動させる制御器として設計することができた．
 本方式はCPU使用率とセマフォというランタイムや実装に依存しない方式を採用しているため，並行数を求めなければならない様々な場面に適用可能であると考える．
 今後の課題として，実環境での評価としてGo言語のGoroutineの起動数に対する評価が必要である．
-また，制御器のパラメタ設計も課題として挙げられるが，フィードバック制御という歴史ある分野の蓄積を有効的に活用することで解決したい．</p>
-<h1 id=発表スライド>発表スライド</h1>
-<h1 id=発表を終えて>発表を終えて</h1>
-<p>第三回のWSA研も様々な観点からの提案と活発な議論が交わされる有意義な場であったと思う．
+また，制御器のパラメタ設計も課題として挙げられるが，フィードバック制御という歴史ある分野の蓄積を有効的に活用することで解決したい．</p><h1 id=発表スライド>発表スライド</h1><h1 id=発表を終えて>発表を終えて</h1><p>第三回のWSA研も様々な観点からの提案と活発な議論が交わされる有意義な場であったと思う．
 特にrrreeeyyyさんの<a href=https://speakerdeck.com/rrreeeyyy/a-survey-of-anomaly-detection-methodologies-for-web-system>A survey of anomaly detection methodologies for web system</a>は業務で得た知識をサーベイ論文と組み合わせて再体系化していく非常に興味深い試みで，サービス運用者が参考にしていくべき取り組みだと思えた．
 自分自身の研究発表では，個人的な開発時の課題であるGoroutine起動数のチューニングという課題から，研究を意識して問いを抽象化することで，実装に囚われない多角的な解決策を講じることができた点が良かったと思う．質疑では本手法が活きる場面を整理できていなかったことに気づけたことでもう一段先に進めた．
-自身のアイディアや実装など狭い範囲から視点を広げるのは難しいことではあるが，こうして研究会を契機に継続的に訓練していくことで少しづつでも前に進んでいると思えるのはとても嬉しい．</p>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/wsa%E7%A0%94>WSA研</a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<div class=social-btn>
-<div>
-<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2018/11/25/wsa_3_kaburaya/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
-</div>
-<div>
-<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
-</div>
-</div>
-</div>
-<footer class=footer>
-<div class=author></div>
-<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
-<p>monochromegane (モノクロめがね) と申します。</p>
-<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-<ul class=social>
-<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
-<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
-<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
-</ul>
-<p class=copyright>
-<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
-</p>
-</footer>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
-<script>hljs.initHighlightingOnLoad()</script>
-<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
-</body>
-</html>
+自身のアイディアや実装など狭い範囲から視点を広げるのは難しいことではあるが，こうして研究会を契機に継続的に訓練していくことで少しづつでも前に進んでいると思えるのはとても嬉しい．</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/wsa%E7%A0%94>WSA研</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2018/11/25/wsa_3_kaburaya/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

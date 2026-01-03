@@ -1,218 +1,83 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width">
-<meta name=author content>
-<title>構造を意識した抜け漏れがなく主張点が明確な論文執筆 &#183; THINKING MEGANE</title>
-<meta name=twitter:card content="summary">
-<meta name=twitter:site content="@monochromegane">
-<meta property="og:description" content="はじめに 研究者は、自身の研究の有用性を主張するため論文を発表する。 しかしながら、研究の有用性を主張するために、抜け漏れがなく主張点が明確な文章を書くのは、慣れないうちは難しい（慣れても難しい）。 本エントリでは、論文の構造を見出だす工程とその構造を書き下す工程を明示的に分離することで、抜け漏れがなく主張点が明確な論文執筆を行う方法を検討する。
-論文執筆の課題 前述の通り、研究の有用性を主張するために、抜け漏れがなく主張点が明確な文章を書くのは、慣れないうちは難しい。 これは、主張の整理と文章の生成を頭の中で同時にやろうとしていることが原因であるように思う。
-第一に、主張の整理は複雑なタスクである。 研究の有用性の主張は、いくつかの課題や提案、評価といった複数の要素と、要素同士の関係性のあり方、すなわち「構造」を持つ。 要素やその関係性の増加に伴い、構造は複雑になるため、頭の中だけで網羅しつつ整合性を取り続けるのは困難である。
-第二に、主張の構造を文章に落とし込むのは複雑なタスクである。 文章は連続した文から構成され、逐次的に記述される。 そのため、要素同士の関係性を含む主張の構造を書き下すためには、文同士の局所的な繋がりに加え、段落や接続詞による大局的な繋がりを表現しなければならない。 頭の中の主張の構造を余さずに正確に文章へと変換するのは困難である。 主張の構造が明らかでない段階では尚更である。
-抜け漏れがなく主張点が明確な論文を書く 論文執筆が難しい理由は、主張の構造を見出だすこと、この構造を文章に落とし込むことという複雑なタスクを同時に行うためだと解釈した。 そこで、これらのタスクを明示的に分離する方法を考える。 この時、主張の構造を見出だすタスクの成果物を文章としてしまっては、主張の構造を文章に落とし込むタスクを兼ねてしまう。 主張の構造を見出だすタスクには必要な要素を文単位で表し、これらの関係性を表現できる形式が望ましい。 本エントリでは、このタスクをつなぐ中間表現を論文ストラクチャーと名付ける。 提案する論文ストラクチャーを以下に示す。
-提案する論文執筆では、この論文ストラクチャーを埋めていく工程と、論文ストラクチャーをもとに主張を文章に落とし込む工程を繰り返すことで執筆を行う。
-主張の構造を見出だす（論文ストラクチャーを埋める） 以下、埋めるべき内容について簡単に説明する。 はじめに②と⑤から主張を明確にし、その主張をストーリー立てて仕上げるよう残りの項目を埋めていくと良い。 なお、③④⑥はリスト形式かつ対応づけを行えるため、ストーリー内の根拠の抜け漏れを防ぐことができる。
-② やりたいこと ⑤と合わせて、主張を明確にするために重要な要素。 リサーチクエスチョンとして、何を解決したいのか、達成したいのかを一文で述べる。
-システム・ソフトウェア開発の論文では、提案手法によって、どのような理想の世界に近づくのかを示す。
- 例）実行環境の変化に素早く適応する [*1] 例）文脈に応じて継続的に推薦手法の選択を最適化する [*2]  ⑤ やったこと ②と合わせて、主張を明確にするために重要な要素。 リサーチクエスチョンをどのようなアプローチ、着眼点をもって解決、達成したかを一文で述べる。
-システム・ソフトウェア開発の論文では、開発したシステムやソフトウェア、アーキテクチャなどの特徴を示す。
- 例）恒常性を持つシステムアーキテクチャ（を提案・開発）[*1] 例）多腕バンディットを用いたメタ推薦システム（を開発）[*2]  ① なぜ、やりたいのか ②への導入となる要素。 その研究の価値や意義を述べる。
-システム・ソフトウェア開発の論文では、提案手法によって、どうして、そのような理想の世界に近づけたいのかを示す。 世間一般的に解決すべき課題として位置付けるも良いし、これまで世間が気づけていなかったけれども見方を変えて課題として捉え直した、のようにしても良いと思う。
-③ なぜ、できないのか ②に対しての課題であり、⑤のアプローチへの導入となる要素。 理想となる世界に対しての（主に）技術的な課題を述べる。 多くの研究では、従来の研究成果で未解決、もしくは改善が必要とされる領域についてサーベイ結果が該当する。
-なお、ここは複数の要素が挙げられるため、論文ストラクチャー上は「A、B、C&mldr;」とリスト形式で記述する。
-④ どうやって、解決したのか ③の複数の課題に対する個々の解決手段であり、⑤の詳細となる要素。 提案手法である⑤がどのような方法で課題を解決するのかを述べる。
-ここは対応づけを行うことでストーリー内での根拠の抜け漏れを防ぐことが目的であるため、③の個々の課題に対する解決手段を「A'、B'、C'&mldr;」とリスト形式で記述する。
-⑥ 本当に、できたのか ③の課題を④の手法で解決できたことを示す要素。 評価とその結果を述べる。
-ここも対応づけによる抜け漏れを防ぐことが目的であるため、③④の個々の課題、手法に対する評価内容を「A''、B''、C''&mldr;」とリスト形式で記述する。
-構造を文章に落とし込む（論文ストラクチャーから文章を作る） 論文ストラクチャーを埋めたら、各項目を使って論文の文章の雛形を作っていく。">
-<meta property="og:title" content="構造を意識した抜け漏れがなく主張点が明確な論文執筆">
-<meta property="og:url" content="https://blog.monochromegane.com/blog/2020/09/23/structure-of-research-paper/">
-<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-<link rel=stylesheet href=/css/reset.css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
-<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
-<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
-<link rel=stylesheet href=/css/text.css>
-<link rel=stylesheet href=/css/color.css>
-<link rel=stylesheet href=/css/layout.css>
-<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
-<link rel="shortcut icon" href=/images/favicon.ico>
-<link rel=canonical href=https://blog.monochromegane.com/blog/2020/09/23/structure-of-research-paper/>
-<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
-</head>
-<body>
-<div class=header>
-<header>
-<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
-<nav>
-<ul class=menu>
-<li><a href=/self-introduction/>Home</a></li>
-<li><a href=/post/>Archives</a></li>
-<li><a href=/diary/>Diary</a></li>
-<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
-</ul>
-</nav>
-</header>
-</div>
-<div class=container>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/blog/2020/09/23/structure-of-research-paper/>構造を意識した抜け漏れがなく主張点が明確な論文執筆</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2020-09-23</div></time>
-</header>
-<div class=post-inner>
-<h1 id=はじめに>はじめに</h1>
-<p>研究者は、自身の研究の有用性を主張するため論文を発表する。
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>構造を意識した抜け漏れがなく主張点が明確な論文執筆 &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="はじめに
+研究者は、自身の研究の有用性を主張するため論文を発表する。
 しかしながら、研究の有用性を主張するために、抜け漏れがなく主張点が明確な文章を書くのは、慣れないうちは難しい（慣れても難しい）。
-本エントリでは、論文の構造を見出だす工程とその構造を書き下す工程を明示的に分離することで、抜け漏れがなく主張点が明確な論文執筆を行う方法を検討する。</p>
-<h1 id=論文執筆の課題>論文執筆の課題</h1>
-<p>前述の通り、研究の有用性を主張するために、抜け漏れがなく主張点が明確な文章を書くのは、慣れないうちは難しい。
-これは、主張の整理と文章の生成を頭の中で同時にやろうとしていることが原因であるように思う。</p>
-<p>第一に、主張の整理は複雑なタスクである。
+本エントリでは、論文の構造を見出だす工程とその構造を書き下す工程を明示的に分離することで、抜け漏れがなく主張点が明確な論文執筆を行う方法を検討する。
+論文執筆の課題
+前述の通り、研究の有用性を主張するために、抜け漏れがなく主張点が明確な文章を書くのは、慣れないうちは難しい。
+これは、主張の整理と文章の生成を頭の中で同時にやろうとしていることが原因であるように思う。
+第一に、主張の整理は複雑なタスクである。
 研究の有用性の主張は、いくつかの課題や提案、評価といった複数の要素と、要素同士の関係性のあり方、すなわち「構造」を持つ。
-要素やその関係性の増加に伴い、構造は複雑になるため、頭の中だけで網羅しつつ整合性を取り続けるのは困難である。</p>
-<p>第二に、主張の構造を文章に落とし込むのは複雑なタスクである。
+要素やその関係性の増加に伴い、構造は複雑になるため、頭の中だけで網羅しつつ整合性を取り続けるのは困難である。
+第二に、主張の構造を文章に落とし込むのは複雑なタスクである。
 文章は連続した文から構成され、逐次的に記述される。
 そのため、要素同士の関係性を含む主張の構造を書き下すためには、文同士の局所的な繋がりに加え、段落や接続詞による大局的な繋がりを表現しなければならない。
 頭の中の主張の構造を余さずに正確に文章へと変換するのは困難である。
-主張の構造が明らかでない段階では尚更である。</p>
-<h1 id=抜け漏れがなく主張点が明確な論文を書く>抜け漏れがなく主張点が明確な論文を書く</h1>
-<p>論文執筆が難しい理由は、主張の構造を見出だすこと、この構造を文章に落とし込むことという複雑なタスクを同時に行うためだと解釈した。
+主張の構造が明らかでない段階では尚更である。
+抜け漏れがなく主張点が明確な論文を書く
+論文執筆が難しい理由は、主張の構造を見出だすこと、この構造を文章に落とし込むことという複雑なタスクを同時に行うためだと解釈した。
 そこで、これらのタスクを明示的に分離する方法を考える。
 この時、主張の構造を見出だすタスクの成果物を文章としてしまっては、主張の構造を文章に落とし込むタスクを兼ねてしまう。
 主張の構造を見出だすタスクには必要な要素を文単位で表し、これらの関係性を表現できる形式が望ましい。
 本エントリでは、このタスクをつなぐ中間表現を論文ストラクチャーと名付ける。
-提案する論文ストラクチャーを以下に示す。</p>
-<p><img src=/images/2020/09/research_paper_structure.jpeg alt=structure></p>
-<p>提案する論文執筆では、この論文ストラクチャーを埋めていく工程と、論文ストラクチャーをもとに主張を文章に落とし込む工程を繰り返すことで執筆を行う。</p>
-<h2 id=主張の構造を見出だす論文ストラクチャーを埋める>主張の構造を見出だす（論文ストラクチャーを埋める）</h2>
-<p>以下、埋めるべき内容について簡単に説明する。
+提案する論文ストラクチャーを以下に示す。
+
+提案する論文執筆では、この論文ストラクチャーを埋めていく工程と、論文ストラクチャーをもとに主張を文章に落とし込む工程を繰り返すことで執筆を行う。
+主張の構造を見出だす（論文ストラクチャーを埋める）
+以下、埋めるべき内容について簡単に説明する。
 はじめに②と⑤から主張を明確にし、その主張をストーリー立てて仕上げるよう残りの項目を埋めていくと良い。
-なお、③④⑥はリスト形式かつ対応づけを行えるため、ストーリー内の根拠の抜け漏れを防ぐことができる。</p>
-<h3 id=-やりたいこと>② やりたいこと</h3>
-<p>⑤と合わせて、<strong>主張を明確にするために重要な要素</strong>。
-リサーチクエスチョンとして、何を解決したいのか、達成したいのかを一文で述べる。</p>
-<p>システム・ソフトウェア開発の論文では、提案手法によって、どのような理想の世界に近づくのかを示す。</p>
-<ul>
-<li>例）実行環境の変化に素早く適応する [*1]</li>
-<li>例）文脈に応じて継続的に推薦手法の選択を最適化する [*2]</li>
-</ul>
-<h3 id=-やったこと>⑤ やったこと</h3>
-<p>②と合わせて、<strong>主張を明確にするために重要な要素</strong>。
-リサーチクエスチョンをどのようなアプローチ、着眼点をもって解決、達成したかを一文で述べる。</p>
-<p>システム・ソフトウェア開発の論文では、開発したシステムやソフトウェア、アーキテクチャなどの特徴を示す。</p>
-<ul>
-<li>例）恒常性を持つシステムアーキテクチャ（を提案・開発）[*1]</li>
-<li>例）多腕バンディットを用いたメタ推薦システム（を開発）[*2]</li>
-</ul>
-<h3 id=-なぜやりたいのか>① なぜ、やりたいのか</h3>
-<p>②への導入となる要素。
-その研究の価値や意義を述べる。</p>
-<p>システム・ソフトウェア開発の論文では、提案手法によって、どうして、そのような理想の世界に近づけたいのかを示す。
-世間一般的に解決すべき課題として位置付けるも良いし、これまで世間が気づけていなかったけれども見方を変えて課題として捉え直した、のようにしても良いと思う。</p>
-<h3 id=-なぜできないのか>③ なぜ、できないのか</h3>
-<p>②に対しての課題であり、⑤のアプローチへの導入となる要素。
+なお、③④⑥はリスト形式かつ対応づけを行えるため、ストーリー内の根拠の抜け漏れを防ぐことができる。
+② やりたいこと
+⑤と合わせて、主張を明確にするために重要な要素。
+リサーチクエスチョンとして、何を解決したいのか、達成したいのかを一文で述べる。
+システム・ソフトウェア開発の論文では、提案手法によって、どのような理想の世界に近づくのかを示す。
+
+例）実行環境の変化に素早く適応する [*1]
+例）文脈に応じて継続的に推薦手法の選択を最適化する [*2]
+
+⑤ やったこと
+②と合わせて、主張を明確にするために重要な要素。
+リサーチクエスチョンをどのようなアプローチ、着眼点をもって解決、達成したかを一文で述べる。
+システム・ソフトウェア開発の論文では、開発したシステムやソフトウェア、アーキテクチャなどの特徴を示す。
+
+例）恒常性を持つシステムアーキテクチャ（を提案・開発）[*1]
+例）多腕バンディットを用いたメタ推薦システム（を開発）[*2]
+
+① なぜ、やりたいのか
+②への導入となる要素。
+その研究の価値や意義を述べる。"><meta property="og:title" content="構造を意識した抜け漏れがなく主張点が明確な論文執筆"><meta property="og:url" content="https://blog.monochromegane.com/blog/2020/09/23/structure-of-research-paper/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2020/09/23/structure-of-research-paper/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2020/09/23/structure-of-research-paper/>構造を意識した抜け漏れがなく主張点が明確な論文執筆</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2020-09-23</div></time></header><div class=post-inner><h1 id=はじめに>はじめに</h1><p>研究者は、自身の研究の有用性を主張するため論文を発表する。
+しかしながら、研究の有用性を主張するために、抜け漏れがなく主張点が明確な文章を書くのは、慣れないうちは難しい（慣れても難しい）。
+本エントリでは、論文の構造を見出だす工程とその構造を書き下す工程を明示的に分離することで、抜け漏れがなく主張点が明確な論文執筆を行う方法を検討する。</p><h1 id=論文執筆の課題>論文執筆の課題</h1><p>前述の通り、研究の有用性を主張するために、抜け漏れがなく主張点が明確な文章を書くのは、慣れないうちは難しい。
+これは、主張の整理と文章の生成を頭の中で同時にやろうとしていることが原因であるように思う。</p><p>第一に、主張の整理は複雑なタスクである。
+研究の有用性の主張は、いくつかの課題や提案、評価といった複数の要素と、要素同士の関係性のあり方、すなわち「構造」を持つ。
+要素やその関係性の増加に伴い、構造は複雑になるため、頭の中だけで網羅しつつ整合性を取り続けるのは困難である。</p><p>第二に、主張の構造を文章に落とし込むのは複雑なタスクである。
+文章は連続した文から構成され、逐次的に記述される。
+そのため、要素同士の関係性を含む主張の構造を書き下すためには、文同士の局所的な繋がりに加え、段落や接続詞による大局的な繋がりを表現しなければならない。
+頭の中の主張の構造を余さずに正確に文章へと変換するのは困難である。
+主張の構造が明らかでない段階では尚更である。</p><h1 id=抜け漏れがなく主張点が明確な論文を書く>抜け漏れがなく主張点が明確な論文を書く</h1><p>論文執筆が難しい理由は、主張の構造を見出だすこと、この構造を文章に落とし込むことという複雑なタスクを同時に行うためだと解釈した。
+そこで、これらのタスクを明示的に分離する方法を考える。
+この時、主張の構造を見出だすタスクの成果物を文章としてしまっては、主張の構造を文章に落とし込むタスクを兼ねてしまう。
+主張の構造を見出だすタスクには必要な要素を文単位で表し、これらの関係性を表現できる形式が望ましい。
+本エントリでは、このタスクをつなぐ中間表現を論文ストラクチャーと名付ける。
+提案する論文ストラクチャーを以下に示す。</p><p><img src=/images/2020/09/research_paper_structure.jpeg alt=structure></p><p>提案する論文執筆では、この論文ストラクチャーを埋めていく工程と、論文ストラクチャーをもとに主張を文章に落とし込む工程を繰り返すことで執筆を行う。</p><h2 id=主張の構造を見出だす論文ストラクチャーを埋める>主張の構造を見出だす（論文ストラクチャーを埋める）</h2><p>以下、埋めるべき内容について簡単に説明する。
+はじめに②と⑤から主張を明確にし、その主張をストーリー立てて仕上げるよう残りの項目を埋めていくと良い。
+なお、③④⑥はリスト形式かつ対応づけを行えるため、ストーリー内の根拠の抜け漏れを防ぐことができる。</p><h3 id=-やりたいこと>② やりたいこと</h3><p>⑤と合わせて、<strong>主張を明確にするために重要な要素</strong>。
+リサーチクエスチョンとして、何を解決したいのか、達成したいのかを一文で述べる。</p><p>システム・ソフトウェア開発の論文では、提案手法によって、どのような理想の世界に近づくのかを示す。</p><ul><li>例）実行環境の変化に素早く適応する [*1]</li><li>例）文脈に応じて継続的に推薦手法の選択を最適化する [*2]</li></ul><h3 id=-やったこと>⑤ やったこと</h3><p>②と合わせて、<strong>主張を明確にするために重要な要素</strong>。
+リサーチクエスチョンをどのようなアプローチ、着眼点をもって解決、達成したかを一文で述べる。</p><p>システム・ソフトウェア開発の論文では、開発したシステムやソフトウェア、アーキテクチャなどの特徴を示す。</p><ul><li>例）恒常性を持つシステムアーキテクチャ（を提案・開発）[*1]</li><li>例）多腕バンディットを用いたメタ推薦システム（を開発）[*2]</li></ul><h3 id=-なぜやりたいのか>① なぜ、やりたいのか</h3><p>②への導入となる要素。
+その研究の価値や意義を述べる。</p><p>システム・ソフトウェア開発の論文では、提案手法によって、どうして、そのような理想の世界に近づけたいのかを示す。
+世間一般的に解決すべき課題として位置付けるも良いし、これまで世間が気づけていなかったけれども見方を変えて課題として捉え直した、のようにしても良いと思う。</p><h3 id=-なぜできないのか>③ なぜ、できないのか</h3><p>②に対しての課題であり、⑤のアプローチへの導入となる要素。
 理想となる世界に対しての（主に）技術的な課題を述べる。
-多くの研究では、従来の研究成果で未解決、もしくは改善が必要とされる領域についてサーベイ結果が該当する。</p>
-<p>なお、ここは複数の要素が挙げられるため、論文ストラクチャー上は「A、B、C&mldr;」とリスト形式で記述する。</p>
-<h3 id=-どうやって解決したのか>④ どうやって、解決したのか</h3>
-<p>③の複数の課題に対する個々の解決手段であり、⑤の詳細となる要素。
-提案手法である⑤がどのような方法で課題を解決するのかを述べる。</p>
-<p>ここは対応づけを行うことでストーリー内での根拠の抜け漏れを防ぐことが目的であるため、③の個々の課題に対する解決手段を「A'、B'、C'&mldr;」とリスト形式で記述する。</p>
-<h3 id=-本当にできたのか>⑥ 本当に、できたのか</h3>
-<p>③の課題を④の手法で解決できたことを示す要素。
-評価とその結果を述べる。</p>
-<p>ここも対応づけによる抜け漏れを防ぐことが目的であるため、③④の個々の課題、手法に対する評価内容を「A''、B''、C''&mldr;」とリスト形式で記述する。</p>
-<h2 id=構造を文章に落とし込む論文ストラクチャーから文章を作る>構造を文章に落とし込む（論文ストラクチャーから文章を作る）</h2>
-<p>論文ストラクチャーを埋めたら、各項目を使って論文の文章の雛形を作っていく。</p>
-<h3 id=タイトル>タイトル</h3>
-<p>②と⑤を組み合わせることは主張を端的に表現したタイトル案を作ることができる。
-よく使われるパターンは「⑤を用いた②」「②が可能な⑤」などであろう。</p>
-<h3 id=概要>概要</h3>
-<p>①から⑥を順番に並べることで抜け漏れのない概要案を作ることができる。
-典型的な例では以下のようにつながれる。</p>
-<ul>
-<li>①の状況になっている</li>
-<li>そのため②が求められている、必要となる</li>
-<li>一方で③A&mldr;の課題がある</li>
-<li>本研究では⑤を提案する</li>
-<li>提案手法では④A'&mldr;を用いて課題を解決した</li>
-<li>評価では⑤A''&mldr;によって有効性を確認した</li>
-</ul>
-<h3 id=1-はじめに>1. はじめに</h3>
-<p>概要と同じく①から⑥を順番に並べることで案を作ることができる。
-ここでは、パラグラフのトピックセンテンスが論文ストラクチャーの各項目になるように配置し、各パラグラフに説明とリファレンスを追加していくと良い。</p>
-<h3 id=2-関連研究>2. 関連研究</h3>
-<p>③の各課題を単位とする節やパラグラフを並べることで案を作ることができる。
-ここでは、各課題がなぜ発生するのか、解決できていないのかを説明するために、従来手法の説明を加えるのが一般的である。</p>
-<h3 id=3-提案手法>3. 提案手法</h3>
-<p>④の各手法を単位とする節やパラグラフを並べることで案を作ることができる。
+多くの研究では、従来の研究成果で未解決、もしくは改善が必要とされる領域についてサーベイ結果が該当する。</p><p>なお、ここは複数の要素が挙げられるため、論文ストラクチャー上は「A、B、C&mldr;」とリスト形式で記述する。</p><h3 id=-どうやって解決したのか>④ どうやって、解決したのか</h3><p>③の複数の課題に対する個々の解決手段であり、⑤の詳細となる要素。
+提案手法である⑤がどのような方法で課題を解決するのかを述べる。</p><p>ここは対応づけを行うことでストーリー内での根拠の抜け漏れを防ぐことが目的であるため、③の個々の課題に対する解決手段を「A&rsquo;、B&rsquo;、C&rsquo;&mldr;」とリスト形式で記述する。</p><h3 id=-本当にできたのか>⑥ 本当に、できたのか</h3><p>③の課題を④の手法で解決できたことを示す要素。
+評価とその結果を述べる。</p><p>ここも対応づけによる抜け漏れを防ぐことが目的であるため、③④の個々の課題、手法に対する評価内容を「A&rsquo;&rsquo;、B&rsquo;&rsquo;、C&rsquo;&rsquo;&mldr;」とリスト形式で記述する。</p><h2 id=構造を文章に落とし込む論文ストラクチャーから文章を作る>構造を文章に落とし込む（論文ストラクチャーから文章を作る）</h2><p>論文ストラクチャーを埋めたら、各項目を使って論文の文章の雛形を作っていく。</p><h3 id=タイトル>タイトル</h3><p>②と⑤を組み合わせることは主張を端的に表現したタイトル案を作ることができる。
+よく使われるパターンは「⑤を用いた②」「②が可能な⑤」などであろう。</p><h3 id=概要>概要</h3><p>①から⑥を順番に並べることで抜け漏れのない概要案を作ることができる。
+典型的な例では以下のようにつながれる。</p><ul><li>①の状況になっている</li><li>そのため②が求められている、必要となる</li><li>一方で③A&mldr;の課題がある</li><li>本研究では⑤を提案する</li><li>提案手法では④A&rsquo;&mldr;を用いて課題を解決した</li><li>評価では⑤A&rsquo;&rsquo;&mldr;によって有効性を確認した</li></ul><h3 id=1-はじめに>1. はじめに</h3><p>概要と同じく①から⑥を順番に並べることで案を作ることができる。
+ここでは、パラグラフのトピックセンテンスが論文ストラクチャーの各項目になるように配置し、各パラグラフに説明とリファレンスを追加していくと良い。</p><h3 id=2-関連研究>2. 関連研究</h3><p>③の各課題を単位とする節やパラグラフを並べることで案を作ることができる。
+ここでは、各課題がなぜ発生するのか、解決できていないのかを説明するために、従来手法の説明を加えるのが一般的である。</p><h3 id=3-提案手法>3. 提案手法</h3><p>④の各手法を単位とする節やパラグラフを並べることで案を作ることができる。
 ここでは、③との対応づけが明らかになるようにできるだけ順序を維持し、また対応する課題について明記すべきである。
-また、⑤を用いて提案手法全体の概要と達成できる事柄について導入部分で触れておくと良い。</p>
-<h3 id=4-評価>4. 評価</h3>
-<p>⑥の各評価を単位とする節やパラグラフを並べることで案を作ることができる。
-ここでも、③や④との対応づけが明らかになるようにできるだけ順序を維持し、また対応する課題、手法について明記すべきである。</p>
-<h3 id=5-まとめ>5. まとめ</h3>
-<p>②と⑤からリサーチクエスチョンとこれに対する提案をまとめる。
+また、⑤を用いて提案手法全体の概要と達成できる事柄について導入部分で触れておくと良い。</p><h3 id=4-評価>4. 評価</h3><p>⑥の各評価を単位とする節やパラグラフを並べることで案を作ることができる。
+ここでも、③や④との対応づけが明らかになるようにできるだけ順序を維持し、また対応する課題、手法について明記すべきである。</p><h3 id=5-まとめ>5. まとめ</h3><p>②と⑤からリサーチクエスチョンとこれに対する提案をまとめる。
 また、⑥の結果を踏まえ解決した③を明記する。
-最後に研究を発展させるための今後の予定を述べる。</p>
-<h1 id=おわりに>おわりに</h1>
-<p>本エントリでは、抜け漏れがなく主張点が明確な論文執筆のために、論文執筆の複雑なタスクを分離し、主張の構造を見出だすタスクと、この構造を文章に落とし込むタスクという二つのタスクを交互に行う方式を提案した。
-また、このために論文ストラクチャーと名付けた主張の構造の整理に適した表現形式を提案した。</p>
-<p>提案手法によって、論文の品質を一定に保ちつつ初稿までの執筆時間を短縮する。
-加えて、論文ストラクチャーを通した研究成果共有によって共著者との早期の意思疎通が容易になり、手戻りを防ぐ効果が期待できる。</p>
-<p>あとは良い研究をするだけである（それもまた難しいのであった）。</p>
-<hr>
-<h3 id=参照>参照</h3>
-<ul>
-<li>*1: 松本 亮介, 近藤 宇智朗, 三宅 悠介, 力武 健次, 栗林 健太郎, FastContainer: 実行環境の変化に素早く適応できる恒常性を持つシステムアーキテクチャ, インターネットと運用技術シンポジウム2017論文集，2017，89-97（2017-11-30）, Nov 2017</li>
-<li>*2: 三宅 悠介, 峯 恒憲, Synapse: 文脈に応じて継続的に推薦手法の選択を最適化する推薦システム, 電子情報通信学会論文誌D, Vol.J103-D,No.11,pp.-,Nov. 2020. (to appear)</li>
-</ul>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/%E8%AB%96%E6%96%87>論文</a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<div class=social-btn>
-<div>
-<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2020/09/23/structure-of-research-paper/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
-</div>
-<div>
-<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
-</div>
-</div>
-</div>
-<footer class=footer>
-<div class=author></div>
-<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
-<p>monochromegane (モノクロめがね) と申します。</p>
-<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-<ul class=social>
-<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
-<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
-<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
-</ul>
-<p class=copyright>
-<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
-</p>
-</footer>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
-<script>hljs.initHighlightingOnLoad()</script>
-<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
-</body>
-</html>
+最後に研究を発展させるための今後の予定を述べる。</p><h1 id=おわりに>おわりに</h1><p>本エントリでは、抜け漏れがなく主張点が明確な論文執筆のために、論文執筆の複雑なタスクを分離し、主張の構造を見出だすタスクと、この構造を文章に落とし込むタスクという二つのタスクを交互に行う方式を提案した。
+また、このために論文ストラクチャーと名付けた主張の構造の整理に適した表現形式を提案した。</p><p>提案手法によって、論文の品質を一定に保ちつつ初稿までの執筆時間を短縮する。
+加えて、論文ストラクチャーを通した研究成果共有によって共著者との早期の意思疎通が容易になり、手戻りを防ぐ効果が期待できる。</p><p>あとは良い研究をするだけである（それもまた難しいのであった）。</p><hr><h3 id=参照>参照</h3><ul><li>*1: 松本 亮介, 近藤 宇智朗, 三宅 悠介, 力武 健次, 栗林 健太郎, FastContainer: 実行環境の変化に素早く適応できる恒常性を持つシステムアーキテクチャ, インターネットと運用技術シンポジウム2017論文集，2017，89-97（2017-11-30）, Nov 2017</li><li>*2: 三宅 悠介, 峯 恒憲, Synapse: 文脈に応じて継続的に推薦手法の選択を最適化する推薦システム, 電子情報通信学会論文誌D, Vol.J103-D,No.11,pp.-,Nov. 2020. (to appear)</li></ul></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/%E8%AB%96%E6%96%87>論文</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2020/09/23/structure-of-research-paper/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

@@ -1,203 +1,58 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width">
-<meta name=author content>
-<title>多腕バンディット問題におけるUCB方策を理解する &#183; THINKING MEGANE</title>
-<meta name=twitter:card content="summary">
-<meta name=twitter:site content="@monochromegane">
-<meta property="og:description" content="多腕バンディット問題における解法の一つであるUCB1方策では以下のスコアを各腕に対して求め、最大のものを選択する。
-\[ \overline{x}_j+\sqrt{\frac{2\ln{n}}{n_j}} \tag{1}\label{eq-1} \]
-ここで、$\overline{x}_j$は腕$j$に対して観測された平均報酬、$n_j$は腕$j$が選択された回数、$n$は全体の試行回数である。 第2項は選択された回数$n_j$が少ないほど大きくなることから、評価が不確かな腕ほど積極的に探索を行う（Optimism in face of uncertainty）。
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>多腕バンディット問題におけるUCB方策を理解する &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="多腕バンディット問題における解法の一つであるUCB1方策では以下のスコアを各腕に対して求め、最大のものを選択する。
+\[
+\overline{x}_j+\sqrt{\frac{2\ln{n}}{n_j}} \tag{1}\label{eq-1}
+\]
+ここで、$\overline{x}_j$は腕$j$に対して観測された平均報酬、$n_j$は腕$j$が選択された回数、$n$は全体の試行回数である。
+第2項は選択された回数$n_j$が少ないほど大きくなることから、評価が不確かな腕ほど積極的に探索を行う（Optimism in face of uncertainty）。
 本エントリでは、この第2項について上記の振る舞い以上の理解を進める。
-確率不等式 \eqref{eq-1}式は確率不等式の一種であるヘフディングの不等式に基づいたものであるため、まず確率不等式を学ぶ。 確率不等式は、確率の分布に依らない確率の近似的な評価に利用される不等式である。 簡単には、稀に発生する事象についての確率の上限を求めることができる。
-マルコフの不等式 Markov&rsquo;s inequality 非負の確率変数$X\geq0$と任意の正数$a > 0$に対して
-\[ Pr \left[ X \geq a \right] \leq \frac{E[X]}{a} \tag{2}\label{eq-2} \]
+確率不等式
+\eqref{eq-1}式は確率不等式の一種であるヘフディングの不等式に基づいたものであるため、まず確率不等式を学ぶ。
+確率不等式は、確率の分布に依らない確率の近似的な評価に利用される不等式である。
+簡単には、稀に発生する事象についての確率の上限を求めることができる。
+マルコフの不等式 Markov&rsquo;s inequality
+非負の確率変数$X\geq0$と任意の正数$a > 0$に対して
+\[
+Pr \left[ X \geq a \right] \leq \frac{E[X]}{a} \tag{2}\label{eq-2}
+\]
 が成り立つ。\eqref{eq-2}をマルコフの不等式と呼ぶ。
 この不等式を用いることで、確率変数$X$の実現値が$a$以上になる確率の上限を、確率分布に依らず期待値$E[X]$から求めることができる（ただし$a \leq E[X]$だと実用的な値にならない）。
 マルコフの不等式を用いて例えば「期待値が10の確率変数で100以上が出る確率は10%以下」（$Pr \left[ X \geq 100 \right] \leq \frac{10}{100} = 0.1$）などと求めることができる。
 証明は
-\begin{align} E[X] &= \int_0^\infty x f(x) dx \notag \\ &= \int_0^a x f(x) dx + \int_a^\infty x f(x) dx \notag \\ &\geq \int_a^\infty x f(x) dx \notag \\ &\geq \int_a^\infty a f(x) dx = a \int_a^\infty f(x) dx = a Pr [X \geq a] \notag \\ \end{align}">
-<meta property="og:title" content="多腕バンディット問題におけるUCB方策を理解する">
-<meta property="og:url" content="https://blog.monochromegane.com/blog/2020/05/16/bandit-algorithm-ucb1/">
-<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-<link rel=stylesheet href=/css/reset.css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
-<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
-<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
-<link rel=stylesheet href=/css/text.css>
-<link rel=stylesheet href=/css/color.css>
-<link rel=stylesheet href=/css/layout.css>
-<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
-<link rel="shortcut icon" href=/images/favicon.ico>
-<link rel=canonical href=https://blog.monochromegane.com/blog/2020/05/16/bandit-algorithm-ucb1/>
-<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
-</head>
-<body>
-<div class=header>
-<header>
-<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
-<nav>
-<ul class=menu>
-<li><a href=/self-introduction/>Home</a></li>
-<li><a href=/post/>Archives</a></li>
-<li><a href=/diary/>Diary</a></li>
-<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
-</ul>
-</nav>
-</header>
-</div>
-<div class=container>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/blog/2020/05/16/bandit-algorithm-ucb1/>多腕バンディット問題におけるUCB方策を理解する</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2020-05-16</div></time>
-</header>
-<div class=post-inner>
-<p>多腕バンディット問題における解法の一つであるUCB1方策では以下のスコアを各腕に対して求め、最大のものを選択する。</p>
-<p>\[
-\overline{x}_j+\sqrt{\frac{2\ln{n}}{n_j}} \tag{1}\label{eq-1}
-\]</p>
-<p>ここで、$\overline{x}_j$は腕$j$に対して観測された平均報酬、$n_j$は腕$j$が選択された回数、$n$は全体の試行回数である。
-第2項は選択された回数$n_j$が少ないほど大きくなることから、評価が不確かな腕ほど積極的に探索を行う（<code>Optimism in face of uncertainty</code>）。</p>
-<p>本エントリでは、この第2項について上記の振る舞い以上の理解を進める。</p>
-<h1 id=確率不等式>確率不等式</h1>
-<p>\eqref{eq-1}式は確率不等式の一種であるヘフディングの不等式に基づいたものであるため、まず確率不等式を学ぶ。
-確率不等式は、確率の分布に依らない確率の近似的な評価に利用される不等式である。
-簡単には、稀に発生する事象についての確率の上限を求めることができる。</p>
-<h2 id=マルコフの不等式-markovs-inequality>マルコフの不等式 Markov&rsquo;s inequality</h2>
-<p>非負の確率変数$X\geq0$と任意の正数$a > 0$に対して</p>
-<p>\[
-Pr \left[ X \geq a \right] \leq \frac{E[X]}{a} \tag{2}\label{eq-2}
-\]</p>
-<p>が成り立つ。\eqref{eq-2}をマルコフの不等式と呼ぶ。</p>
-<p>この不等式を用いることで、確率変数$X$の実現値が$a$以上になる確率の上限を、確率分布に依らず期待値$E[X]$から求めることができる（ただし$a \leq E[X]$だと実用的な値にならない）。</p>
-<p>マルコフの不等式を用いて例えば「期待値が10の確率変数で100以上が出る確率は10%以下」（$Pr \left[ X \geq 100 \right] \leq \frac{10}{100} = 0.1$）などと求めることができる。</p>
-<p>証明は</p>
-<p>\begin{align}
+\begin{align}
 E[X] &= \int_0^\infty x f(x) dx \notag \\ &= \int_0^a x f(x) dx + \int_a^\infty x f(x) dx \notag \\ &\geq \int_a^\infty x f(x) dx \notag \\ &\geq \int_a^\infty a f(x) dx = a \int_a^\infty f(x) dx = a Pr [X \geq a] \notag \\
-\end{align}</p>
-<p>となる。なお、2行目から3行目は、右辺第1項が$\geq 0$であるため。3行目から4行目は積分区間で最も小さい$a$を使うため。</p>
-<h2 id=チェビシェフの不等式-chebyshevs-inequality>チェビシェフの不等式 Chebyshev’s inequality</h2>
-<p>確率変数$X$が期待値$E[X]=\mu$、分散$\sigma^2$を持つとき、任意の正数$a > 0$に対して</p>
-<p>\[
+\end{align}"><meta property="og:title" content="多腕バンディット問題におけるUCB方策を理解する"><meta property="og:url" content="https://blog.monochromegane.com/blog/2020/05/16/bandit-algorithm-ucb1/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2020/05/16/bandit-algorithm-ucb1/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2020/05/16/bandit-algorithm-ucb1/>多腕バンディット問題におけるUCB方策を理解する</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2020-05-16</div></time></header><div class=post-inner><p>多腕バンディット問題における解法の一つであるUCB1方策では以下のスコアを各腕に対して求め、最大のものを選択する。</p><p>\[
+\overline{x}_j+\sqrt{\frac{2\ln{n}}{n_j}} \tag{1}\label{eq-1}
+\]</p><p>ここで、$\overline{x}_j$は腕$j$に対して観測された平均報酬、$n_j$は腕$j$が選択された回数、$n$は全体の試行回数である。
+第2項は選択された回数$n_j$が少ないほど大きくなることから、評価が不確かな腕ほど積極的に探索を行う（<code>Optimism in face of uncertainty</code>）。</p><p>本エントリでは、この第2項について上記の振る舞い以上の理解を進める。</p><h1 id=確率不等式>確率不等式</h1><p>\eqref{eq-1}式は確率不等式の一種であるヘフディングの不等式に基づいたものであるため、まず確率不等式を学ぶ。
+確率不等式は、確率の分布に依らない確率の近似的な評価に利用される不等式である。
+簡単には、稀に発生する事象についての確率の上限を求めることができる。</p><h2 id=マルコフの不等式-markovs-inequality>マルコフの不等式 Markov&rsquo;s inequality</h2><p>非負の確率変数$X\geq0$と任意の正数$a > 0$に対して</p><p>\[
+Pr \left[ X \geq a \right] \leq \frac{E[X]}{a} \tag{2}\label{eq-2}
+\]</p><p>が成り立つ。\eqref{eq-2}をマルコフの不等式と呼ぶ。</p><p>この不等式を用いることで、確率変数$X$の実現値が$a$以上になる確率の上限を、確率分布に依らず期待値$E[X]$から求めることができる（ただし$a \leq E[X]$だと実用的な値にならない）。</p><p>マルコフの不等式を用いて例えば「期待値が10の確率変数で100以上が出る確率は10%以下」（$Pr \left[ X \geq 100 \right] \leq \frac{10}{100} = 0.1$）などと求めることができる。</p><p>証明は</p><p>\begin{align}
+E[X] &= \int_0^\infty x f(x) dx \notag \\ &= \int_0^a x f(x) dx + \int_a^\infty x f(x) dx \notag \\ &\geq \int_a^\infty x f(x) dx \notag \\ &\geq \int_a^\infty a f(x) dx = a \int_a^\infty f(x) dx = a Pr [X \geq a] \notag \\
+\end{align}</p><p>となる。なお、2行目から3行目は、右辺第1項が$\geq 0$であるため。3行目から4行目は積分区間で最も小さい$a$を使うため。</p><h2 id=チェビシェフの不等式-chebyshevs-inequality>チェビシェフの不等式 Chebyshev’s inequality</h2><p>確率変数$X$が期待値$E[X]=\mu$、分散$\sigma^2$を持つとき、任意の正数$a > 0$に対して</p><p>\[
 Pr \left[ \mid X - \mu \mid \geq a \sigma \right] \leq \frac{1}{a^2} \tag{3}\label{eq-3}
-\]</p>
-<p>が成り立つ。\eqref{eq-3}をチェビシェフの不等式と呼ぶ。</p>
-<p>この不等式を用いることで、確率変数$X$の実現値と期待値$\mu$の差が標準偏差$\sigma$の$a$倍以上になる確率の上限を、確率分布に依らず期待値$\mu$と分散$\sigma^2$から求めることができる。</p>
-<p>証明は、マルコフの不等式に対して$X = (X-\mu)^2$と$a=a^2\sigma^2$とおいた時、</p>
-<p>\[
+\]</p><p>が成り立つ。\eqref{eq-3}をチェビシェフの不等式と呼ぶ。</p><p>この不等式を用いることで、確率変数$X$の実現値と期待値$\mu$の差が標準偏差$\sigma$の$a$倍以上になる確率の上限を、確率分布に依らず期待値$\mu$と分散$\sigma^2$から求めることができる。</p><p>証明は、マルコフの不等式に対して$X = (X-\mu)^2$と$a=a^2\sigma^2$とおいた時、</p><p>\[
 Pr[(X-\mu)^2 \geq a^2\sigma^2] \leq \frac{E[(X-\mu)^2]}{a^2\sigma^2} = \frac{\sigma^2}{a^2\sigma^2} = \frac{1}{a^2} \\ Pr[\mid X-\mu \mid \geq a\sigma] \leq \frac{1}{a^2}
-\]</p>
-<p>となる。なお、少し工夫して$a=a^2$とすると</p>
-<p>\[
+\]</p><p>となる。なお、少し工夫して$a=a^2$とすると</p><p>\[
 Pr[(X-\mu)^2 \geq a^2] \leq \frac{E[(X-\mu)^2]}{a^2} = \frac{\sigma^2}{a^2} \\ Pr[\mid X-\mu \mid \geq a] \leq \frac{\sigma^2}{a^2}
-\]</p>
-<p>のように、確率変数$X$の実現値と期待値$\mu$の差を標準偏差$\sigma$を使わずに表現できる。この場合例えば「期待値が10で標準偏差が5の確率変数で100以上が出る確率は0.31%未満」（$Pr[X-10 \geq 90] \leq \frac{5^2}{90^2} = 0.00308&mldr;$）などと求めることができる。</p>
-<h2 id=ヘフディングの不等式-hoeffdings-inequality>ヘフディングの不等式 Hoeffding’s inequality</h2>
-<p>独立な$n$個の確率変数$X[a,b]$において平均を$\overline{X}$、期待値を$E\left[\overline{X}\right]$とおいた時、任意の正数$u > 0$に対して</p>
-<p>\[
+\]</p><p>のように、確率変数$X$の実現値と期待値$\mu$の差を標準偏差$\sigma$を使わずに表現できる。この場合例えば「期待値が10で標準偏差が5の確率変数で100以上が出る確率は0.31%未満」（$Pr[X-10 \geq 90] \leq \frac{5^2}{90^2} = 0.00308&mldr;$）などと求めることができる。</p><h2 id=ヘフディングの不等式-hoeffdings-inequality>ヘフディングの不等式 Hoeffding’s inequality</h2><p>独立な$n$個の確率変数$X[a,b]$において平均を$\overline{X}$、期待値を$E\left[\overline{X}\right]$とおいた時、任意の正数$u > 0$に対して</p><p>\[
 Pr \left[\overline{X}-E\left[\overline{X}\right] \geq u\right] \leq \exp\left(-\frac{2n^2u^2}{\sum_{i=1}^{n}(b_i-a_i)^2}\right) \tag{4}\label{eq-4}
-\]</p>
-<p>が成り立つ。\eqref{eq-4}をヘフディングの不等式と呼ぶ。</p>
-<p>この不等式を用いることで、n個の確率変数$X$の平均と期待値の誤差が$u$以上になる（すなわち真の期待値を過大評価している）確率の上限を、確率分布に依らずに求めることができる。</p>
-<p>同様に真の期待値を過小評価している確率の上限は、</p>
-<p>\[
+\]</p><p>が成り立つ。\eqref{eq-4}をヘフディングの不等式と呼ぶ。</p><p>この不等式を用いることで、n個の確率変数$X$の平均と期待値の誤差が$u$以上になる（すなわち真の期待値を過大評価している）確率の上限を、確率分布に依らずに求めることができる。</p><p>同様に真の期待値を過小評価している確率の上限は、</p><p>\[
 Pr \left[-\overline{X}+E\left[\overline{X}\right] \geq u\right] \leq \exp\left(-\frac{2n^2u^2}{\sum_{i=1}^{n}(b_i-a_i)^2}\right) \tag{5}\label{eq-5}
-\]</p>
-<p>であり、真の期待値に対して$u$以上の誤差が生じる確率の上限は\eqref{eq-4}と\eqref{eq-5}を合わせた、</p>
-<p>\[
+\]</p><p>であり、真の期待値に対して$u$以上の誤差が生じる確率の上限は\eqref{eq-4}と\eqref{eq-5}を合わせた、</p><p>\[
 Pr \left[\mid \overline{X}-E\left[\overline{X}\right] \mid \geq u\right] = Pr \left[\overline{X}-E\left[\overline{X}\right] \geq u\right] + Pr \left[-\overline{X}+E\left[\overline{X}\right] \geq u\right] \tag{6}\label{eq-6}
-\]</p>
-<p>となる。</p>
-<p>また、確率変数$X[a,b]$で$a=0,b=1$の時、\eqref{eq-4}より</p>
-<p>\[
+\]</p><p>となる。</p><p>また、確率変数$X[a,b]$で$a=0,b=1$の時、\eqref{eq-4}より</p><p>\[
 Pr \left[\overline{X}-E\left[\overline{X}\right] \geq u\right] \leq \exp\left(-\frac{2n^2u^2}{n}\right) = \exp\left(-2nu^2\right)\tag{7}\label{eq-7}
-\]</p>
-<p>同じく\eqref{eq-5}より</p>
-<p>\[
+\]</p><p>同じく\eqref{eq-5}より</p><p>\[
 Pr \left[-\overline{X}+E\left[\overline{X}\right] \geq u\right] \leq \exp\left(-\frac{2n^2u^2}{n}\right) = \exp\left(-2nu^2\right)\tag{8}\label{eq-8}
-\]</p>
-<p>である。証明は論文に譲る。</p>
-<h1 id=ucb1方策>UCB1方策</h1>
-<p>UCB1方策では、ヘフディングの不等式\eqref{eq-8}を用いて、腕$j$の報酬の期待値の信頼区間の上側の上限である\eqref{eq-1}を求める。
-\eqref{eq-1}を再掲する。</p>
-<p>\[
+\]</p><p>である。証明は論文に譲る。</p><h1 id=ucb1方策>UCB1方策</h1><p>UCB1方策では、ヘフディングの不等式\eqref{eq-8}を用いて、腕$j$の報酬の期待値の信頼区間の上側の上限である\eqref{eq-1}を求める。
+\eqref{eq-1}を再掲する。</p><p>\[
 \overline{x}_j+\sqrt{\frac{2\ln{n}}{n_j}} \tag{1}
-\]</p>
-<p>腕$j$の報酬の期待値を$x^*_j$とすると\eqref{eq-8}は</p>
-<p>\[
+\]</p><p>腕$j$の報酬の期待値を$x^*_j$とすると\eqref{eq-8}は</p><p>\[
 Pr \left[x^*_j \geq \overline{x}_j + u\right] \leq \exp\left(-2n_ju^2\right)\tag{9}\label{eq-9}
-\]</p>
-<p>\eqref{eq-9}は真の期待値を過小評価している確率の上限であり、これを試行回数$n$が進むごとに小さくしたいと考える。そこで右辺を$n^{-m}=\frac{1}{n^m}$とすると、</p>
-<p>\begin{align}
+\]</p><p>\eqref{eq-9}は真の期待値を過小評価している確率の上限であり、これを試行回数$n$が進むごとに小さくしたいと考える。そこで右辺を$n^{-m}=\frac{1}{n^m}$とすると、</p><p>\begin{align}
 \exp\left(-2n_ju^2\right) &= \frac{1}{n^m} \notag \\ -2n_ju^2 &= \ln{\frac{1}{n^m}} \notag \\ &= \ln{1} - \ln{n^m} \notag \\ &= 0 - m\ln{n} \notag \\ 2n_ju^2 &= m\ln{n} \notag \\ u^2 &= \frac{m\ln{n}}{2n_j} \notag \\ u &= \sqrt{\frac{m\ln{n}}{2n_j}} \notag
-\end{align}</p>
-<p>が得られる。理論限界より$n$回目の試行において$1/n$の確率で各腕が選択する必要があるとされており、これに従えば$m=1$だが、論文では$m=4$としている（すなわち$u = \sqrt{\frac{2\ln{n}}{n_j}}$）。</p>
-<p>これを\eqref{eq-9}に代入し</p>
-<p>\[
+\end{align}</p><p>が得られる。理論限界より$n$回目の試行において$1/n$の確率で各腕が選択する必要があるとされており、これに従えば$m=1$だが、論文では$m=4$としている（すなわち$u = \sqrt{\frac{2\ln{n}}{n_j}}$）。</p><p>これを\eqref{eq-9}に代入し</p><p>\[
 Pr \left[x^*_j \geq \overline{x}_j + \sqrt{\frac{2\ln{n}}{n_j}}\right] \leq \frac{1}{n^4}\tag{10}\label{eq-10}
-\]</p>
-<p>よって$1/n^4$の上限において、\eqref{eq-1}のスコアを用いて報酬の期待値を最も低く見積もっているであろう腕を選択することができる。すなわち<code>Optimism in face of uncertainty</code>に従う。</p>
-<h1 id=参考>参考</h1>
-<ul>
-<li><a href=https://ja.wikipedia.org/wiki/%E3%83%9E%E3%83%AB%E3%82%B3%E3%83%95%E3%81%AE%E4%B8%8D%E7%AD%89%E5%BC%8F>マルコフの不等式</a></li>
-<li><a href=https://ja.wikipedia.org/wiki/%E3%83%81%E3%82%A7%E3%83%93%E3%82%B7%E3%82%A7%E3%83%95%E3%81%AE%E4%B8%8D%E7%AD%89%E5%BC%8F>チェビシェフの不等式</a></li>
-<li><a href="https://www.youtube.com/watch?v=d-ugoDdXWrU">【大学数学】チェビシェフの不等式【確率統計】- 予備校のノリで学ぶ「大学の数学・物理」</a></li>
-<li><a href="http://stat.inf.uec.ac.jp/lib/exe/fetch.php?media=prob:prob-9-note-and-quizes-20120614.pdf">確率論 (Probability Theory) 第 9 週</a></li>
-<li><a href=https://en.wikipedia.org/wiki/Hoeffding%27s_inequality>Hoeffding&rsquo;s inequality</a></li>
-<li><a href=http://repository.lib.ncsu.edu/bitstream/1840.4/2170/1/ISMS_1962_326.pdf>Hoeffding, Wassily (1963). &ldquo;Probability inequalities for sums of bounded random variables&rdquo;. Journal of the American Statistical Association. 58 (301): 13–30.</a></li>
-<li><a href=https://homes.di.unimi.it/~cesabian/Pubblicazioni/ml-02.pdf>Auer, Peter, Nicolo Cesa-Bianchi, and Paul Fischer. &ldquo;Finite-time analysis of the multiarmed bandit problem.&rdquo; Machine learning 47.2-3 (2002): 235-256.</a></li>
-<li><a href=https://ludu-vorton.hatenablog.com/entry/2019/06/06/073000>ヘフディングの不等式(Hoeffding&rsquo;s inequality)と諸々の確率の評価の不等式</a></li>
-<li><a href=https://qiita.com/usaito/items/ad15394547bd5daf8937>バンディットアルゴリズムで最適な介入を見つける（基本編）</a></li>
-<li><a href=https://research.miidas.jp/2020/02/%E3%83%90%E3%83%B3%E3%83%87%E3%82%A3%E3%83%83%E3%83%88%E3%82%A2%E3%83%AB%E3%82%B4%E3%83%AA%E3%82%BA%E3%83%A0%E3%81%AE%E7%B6%9A%E3%81%8D/>バンディットアルゴリズムの続き</a></li>
-<li><a href=https://www.slideshare.net/nishio/1-70974083>強化学習その1</a></li>
-<li><a href=https://www.amazon.co.jp/dp/406152917X/>バンディット問題の理論とアルゴリズム (機械学習プロフェッショナルシリーズ)</a></li>
-</ul>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/bandit>bandit</a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<div class=social-btn>
-<div>
-<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2020/05/16/bandit-algorithm-ucb1/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
-</div>
-<div>
-<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
-</div>
-</div>
-</div>
-<footer class=footer>
-<div class=author></div>
-<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
-<p>monochromegane (モノクロめがね) と申します。</p>
-<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-<ul class=social>
-<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
-<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
-<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
-</ul>
-<p class=copyright>
-<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
-</p>
-</footer>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
-<script>hljs.initHighlightingOnLoad()</script>
-<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
-</body>
-</html>
+\]</p><p>よって$1/n^4$の上限において、\eqref{eq-1}のスコアを用いて報酬の期待値を最も低く見積もっているであろう腕を選択することができる。すなわち<code>Optimism in face of uncertainty</code>に従う。</p><h1 id=参考>参考</h1><ul><li><a href=https://ja.wikipedia.org/wiki/%E3%83%9E%E3%83%AB%E3%82%B3%E3%83%95%E3%81%AE%E4%B8%8D%E7%AD%89%E5%BC%8F>マルコフの不等式</a></li><li><a href=https://ja.wikipedia.org/wiki/%E3%83%81%E3%82%A7%E3%83%93%E3%82%B7%E3%82%A7%E3%83%95%E3%81%AE%E4%B8%8D%E7%AD%89%E5%BC%8F>チェビシェフの不等式</a></li><li><a href="https://www.youtube.com/watch?v=d-ugoDdXWrU">【大学数学】チェビシェフの不等式【確率統計】- 予備校のノリで学ぶ「大学の数学・物理」</a></li><li><a href="http://stat.inf.uec.ac.jp/lib/exe/fetch.php?media=prob:prob-9-note-and-quizes-20120614.pdf">確率論 (Probability Theory) 第 9 週</a></li><li><a href=https://en.wikipedia.org/wiki/Hoeffding%27s_inequality>Hoeffding&rsquo;s inequality</a></li><li><a href=http://repository.lib.ncsu.edu/bitstream/1840.4/2170/1/ISMS_1962_326.pdf>Hoeffding, Wassily (1963). &ldquo;Probability inequalities for sums of bounded random variables&rdquo;. Journal of the American Statistical Association. 58 (301): 13–30.</a></li><li><a href=https://homes.di.unimi.it/~cesabian/Pubblicazioni/ml-02.pdf>Auer, Peter, Nicolo Cesa-Bianchi, and Paul Fischer. &ldquo;Finite-time analysis of the multiarmed bandit problem.&rdquo; Machine learning 47.2-3 (2002): 235-256.</a></li><li><a href=https://ludu-vorton.hatenablog.com/entry/2019/06/06/073000>ヘフディングの不等式(Hoeffding&rsquo;s inequality)と諸々の確率の評価の不等式</a></li><li><a href=https://qiita.com/usaito/items/ad15394547bd5daf8937>バンディットアルゴリズムで最適な介入を見つける（基本編）</a></li><li><a href=https://research.miidas.jp/2020/02/%E3%83%90%E3%83%B3%E3%83%87%E3%82%A3%E3%83%83%E3%83%88%E3%82%A2%E3%83%AB%E3%82%B4%E3%83%AA%E3%82%BA%E3%83%A0%E3%81%AE%E7%B6%9A%E3%81%8D/>バンディットアルゴリズムの続き</a></li><li><a href=https://www.slideshare.net/nishio/1-70974083>強化学習その1</a></li><li><a href=https://www.amazon.co.jp/dp/406152917X/>バンディット問題の理論とアルゴリズム (機械学習プロフェッショナルシリーズ)</a></li></ul></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/bandit>bandit</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2020/05/16/bandit-algorithm-ucb1/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

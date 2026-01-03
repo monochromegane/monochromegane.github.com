@@ -1,155 +1,47 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width">
-<meta name=author content>
-<title>2024 &#183; THINKING MEGANE</title>
-<meta name=twitter:card content="summary">
-<meta name=twitter:site content="@monochromegane">
-<meta property="og:description" content="今年は、九州大学大学院システム情報科学府博士後期課程を修了し、博士（情報科学）の学位を授与されたことが、一番のハイライトだった。 指導くださった先生方、ペパボ研究所の皆さんをはじめとする同僚、切磋琢磨した社会人学生の皆さん、そして家族へ、改めて心から感謝したい。
-達成感でいっぱいであるものの、年度中の博士論文執筆と事業への貢献の両立は、想像以上に大変だった。 研究においては元々、事業への貢献も求められるため、自身の専門領域から様々な分析や提案、実装を並行して進めていたが、博士論文の執筆中は、その複雑さと膨大さゆえに脳内のリソースを極限まで使い続ける日々であり、これまで以上に研究と実務の両立の難易度が高かったように思う。 それでも、最後までやり切ることができたことに、今はただ安堵している。 一方で、これらの分析や提案については、伝え方や巻き込む人々の選定をもっと考えることで、より事業成果につなげられたのではないかという反省もある。
-来年は博士として、今の専門性に加え、さらに高い期待が寄せられる立場となるはずである。 不確実で混沌とした課題領域において、比較・体系化・言語化を通じて、誰もがその課題を共有し、迅速かつ効果的な対策を講じられる基盤を整えることが求められる。 このスキルを活かし、事業に携わる人々が互いの専門性を最大限に発揮し、成果につながる環境を作り上げることを目指していきたい。
-振り返れば、多忙の連続であった一年で、正直なところ鮮明な記憶が残っていない。 それでも、この積み重ねや振り返りが今後の糧になると信じ、今後も一歩一歩進んでいきたい。 来年もどうぞよろしくお願いいたします。
-実績 以下、実績を列挙する。
-論文 博論と国際会議論文1本。本数としては少なくなってしまったが博論と並行して国際会議に投稿・発表し、博論の質を向上させることができたのは自身を褒めてあげたい。 来年はより水準の高い会議へも挑戦していきたい。
- 三宅 悠介, 多様かつ継続的に変化する環境に適応する情報システム, 九州大学博士学位論文, 2024. [発表資料] Yusuke Miyake, Ryuji Watanabe, Tsunenori Mine, Online Nonstationary and Nonlinear Bandits with Recursive Weighted Gaussian Process, The 48th IEEE International Conference on Computers, Software, and Applications (COMPSAC 2024), pp.11-20, Jul 2024. [発表資料]  国内発表 福岡で開催した技術イベントで1回（博論の公聴会を除く）。 来年は全国規模の技術イベントへの復帰を果たしたいところ。
- 三宅 悠介 Go言語でターミナルフレンドリーなAIコマンド、afaを作った, Fukuoka.go#20, 2024年10月.  OSS AIを開発環境に取り込んでいくためのツール群を整えた。来年はもう一歩先の統合を目指したい。
- AFA - AFA is a terminal-friendly AI command.">
-<meta property="og:title" content="2024">
-<meta property="og:url" content="https://blog.monochromegane.com/blog/2024/12/31/2024/">
-<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-<link rel=stylesheet href=/css/reset.css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
-<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
-<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
-<link rel=stylesheet href=/css/text.css>
-<link rel=stylesheet href=/css/color.css>
-<link rel=stylesheet href=/css/layout.css>
-<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
-<link rel="shortcut icon" href=/images/favicon.ico>
-<link rel=canonical href=https://blog.monochromegane.com/blog/2024/12/31/2024/>
-<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
-</head>
-<body>
-<div class=header>
-<header>
-<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
-<nav>
-<ul class=menu>
-<li><a href=/self-introduction/>Home</a></li>
-<li><a href=/post/>Archives</a></li>
-<li><a href=/diary/>Diary</a></li>
-<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
-</ul>
-</nav>
-</header>
-</div>
-<div class=container>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/blog/2024/12/31/2024/>2024</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2024-12-31</div></time>
-</header>
-<div class=post-inner>
-<p>今年は、九州大学大学院システム情報科学府博士後期課程を修了し、博士（情報科学）の学位を授与されたことが、一番のハイライトだった。
-指導くださった先生方、ペパボ研究所の皆さんをはじめとする同僚、切磋琢磨した社会人学生の皆さん、そして家族へ、改めて心から感謝したい。</p>
-<p>達成感でいっぱいであるものの、年度中の博士論文執筆と事業への貢献の両立は、想像以上に大変だった。
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>2024 &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="今年は、九州大学大学院システム情報科学府博士後期課程を修了し、博士（情報科学）の学位を授与されたことが、一番のハイライトだった。
+指導くださった先生方、ペパボ研究所の皆さんをはじめとする同僚、切磋琢磨した社会人学生の皆さん、そして家族へ、改めて心から感謝したい。
+達成感でいっぱいであるものの、年度中の博士論文執筆と事業への貢献の両立は、想像以上に大変だった。
 研究においては元々、事業への貢献も求められるため、自身の専門領域から様々な分析や提案、実装を並行して進めていたが、博士論文の執筆中は、その複雑さと膨大さゆえに脳内のリソースを極限まで使い続ける日々であり、これまで以上に研究と実務の両立の難易度が高かったように思う。
 それでも、最後までやり切ることができたことに、今はただ安堵している。
-一方で、これらの分析や提案については、伝え方や巻き込む人々の選定をもっと考えることで、より事業成果につなげられたのではないかという反省もある。</p>
-<p>来年は博士として、今の専門性に加え、さらに高い期待が寄せられる立場となるはずである。
+一方で、これらの分析や提案については、伝え方や巻き込む人々の選定をもっと考えることで、より事業成果につなげられたのではないかという反省もある。
+来年は博士として、今の専門性に加え、さらに高い期待が寄せられる立場となるはずである。
 不確実で混沌とした課題領域において、比較・体系化・言語化を通じて、誰もがその課題を共有し、迅速かつ効果的な対策を講じられる基盤を整えることが求められる。
-このスキルを活かし、事業に携わる人々が互いの専門性を最大限に発揮し、成果につながる環境を作り上げることを目指していきたい。</p>
-<p>振り返れば、多忙の連続であった一年で、正直なところ鮮明な記憶が残っていない。
+このスキルを活かし、事業に携わる人々が互いの専門性を最大限に発揮し、成果につながる環境を作り上げることを目指していきたい。
+振り返れば、多忙の連続であった一年で、正直なところ鮮明な記憶が残っていない。
 それでも、この積み重ねや振り返りが今後の糧になると信じ、今後も一歩一歩進んでいきたい。
-来年もどうぞよろしくお願いいたします。</p>
-<h1 id=実績>実績</h1>
-<p>以下、実績を列挙する。</p>
-<h2 id=論文>論文</h2>
-<p>博論と国際会議論文1本。本数としては少なくなってしまったが博論と並行して国際会議に投稿・発表し、博論の質を向上させることができたのは自身を褒めてあげたい。
-来年はより水準の高い会議へも挑戦していきたい。</p>
-<ul>
-<li>三宅 悠介, 多様かつ継続的に変化する環境に適応する情報システム, 九州大学博士学位論文, 2024. <a href=https://speakerdeck.com/monochromegane/thesis-defense-presentation>[発表資料]</a></li>
-<li>Yusuke Miyake, Ryuji Watanabe, Tsunenori Mine, <a href=https://ieeexplore.ieee.org/document/10633680>Online Nonstationary and Nonlinear Bandits with Recursive Weighted Gaussian Process</a>, The 48th IEEE International Conference on Computers, Software, and Applications (COMPSAC 2024), pp.11-20, Jul 2024. <a href=https://speakerdeck.com/monochromegane/online-nonstationary-and-nonlinear-bandits-with-recursive-weighted-gaussian-process>[発表資料]</a></li>
-</ul>
-<h2 id=国内発表>国内発表</h2>
-<p>福岡で開催した技術イベントで1回（博論の公聴会を除く）。
-来年は全国規模の技術イベントへの復帰を果たしたいところ。</p>
-<ul>
-<li>三宅 悠介 <a href=https://speakerdeck.com/monochromegane/fukuokago20-afa>Go言語でターミナルフレンドリーなAIコマンド、afaを作った</a>, <a href=https://fukuokago.connpass.com/event/330951/>Fukuoka.go#20</a>, 2024年10月.</li>
-</ul>
-<h2 id=oss>OSS</h2>
-<p>AIを開発環境に取り込んでいくためのツール群を整えた。来年はもう一歩先の統合を目指したい。</p>
-<ul>
-<li><a href=https://github.com/monochromegane/afa>AFA - AFA is a terminal-friendly AI command.</a></li>
-<li><a href=https://github.com/monochromegane/afa-tui>AFA-TUI - AFA-TUI is a rich Text User Interface for AFA.</a></li>
-</ul>
-<h2 id=コミュニティ活動>コミュニティ活動</h2>
-<p>Fukuoka.goを再開できたのがよかった。いつの間にか10周年だったので来年3月ごろにお祝い的な会も開催を考えている。学会系では、研究会の運営委員を継続している。</p>
-<ul>
-<li><a href=https://fukuokago.connpass.com/event/330951/>Fukuoka.go#20</a></li>
-</ul>
-<h2 id=ブログ>ブログ</h2>
-<p>3本。ここ数年に比べると増えた。OSS紹介、思い出、考えのまとめなど雑多な内容だが、博士課程が終わってとにかく思いついたら書くことができているので来年も継続的に書いていきたい。</p>
-<ul>
-<li><a href=https://blog.monochromegane.com/blog/2024/09/16/afa/>ターミナルフレンドリーなAIコマンド、afaを作った</a></li>
-<li><a href=https://blog.monochromegane.com/blog/2024/10/05/doctor-information-science/>ペパボに入って12年が経った。気付けば博士になっていた</a></li>
-<li><a href=https://blog.monochromegane.com/blog/2024/12/23/nakayoku/>みんなと仲良くすること</a></li>
-</ul>
-<h2 id=その他>その他</h2>
-<p>研究所で開催した社内向けの勉強会の記事。来年はAI前提を踏まえこれらを事業にどんどん適用していく。</p>
-<ul>
-<li><a href=https://rand.pepabo.com/article/2024/03/28/ai/>AIを前提とした体験の実現に向けての勉強会を開催しました</a></li>
-</ul>
-<p>国際会議採択のニュースリリース。
-来年はプレスリリース目指して頑張りたい。</p>
-<ul>
-<li><a href="https://pepabo.com/news/information/202404231200/?_gl=1*19uunue*_ga*MTM3Mjc5NzQyMC4xNzEzODUwNzk1*_ga_LER6JRTV8K*MTczNTY1MzAwMS42MC4xLjE3MzU2NTQ4MzcuMC4wLjA.#_ga=2.198738415.1525457293.1735640790-1372797420.1713850795">ペパボ研究所の論文がIEEEの国際会議「COMPSAC 2024」に採択</a></li>
-</ul>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/%E3%81%B5%E3%82%8A%E3%81%8B%E3%81%88%E3%82%8A>ふりかえり</a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<div class=social-btn>
-<div>
-<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2024/12/31/2024/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
-</div>
-<div>
-<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
-</div>
-</div>
-</div>
-<footer class=footer>
-<div class=author></div>
-<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
-<p>monochromegane (モノクロめがね) と申します。</p>
-<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-<ul class=social>
-<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
-<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
-<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
-</ul>
-<p class=copyright>
-<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
-</p>
-</footer>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
-<script>hljs.initHighlightingOnLoad()</script>
-<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
-</body>
-</html>
+来年もどうぞよろしくお願いいたします。
+実績
+以下、実績を列挙する。
+論文
+博論と国際会議論文1本。本数としては少なくなってしまったが博論と並行して国際会議に投稿・発表し、博論の質を向上させることができたのは自身を褒めてあげたい。
+来年はより水準の高い会議へも挑戦していきたい。
+
+三宅 悠介, 多様かつ継続的に変化する環境に適応する情報システム, 九州大学博士学位論文, 2024. [発表資料]
+Yusuke Miyake, Ryuji Watanabe, Tsunenori Mine, Online Nonstationary and Nonlinear Bandits with Recursive Weighted Gaussian Process, The 48th IEEE International Conference on Computers, Software, and Applications (COMPSAC 2024), pp.11-20, Jul 2024. [発表資料]
+
+国内発表
+福岡で開催した技術イベントで1回（博論の公聴会を除く）。
+来年は全国規模の技術イベントへの復帰を果たしたいところ。
+
+三宅 悠介 Go言語でターミナルフレンドリーなAIコマンド、afaを作った, Fukuoka.go#20, 2024年10月.
+
+OSS
+AIを開発環境に取り込んでいくためのツール群を整えた。来年はもう一歩先の統合を目指したい。
+
+AFA - AFA is a terminal-friendly AI command.
+AFA-TUI - AFA-TUI is a rich Text User Interface for AFA.
+
+コミュニティ活動
+Fukuoka.goを再開できたのがよかった。いつの間にか10周年だったので来年3月ごろにお祝い的な会も開催を考えている。学会系では、研究会の運営委員を継続している。"><meta property="og:title" content="2024"><meta property="og:url" content="https://blog.monochromegane.com/blog/2024/12/31/2024/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2024/12/31/2024/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2024/12/31/2024/>2024</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2024-12-31</div></time></header><div class=post-inner><p>今年は、九州大学大学院システム情報科学府博士後期課程を修了し、博士（情報科学）の学位を授与されたことが、一番のハイライトだった。
+指導くださった先生方、ペパボ研究所の皆さんをはじめとする同僚、切磋琢磨した社会人学生の皆さん、そして家族へ、改めて心から感謝したい。</p><p>達成感でいっぱいであるものの、年度中の博士論文執筆と事業への貢献の両立は、想像以上に大変だった。
+研究においては元々、事業への貢献も求められるため、自身の専門領域から様々な分析や提案、実装を並行して進めていたが、博士論文の執筆中は、その複雑さと膨大さゆえに脳内のリソースを極限まで使い続ける日々であり、これまで以上に研究と実務の両立の難易度が高かったように思う。
+それでも、最後までやり切ることができたことに、今はただ安堵している。
+一方で、これらの分析や提案については、伝え方や巻き込む人々の選定をもっと考えることで、より事業成果につなげられたのではないかという反省もある。</p><p>来年は博士として、今の専門性に加え、さらに高い期待が寄せられる立場となるはずである。
+不確実で混沌とした課題領域において、比較・体系化・言語化を通じて、誰もがその課題を共有し、迅速かつ効果的な対策を講じられる基盤を整えることが求められる。
+このスキルを活かし、事業に携わる人々が互いの専門性を最大限に発揮し、成果につながる環境を作り上げることを目指していきたい。</p><p>振り返れば、多忙の連続であった一年で、正直なところ鮮明な記憶が残っていない。
+それでも、この積み重ねや振り返りが今後の糧になると信じ、今後も一歩一歩進んでいきたい。
+来年もどうぞよろしくお願いいたします。</p><h1 id=実績>実績</h1><p>以下、実績を列挙する。</p><h2 id=論文>論文</h2><p>博論と国際会議論文1本。本数としては少なくなってしまったが博論と並行して国際会議に投稿・発表し、博論の質を向上させることができたのは自身を褒めてあげたい。
+来年はより水準の高い会議へも挑戦していきたい。</p><ul><li>三宅 悠介, 多様かつ継続的に変化する環境に適応する情報システム, 九州大学博士学位論文, 2024. <a href=https://speakerdeck.com/monochromegane/thesis-defense-presentation>[発表資料]</a></li><li>Yusuke Miyake, Ryuji Watanabe, Tsunenori Mine, <a href=https://ieeexplore.ieee.org/document/10633680>Online Nonstationary and Nonlinear Bandits with Recursive Weighted Gaussian Process</a>, The 48th IEEE International Conference on Computers, Software, and Applications (COMPSAC 2024), pp.11-20, Jul 2024. <a href=https://speakerdeck.com/monochromegane/online-nonstationary-and-nonlinear-bandits-with-recursive-weighted-gaussian-process>[発表資料]</a></li></ul><h2 id=国内発表>国内発表</h2><p>福岡で開催した技術イベントで1回（博論の公聴会を除く）。
+来年は全国規模の技術イベントへの復帰を果たしたいところ。</p><ul><li>三宅 悠介 <a href=https://speakerdeck.com/monochromegane/fukuokago20-afa>Go言語でターミナルフレンドリーなAIコマンド、afaを作った</a>, <a href=https://fukuokago.connpass.com/event/330951/>Fukuoka.go#20</a>, 2024年10月.</li></ul><h2 id=oss>OSS</h2><p>AIを開発環境に取り込んでいくためのツール群を整えた。来年はもう一歩先の統合を目指したい。</p><ul><li><a href=https://github.com/monochromegane/afa>AFA - AFA is a terminal-friendly AI command.</a></li><li><a href=https://github.com/monochromegane/afa-tui>AFA-TUI - AFA-TUI is a rich Text User Interface for AFA.</a></li></ul><h2 id=コミュニティ活動>コミュニティ活動</h2><p>Fukuoka.goを再開できたのがよかった。いつの間にか10周年だったので来年3月ごろにお祝い的な会も開催を考えている。学会系では、研究会の運営委員を継続している。</p><ul><li><a href=https://fukuokago.connpass.com/event/330951/>Fukuoka.go#20</a></li></ul><h2 id=ブログ>ブログ</h2><p>3本。ここ数年に比べると増えた。OSS紹介、思い出、考えのまとめなど雑多な内容だが、博士課程が終わってとにかく思いついたら書くことができているので来年も継続的に書いていきたい。</p><ul><li><a href=https://blog.monochromegane.com/blog/2024/09/16/afa/>ターミナルフレンドリーなAIコマンド、afaを作った</a></li><li><a href=https://blog.monochromegane.com/blog/2024/10/05/doctor-information-science/>ペパボに入って12年が経った。気付けば博士になっていた</a></li><li><a href=https://blog.monochromegane.com/blog/2024/12/23/nakayoku/>みんなと仲良くすること</a></li></ul><h2 id=その他>その他</h2><p>研究所で開催した社内向けの勉強会の記事。来年はAI前提を踏まえこれらを事業にどんどん適用していく。</p><ul><li><a href=https://rand.pepabo.com/article/2024/03/28/ai/>AIを前提とした体験の実現に向けての勉強会を開催しました</a></li></ul><p>国際会議採択のニュースリリース。
+来年はプレスリリース目指して頑張りたい。</p><ul><li><a href="https://pepabo.com/news/information/202404231200/?_gl=1*19uunue*_ga*MTM3Mjc5NzQyMC4xNzEzODUwNzk1*_ga_LER6JRTV8K*MTczNTY1MzAwMS42MC4xLjE3MzU2NTQ4MzcuMC4wLjA.#_ga=2.198738415.1525457293.1735640790-1372797420.1713850795">ペパボ研究所の論文がIEEEの国際会議「COMPSAC 2024」に採択</a></li></ul></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/%E3%81%B5%E3%82%8A%E3%81%8B%E3%81%88%E3%82%8A>ふりかえり</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2024/12/31/2024/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

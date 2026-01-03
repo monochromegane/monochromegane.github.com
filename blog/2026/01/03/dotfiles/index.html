@@ -1,0 +1,103 @@
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>dotfilesを5年ぶりに整備した &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content='なんとdotfilesも5年更新していなかった。
+なにかと気忙しいのではあるが、木こりのジレンマに陥らないよう再起動していきたい。
+さて、昨年末にMacbook Proを新調してまっさらな開発環境が手に入ったのに合わせてdotfilesを見直した。
+
+monochromegane/dotfiles
+
+大きくは以下。
+
+dotfiles管理をchezmoiに変更
+開発ツール管理をmiseに変更
+ターミナルエミュレーターをGhosttyに変更
+
+以下、それぞれについて簡単にメモをしておく。
+chezmoi
+各ツールの設定などは大幅に変えていないのだが、dotfiles管理にはchezmoiを導入した。
+これまで自作インストールスクリプトは、メンテナンスできていなかったし、設定ファイルの変更後のリポジトリへの反映ルールのようなものがなく反映漏れなど生じていたので、これを機にchezmoiの流儀に任せることにした。
+設定ファイル
+既存dotfilesがある場合、ファイルをchezumoi addしていくと、chezmoiの命名規則に沿ったファイル名でリポジトリに加えていくことができる。
+命名規則はホームディレクトリ以下のディレクトリもしくはファイル名のそれぞれについて.をdot_に置き換えたものになる。
+例えば、~/.config/zsh/.zshrcであればdot_config/zsh/dot_zshrcとして管理する。
+自分の場合は、このタイミングでXDG Base Directoryに合わせるようにもしたかったのと新しいPCで~が綺麗だったのもあり、chezmoi側（chezmoi cdで移動できるリポジトリのclone先。~/.local/share/chezmoi）で上記の命名に合わせて変更した上で、chezmoi applyをすることで反映する方法を取った。
+$ chezmoi init git@github.com:monochromegane/dotfiles.git
+$ chezmoi cd
+$ mv zshrc dot_config/zsh/dot_zshrc
+(snip)
+$ chezmoi apply
+今もリポジトリへの反映を忘れないよう基本はchezmoi側で修正してapplyをする運用にしている。
+なお、dotfiles内の実行権限が必要なファイルについてはファイルに属性付与ではなく、bin/executable_git_diff_wrapperのように命名規則で制御する必要がある。
+インストールスクリプト
+chezmoiではインストールスクリプトも管理できる。
+dotfilesリポジトリの直下におくこともできるが.chezmoiscriptsという名前のディレクトリを作ると複数スクリプトがあっても整理されるのでこの構成を採用した。
+管理用ツールを導入するからには動作確認の必要な自作スクリプトの役割は最低限にしたかったので、パッケージ管理ツールのインストールのみに抑え、各パッケージのインストールなどはパッケージマネージャーに任せるようにしている。
+具体的には、ツールや開発環境のパッケージ管理のためのHomebrew、miseと、Vim用のミニマルなパッケージ管理であるminpacだけをインストールしている。
+$ chezmoi cd
+$ ls .chezmoiscripts
+run_once_after_01_install-brew.sh   run_once_after_03_install-mise.sh
+run_once_after_02_install-minpac.sh
+上記のような命名にすることで、apply後に一度だけスクリプトが順番に実行される。
+mise
+開発環境やツール類はHomebrewで雑多に入れていたのと、言語ランタイムの*env系が増えてしまっていたのを整理すべく、miseに寄せることにした。
+&ldquo;The front-end to your dev env"というコンセプト通り、開発環境構築に関連する多くのことができるのだが、ひとまずは、グローバルに各種言語ランタイムといくつかのツールを入れるようにしている。
+ディレクトリごとにmise.tomlを作って利用するツールを使い分けられるのはとても良さそう。
+例えば、このブログで使っているhugoコマンドなどはブログ用のリポジトリでだけ使えれば良いのでmise use go:github.com/gohugoio/hugo@latestとすれば、そのディレクトリ配下では~/.local/share/mise/installs/go-github-com-gohugoio-hugo/0.154.2/bin/hugoがPATH環境変数に追加されてコマンドが認識される状態になる。
+なお、caskが便利なのもあり、しばらくはBrewfileによるHomebrewと併用していくことになると思う。
+Ghostty
+長年iTerm2を使っていて特に不満はなかったが、chezmoi導入にあたって設定をファイルで管理したくなり、Ghosttyを使ってみることにした。'><meta property="og:title" content="dotfilesを5年ぶりに整備した"><meta property="og:url" content="https://blog.monochromegane.com/blog/2026/01/03/dotfiles/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2026/01/03/dotfiles/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2026/01/03/dotfiles/>dotfilesを5年ぶりに整備した</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2026-01-03</div></time></header><div class=post-inner><p>なんとdotfilesも5年更新していなかった。
+なにかと気忙しいのではあるが、木こりのジレンマに陥らないよう再起動していきたい。</p><p>さて、昨年末にMacbook Proを新調してまっさらな開発環境が手に入ったのに合わせてdotfilesを見直した。</p><ul><li><a href=https://github.com/monochromegane/dotfiles>monochromegane/dotfiles</a></li></ul><p>大きくは以下。</p><ul><li>dotfiles管理を<a href=https://www.chezmoi.io/>chezmoi</a>に変更</li><li>開発ツール管理を<a href=https://mise.jdx.dev/>mise</a>に変更</li><li>ターミナルエミュレーターを<a href=https://ghostty.org/>Ghostty</a>に変更</li></ul><p>以下、それぞれについて簡単にメモをしておく。</p><h2 id=chezmoi>chezmoi</h2><p>各ツールの設定などは大幅に変えていないのだが、dotfiles管理には<a href=https://www.chezmoi.io/>chezmoi</a>を導入した。
+これまで自作インストールスクリプトは、メンテナンスできていなかったし、設定ファイルの変更後のリポジトリへの反映ルールのようなものがなく反映漏れなど生じていたので、これを機にchezmoiの流儀に任せることにした。</p><h3 id=設定ファイル>設定ファイル</h3><p>既存dotfilesがある場合、ファイルを<code>chezumoi add</code>していくと、chezmoiの命名規則に沿ったファイル名でリポジトリに加えていくことができる。
+命名規則はホームディレクトリ以下のディレクトリもしくはファイル名のそれぞれについて<code>.</code>を<code>dot_</code>に置き換えたものになる。
+例えば、<code>~/.config/zsh/.zshrc</code>であれば<code>dot_config/zsh/dot_zshrc</code>として管理する。</p><p>自分の場合は、このタイミングでXDG Base Directoryに合わせるようにもしたかったのと新しいPCで<code>~</code>が綺麗だったのもあり、chezmoi側（<code>chezmoi cd</code>で移動できるリポジトリのclone先。<code>~/.local/share/chezmoi</code>）で上記の命名に合わせて変更した上で、<code>chezmoi apply</code>をすることで反映する方法を取った。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ chezmoi init git@github.com:monochromegane/dotfiles.git
+</span></span><span style=display:flex><span>$ chezmoi cd
+</span></span><span style=display:flex><span>$ mv zshrc dot_config/zsh/dot_zshrc
+</span></span><span style=display:flex><span><span style=color:#f92672>(</span>snip<span style=color:#f92672>)</span>
+</span></span><span style=display:flex><span>$ chezmoi apply
+</span></span></code></pre></div><p>今もリポジトリへの反映を忘れないよう基本はchezmoi側で修正してapplyをする運用にしている。</p><p>なお、dotfiles内の実行権限が必要なファイルについてはファイルに属性付与ではなく、<code>bin/executable_git_diff_wrapper</code>のように命名規則で制御する必要がある。</p><h3 id=インストールスクリプト>インストールスクリプト</h3><p>chezmoiではインストールスクリプトも管理できる。
+dotfilesリポジトリの直下におくこともできるが<code>.chezmoiscripts</code>という名前のディレクトリを作ると複数スクリプトがあっても整理されるのでこの構成を採用した。</p><p>管理用ツールを導入するからには動作確認の必要な自作スクリプトの役割は最低限にしたかったので、パッケージ管理ツールのインストールのみに抑え、各パッケージのインストールなどはパッケージマネージャーに任せるようにしている。</p><p>具体的には、ツールや開発環境のパッケージ管理のためのHomebrew、miseと、Vim用のミニマルなパッケージ管理である<a href=https://github.com/k-takata/minpac>minpac</a>だけをインストールしている。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ chezmoi cd
+</span></span><span style=display:flex><span>$ ls .chezmoiscripts
+</span></span><span style=display:flex><span>run_once_after_01_install-brew.sh   run_once_after_03_install-mise.sh
+</span></span><span style=display:flex><span>run_once_after_02_install-minpac.sh
+</span></span></code></pre></div><p>上記のような命名にすることで、apply後に一度だけスクリプトが順番に実行される。</p><h2 id=mise>mise</h2><p>開発環境やツール類はHomebrewで雑多に入れていたのと、言語ランタイムの<code>*env</code>系が増えてしまっていたのを整理すべく、<a href=https://mise.jdx.dev/>mise</a>に寄せることにした。</p><p>&ldquo;The front-end to your dev env"というコンセプト通り、開発環境構築に関連する多くのことができるのだが、ひとまずは、グローバルに各種言語ランタイムといくつかのツールを入れるようにしている。
+ディレクトリごとに<code>mise.toml</code>を作って利用するツールを使い分けられるのはとても良さそう。</p><p>例えば、このブログで使っている<a href=https://gohugo.io/>hugo</a>コマンドなどはブログ用のリポジトリでだけ使えれば良いので<code>mise use go:github.com/gohugoio/hugo@latest</code>とすれば、そのディレクトリ配下では<code>~/.local/share/mise/installs/go-github-com-gohugoio-hugo/0.154.2/bin/hugo</code>がPATH環境変数に追加されてコマンドが認識される状態になる。</p><p>なお、caskが便利なのもあり、しばらくはBrewfileによるHomebrewと併用していくことになると思う。</p><h2 id=ghostty>Ghostty</h2><p>長年iTerm2を使っていて特に不満はなかったが、chezmoi導入にあたって設定をファイルで管理したくなり、Ghosttyを使ってみることにした。</p><p>&ldquo;Zero Configuration Philosophy"を謳っているだけあり、以下の設定で十分、動作も軽快で特に問題なく利用できている。念の為iTerm2もまだ入れているがこのまま乗り換えで良さそう。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>command = /opt/homebrew/bin/zsh -l
+</span></span><span style=display:flex><span>mouse-hide-while-typing = true
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># Theme
+</span></span><span style=display:flex><span>theme = Dracula+
+</span></span><span style=display:flex><span>background = #0f1015
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># Title bar
+</span></span><span style=display:flex><span>macos-titlebar-proxy-icon = hidden
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># Font
+</span></span><span style=display:flex><span>font-family = Moralerspace Neon
+</span></span><span style=display:flex><span>font-thicken = true
+</span></span><span style=display:flex><span>font-thicken-strength = 1
+</span></span><span style=display:flex><span>font-feature = -dlig
+</span></span><span style=display:flex><span>font-size = 15
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># Cursor
+</span></span><span style=display:flex><span>shell-integration-features = no-cursor
+</span></span><span style=display:flex><span>cursor-style = block
+</span></span><span style=display:flex><span>cursor-style-blink = false
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># TERM
+</span></span><span style=display:flex><span>term = &#34;xterm-256color&#34;
+</span></span></code></pre></div><h3 id=フォントとテーマ>フォントとテーマ</h3><p>せっかくなので、フォントやテーマも変更してみた。</p><p>Ghosttyの標準だと日本語表示が微妙だったので、フォントとして<a href=https://github.com/yuru7/moralerspace>Moralerspace</a>を導入し、<code>Neon</code>を設定し、上記設定にあるように太め大きめにしている。</p><p>また、テーマには、ダーク系のテーマでVim側ともマッチするものとして、<code>Dracula+</code>テーマを採用した。
+<a href=https://draculatheme.com/ghostty>Dracula Theme for Ghostty</a>としてもあるが、標準で選択できるようになっている。
+Vim側も<a href=https://draculatheme.com/vim>Dracula Theme for Vim</a>として公開されているので、minpackで以下のように設定を追加した。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-vimrc data-lang=vimrc><span style=display:flex><span><span style=color:#a6e22e>call</span> <span style=color:#a6e22e>minpac</span>#<span style=color:#a6e22e>add</span>(<span style=color:#e6db74>&#39;dracula/vim&#39;</span>, {<span style=color:#e6db74>&#39;name&#39;</span>: <span style=color:#e6db74>&#39;dracula&#39;</span>})
+</span></span></code></pre></div><p>テーマそのままだと背景がグレー寄りで個人的にはややぼやけたように見えてしまうので、Ghostty側で<code>background</code>を設定し、以下のようにctermbgをNoneにすることでGhostty側の背景色と同じにして統一感を出している。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-vimrc data-lang=vimrc><span style=display:flex><span><span style=color:#75715e>&#34;colorschemeを設定する</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>function</span>! <span style=color:#a6e22e>s</span>:<span style=color:#a6e22e>customize_dracula_bg</span>() <span style=color:#a6e22e>abort</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>highlight</span> <span style=color:#a6e22e>Normal</span>       <span style=color:#a6e22e>ctermbg</span>=<span style=color:#a6e22e>None</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>highlight</span> <span style=color:#a6e22e>CursorLine</span>   <span style=color:#a6e22e>ctermbg</span>=<span style=color:#a6e22e>None</span> <span style=color:#a6e22e>cterm</span>=underline
+</span></span><span style=display:flex><span><span style=color:#66d9ef>endfunction</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>augroup</span> <span style=color:#a6e22e>DraculaCustomization</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>autocmd</span>!
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>autocmd</span> <span style=color:#a6e22e>ColorScheme</span> <span style=color:#a6e22e>dracula</span> <span style=color:#a6e22e>call</span> <span style=color:#a6e22e>s</span>:<span style=color:#a6e22e>customize_dracula_bg</span>()
+</span></span><span style=display:flex><span><span style=color:#a6e22e>augroup</span> <span style=color:#a6e22e>END</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>colorscheme</span> <span style=color:#a6e22e>dracula</span>
+</span></span></code></pre></div><p>GhosttyでDraculaで、背景色<code>#0f1015</code>の青みがかった夜空みたいな色でコンセプト的にも統一できてなかなか気に入っている。</p><h2 id=その他>その他</h2><p>いわゆるコーディングエージェント系の設定も見直していってるが長くなるのでまた次回とする。</p><h2 id=後記的なもの>後記的なもの</h2><p>昨年、ブログを一本も書いていないことに気づいたのが今日。
+年始に『<a href=https://www.kodansha.co.jp/book/products/0000415692>「書くこと」の哲学　ことばの再履修</a>』を読みながら、今回の記事のような、やったことや事実ベースの「書きえる」ことすら書かずして、何を書けようという気持ちからブログ再開してみたのであるが、ただ書き出すことの爽快さを思い出せてとても良かった。
+気負わずに再開していきたい。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/></a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2026/01/03/dotfiles/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

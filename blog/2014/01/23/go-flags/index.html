@@ -1,172 +1,96 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width">
-<meta name=author content>
-<title>Go言語でコマンドラインオプション使うなら。便利パッケージgo-flags。 &#183; THINKING MEGANE</title>
-<meta name=twitter:card content="summary">
-<meta name=twitter:site content="@monochromegane">
-<meta property="og:description" content="Go言語でコマンドラインオプションを使うときは標準のflagsパッケージを使うことが多いと思いますが、go-flagsを使うとオプションの仕様を定義するだけでうまいことやってくれるので便利です。
-go-flags go-flagsはコマンドラインオプションのパーサーです。オプションの仕様を定義した構造体に、コマンドライン引数をバインドしたり、定義した仕様からヘルプを整形・表示してくれます。
-標準のflagsパッケージに比べて、オプション指定方法が柔軟であること、指定されたオプションを構造体としてプログラム内で利用できること、値のバインドやヘルプの生成などの定型的な実装を行わないでよくなること、といいコトずくめなので使わない理由はないでしょう。
-インストール $ go get github.com/jessevdk/go-flags 利用方法 オプションを定義した構造体を用意します。
-type Options struct { Verbose []bool `short:&#34;v&#34; long:&#34;verbose&#34; description:&#34;Show verbose debug information&#34;` } オプションを解析します。
-package main import ( flags &#34;github.com/jessevdk/go-flags&#34; ) var opts Options func main() { args, err := flags.Parse(&opts) if err != nil { os.Exit(1) } // go run main.go -vv arg1 のように起動された場合、以下のように値がバインドされる 	// opts.Verbose = [true, true] 	// args[0] = &#34;arg1&#34; } ヘルプを表示する -hもしくは--helpで整形されたUsageが表示されます。引数の数が足りない場合などに明示的に表示したい、Usageの内容を変更したいという場合はパーサーを生成する必要があります。">
-<meta property="og:title" content="Go言語でコマンドラインオプション使うなら。便利パッケージgo-flags。">
-<meta property="og:url" content="https://blog.monochromegane.com/blog/2014/01/23/go-flags/">
-<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-<link rel=stylesheet href=/css/reset.css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
-<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
-<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
-<link rel=stylesheet href=/css/text.css>
-<link rel=stylesheet href=/css/color.css>
-<link rel=stylesheet href=/css/layout.css>
-<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
-<link rel="shortcut icon" href=/images/favicon.ico>
-<link rel=canonical href=https://blog.monochromegane.com/blog/2014/01/23/go-flags/>
-<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
-</head>
-<body>
-<div class=header>
-<header>
-<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
-<nav>
-<ul class=menu>
-<li><a href=/self-introduction/>Home</a></li>
-<li><a href=/post/>Archives</a></li>
-<li><a href=/diary/>Diary</a></li>
-<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
-</ul>
-</nav>
-</header>
-</div>
-<div class=container>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/blog/2014/01/23/go-flags/>Go言語でコマンドラインオプション使うなら。便利パッケージgo-flags。</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2014-01-23</div></time>
-</header>
-<div class=post-inner>
-<p>Go言語でコマンドラインオプションを使うときは標準のflagsパッケージを使うことが多いと思いますが、<a href=https://github.com/jessevdk/go-flags>go-flags</a>を使うとオプションの仕様を定義するだけでうまいことやってくれるので便利です。</p>
-<h1 id=go-flags>go-flags</h1>
-<p>go-flagsはコマンドラインオプションのパーサーです。オプションの仕様を定義した構造体に、コマンドライン引数をバインドしたり、定義した仕様からヘルプを整形・表示してくれます。</p>
-<p>標準のflagsパッケージに比べて、オプション指定方法が柔軟であること、指定されたオプションを構造体としてプログラム内で利用できること、値のバインドやヘルプの生成などの定型的な実装を行わないでよくなること、といいコトずくめなので使わない理由はないでしょう。</p>
-<h2 id=インストール>インストール</h2>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ go get github.com/jessevdk/go-flags
-</code></pre></div><h2 id=利用方法>利用方法</h2>
-<p>オプションを定義した構造体を用意します。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Options</span> <span style=color:#66d9ef>struct</span> {
-    <span style=color:#a6e22e>Verbose</span> []<span style=color:#66d9ef>bool</span> <span style=color:#e6db74>`short:&#34;v&#34; long:&#34;verbose&#34; description:&#34;Show verbose debug information&#34;`</span>
-}
-</code></pre></div><p>オプションを解析します。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>Go言語でコマンドラインオプション使うなら。便利パッケージgo-flags。 &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content='Go言語でコマンドラインオプションを使うときは標準のflagsパッケージを使うことが多いと思いますが、go-flagsを使うとオプションの仕様を定義するだけでうまいことやってくれるので便利です。
 
-<span style=color:#f92672>import</span> (
-	<span style=color:#a6e22e>flags</span> <span style=color:#e6db74>&#34;github.com/jessevdk/go-flags&#34;</span>
+go-flags
+go-flagsはコマンドラインオプションのパーサーです。オプションの仕様を定義した構造体に、コマンドライン引数をバインドしたり、定義した仕様からヘルプを整形・表示してくれます。
+標準のflagsパッケージに比べて、オプション指定方法が柔軟であること、指定されたオプションを構造体としてプログラム内で利用できること、値のバインドやヘルプの生成などの定型的な実装を行わないでよくなること、といいコトずくめなので使わない理由はないでしょう。
+インストール
+$ go get github.com/jessevdk/go-flags
+利用方法
+オプションを定義した構造体を用意します。
+type Options struct {
+    Verbose []bool `short:"v" long:"verbose" description:"Show verbose debug information"`
+}
+オプションを解析します。
+package main
+
+import (
+	flags "github.com/jessevdk/go-flags"
 )
 
-<span style=color:#66d9ef>var</span> <span style=color:#a6e22e>opts</span> <span style=color:#a6e22e>Options</span>
+var opts Options
 
-<span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
-	<span style=color:#a6e22e>args</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>flags</span>.<span style=color:#a6e22e>Parse</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>opts</span>)
-	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
-		<span style=color:#a6e22e>os</span>.<span style=color:#a6e22e>Exit</span>(<span style=color:#ae81ff>1</span>)
+func main() {
+	args, err := flags.Parse(&amp;opts)
+	if err != nil {
+		os.Exit(1)
 	}
 
-	<span style=color:#75715e>// go run main.go -vv arg1 のように起動された場合、以下のように値がバインドされる
-</span><span style=color:#75715e></span>	<span style=color:#75715e>// opts.Verbose = [true, true]
-</span><span style=color:#75715e></span>	<span style=color:#75715e>// args[0] = &#34;arg1&#34;
-</span><span style=color:#75715e></span>}
-</code></pre></div><h3 id=ヘルプを表示する>ヘルプを表示する</h3>
-<p><code>-h</code>もしくは<code>--help</code>で整形されたUsageが表示されます。引数の数が足りない場合などに明示的に表示したい、Usageの内容を変更したいという場合はパーサーを生成する必要があります。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
-	<span style=color:#a6e22e>parser</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>flags</span>.<span style=color:#a6e22e>NewParser</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>opts</span>, <span style=color:#a6e22e>flags</span>.<span style=color:#a6e22e>Default</span>)
-	<span style=color:#a6e22e>parser</span>.<span style=color:#a6e22e>Name</span> = <span style=color:#e6db74>&#34;pt&#34;</span>
-	<span style=color:#a6e22e>parser</span>.<span style=color:#a6e22e>Usage</span> = <span style=color:#e6db74>&#34;[OPTIONS] PATTERN [PATH]&#34;</span>
+	// go run main.go -vv arg1 のように起動された場合、以下のように値がバインドされる
+	// opts.Verbose = [true, true]
+	// args[0] = "arg1"
+}
+ヘルプを表示する
+-hもしくは--helpで整形されたUsageが表示されます。引数の数が足りない場合などに明示的に表示したい、Usageの内容を変更したいという場合はパーサーを生成する必要があります。
+func main() {
+	parser := flags.NewParser(&amp;opts, flags.Default)
+	parser.Name = "pt"
+	parser.Usage = "[OPTIONS] PATTERN [PATH]"
 
-	<span style=color:#a6e22e>args</span>, <span style=color:#a6e22e>_</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>parser</span>.<span style=color:#a6e22e>Parse</span>()
+	args, _ := parser.Parse()
 
-	<span style=color:#75715e>// 引数がひとつもなければヘルプを表示する
-</span><span style=color:#75715e></span>	<span style=color:#66d9ef>if</span> len(<span style=color:#a6e22e>args</span>) <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span> {
-		<span style=color:#a6e22e>parser</span>.<span style=color:#a6e22e>WriteHelp</span>(<span style=color:#a6e22e>os</span>.<span style=color:#a6e22e>Stdout</span>)
-		<span style=color:#a6e22e>os</span>.<span style=color:#a6e22e>Exit</span>(<span style=color:#ae81ff>1</span>)
+	// 引数がひとつもなければヘルプを表示する
+	if len(args) == 0 {
+		parser.WriteHelp(os.Stdout)
+		os.Exit(1)
 	}
 }
-</code></pre></div><p>go-flagsを使っている<a href=/blog/2014/01/16/the-platinum-searcher/>プラチナサーチャー</a>の場合、以下のようなヘルプが自動で表示されてます。便利！</p>
-<pre tabindex=0><code>Usage:
+go-flagsを使っているプラチナサーチャーの場合、以下のようなヘルプが自動で表示されてます。便利！'><meta property="og:title" content="Go言語でコマンドラインオプション使うなら。便利パッケージgo-flags。"><meta property="og:url" content="https://blog.monochromegane.com/blog/2014/01/23/go-flags/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2014/01/23/go-flags/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2014/01/23/go-flags/>Go言語でコマンドラインオプション使うなら。便利パッケージgo-flags。</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2014-01-23</div></time></header><div class=post-inner><p>Go言語でコマンドラインオプションを使うときは標準のflagsパッケージを使うことが多いと思いますが、<a href=https://github.com/jessevdk/go-flags>go-flags</a>を使うとオプションの仕様を定義するだけでうまいことやってくれるので便利です。</p><h1 id=go-flags>go-flags</h1><p>go-flagsはコマンドラインオプションのパーサーです。オプションの仕様を定義した構造体に、コマンドライン引数をバインドしたり、定義した仕様からヘルプを整形・表示してくれます。</p><p>標準のflagsパッケージに比べて、オプション指定方法が柔軟であること、指定されたオプションを構造体としてプログラム内で利用できること、値のバインドやヘルプの生成などの定型的な実装を行わないでよくなること、といいコトずくめなので使わない理由はないでしょう。</p><h2 id=インストール>インストール</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ go get github.com/jessevdk/go-flags
+</span></span></code></pre></div><h2 id=利用方法>利用方法</h2><p>オプションを定義した構造体を用意します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Options</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Verbose</span> []<span style=color:#66d9ef>bool</span> <span style=color:#e6db74>`short:&#34;v&#34; long:&#34;verbose&#34; description:&#34;Show verbose debug information&#34;`</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>オプションを解析します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>flags</span> <span style=color:#e6db74>&#34;github.com/jessevdk/go-flags&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>opts</span> <span style=color:#a6e22e>Options</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>args</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>flags</span>.<span style=color:#a6e22e>Parse</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>opts</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>os</span>.<span style=color:#a6e22e>Exit</span>(<span style=color:#ae81ff>1</span>)
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// go run main.go -vv arg1 のように起動された場合、以下のように値がバインドされる</span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// opts.Verbose = [true, true]</span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// args[0] = &#34;arg1&#34;</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=ヘルプを表示する>ヘルプを表示する</h3><p><code>-h</code>もしくは<code>--help</code>で整形されたUsageが表示されます。引数の数が足りない場合などに明示的に表示したい、Usageの内容を変更したいという場合はパーサーを生成する必要があります。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>parser</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>flags</span>.<span style=color:#a6e22e>NewParser</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>opts</span>, <span style=color:#a6e22e>flags</span>.<span style=color:#a6e22e>Default</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>parser</span>.<span style=color:#a6e22e>Name</span> = <span style=color:#e6db74>&#34;pt&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>parser</span>.<span style=color:#a6e22e>Usage</span> = <span style=color:#e6db74>&#34;[OPTIONS] PATTERN [PATH]&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>args</span>, <span style=color:#a6e22e>_</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>parser</span>.<span style=color:#a6e22e>Parse</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// 引数がひとつもなければヘルプを表示する</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> len(<span style=color:#a6e22e>args</span>) <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>parser</span>.<span style=color:#a6e22e>WriteHelp</span>(<span style=color:#a6e22e>os</span>.<span style=color:#a6e22e>Stdout</span>)
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>os</span>.<span style=color:#a6e22e>Exit</span>(<span style=color:#ae81ff>1</span>)
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>go-flagsを使っている<a href=/blog/2014/01/16/the-platinum-searcher/>プラチナサーチャー</a>の場合、以下のようなヘルプが自動で表示されてます。便利！</p><pre tabindex=0><code>Usage:
   pt [OPTIONS] PATTERN [PATH]
 
 Application Options:
-      --nocolor             Don't print color codes in results (Disabled by default)
-      --nogroup             Don't print file name at header (Disabled by default)
-  -l, --files-with-matches  Only print filenames that don't contain matches
+      --nocolor             Don&#39;t print color codes in results (Disabled by default)
+      --nogroup             Don&#39;t print file name at header (Disabled by default)
+  -l, --files-with-matches  Only print filenames that don&#39;t contain matches
       --vcs-ignore=         VCS ignore files (Default: .gitignore, .hgignore)
       --ignore=             Ignore files/directories matching pattern
       --depth=              Search up to NUM derectories deep (Default: 25)
 
 Help Options:
   -h, --help                Show this help message
-</code></pre><p>また、ヘルプはWindows向けにビルドした場合は、<code>-</code>ではなく、<code>/</code>になります。芸が細かくてよい感じ。</p>
-<h2 id=コマンドラインオプションの定義>コマンドラインオプションの定義</h2>
-<p>コマンドラインオプションの定義はフィールドタグとして用意されています。よく使うフィールドタグは以下のとおりです。</p>
-<ul>
-<li><code>short</code>: 短いオプション名を定義。 short:&ldquo;v"で、<code>-v</code>となる</li>
-<li><code>long</code>: 長いオプション名を定義。 long:&ldquo;verbose"で、<code>--verbose</code>となる</li>
-<li><code>description</code>: 説明を定義。ヘルプに表示される文言となる</li>
-<li><code>default</code>: 省略された場合のデフォルト値を定義</li>
-<li><code>default-mask</code>: ヘルプに表示するデフォルト値をこの値でマスクする。ヘルプに表示したくない場合、"-&ldquo;と指定。表示する文言を変えたい場合などにも使う。</li>
-</ul>
-<p>その他、利用できるフィールドタグは以下を参考にしてください</p>
-<ul>
-<li><a href=http://godoc.org/github.com/jessevdk/go-flags>GoDoc: go-flags</a></li>
-</ul>
-<p>go-flagsは他にもmapやfuncを格納できたりするのでドキュメントを眺めたり、ソース読んだりしても楽しいですね。</p>
-<p>Go言語はコマンドラインツールつくることも多いと思うので、便利パッケージgo-flags、オススメです。</p>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/golang>golang</a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<div class=social-btn>
-<div>
-<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2014/01/23/go-flags/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
-</div>
-<div>
-<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
-</div>
-</div>
-</div>
-<footer class=footer>
-<div class=author></div>
-<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
-<p>monochromegane (モノクロめがね) と申します。</p>
-<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-<ul class=social>
-<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
-<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
-<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
-</ul>
-<p class=copyright>
-<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
-</p>
-</footer>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
-<script>hljs.initHighlightingOnLoad()</script>
-<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
-</body>
-</html>
+</code></pre><p>また、ヘルプはWindows向けにビルドした場合は、<code>-</code>ではなく、<code>/</code>になります。芸が細かくてよい感じ。</p><h2 id=コマンドラインオプションの定義>コマンドラインオプションの定義</h2><p>コマンドラインオプションの定義はフィールドタグとして用意されています。よく使うフィールドタグは以下のとおりです。</p><ul><li><code>short</code>: 短いオプション名を定義。 short:&ldquo;v"で、<code>-v</code>となる</li><li><code>long</code>: 長いオプション名を定義。 long:&ldquo;verbose"で、<code>--verbose</code>となる</li><li><code>description</code>: 説明を定義。ヘルプに表示される文言となる</li><li><code>default</code>: 省略された場合のデフォルト値を定義</li><li><code>default-mask</code>: ヘルプに表示するデフォルト値をこの値でマスクする。ヘルプに表示したくない場合、&rdquo;-&ldquo;と指定。表示する文言を変えたい場合などにも使う。</li></ul><p>その他、利用できるフィールドタグは以下を参考にしてください</p><ul><li><a href=http://godoc.org/github.com/jessevdk/go-flags>GoDoc: go-flags</a></li></ul><p>go-flagsは他にもmapやfuncを格納できたりするのでドキュメントを眺めたり、ソース読んだりしても楽しいですね。</p><p>Go言語はコマンドラインツールつくることも多いと思うので、便利パッケージgo-flags、オススメです。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/golang>golang</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2014/01/23/go-flags/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

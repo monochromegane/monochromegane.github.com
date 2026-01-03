@@ -1,173 +1,86 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width">
-<meta name=author content>
-<title>半歩進むChef-Solo - Cookbookの共通化（library） &#183; THINKING MEGANE</title>
-<meta name=twitter:card content="summary">
-<meta name=twitter:site content="@monochromegane">
-<meta property="og:description" content="Cookbookの共通化（library） 前回エントリではrecipeとdefinitionを用いたCookbookの共通化の手順を紹介しました。 今回はChefのもうひとつの共通化の仕組みであるlibraryを紹介します。
-libraryって libraryはRubyコードを用いて、Chefに新しいクラスやメソッドを追加することができる仕組みです。
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>半歩進むChef-Solo - Cookbookの共通化（library） &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content='Cookbookの共通化（library）
+前回エントリではrecipeとdefinitionを用いたCookbookの共通化の手順を紹介しました。
+今回はChefのもうひとつの共通化の仕組みであるlibraryを紹介します。
+
+libraryって
+libraryはRubyコードを用いて、Chefに新しいクラスやメソッドを追加することができる仕組みです。
 libraryはクックブック内のlibraries/library_name.rbに定義することで自動で読み込まれ、recipes, attributes, file, definitions, providers, definitionsで利用することができます。
 libraryの用途は以下の様なものがあります。
- ファイルに格納されている属性値へのアクセス ループのようなプログラムテクニックの利用 Chefのレシピから直接呼び出せるような独自名前空間の作成（Chef::Recipeの名前空間をきれいな状態に保つ） データベースへの接続 LDAPプロバイダとの接続 その他、Rubyでできることはなんでも  libraryを使う 基本 1. libraryを定義する 一番かんたんな利用法は、Chef::Recipeクラスにメソッドを追加する方法です。 例としてChefのキャッシュディレクトリを取得するメソッドを定義してみます。
+
+ファイルに格納されている属性値へのアクセス
+ループのようなプログラムテクニックの利用
+Chefのレシピから直接呼び出せるような独自名前空間の作成（Chef::Recipeの名前空間をきれいな状態に保つ）
+データベースへの接続
+LDAPプロバイダとの接続
+その他、Rubyでできることはなんでも
+
+
+libraryを使う
+基本
+1. libraryを定義する
+一番かんたんな利用法は、Chef::Recipeクラスにメソッドを追加する方法です。
+例としてChefのキャッシュディレクトリを取得するメソッドを定義してみます。
 libraries/cache.rb
-def cache_path Chef::Config[:file_cache_path] end マニュアルではChef::Recipeクラスに明示的に定義するようになっていますが、上記の記法でもChef::Recipeクラスに定義されるようです。
-2. libraryを使う レシピ内などで呼び出すことができます。
+def cache_path
+  Chef::Config[:file_cache_path]
+end
+マニュアルではChef::Recipeクラスに明示的に定義するようになっていますが、上記の記法でもChef::Recipeクラスに定義されるようです。
+2. libraryを使う
+レシピ内などで呼び出すことができます。
 recipes/default.rb
-remote_file &#34;#{cache_path}/sample.tar.gz&#34; do # 省略 end 名前空間 libraryが大きくなるようであれば、名前空間の分割を考える必要があります。 以下のようにChef::Recipe::XXXのように名前空間を分けて定義するか、後述のmodule化を検討してください。
+remote_file "#{cache_path}/sample.tar.gz" do
+  # 省略
+end
+名前空間
+libraryが大きくなるようであれば、名前空間の分割を考える必要があります。
+以下のようにChef::Recipe::XXXのように名前空間を分けて定義するか、後述のmodule化を検討してください。
 libraries/cache.rb
-class Chef::Recipe::Cache def self.path Chef::Config[:file_cache_path] end end recipes/default.rb
-remote_file &#34;#{Cache.path}/sample.tar.gz&#34; do # 省略 end module構成 名前空間の分割にはmoduleを利用することもできます。 opscodeでの利用例はmodule構成にして、helperとして定義する例が多いようです。
+class Chef::Recipe::Cache
+  def self.path
+    Chef::Config[:file_cache_path]
+  end
+end
+recipes/default.rb
+remote_file "#{Cache.path}/sample.tar.gz" do
+  # 省略
+end
+module構成
+名前空間の分割にはmoduleを利用することもできます。
+opscodeでの利用例はmodule構成にして、helperとして定義する例が多いようです。
 libraries/helper.rb
-module Helper def cache_path Chef::Config[:file_cache_path] end end recipes/default.">
-<meta property="og:title" content="半歩進むChef-Solo - Cookbookの共通化（library）">
-<meta property="og:url" content="https://blog.monochromegane.com/blog/2013/05/06/next-step-chef-solo-library/">
-<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-<link rel=stylesheet href=/css/reset.css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
-<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
-<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
-<link rel=stylesheet href=/css/text.css>
-<link rel=stylesheet href=/css/color.css>
-<link rel=stylesheet href=/css/layout.css>
-<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
-<link rel="shortcut icon" href=/images/favicon.ico>
-<link rel=canonical href=https://blog.monochromegane.com/blog/2013/05/06/next-step-chef-solo-library/>
-<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
-</head>
-<body>
-<div class=header>
-<header>
-<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
-<nav>
-<ul class=menu>
-<li><a href=/self-introduction/>Home</a></li>
-<li><a href=/post/>Archives</a></li>
-<li><a href=/diary/>Diary</a></li>
-<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
-</ul>
-</nav>
-</header>
-</div>
-<div class=container>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/blog/2013/05/06/next-step-chef-solo-library/>半歩進むChef-Solo - Cookbookの共通化（library）</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2013-05-06</div></time>
-</header>
-<div class=post-inner>
-<h1 id=cookbookの共通化library>Cookbookの共通化（library）</h1>
-<p><a href=/blog/2013/05/05/next-step-chef-solo-recipe-and-definition/>前回エントリ</a>ではrecipeとdefinitionを用いたCookbookの共通化の手順を紹介しました。
-今回はChefのもうひとつの共通化の仕組みである<strong>library</strong>を紹介します。</p>
-<h1 id=libraryって>libraryって</h1>
-<p>libraryはRubyコードを用いて、Chefに新しいクラスやメソッドを追加することができる仕組みです。</p>
-<p>libraryはクックブック内のlibraries/library_name.rbに定義することで自動で読み込まれ、recipes, attributes, file, definitions, providers, definitionsで利用することができます。</p>
-<p>libraryの用途は以下の様なものがあります。</p>
-<ul>
-<li>ファイルに格納されている属性値へのアクセス</li>
-<li>ループのようなプログラムテクニックの利用</li>
-<li>Chefのレシピから直接呼び出せるような独自名前空間の作成（Chef::Recipeの名前空間をきれいな状態に保つ）</li>
-<li>データベースへの接続</li>
-<li>LDAPプロバイダとの接続</li>
-<li>その他、Rubyでできることはなんでも</li>
-</ul>
-<h1 id=libraryを使う>libraryを使う</h1>
-<h2 id=基本>基本</h2>
-<h3 id=1-libraryを定義する>1. libraryを定義する</h3>
-<p>一番かんたんな利用法は、Chef::Recipeクラスにメソッドを追加する方法です。
-例としてChefのキャッシュディレクトリを取得するメソッドを定義してみます。</p>
-<p><code>libraries/cache.rb</code></p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>cache_path</span>
-  <span style=color:#66d9ef>Chef</span><span style=color:#f92672>::</span><span style=color:#66d9ef>Config</span><span style=color:#f92672>[</span><span style=color:#e6db74>:file_cache_path</span><span style=color:#f92672>]</span>
-<span style=color:#66d9ef>end</span>
-</code></pre></div><p>マニュアルではChef::Recipeクラスに明示的に定義するようになっていますが、上記の記法でもChef::Recipeクラスに定義されるようです。</p>
-<h3 id=2-libraryを使う>2. libraryを使う</h3>
-<p>レシピ内などで呼び出すことができます。</p>
-<p><code>recipes/default.rb</code></p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby>remote_file <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>#{</span>cache_path<span style=color:#e6db74>}</span><span style=color:#e6db74>/sample.tar.gz&#34;</span> <span style=color:#66d9ef>do</span>
-  <span style=color:#75715e># 省略</span>
-<span style=color:#66d9ef>end</span>
-</code></pre></div><h2 id=名前空間>名前空間</h2>
-<p>libraryが大きくなるようであれば、名前空間の分割を考える必要があります。
-以下のようにChef::Recipe::XXXのように名前空間を分けて定義するか、後述のmodule化を検討してください。</p>
-<p><code>libraries/cache.rb</code></p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Chef</span><span style=color:#f92672>::</span><span style=color:#66d9ef>Recipe</span><span style=color:#f92672>::</span><span style=color:#66d9ef>Cache</span>
-  <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>self</span><span style=color:#f92672>.</span><span style=color:#a6e22e>path</span>
-    <span style=color:#66d9ef>Chef</span><span style=color:#f92672>::</span><span style=color:#66d9ef>Config</span><span style=color:#f92672>[</span><span style=color:#e6db74>:file_cache_path</span><span style=color:#f92672>]</span>
-  <span style=color:#66d9ef>end</span>
-<span style=color:#66d9ef>end</span>
-</code></pre></div><p><code>recipes/default.rb</code></p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby>remote_file <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>#{</span><span style=color:#66d9ef>Cache</span><span style=color:#f92672>.</span>path<span style=color:#e6db74>}</span><span style=color:#e6db74>/sample.tar.gz&#34;</span> <span style=color:#66d9ef>do</span>
-  <span style=color:#75715e># 省略</span>
-<span style=color:#66d9ef>end</span>
-</code></pre></div><h2 id=module構成>module構成</h2>
-<p>名前空間の分割にはmoduleを利用することもできます。
-opscodeでの利用例はmodule構成にして、helperとして定義する例が多いようです。</p>
-<p><code>libraries/helper.rb</code></p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#66d9ef>module</span> Helper
-  <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>cache_path</span>
-    <span style=color:#66d9ef>Chef</span><span style=color:#f92672>::</span><span style=color:#66d9ef>Config</span><span style=color:#f92672>[</span><span style=color:#e6db74>:file_cache_path</span><span style=color:#f92672>]</span>
-  <span style=color:#66d9ef>end</span>
-<span style=color:#66d9ef>end</span>
-</code></pre></div><p><code>recipes/default.rb</code></p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#75715e># moduleのinclude</span>
-<span style=color:#f92672>::</span><span style=color:#66d9ef>Chef</span><span style=color:#f92672>::</span><span style=color:#66d9ef>Recipe</span><span style=color:#f92672>.</span>send(<span style=color:#e6db74>:include</span>, <span style=color:#66d9ef>Helpers</span>) 
-<span style=color:#75715e># メソッドを利用する</span>
-remote_file <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>#{</span>cache_path<span style=color:#e6db74>}</span><span style=color:#e6db74>/sample.tar.gz&#34;</span> <span style=color:#66d9ef>do</span>
-  <span style=color:#75715e># 省略</span>
-<span style=color:#66d9ef>end</span>
-</code></pre></div><h2 id=attirubuteへのアクセス>attirubuteへのアクセス</h2>
-<p>マニュアルにはChef::Recipeクラスの@node変数経由で取得する記述になっていますが、通常通り<code>node.attr</code>もしくは<code>node[attr]</code>の取得方法で取得することができます。</p>
-<h2 id=resourceの利用>resourceの利用</h2>
-<p>library内でもresource類を使うことができます。</p>
-<p>前回のrecipe, definitionに続き、共通化という観点でlibraryを紹介しました。</p>
-<p>次回はdefinition利用時のtipsを紹介する予定です。</p>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/chef>chef</a></li>
-<li><a class=tag-link href=/tags/vagrant>vagrant</a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<div class=social-btn>
-<div>
-<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/05/06/next-step-chef-solo-library/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
-</div>
-<div>
-<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
-</div>
-</div>
-</div>
-<footer class=footer>
-<div class=author></div>
-<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
-<p>monochromegane (モノクロめがね) と申します。</p>
-<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-<ul class=social>
-<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
-<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
-<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
-</ul>
-<p class=copyright>
-<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
-</p>
-</footer>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
-<script>hljs.initHighlightingOnLoad()</script>
-<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
-</body>
-</html>
+module Helper
+  def cache_path
+    Chef::Config[:file_cache_path]
+  end
+end
+recipes/default.rb'><meta property="og:title" content="半歩進むChef-Solo - Cookbookの共通化（library）"><meta property="og:url" content="https://blog.monochromegane.com/blog/2013/05/06/next-step-chef-solo-library/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2013/05/06/next-step-chef-solo-library/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2013/05/06/next-step-chef-solo-library/>半歩進むChef-Solo - Cookbookの共通化（library）</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2013-05-06</div></time></header><div class=post-inner><h1 id=cookbookの共通化library>Cookbookの共通化（library）</h1><p><a href=/blog/2013/05/05/next-step-chef-solo-recipe-and-definition/>前回エントリ</a>ではrecipeとdefinitionを用いたCookbookの共通化の手順を紹介しました。
+今回はChefのもうひとつの共通化の仕組みである<strong>library</strong>を紹介します。</p><h1 id=libraryって>libraryって</h1><p>libraryはRubyコードを用いて、Chefに新しいクラスやメソッドを追加することができる仕組みです。</p><p>libraryはクックブック内のlibraries/library_name.rbに定義することで自動で読み込まれ、recipes, attributes, file, definitions, providers, definitionsで利用することができます。</p><p>libraryの用途は以下の様なものがあります。</p><ul><li>ファイルに格納されている属性値へのアクセス</li><li>ループのようなプログラムテクニックの利用</li><li>Chefのレシピから直接呼び出せるような独自名前空間の作成（Chef::Recipeの名前空間をきれいな状態に保つ）</li><li>データベースへの接続</li><li>LDAPプロバイダとの接続</li><li>その他、Rubyでできることはなんでも</li></ul><h1 id=libraryを使う>libraryを使う</h1><h2 id=基本>基本</h2><h3 id=1-libraryを定義する>1. libraryを定義する</h3><p>一番かんたんな利用法は、Chef::Recipeクラスにメソッドを追加する方法です。
+例としてChefのキャッシュディレクトリを取得するメソッドを定義してみます。</p><p><code>libraries/cache.rb</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>cache_path</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>Chef</span><span style=color:#f92672>::</span><span style=color:#66d9ef>Config</span><span style=color:#f92672>[</span><span style=color:#e6db74>:file_cache_path</span><span style=color:#f92672>]</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>end</span>
+</span></span></code></pre></div><p>マニュアルではChef::Recipeクラスに明示的に定義するようになっていますが、上記の記法でもChef::Recipeクラスに定義されるようです。</p><h3 id=2-libraryを使う>2. libraryを使う</h3><p>レシピ内などで呼び出すことができます。</p><p><code>recipes/default.rb</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=display:flex><span>remote_file <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>#{</span>cache_path<span style=color:#e6db74>}</span><span style=color:#e6db74>/sample.tar.gz&#34;</span> <span style=color:#66d9ef>do</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e># 省略</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>end</span>
+</span></span></code></pre></div><h2 id=名前空間>名前空間</h2><p>libraryが大きくなるようであれば、名前空間の分割を考える必要があります。
+以下のようにChef::Recipe::XXXのように名前空間を分けて定義するか、後述のmodule化を検討してください。</p><p><code>libraries/cache.rb</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Chef</span><span style=color:#f92672>::</span><span style=color:#66d9ef>Recipe</span><span style=color:#f92672>::</span><span style=color:#66d9ef>Cache</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>self</span><span style=color:#f92672>.</span><span style=color:#a6e22e>path</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>Chef</span><span style=color:#f92672>::</span><span style=color:#66d9ef>Config</span><span style=color:#f92672>[</span><span style=color:#e6db74>:file_cache_path</span><span style=color:#f92672>]</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>end</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>end</span>
+</span></span></code></pre></div><p><code>recipes/default.rb</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=display:flex><span>remote_file <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>#{</span><span style=color:#66d9ef>Cache</span><span style=color:#f92672>.</span>path<span style=color:#e6db74>}</span><span style=color:#e6db74>/sample.tar.gz&#34;</span> <span style=color:#66d9ef>do</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e># 省略</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>end</span>
+</span></span></code></pre></div><h2 id=module構成>module構成</h2><p>名前空間の分割にはmoduleを利用することもできます。
+opscodeでの利用例はmodule構成にして、helperとして定義する例が多いようです。</p><p><code>libraries/helper.rb</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=display:flex><span><span style=color:#66d9ef>module</span> Helper
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>cache_path</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>Chef</span><span style=color:#f92672>::</span><span style=color:#66d9ef>Config</span><span style=color:#f92672>[</span><span style=color:#e6db74>:file_cache_path</span><span style=color:#f92672>]</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>end</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>end</span>
+</span></span></code></pre></div><p><code>recipes/default.rb</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=display:flex><span><span style=color:#75715e># moduleのinclude</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>::</span><span style=color:#66d9ef>Chef</span><span style=color:#f92672>::</span><span style=color:#66d9ef>Recipe</span><span style=color:#f92672>.</span>send(<span style=color:#e6db74>:include</span>, <span style=color:#66d9ef>Helpers</span>) 
+</span></span><span style=display:flex><span><span style=color:#75715e># メソッドを利用する</span>
+</span></span><span style=display:flex><span>remote_file <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>#{</span>cache_path<span style=color:#e6db74>}</span><span style=color:#e6db74>/sample.tar.gz&#34;</span> <span style=color:#66d9ef>do</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e># 省略</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>end</span>
+</span></span></code></pre></div><h2 id=attirubuteへのアクセス>attirubuteへのアクセス</h2><p>マニュアルにはChef::Recipeクラスの@node変数経由で取得する記述になっていますが、通常通り<code>node.attr</code>もしくは<code>node[attr]</code>の取得方法で取得することができます。</p><h2 id=resourceの利用>resourceの利用</h2><p>library内でもresource類を使うことができます。</p><p>前回のrecipe, definitionに続き、共通化という観点でlibraryを紹介しました。</p><p>次回はdefinition利用時のtipsを紹介する予定です。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/chef>chef</a></li><li><a class=tag-link href=/tags/vagrant>vagrant</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/05/06/next-step-chef-solo-library/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

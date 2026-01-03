@@ -1,199 +1,81 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width">
-<meta name=author content>
-<title>Go言語でつくったツールをHomebrewで配布する &#183; THINKING MEGANE</title>
-<meta name=twitter:card content="summary">
-<meta name=twitter:site content="@monochromegane">
-<meta property="og:description" content="先日、Go言語でつくった高速検索ツール(the_platinum_searcher)をHomebrewで配布できるようにしました。
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>Go言語でつくったツールをHomebrewで配布する &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="先日、Go言語でつくった高速検索ツール(the_platinum_searcher)をHomebrewで配布できるようにしました。
 意外とGo言語製ツールをHomebrew対応させる情報がなかったので、配布までの手順をまとめておきます。
- Homebrewに対応させる HomebrewはMacで利用できるパッケージマネージャーです。
+
+Homebrewに対応させる
+HomebrewはMacで利用できるパッケージマネージャーです。
 Homebrewでツールやパッケージを配布するにはそれらに関する情報やインストール方法を定義したFormula(製法)ファイルが必要です。
 また、Formulaを登録するリポジトリも必要です。Homebrewには公式リポジトリがありますが、tapコマンドを使うことで独自リポジトリをFormula取得先として追加することができます。
 今回は、独自リポジトリでFormulaを公開します。
-Formulaファイルの作成 Formulaファイルを格納するディレクトリは独自リポジトリの命名規則に沿ってhomebrew-を先頭につけておきます。
-$ mkdir homebrew-リポジトリ名 $ cd !$ $ vi パッケージ名.rb 以下、the_platinum_searcher(pt)のFormulaを参考に解説を行います。
-monochromegane/homebrew-pt/pt.rb
-require 'formula' HOMEBREW_PT_VERSION='1.6.2' class Pt < Formula homepage 'https://github.com/monochromegane/the_platinum_searcher' url 'https://github.com/monochromegane/the_platinum_searcher.git', :tag => &#34;v#{HOMEBREW_PT_VERSION}&#34; version HOMEBREW_PT_VERSION head 'https://github.com/monochromegane/the_platinum_searcher.git', :branch => 'master' depends_on 'go' => :build depends_on 'hg' => :build def install ENV['GOPATH'] = buildpath system 'go', 'get', 'github.com/shiena/ansicolor' system 'go', 'get', 'github.com/monochromegane/terminal' system 'go', 'get', 'github.com/jessevdk/go-flags' system 'go', 'get', 'code.">
-<meta property="og:title" content="Go言語でつくったツールをHomebrewで配布する">
-<meta property="og:url" content="https://blog.monochromegane.com/blog/2014/05/19/homebrew-formula-for-golang/">
-<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-<link rel=stylesheet href=/css/reset.css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
-<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
-<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
-<link rel=stylesheet href=/css/text.css>
-<link rel=stylesheet href=/css/color.css>
-<link rel=stylesheet href=/css/layout.css>
-<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
-<link rel="shortcut icon" href=/images/favicon.ico>
-<link rel=canonical href=https://blog.monochromegane.com/blog/2014/05/19/homebrew-formula-for-golang/>
-<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
-</head>
-<body>
-<div class=header>
-<header>
-<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
-<nav>
-<ul class=menu>
-<li><a href=/self-introduction/>Home</a></li>
-<li><a href=/post/>Archives</a></li>
-<li><a href=/diary/>Diary</a></li>
-<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
-</ul>
-</nav>
-</header>
-</div>
-<div class=container>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/blog/2014/05/19/homebrew-formula-for-golang/>Go言語でつくったツールをHomebrewで配布する</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2014-05-19</div></time>
-</header>
-<div class=post-inner>
-<p>先日、Go言語でつくった高速検索ツール(<a href=/blog/2014/01/16/the-platinum-searcher/>the_platinum_searcher</a>)をHomebrewで配布できるようにしました。<br>
-意外とGo言語製ツールをHomebrew対応させる情報がなかったので、配布までの手順をまとめておきます。</p>
-<hr>
-<h1 id=homebrewに対応させる>Homebrewに対応させる</h1>
-<p><a href=http://brew.sh/>Homebrew</a>はMacで利用できるパッケージマネージャーです。</p>
-<p>Homebrewでツールやパッケージを配布するにはそれらに関する情報やインストール方法を定義した<code>Formula</code>(製法)ファイルが必要です。<br>
-また、Formulaを登録するリポジトリも必要です。Homebrewには公式リポジトリがありますが、<code>tap</code>コマンドを使うことで独自リポジトリをFormula取得先として追加することができます。</p>
-<p>今回は、独自リポジトリでFormulaを公開します。</p>
-<h2 id=formulaファイルの作成>Formulaファイルの作成</h2>
-<p>Formulaファイルを格納するディレクトリは独自リポジトリの命名規則に沿って<code>homebrew-</code>を先頭につけておきます。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ mkdir homebrew-リポジトリ名
+Formulaファイルの作成
+Formulaファイルを格納するディレクトリは独自リポジトリの命名規則に沿ってhomebrew-を先頭につけておきます。
+$ mkdir homebrew-リポジトリ名
 $ cd !$
 $ vi パッケージ名.rb
-</code></pre></div><p>以下、the_platinum_searcher(pt)のFormulaを参考に解説を行います。</p>
-<p><code>monochromegane/homebrew-pt/pt.rb</code></p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby>require <span style=color:#e6db74>&#39;formula&#39;</span>
+以下、the_platinum_searcher(pt)のFormulaを参考に解説を行います。
+monochromegane/homebrew-pt/pt.rb
+require 'formula'
 
-<span style=color:#66d9ef>HOMEBREW_PT_VERSION</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#39;1.6.2&#39;</span>
-<span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Pt</span> <span style=color:#f92672>&lt;</span> <span style=color:#66d9ef>Formula</span>
-  homepage <span style=color:#e6db74>&#39;https://github.com/monochromegane/the_platinum_searcher&#39;</span>
-  url <span style=color:#e6db74>&#39;https://github.com/monochromegane/the_platinum_searcher.git&#39;</span>, <span style=color:#e6db74>:tag</span> <span style=color:#f92672>=&gt;</span> <span style=color:#e6db74>&#34;v</span><span style=color:#e6db74>#{</span><span style=color:#66d9ef>HOMEBREW_PT_VERSION</span><span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
-  version <span style=color:#66d9ef>HOMEBREW_PT_VERSION</span>
-  head <span style=color:#e6db74>&#39;https://github.com/monochromegane/the_platinum_searcher.git&#39;</span>, <span style=color:#e6db74>:branch</span> <span style=color:#f92672>=&gt;</span> <span style=color:#e6db74>&#39;master&#39;</span>
+HOMEBREW_PT_VERSION='1.6.2'
+class Pt < Formula
+  homepage 'https://github.com/monochromegane/the_platinum_searcher'
+  url 'https://github.com/monochromegane/the_platinum_searcher.git', :tag => &#34;v#{HOMEBREW_PT_VERSION}&#34;
+  version HOMEBREW_PT_VERSION
+  head 'https://github.com/monochromegane/the_platinum_searcher.git', :branch => 'master'
 
-  depends_on <span style=color:#e6db74>&#39;go&#39;</span> <span style=color:#f92672>=&gt;</span> <span style=color:#e6db74>:build</span>
-  depends_on <span style=color:#e6db74>&#39;hg&#39;</span> <span style=color:#f92672>=&gt;</span> <span style=color:#e6db74>:build</span>
+  depends_on 'go' => :build
+  depends_on 'hg' => :build
 
-  <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>install</span>
-    <span style=color:#66d9ef>ENV</span><span style=color:#f92672>[</span><span style=color:#e6db74>&#39;GOPATH&#39;</span><span style=color:#f92672>]</span> <span style=color:#f92672>=</span> buildpath
-    system <span style=color:#e6db74>&#39;go&#39;</span>, <span style=color:#e6db74>&#39;get&#39;</span>, <span style=color:#e6db74>&#39;github.com/shiena/ansicolor&#39;</span>
-    system <span style=color:#e6db74>&#39;go&#39;</span>, <span style=color:#e6db74>&#39;get&#39;</span>, <span style=color:#e6db74>&#39;github.com/monochromegane/terminal&#39;</span>
-    system <span style=color:#e6db74>&#39;go&#39;</span>, <span style=color:#e6db74>&#39;get&#39;</span>, <span style=color:#e6db74>&#39;github.com/jessevdk/go-flags&#39;</span>
-    system <span style=color:#e6db74>&#39;go&#39;</span>, <span style=color:#e6db74>&#39;get&#39;</span>, <span style=color:#e6db74>&#39;code.google.com/p/go.text/transform&#39;</span>
-    mkdir_p buildpath<span style=color:#f92672>/</span><span style=color:#e6db74>&#39;src/github.com/monochromegane/the_platinum_searcher&#39;</span>
-    ln_s buildpath<span style=color:#f92672>/</span><span style=color:#e6db74>&#39;search&#39;</span>, buildpath<span style=color:#f92672>/</span><span style=color:#e6db74>&#39;src/github.com/monochromegane/the_platinum_searcher/.&#39;</span>
-    system <span style=color:#e6db74>&#39;go&#39;</span>, <span style=color:#e6db74>&#39;build&#39;</span>, <span style=color:#e6db74>&#39;-o&#39;</span>, <span style=color:#e6db74>&#39;pt&#39;</span>
-    bin<span style=color:#f92672>.</span>install <span style=color:#e6db74>&#39;pt&#39;</span>
-  <span style=color:#66d9ef>end</span>
-<span style=color:#66d9ef>end</span>
-</code></pre></div><h4 id=url>url</h4>
-<p>urlにはツールのリポジトリを指定します。<code>:tag</code>オプションをつけることで指定のリリースタグ時点のものを取得させることができます。</p>
-<hr>
-<h4 id=version>version</h4>
-<p>Formulaのバージョンを指定します。上記のようにツールのバージョンとあわせておくとよいです。</p>
-<hr>
-<h4 id=head>head</h4>
-<p><code>brew install --HEAD</code>したときに取得するリポジトリとブランチ。この場合、最新のmasterを取得します。</p>
-<hr>
-<h4 id=depends_on>depends_on</h4>
-<p>ビルドに必要なパッケージを指定します。<br>
-<code>go</code>は必須。<code>hg</code>は自分のツールが利用するパッケージが<code>code.google.com</code>にあれば必要になります。</p>
-<hr>
-<h4 id=envgopath>ENV[&lsquo;GOPATH&rsquo;]</h4>
-<p><code>ENV['GOPATH']</code>を<code>buildpath</code>にするのがお作法のようです。</p>
-<hr>
-<h4 id=go-get>go get</h4>
-<p><code>system</code>をつかってツールで必要なGoのパッケージを取得しておきます。<br>
-ここで取得したパッケージは<code>$GOPATH</code>(=<code>buildpath</code>)に配置されます。</p>
-<hr>
-<h4 id=mkdir_p-ln_s>mkdir_p, ln_s</h4>
-<p>ツール内でGoのパッケージを分ける構成にしている場合、<code>GOPATH/src</code>を探してしまい、パッケージが見つからないエラーになってしまいます。<br>
-分けたパッケージを<code>go get</code>で取得してしまうとmasterを取得してしまうので、チェックアウトしたリポジトリの資産を使ってもらうにはGOPATH/src配下にシンボリックリンクをはる必要がありました。</p>
-<p>もっとよいやり方があれば、教えてください&mldr;</p>
-<hr>
-<h4 id=go-build>go build</h4>
-<p>ビルドします。ここでは<code>-o</code>でビルド成果物のファイル名を指定しています。</p>
-<hr>
-<h4 id=bininstall>bin.install</h4>
-<p>ビルド成果物をパスの通ったところに配置します。<br>
-具体的には<code>/usr/local/Cellar/パッケージ名/バージョン/bin</code>配下にビルド成果物を配置して<code>/usr/local/bin/ビルド成果物名</code>にシンボリックリンクをはってくれます。</p>
-<h2 id=formulaの公開>Formulaの公開</h2>
-<p>Formulaができたら、上記資産をGithubに同名のリポジトリをつくってpushしておきます。</p>
-<h2 id=インストール>インストール</h2>
-<h3 id=独自リポジトリをhomebrewに追加する>独自リポジトリをHomebrewに追加する</h3>
-<p>以下のコマンドでHomebrewに独自リポジトリを追加します。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ brew tap ユーザ/リポジトリ
-</code></pre></div><p><code>ユーザ</code>は自分のGithubのアカウント名、<code>リポジトリ</code>はGithubのリポジトリ名から<code>homebrew-</code>を外したものを指定します。</p>
-<p><code>/usr/local/Library/Taps/</code>配下に<code>ユーザ/リポジトリ</code>のディレクトリができていれば追加成功です。</p>
-<h3 id=インストール-1>インストール</h3>
-<p>独自リポジトリ内のFormulaに定義された内容でインストールします。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ brew install パッケージ名
-</code></pre></div><hr>
-<p>つまり、the_platinum_searcherの場合、ユーザがインストールのために行う作業は以下だけです。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ brew tap monochromegane/pt <span style=color:#75715e># 独自リポジトリを追加</span>
-$ brew install pt            <span style=color:#75715e># インストール</span>
-</code></pre></div><h2 id=アップデート>アップデート</h2>
-<p>ツールのバージョンが上がったら、リリースタグをつけて、Formulaのバージョンも同じように上げておきます。</p>
-<p>その後は</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ brew update               <span style=color:#75715e># 最新のFormulaを取得</span>
-$ brew upgrade パッケージ名 <span style=color:#75715e># アップグレード</span>
-</code></pre></div><p>で、ツールの更新が行えます。</p>
-<hr>
-<h1 id=homebrewで配布する利点など>Homebrewで配布する利点など</h1>
-<p>the_platinum_searcherでは、<code>go get</code>や<code>go install</code>を使ったインストールだとGo開発者ではないひとに敷居が高いため、drone.ioのartifacts機能を使ってビルド成果物をダウンロードしてもらうようにしていました。</p>
-<p>ただ、これでもダウンロードしてパス通したり、バージョンアップなどでいくつか不便もあったので、そのあたりをHomebrewに乗っかることで解決できました。</p>
-<p>また、ローカルビルドによりCGOが有効にできるので（drone.ioだとCGOが使えない）、CGO有無による予想しない挙動に悩まされないのももうれしい点です。</p>
-<p>Go言語でつくったツールを配布する手段としてHomebrew、検討してみてはどうでしょうか。</p>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/homebrew>homebrew</a></li>
-<li><a class=tag-link href=/tags/golang>golang</a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<div class=social-btn>
-<div>
-<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2014/05/19/homebrew-formula-for-golang/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
-</div>
-<div>
-<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
-</div>
-</div>
-</div>
-<footer class=footer>
-<div class=author></div>
-<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
-<p>monochromegane (モノクロめがね) と申します。</p>
-<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-<ul class=social>
-<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
-<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
-<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
-</ul>
-<p class=copyright>
-<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
-</p>
-</footer>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
-<script>hljs.initHighlightingOnLoad()</script>
-<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
-</body>
-</html>
+  def install
+    ENV['GOPATH'] = buildpath
+    system 'go', 'get', 'github.com/shiena/ansicolor'
+    system 'go', 'get', 'github.com/monochromegane/terminal'
+    system 'go', 'get', 'github.com/jessevdk/go-flags'
+    system 'go', 'get', 'code.google.com/p/go.text/transform'
+    mkdir_p buildpath/'src/github.com/monochromegane/the_platinum_searcher'
+    ln_s buildpath/'search', buildpath/'src/github.com/monochromegane/the_platinum_searcher/.'
+    system 'go', 'build', '-o', 'pt'
+    bin.install 'pt'
+  end
+end
+url
+urlにはツールのリポジトリを指定します。:tagオプションをつけることで指定のリリースタグ時点のものを取得させることができます。
+
+version
+Formulaのバージョンを指定します。上記のようにツールのバージョンとあわせておくとよいです。
+
+head
+brew install --HEADしたときに取得するリポジトリとブランチ。この場合、最新のmasterを取得します。"><meta property="og:title" content="Go言語でつくったツールをHomebrewで配布する"><meta property="og:url" content="https://blog.monochromegane.com/blog/2014/05/19/homebrew-formula-for-golang/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2014/05/19/homebrew-formula-for-golang/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2014/05/19/homebrew-formula-for-golang/>Go言語でつくったツールをHomebrewで配布する</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2014-05-19</div></time></header><div class=post-inner><p>先日、Go言語でつくった高速検索ツール(<a href=/blog/2014/01/16/the-platinum-searcher/>the_platinum_searcher</a>)をHomebrewで配布できるようにしました。<br>意外とGo言語製ツールをHomebrew対応させる情報がなかったので、配布までの手順をまとめておきます。</p><hr><h1 id=homebrewに対応させる>Homebrewに対応させる</h1><p><a href=http://brew.sh/>Homebrew</a>はMacで利用できるパッケージマネージャーです。</p><p>Homebrewでツールやパッケージを配布するにはそれらに関する情報やインストール方法を定義した<code>Formula</code>(製法)ファイルが必要です。<br>また、Formulaを登録するリポジトリも必要です。Homebrewには公式リポジトリがありますが、<code>tap</code>コマンドを使うことで独自リポジトリをFormula取得先として追加することができます。</p><p>今回は、独自リポジトリでFormulaを公開します。</p><h2 id=formulaファイルの作成>Formulaファイルの作成</h2><p>Formulaファイルを格納するディレクトリは独自リポジトリの命名規則に沿って<code>homebrew-</code>を先頭につけておきます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ mkdir homebrew-リポジトリ名
+</span></span><span style=display:flex><span>$ cd !$
+</span></span><span style=display:flex><span>$ vi パッケージ名.rb
+</span></span></code></pre></div><p>以下、the_platinum_searcher(pt)のFormulaを参考に解説を行います。</p><p><code>monochromegane/homebrew-pt/pt.rb</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=display:flex><span>require <span style=color:#e6db74>&#39;formula&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>HOMEBREW_PT_VERSION</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#39;1.6.2&#39;</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Pt</span> <span style=color:#f92672>&lt;</span> <span style=color:#66d9ef>Formula</span>
+</span></span><span style=display:flex><span>  homepage <span style=color:#e6db74>&#39;https://github.com/monochromegane/the_platinum_searcher&#39;</span>
+</span></span><span style=display:flex><span>  url <span style=color:#e6db74>&#39;https://github.com/monochromegane/the_platinum_searcher.git&#39;</span>, <span style=color:#e6db74>:tag</span> <span style=color:#f92672>=&gt;</span> <span style=color:#e6db74>&#34;v</span><span style=color:#e6db74>#{</span><span style=color:#66d9ef>HOMEBREW_PT_VERSION</span><span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>  version <span style=color:#66d9ef>HOMEBREW_PT_VERSION</span>
+</span></span><span style=display:flex><span>  head <span style=color:#e6db74>&#39;https://github.com/monochromegane/the_platinum_searcher.git&#39;</span>, <span style=color:#e6db74>:branch</span> <span style=color:#f92672>=&gt;</span> <span style=color:#e6db74>&#39;master&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  depends_on <span style=color:#e6db74>&#39;go&#39;</span> <span style=color:#f92672>=&gt;</span> <span style=color:#e6db74>:build</span>
+</span></span><span style=display:flex><span>  depends_on <span style=color:#e6db74>&#39;hg&#39;</span> <span style=color:#f92672>=&gt;</span> <span style=color:#e6db74>:build</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>install</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>ENV</span><span style=color:#f92672>[</span><span style=color:#e6db74>&#39;GOPATH&#39;</span><span style=color:#f92672>]</span> <span style=color:#f92672>=</span> buildpath
+</span></span><span style=display:flex><span>    system <span style=color:#e6db74>&#39;go&#39;</span>, <span style=color:#e6db74>&#39;get&#39;</span>, <span style=color:#e6db74>&#39;github.com/shiena/ansicolor&#39;</span>
+</span></span><span style=display:flex><span>    system <span style=color:#e6db74>&#39;go&#39;</span>, <span style=color:#e6db74>&#39;get&#39;</span>, <span style=color:#e6db74>&#39;github.com/monochromegane/terminal&#39;</span>
+</span></span><span style=display:flex><span>    system <span style=color:#e6db74>&#39;go&#39;</span>, <span style=color:#e6db74>&#39;get&#39;</span>, <span style=color:#e6db74>&#39;github.com/jessevdk/go-flags&#39;</span>
+</span></span><span style=display:flex><span>    system <span style=color:#e6db74>&#39;go&#39;</span>, <span style=color:#e6db74>&#39;get&#39;</span>, <span style=color:#e6db74>&#39;code.google.com/p/go.text/transform&#39;</span>
+</span></span><span style=display:flex><span>    mkdir_p buildpath<span style=color:#f92672>/</span><span style=color:#e6db74>&#39;src/github.com/monochromegane/the_platinum_searcher&#39;</span>
+</span></span><span style=display:flex><span>    ln_s buildpath<span style=color:#f92672>/</span><span style=color:#e6db74>&#39;search&#39;</span>, buildpath<span style=color:#f92672>/</span><span style=color:#e6db74>&#39;src/github.com/monochromegane/the_platinum_searcher/.&#39;</span>
+</span></span><span style=display:flex><span>    system <span style=color:#e6db74>&#39;go&#39;</span>, <span style=color:#e6db74>&#39;build&#39;</span>, <span style=color:#e6db74>&#39;-o&#39;</span>, <span style=color:#e6db74>&#39;pt&#39;</span>
+</span></span><span style=display:flex><span>    bin<span style=color:#f92672>.</span>install <span style=color:#e6db74>&#39;pt&#39;</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>end</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>end</span>
+</span></span></code></pre></div><h4 id=url>url</h4><p>urlにはツールのリポジトリを指定します。<code>:tag</code>オプションをつけることで指定のリリースタグ時点のものを取得させることができます。</p><hr><h4 id=version>version</h4><p>Formulaのバージョンを指定します。上記のようにツールのバージョンとあわせておくとよいです。</p><hr><h4 id=head>head</h4><p><code>brew install --HEAD</code>したときに取得するリポジトリとブランチ。この場合、最新のmasterを取得します。</p><hr><h4 id=depends_on>depends_on</h4><p>ビルドに必要なパッケージを指定します。<br><code>go</code>は必須。<code>hg</code>は自分のツールが利用するパッケージが<code>code.google.com</code>にあれば必要になります。</p><hr><h4 id=envgopath>ENV[&lsquo;GOPATH&rsquo;]</h4><p><code>ENV['GOPATH']</code>を<code>buildpath</code>にするのがお作法のようです。</p><hr><h4 id=go-get>go get</h4><p><code>system</code>をつかってツールで必要なGoのパッケージを取得しておきます。<br>ここで取得したパッケージは<code>$GOPATH</code>(=<code>buildpath</code>)に配置されます。</p><hr><h4 id=mkdir_p-ln_s>mkdir_p, ln_s</h4><p>ツール内でGoのパッケージを分ける構成にしている場合、<code>GOPATH/src</code>を探してしまい、パッケージが見つからないエラーになってしまいます。<br>分けたパッケージを<code>go get</code>で取得してしまうとmasterを取得してしまうので、チェックアウトしたリポジトリの資産を使ってもらうにはGOPATH/src配下にシンボリックリンクをはる必要がありました。</p><p>もっとよいやり方があれば、教えてください&mldr;</p><hr><h4 id=go-build>go build</h4><p>ビルドします。ここでは<code>-o</code>でビルド成果物のファイル名を指定しています。</p><hr><h4 id=bininstall>bin.install</h4><p>ビルド成果物をパスの通ったところに配置します。<br>具体的には<code>/usr/local/Cellar/パッケージ名/バージョン/bin</code>配下にビルド成果物を配置して<code>/usr/local/bin/ビルド成果物名</code>にシンボリックリンクをはってくれます。</p><h2 id=formulaの公開>Formulaの公開</h2><p>Formulaができたら、上記資産をGithubに同名のリポジトリをつくってpushしておきます。</p><h2 id=インストール>インストール</h2><h3 id=独自リポジトリをhomebrewに追加する>独自リポジトリをHomebrewに追加する</h3><p>以下のコマンドでHomebrewに独自リポジトリを追加します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ brew tap ユーザ/リポジトリ
+</span></span></code></pre></div><p><code>ユーザ</code>は自分のGithubのアカウント名、<code>リポジトリ</code>はGithubのリポジトリ名から<code>homebrew-</code>を外したものを指定します。</p><p><code>/usr/local/Library/Taps/</code>配下に<code>ユーザ/リポジトリ</code>のディレクトリができていれば追加成功です。</p><h3 id=インストール-1>インストール</h3><p>独自リポジトリ内のFormulaに定義された内容でインストールします。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ brew install パッケージ名
+</span></span></code></pre></div><hr><p>つまり、the_platinum_searcherの場合、ユーザがインストールのために行う作業は以下だけです。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ brew tap monochromegane/pt <span style=color:#75715e># 独自リポジトリを追加</span>
+</span></span><span style=display:flex><span>$ brew install pt            <span style=color:#75715e># インストール</span>
+</span></span></code></pre></div><h2 id=アップデート>アップデート</h2><p>ツールのバージョンが上がったら、リリースタグをつけて、Formulaのバージョンも同じように上げておきます。</p><p>その後は</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ brew update               <span style=color:#75715e># 最新のFormulaを取得</span>
+</span></span><span style=display:flex><span>$ brew upgrade パッケージ名 <span style=color:#75715e># アップグレード</span>
+</span></span></code></pre></div><p>で、ツールの更新が行えます。</p><hr><h1 id=homebrewで配布する利点など>Homebrewで配布する利点など</h1><p>the_platinum_searcherでは、<code>go get</code>や<code>go install</code>を使ったインストールだとGo開発者ではないひとに敷居が高いため、drone.ioのartifacts機能を使ってビルド成果物をダウンロードしてもらうようにしていました。</p><p>ただ、これでもダウンロードしてパス通したり、バージョンアップなどでいくつか不便もあったので、そのあたりをHomebrewに乗っかることで解決できました。</p><p>また、ローカルビルドによりCGOが有効にできるので（drone.ioだとCGOが使えない）、CGO有無による予想しない挙動に悩まされないのももうれしい点です。</p><p>Go言語でつくったツールを配布する手段としてHomebrew、検討してみてはどうでしょうか。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/homebrew>homebrew</a></li><li><a class=tag-link href=/tags/golang>golang</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2014/05/19/homebrew-formula-for-golang/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

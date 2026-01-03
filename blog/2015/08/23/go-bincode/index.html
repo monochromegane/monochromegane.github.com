@@ -1,128 +1,30 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width">
-<meta name=author content>
-<title>野良バイナリになっても大丈夫。Goのバイナリにソースコードを添付するツールをつくった。 &#183; THINKING MEGANE</title>
-<meta name=twitter:card content="summary">
-<meta name=twitter:site content="@monochromegane">
-<meta property="og:description" content="サーバーにあるGoのバイナリのバージョン管理は気を使います。どのバージョンで動いているのかわからなくならないよう、バージョンやリビジョンを埋め込む方法がありますが、そもそもリポジトリもわからないバイナリがあったら&mldr;そんなときに備えて、ソースコード自体をバイナリに埋め込んでおくというツールをつくってみました。
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>野良バイナリになっても大丈夫。Goのバイナリにソースコードを添付するツールをつくった。 &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="サーバーにあるGoのバイナリのバージョン管理は気を使います。どのバージョンで動いているのかわからなくならないよう、バージョンやリビジョンを埋め込む方法がありますが、そもそもリポジトリもわからないバイナリがあったら&mldr;そんなときに備えて、ソースコード自体をバイナリに埋め込んでおくというツールをつくってみました。
+
 go-bincodeは内部でgo-bindataを使い、goのソースコードをバイナリに埋め込みます。また、埋め込んだソースコードを参照/リストアするための各種オプションを提供します。
-利用方法 以下、様子です。
+利用方法
+以下、様子です。
+
 使い方は、ソースコードを埋め込みたい対象のリポジトリで go-bincode コマンドを叩くだけです。必要に応じてpkgオプションでパッケージ名を指定してください。
 go-bincode.goとgo-bincoder.goが生成され、ソースコードの参照/リストアを行うためのオプションが使えるようになります。
 あとはいつも通りビルドしたバイナリを配布すればOKです。
-オプション  list-code: ソースコード一覧を表示します show-code: 指定したソースコードの内容を表示します restore-code: ソースコードをリストアします  生成したコードの依存関係 go-bincodeを使って生成されるコードはコードのアーカイブと参照/リストア用のオプションを提供するだけです。 生成後、あなたのコードを修正する必要はありません。
+オプション
+
+list-code: ソースコード一覧を表示します
+show-code: 指定したソースコードの内容を表示します
+restore-code: ソースコードをリストアします
+
+生成したコードの依存関係
+go-bincodeを使って生成されるコードはコードのアーカイブと参照/リストア用のオプションを提供するだけです。
+生成後、あなたのコードを修正する必要はありません。
 アーカイブされるコードには生成したコードは含まれませんが、上記の通り依存関係が存在しないため、リストア後のコードも問題なくビルドできます。
-インストール go-bindataを内部で使っているのであわせてインストールしてください。
-$ go get -u github.com/jteeuwen/go-bindata/... # Requirement $ go get -u github.com/monochromegane/go-bincode/... まとめ CI、バージョン管理、デプロイ自動化や環境のコード化が一般になってきた時代なので、バイナリとリポジトリとの関連も分からない野良バイナリになるというのは正直なかなか考えにくいとは思いますが、いざという時に判断材料が多いのに越したことはないと思います。
-念には念を入れ、数年後の「Goあるある」でバイナリのコードがわからない〜という話が出ないよう、よければ使ってみてください。">
-<meta property="og:title" content="野良バイナリになっても大丈夫。Goのバイナリにソースコードを添付するツールをつくった。">
-<meta property="og:url" content="https://blog.monochromegane.com/blog/2015/08/23/go-bincode/">
-<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-<link rel=stylesheet href=/css/reset.css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
-<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
-<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
-<link rel=stylesheet href=/css/text.css>
-<link rel=stylesheet href=/css/color.css>
-<link rel=stylesheet href=/css/layout.css>
-<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
-<link rel="shortcut icon" href=/images/favicon.ico>
-<link rel=canonical href=https://blog.monochromegane.com/blog/2015/08/23/go-bincode/>
-<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
-</head>
-<body>
-<div class=header>
-<header>
-<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
-<nav>
-<ul class=menu>
-<li><a href=/self-introduction/>Home</a></li>
-<li><a href=/post/>Archives</a></li>
-<li><a href=/diary/>Diary</a></li>
-<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
-</ul>
-</nav>
-</header>
-</div>
-<div class=container>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/blog/2015/08/23/go-bincode/>野良バイナリになっても大丈夫。Goのバイナリにソースコードを添付するツールをつくった。</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2015-08-23</div></time>
-</header>
-<div class=post-inner>
-<p>サーバーにあるGoのバイナリのバージョン管理は気を使います。どのバージョンで動いているのかわからなくならないよう、バージョンやリビジョンを埋め込む方法がありますが、そもそもリポジトリもわからないバイナリがあったら&mldr;そんなときに備えて、ソースコード自体をバイナリに埋め込んでおくというツールをつくってみました。</p>
-<p><code>go-bincode</code>は内部で<code>go-bindata</code>を使い、goのソースコードをバイナリに埋め込みます。また、埋め込んだソースコードを参照/リストアするための各種オプションを提供します。</p>
-<h2 id=利用方法>利用方法</h2>
-<p>以下、様子です。</p>
-<p><img src=https://cloud.githubusercontent.com/assets/1845486/9424618/4ada7c6a-492d-11e5-9958-73bc329ac35c.gif alt=go-bincode></p>
-<p>使い方は、ソースコードを埋め込みたい対象のリポジトリで go-bincode コマンドを叩くだけです。必要に応じて<code>pkg</code>オプションでパッケージ名を指定してください。</p>
-<p><code>go-bincode.go</code>と<code>go-bincoder.go</code>が生成され、ソースコードの参照/リストアを行うためのオプションが使えるようになります。</p>
-<p>あとはいつも通りビルドしたバイナリを配布すればOKです。</p>
-<h3 id=オプション>オプション</h3>
-<ul>
-<li><strong>list-code</strong>: ソースコード一覧を表示します</li>
-<li><strong>show-code</strong>: 指定したソースコードの内容を表示します</li>
-<li><strong>restore-code</strong>: ソースコードをリストアします</li>
-</ul>
-<h2 id=生成したコードの依存関係>生成したコードの依存関係</h2>
-<p>go-bincodeを使って生成されるコードはコードのアーカイブと参照/リストア用のオプションを提供するだけです。
-生成後、あなたのコードを修正する必要はありません。</p>
-<p>アーカイブされるコードには生成したコードは含まれませんが、上記の通り依存関係が存在しないため、リストア後のコードも問題なくビルドできます。</p>
-<h2 id=インストール>インストール</h2>
-<p>go-bindataを内部で使っているのであわせてインストールしてください。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ go get -u github.com/jteeuwen/go-bindata/... <span style=color:#75715e># Requirement</span>
+インストール
+go-bindataを内部で使っているのであわせてインストールしてください。
+$ go get -u github.com/jteeuwen/go-bindata/... # Requirement
 $ go get -u github.com/monochromegane/go-bincode/...
-</code></pre></div><h1 id=まとめ>まとめ</h1>
-<p>CI、バージョン管理、デプロイ自動化や環境のコード化が一般になってきた時代なので、バイナリとリポジトリとの関連も分からない野良バイナリになるというのは正直なかなか考えにくいとは思いますが、いざという時に判断材料が多いのに越したことはないと思います。</p>
-<p>念には念を入れ、数年後の「Goあるある」でバイナリのコードがわからない〜という話が出ないよう、よければ使ってみてください。</p>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/golang>golang</a></li>
-<li><a class=tag-link href=/tags/go-bincode>go-bincode</a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<div class=social-btn>
-<div>
-<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2015/08/23/go-bincode/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
-</div>
-<div>
-<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
-</div>
-</div>
-</div>
-<footer class=footer>
-<div class=author></div>
-<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
-<p>monochromegane (モノクロめがね) と申します。</p>
-<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-<ul class=social>
-<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
-<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
-<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
-</ul>
-<p class=copyright>
-<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
-</p>
-</footer>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
-<script>hljs.initHighlightingOnLoad()</script>
-<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
-</body>
-</html>
+まとめ
+CI、バージョン管理、デプロイ自動化や環境のコード化が一般になってきた時代なので、バイナリとリポジトリとの関連も分からない野良バイナリになるというのは正直なかなか考えにくいとは思いますが、いざという時に判断材料が多いのに越したことはないと思います。
+念には念を入れ、数年後の「Goあるある」でバイナリのコードがわからない〜という話が出ないよう、よければ使ってみてください。"><meta property="og:title" content="野良バイナリになっても大丈夫。Goのバイナリにソースコードを添付するツールをつくった。"><meta property="og:url" content="https://blog.monochromegane.com/blog/2015/08/23/go-bincode/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2015/08/23/go-bincode/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2015/08/23/go-bincode/>野良バイナリになっても大丈夫。Goのバイナリにソースコードを添付するツールをつくった。</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2015-08-23</div></time></header><div class=post-inner><p>サーバーにあるGoのバイナリのバージョン管理は気を使います。どのバージョンで動いているのかわからなくならないよう、バージョンやリビジョンを埋め込む方法がありますが、そもそもリポジトリもわからないバイナリがあったら&mldr;そんなときに備えて、ソースコード自体をバイナリに埋め込んでおくというツールをつくってみました。</p><p><code>go-bincode</code>は内部で<code>go-bindata</code>を使い、goのソースコードをバイナリに埋め込みます。また、埋め込んだソースコードを参照/リストアするための各種オプションを提供します。</p><h2 id=利用方法>利用方法</h2><p>以下、様子です。</p><p><img src=https://cloud.githubusercontent.com/assets/1845486/9424618/4ada7c6a-492d-11e5-9958-73bc329ac35c.gif alt=go-bincode></p><p>使い方は、ソースコードを埋め込みたい対象のリポジトリで go-bincode コマンドを叩くだけです。必要に応じて<code>pkg</code>オプションでパッケージ名を指定してください。</p><p><code>go-bincode.go</code>と<code>go-bincoder.go</code>が生成され、ソースコードの参照/リストアを行うためのオプションが使えるようになります。</p><p>あとはいつも通りビルドしたバイナリを配布すればOKです。</p><h3 id=オプション>オプション</h3><ul><li><strong>list-code</strong>: ソースコード一覧を表示します</li><li><strong>show-code</strong>: 指定したソースコードの内容を表示します</li><li><strong>restore-code</strong>: ソースコードをリストアします</li></ul><h2 id=生成したコードの依存関係>生成したコードの依存関係</h2><p>go-bincodeを使って生成されるコードはコードのアーカイブと参照/リストア用のオプションを提供するだけです。
+生成後、あなたのコードを修正する必要はありません。</p><p>アーカイブされるコードには生成したコードは含まれませんが、上記の通り依存関係が存在しないため、リストア後のコードも問題なくビルドできます。</p><h2 id=インストール>インストール</h2><p>go-bindataを内部で使っているのであわせてインストールしてください。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ go get -u github.com/jteeuwen/go-bindata/... <span style=color:#75715e># Requirement</span>
+</span></span><span style=display:flex><span>$ go get -u github.com/monochromegane/go-bincode/...
+</span></span></code></pre></div><h1 id=まとめ>まとめ</h1><p>CI、バージョン管理、デプロイ自動化や環境のコード化が一般になってきた時代なので、バイナリとリポジトリとの関連も分からない野良バイナリになるというのは正直なかなか考えにくいとは思いますが、いざという時に判断材料が多いのに越したことはないと思います。</p><p>念には念を入れ、数年後の「Goあるある」でバイナリのコードがわからない〜という話が出ないよう、よければ使ってみてください。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/golang>golang</a></li><li><a class=tag-link href=/tags/go-bincode>go-bincode</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2015/08/23/go-bincode/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

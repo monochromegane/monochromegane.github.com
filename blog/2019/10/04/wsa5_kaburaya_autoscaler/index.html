@@ -1,208 +1,114 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width">
-<meta name=author content>
-<title>Kaburaya AutoScaler: 多環境での運用性を考慮した自律適応型オートスケーリング制御系 &#183; THINKING MEGANE</title>
-<meta name=twitter:card content="summary">
-<meta name=twitter:site content="@monochromegane">
-<meta property="og:description" content="このエントリは、第五回 Web System Architecture 研究会 (WSA研)の予稿です。
-はじめに Webサービスの運用において，急激なアクセス頻度の上昇に対する安定性を保つため，Webアプリケーションにスケーラビリティの仕組みが一般的に求められるようになった． これを支援するためにWebアプリケーションを稼働させるクラウドサービスやオーケストレーションツールから，オートスケーリング機能が提供されている． これらのオートスケーリング機能では，開発運用者が予め定めた条件を元にWebアプリケーションの状況が監視される． そうして，条件を満たせば，開発運用者が予め定めたスケール方法とその実施量に従いWebアプリケーションをスケールさせる．
-このようにオートスケーリングによって，ユーザからのリクエスト数の増減に応じて最適なサーバ台数を調整されることで利用者の快適さと情報システムの運用コストを両立できるようになった． 一方で，オートスケーリングを導入し，継続的に安定した運用するためには開発運用者の運用努力が必要であるが，これらは管理する環境の増加に従い困難になる． そのため，多環境での運用性を考慮した自動化可能なオートスケーリング戦略が求められる．
-オートスケーリングの継続的に安定した運用に向けた課題は大きく二つある． 一つ目は，アプリケーション特性の把握，二つ目は，“遅れ”の考慮である．
-課題1: アプリケーション特性の把握 スケールにはWebアプリケーションを稼働する仮想サーバへリソースを追加する垂直スケール（スケールアップ），稼働する仮想サーバを追加する水平スケール（スケールアウト）の2種類の方法がある． しかしながら，どちらの方法を用いるにせよ，開発運用者はWebアプリケーションの特性に応じたオートスケーリングの条件やその実施量を予め定める必要がある． 例えば，時刻ベースであればアクセス頻度の時系列的傾向や，リソース変動ベースであればボトルネックとなるメトリクスである． また，これらの条件に対する必要台数の算出も必要となる． Webアプリケーションは常に変更が加わることから，手動での継続的な特性の把握と決定は運用負荷の面で現実的ではない．
-そこで，特性把握の自動化が行われている． 三宅らは，過去のアクセス頻度のデータからLSTMを用いて24時間先までの1時間単位のアクセス頻度を予測するモデルを構築し，予測アクセス頻度を元に経験から得られたサーバ単位のスループットにより必要なサーバ台数を求めた[1]． スループットの把握では，パラメタを連続的に変化させながら最良の結果を得る値を探索的に求める方法も提案されている[2]． これらの予測的，探索的なアプローチによる特性把握の自動化により，変化する環境に対する追従性は向上する． 一方で，事前的なアプローチであるため，予測の誤差，探索を行った環境と本番環境の誤差に対処できないという課題が残る．
-そのため，三宅らはフィードバック制御による個別の特性把握を必要としないアプローチ[3][4]を提案した． この手法では，直近のレスポンスタイムが均衡する点に収束するような台数調整によって特性把握が不要で実行時に誤差を修正することができる． ただし，フィードバック制御を用いるため，制御量であるサーバ台数の決定は探索的である． 待ち行列理論によれば窓口利用率が1を超えると待ち行列は収束しないとされていることから，サーバ台数は即時かつ決定的に求められることが望ましい．
-課題2: “遅れ”の考慮 オートスケーリングでは，本番環境の誤差に対応するための即応的なアプローチを採用すると&#34;遅れ&#34;の課題が発生する． 一つ目の遅れは，負荷上昇からサーバ台数を見積もるまでの時間差である． 本稿ではこれを「入力の遅れ」と呼ぶ． 次はサーバ台数の変更指示から起動までの時間差である． 本稿ではこれを「出力の遅れ」と呼ぶ． 待ち行列理論によれば窓口利用率が1を超えると待ち行列は収束しないとされていることから，これらの遅れに対して発生した待ちリクエストが系の安定性を崩す． 安定性の低下は開発運用者による不定期な対応を要請し，運用負荷につながることからこれを回避する必要がある．
-そのために，遅れを最小化する手法が適用される． 入力の遅れでは，変化点検出などにより負荷上昇を即時に察知する方式がある． また，出力の遅れではCRIUを利用することで起動までの時間を短縮する方式[5]がある． しかしながら，精度の観点やシステム制約によって遅れを0にはできないため，遅れそのものに対する対策は必要となる．
-遅れを踏まえた準備では，前述の予測的なアプローチが考えられる． 三宅らの手法[1]では，予測と事前起動によりこれらの遅れを考慮するが，本番環境の誤差への課題が残る． そこで，スミスの予測法[6]のようにフィードバック制御において遅れによる影響を踏まえた制御量を算出する手法がある． 一方で，予測のためには精度の高い予測モデルの構築が必要であり，追従にはここの自動化が必須となる．
-提案手法 多環境での運用性を考慮したアプリケーション特性の把握の自動化と安定性の両立のためには，以下の要件が必要となる．
- Webアプリケーション特性として負荷に対する実施量の関係が把握できる これを不必要な負荷をかけることなく実行時に自動で把握できる 把握したWebアプリケーション特性と実環境に誤差が生じた場合に修正できる これを実現するリアクティブなアプローチで発生する”遅れ”へ対処できる  そこで，フィードフォワード制御を中心とし，実環境の特性把握・追従のためにフィードバック制御を組み込んだ2自由度のオートスケーリング制御系を提案する． 提案手法により，特性把握・追従の自動化ならびに待ち行列理論を用いた決定的な台数算出・遅れ補償による安定化が見込める． なお，本提案手法の実装はKaburaya AutoScalerとして，OSSでの公開・開発を続けている．
- monochromegane/kaburaya-autoscaler  提案手法では，Webアプリケーション特性を求めるにあたって低負荷時では理想的なレスポンスタイム，高負荷時ではスループット限界を用いることで対象のWebアプリケーションに不必要な負荷をかけることなく現状に即したWebアプリケーション特性を把握することができる． また，仮想サーバ起動までの遅れに伴う負荷状況を予測し，これを見越した実施量を見積もる遅れ補償機構を設けた．
-提案手法のアーキテクチャを以下に示す．
-ここで$F$はフィードフォワード制御部である． 現状の負荷状況に応じて実施量であるサーバ台数を算出する． 算出には待ち行列理論の窓口利用率を求める式を変形した$\lambda/\rho\mu$を用いる． なお，$\lambda$は平均到着率（req/単位時間），$\mu$は平均サービス率（req/単位時間），$\rho$は窓口利用率を表す． 提案手法では$\rho$には0より大きく1未満の任意の値を設定することができる．">
-<meta property="og:title" content="Kaburaya AutoScaler: 多環境での運用性を考慮した自律適応型オートスケーリング制御系">
-<meta property="og:url" content="https://blog.monochromegane.com/blog/2019/10/04/wsa5_kaburaya_autoscaler/">
-<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-<link rel=stylesheet href=/css/reset.css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
-<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
-<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
-<link rel=stylesheet href=/css/text.css>
-<link rel=stylesheet href=/css/color.css>
-<link rel=stylesheet href=/css/layout.css>
-<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
-<link rel="shortcut icon" href=/images/favicon.ico>
-<link rel=canonical href=https://blog.monochromegane.com/blog/2019/10/04/wsa5_kaburaya_autoscaler/>
-<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
-</head>
-<body>
-<div class=header>
-<header>
-<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
-<nav>
-<ul class=menu>
-<li><a href=/self-introduction/>Home</a></li>
-<li><a href=/post/>Archives</a></li>
-<li><a href=/diary/>Diary</a></li>
-<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
-</ul>
-</nav>
-</header>
-</div>
-<div class=container>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/blog/2019/10/04/wsa5_kaburaya_autoscaler/>Kaburaya AutoScaler: 多環境での運用性を考慮した自律適応型オートスケーリング制御系</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2019-10-04</div></time>
-</header>
-<div class=post-inner>
-<p>このエントリは、<a href=https://websystemarchitecture.hatenablog.jp/entry/2019/07/30/172650>第五回 Web System Architecture 研究会 (WSA研)</a>の予稿です。</p>
-<h1 id=はじめに>はじめに</h1>
-<p>Webサービスの運用において，急激なアクセス頻度の上昇に対する安定性を保つため，Webアプリケーションにスケーラビリティの仕組みが一般的に求められるようになった．
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>Kaburaya AutoScaler: 多環境での運用性を考慮した自律適応型オートスケーリング制御系 &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content='このエントリは、第五回 Web System Architecture 研究会 (WSA研)の予稿です。
+はじめに
+Webサービスの運用において，急激なアクセス頻度の上昇に対する安定性を保つため，Webアプリケーションにスケーラビリティの仕組みが一般的に求められるようになった．
 これを支援するためにWebアプリケーションを稼働させるクラウドサービスやオーケストレーションツールから，オートスケーリング機能が提供されている．
 これらのオートスケーリング機能では，開発運用者が予め定めた条件を元にWebアプリケーションの状況が監視される．
-そうして，条件を満たせば，開発運用者が予め定めたスケール方法とその実施量に従いWebアプリケーションをスケールさせる．</p>
-<p>このようにオートスケーリングによって，ユーザからのリクエスト数の増減に応じて最適なサーバ台数を調整されることで利用者の快適さと情報システムの運用コストを両立できるようになった．
+そうして，条件を満たせば，開発運用者が予め定めたスケール方法とその実施量に従いWebアプリケーションをスケールさせる．
+このようにオートスケーリングによって，ユーザからのリクエスト数の増減に応じて最適なサーバ台数を調整されることで利用者の快適さと情報システムの運用コストを両立できるようになった．
 一方で，オートスケーリングを導入し，継続的に安定した運用するためには開発運用者の運用努力が必要であるが，これらは管理する環境の増加に従い困難になる．
-そのため，多環境での運用性を考慮した自動化可能なオートスケーリング戦略が求められる．</p>
-<p>オートスケーリングの継続的に安定した運用に向けた課題は大きく二つある．
-一つ目は，アプリケーション特性の把握，二つ目は，“遅れ”の考慮である．</p>
-<h2 id=課題1-アプリケーション特性の把握>課題1: アプリケーション特性の把握</h2>
-<p>スケールにはWebアプリケーションを稼働する仮想サーバへリソースを追加する垂直スケール（スケールアップ），稼働する仮想サーバを追加する水平スケール（スケールアウト）の2種類の方法がある．
+そのため，多環境での運用性を考慮した自動化可能なオートスケーリング戦略が求められる．
+オートスケーリングの継続的に安定した運用に向けた課題は大きく二つある．
+一つ目は，アプリケーション特性の把握，二つ目は，“遅れ”の考慮である．
+課題1: アプリケーション特性の把握
+スケールにはWebアプリケーションを稼働する仮想サーバへリソースを追加する垂直スケール（スケールアップ），稼働する仮想サーバを追加する水平スケール（スケールアウト）の2種類の方法がある．
 しかしながら，どちらの方法を用いるにせよ，開発運用者はWebアプリケーションの特性に応じたオートスケーリングの条件やその実施量を予め定める必要がある．
 例えば，時刻ベースであればアクセス頻度の時系列的傾向や，リソース変動ベースであればボトルネックとなるメトリクスである．
 また，これらの条件に対する必要台数の算出も必要となる．
-Webアプリケーションは常に変更が加わることから，手動での継続的な特性の把握と決定は運用負荷の面で現実的ではない．</p>
-<p>そこで，特性把握の自動化が行われている．
+Webアプリケーションは常に変更が加わることから，手動での継続的な特性の把握と決定は運用負荷の面で現実的ではない．
+そこで，特性把握の自動化が行われている．
 三宅らは，過去のアクセス頻度のデータからLSTMを用いて24時間先までの1時間単位のアクセス頻度を予測するモデルを構築し，予測アクセス頻度を元に経験から得られたサーバ単位のスループットにより必要なサーバ台数を求めた[1]．
 スループットの把握では，パラメタを連続的に変化させながら最良の結果を得る値を探索的に求める方法も提案されている[2]．
 これらの予測的，探索的なアプローチによる特性把握の自動化により，変化する環境に対する追従性は向上する．
-一方で，事前的なアプローチであるため，予測の誤差，探索を行った環境と本番環境の誤差に対処できないという課題が残る．</p>
-<p>そのため，三宅らはフィードバック制御による個別の特性把握を必要としないアプローチ[3][4]を提案した．
+一方で，事前的なアプローチであるため，予測の誤差，探索を行った環境と本番環境の誤差に対処できないという課題が残る．
+そのため，三宅らはフィードバック制御による個別の特性把握を必要としないアプローチ[3][4]を提案した．
 この手法では，直近のレスポンスタイムが均衡する点に収束するような台数調整によって特性把握が不要で実行時に誤差を修正することができる．
 ただし，フィードバック制御を用いるため，制御量であるサーバ台数の決定は探索的である．
-待ち行列理論によれば窓口利用率が1を超えると待ち行列は収束しないとされていることから，サーバ台数は即時かつ決定的に求められることが望ましい．</p>
-<h2 id=課題2-遅れの考慮>課題2: “遅れ”の考慮</h2>
-<p>オートスケーリングでは，本番環境の誤差に対応するための即応的なアプローチを採用すると"遅れ"の課題が発生する．
+待ち行列理論によれば窓口利用率が1を超えると待ち行列は収束しないとされていることから，サーバ台数は即時かつ決定的に求められることが望ましい．
+課題2: “遅れ”の考慮
+オートスケーリングでは，本番環境の誤差に対応するための即応的なアプローチを採用すると"遅れ"の課題が発生する．
 一つ目の遅れは，負荷上昇からサーバ台数を見積もるまでの時間差である．
 本稿ではこれを「入力の遅れ」と呼ぶ．
 次はサーバ台数の変更指示から起動までの時間差である．
 本稿ではこれを「出力の遅れ」と呼ぶ．
 待ち行列理論によれば窓口利用率が1を超えると待ち行列は収束しないとされていることから，これらの遅れに対して発生した待ちリクエストが系の安定性を崩す．
-安定性の低下は開発運用者による不定期な対応を要請し，運用負荷につながることからこれを回避する必要がある．</p>
-<p>そのために，遅れを最小化する手法が適用される．
+安定性の低下は開発運用者による不定期な対応を要請し，運用負荷につながることからこれを回避する必要がある．
+そのために，遅れを最小化する手法が適用される．
 入力の遅れでは，変化点検出などにより負荷上昇を即時に察知する方式がある．
 また，出力の遅れではCRIUを利用することで起動までの時間を短縮する方式[5]がある．
-しかしながら，精度の観点やシステム制約によって遅れを0にはできないため，遅れそのものに対する対策は必要となる．</p>
-<p>遅れを踏まえた準備では，前述の予測的なアプローチが考えられる．
+しかしながら，精度の観点やシステム制約によって遅れを0にはできないため，遅れそのものに対する対策は必要となる．
+遅れを踏まえた準備では，前述の予測的なアプローチが考えられる．
 三宅らの手法[1]では，予測と事前起動によりこれらの遅れを考慮するが，本番環境の誤差への課題が残る．
 そこで，スミスの予測法[6]のようにフィードバック制御において遅れによる影響を踏まえた制御量を算出する手法がある．
-一方で，予測のためには精度の高い予測モデルの構築が必要であり，追従にはここの自動化が必須となる．</p>
-<h1 id=提案手法>提案手法</h1>
-<p>多環境での運用性を考慮したアプリケーション特性の把握の自動化と安定性の両立のためには，以下の要件が必要となる．</p>
-<ol>
-<li>Webアプリケーション特性として負荷に対する実施量の関係が把握できる</li>
-<li>これを不必要な負荷をかけることなく実行時に自動で把握できる</li>
-<li>把握したWebアプリケーション特性と実環境に誤差が生じた場合に修正できる</li>
-<li>これを実現するリアクティブなアプローチで発生する”遅れ”へ対処できる</li>
-</ol>
-<p>そこで，フィードフォワード制御を中心とし，実環境の特性把握・追従のためにフィードバック制御を組み込んだ2自由度のオートスケーリング制御系を提案する．
+一方で，予測のためには精度の高い予測モデルの構築が必要であり，追従にはここの自動化が必須となる．
+提案手法
+多環境での運用性を考慮したアプリケーション特性の把握の自動化と安定性の両立のためには，以下の要件が必要となる．
+
+Webアプリケーション特性として負荷に対する実施量の関係が把握できる
+これを不必要な負荷をかけることなく実行時に自動で把握できる
+把握したWebアプリケーション特性と実環境に誤差が生じた場合に修正できる
+これを実現するリアクティブなアプローチで発生する”遅れ”へ対処できる
+
+そこで，フィードフォワード制御を中心とし，実環境の特性把握・追従のためにフィードバック制御を組み込んだ2自由度のオートスケーリング制御系を提案する．
 提案手法により，特性把握・追従の自動化ならびに待ち行列理論を用いた決定的な台数算出・遅れ補償による安定化が見込める．
-なお，本提案手法の実装はKaburaya AutoScalerとして，OSSでの公開・開発を続けている．</p>
-<ul>
-<li><a href=https://github.com/monochromegane/kaburaya-autoscaler>monochromegane/kaburaya-autoscaler</a></li>
-</ul>
-<p>提案手法では，Webアプリケーション特性を求めるにあたって低負荷時では理想的なレスポンスタイム，高負荷時ではスループット限界を用いることで対象のWebアプリケーションに不必要な負荷をかけることなく現状に即したWebアプリケーション特性を把握することができる．
-また，仮想サーバ起動までの遅れに伴う負荷状況を予測し，これを見越した実施量を見積もる遅れ補償機構を設けた．</p>
-<p>提案手法のアーキテクチャを以下に示す．</p>
-<p><img src=https://user-images.githubusercontent.com/1845486/65784527-35289080-e18d-11e9-98eb-a155ed8967cc.png alt="Kaburaya AutoScaler Architecture"></p>
-<p>ここで$F$はフィードフォワード制御部である． 現状の負荷状況に応じて実施量であるサーバ台数を算出する．
+なお，本提案手法の実装はKaburaya AutoScalerとして，OSSでの公開・開発を続けている．
+
+monochromegane/kaburaya-autoscaler
+
+提案手法では，Webアプリケーション特性を求めるにあたって低負荷時では理想的なレスポンスタイム，高負荷時ではスループット限界を用いることで対象のWebアプリケーションに不必要な負荷をかけることなく現状に即したWebアプリケーション特性を把握することができる．
+また，仮想サーバ起動までの遅れに伴う負荷状況を予測し，これを見越した実施量を見積もる遅れ補償機構を設けた．
+提案手法のアーキテクチャを以下に示す．
+
+ここで$F$はフィードフォワード制御部である． 現状の負荷状況に応じて実施量であるサーバ台数を算出する．
 算出には待ち行列理論の窓口利用率を求める式を変形した$\lambda/\rho\mu$を用いる．
 なお，$\lambda$は平均到着率（req/単位時間），$\mu$は平均サービス率（req/単位時間），$\rho$は窓口利用率を表す．
-提案手法では$\rho$には0より大きく1未満の任意の値を設定することができる．</p>
-<p>$P$はプラントであり，$F$で求めたサーバ台数を用いて実際にWebサービスを運用する実環境である．
+提案手法では$\rho$には0より大きく1未満の任意の値を設定することができる．'><meta property="og:title" content="Kaburaya AutoScaler: 多環境での運用性を考慮した自律適応型オートスケーリング制御系"><meta property="og:url" content="https://blog.monochromegane.com/blog/2019/10/04/wsa5_kaburaya_autoscaler/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2019/10/04/wsa5_kaburaya_autoscaler/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2019/10/04/wsa5_kaburaya_autoscaler/>Kaburaya AutoScaler: 多環境での運用性を考慮した自律適応型オートスケーリング制御系</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2019-10-04</div></time></header><div class=post-inner><p>このエントリは、<a href=https://websystemarchitecture.hatenablog.jp/entry/2019/07/30/172650>第五回 Web System Architecture 研究会 (WSA研)</a>の予稿です。</p><h1 id=はじめに>はじめに</h1><p>Webサービスの運用において，急激なアクセス頻度の上昇に対する安定性を保つため，Webアプリケーションにスケーラビリティの仕組みが一般的に求められるようになった．
+これを支援するためにWebアプリケーションを稼働させるクラウドサービスやオーケストレーションツールから，オートスケーリング機能が提供されている．
+これらのオートスケーリング機能では，開発運用者が予め定めた条件を元にWebアプリケーションの状況が監視される．
+そうして，条件を満たせば，開発運用者が予め定めたスケール方法とその実施量に従いWebアプリケーションをスケールさせる．</p><p>このようにオートスケーリングによって，ユーザからのリクエスト数の増減に応じて最適なサーバ台数を調整されることで利用者の快適さと情報システムの運用コストを両立できるようになった．
+一方で，オートスケーリングを導入し，継続的に安定した運用するためには開発運用者の運用努力が必要であるが，これらは管理する環境の増加に従い困難になる．
+そのため，多環境での運用性を考慮した自動化可能なオートスケーリング戦略が求められる．</p><p>オートスケーリングの継続的に安定した運用に向けた課題は大きく二つある．
+一つ目は，アプリケーション特性の把握，二つ目は，“遅れ”の考慮である．</p><h2 id=課題1-アプリケーション特性の把握>課題1: アプリケーション特性の把握</h2><p>スケールにはWebアプリケーションを稼働する仮想サーバへリソースを追加する垂直スケール（スケールアップ），稼働する仮想サーバを追加する水平スケール（スケールアウト）の2種類の方法がある．
+しかしながら，どちらの方法を用いるにせよ，開発運用者はWebアプリケーションの特性に応じたオートスケーリングの条件やその実施量を予め定める必要がある．
+例えば，時刻ベースであればアクセス頻度の時系列的傾向や，リソース変動ベースであればボトルネックとなるメトリクスである．
+また，これらの条件に対する必要台数の算出も必要となる．
+Webアプリケーションは常に変更が加わることから，手動での継続的な特性の把握と決定は運用負荷の面で現実的ではない．</p><p>そこで，特性把握の自動化が行われている．
+三宅らは，過去のアクセス頻度のデータからLSTMを用いて24時間先までの1時間単位のアクセス頻度を予測するモデルを構築し，予測アクセス頻度を元に経験から得られたサーバ単位のスループットにより必要なサーバ台数を求めた[1]．
+スループットの把握では，パラメタを連続的に変化させながら最良の結果を得る値を探索的に求める方法も提案されている[2]．
+これらの予測的，探索的なアプローチによる特性把握の自動化により，変化する環境に対する追従性は向上する．
+一方で，事前的なアプローチであるため，予測の誤差，探索を行った環境と本番環境の誤差に対処できないという課題が残る．</p><p>そのため，三宅らはフィードバック制御による個別の特性把握を必要としないアプローチ[3][4]を提案した．
+この手法では，直近のレスポンスタイムが均衡する点に収束するような台数調整によって特性把握が不要で実行時に誤差を修正することができる．
+ただし，フィードバック制御を用いるため，制御量であるサーバ台数の決定は探索的である．
+待ち行列理論によれば窓口利用率が1を超えると待ち行列は収束しないとされていることから，サーバ台数は即時かつ決定的に求められることが望ましい．</p><h2 id=課題2-遅れの考慮>課題2: “遅れ”の考慮</h2><p>オートスケーリングでは，本番環境の誤差に対応するための即応的なアプローチを採用すると"遅れ"の課題が発生する．
+一つ目の遅れは，負荷上昇からサーバ台数を見積もるまでの時間差である．
+本稿ではこれを「入力の遅れ」と呼ぶ．
+次はサーバ台数の変更指示から起動までの時間差である．
+本稿ではこれを「出力の遅れ」と呼ぶ．
+待ち行列理論によれば窓口利用率が1を超えると待ち行列は収束しないとされていることから，これらの遅れに対して発生した待ちリクエストが系の安定性を崩す．
+安定性の低下は開発運用者による不定期な対応を要請し，運用負荷につながることからこれを回避する必要がある．</p><p>そのために，遅れを最小化する手法が適用される．
+入力の遅れでは，変化点検出などにより負荷上昇を即時に察知する方式がある．
+また，出力の遅れではCRIUを利用することで起動までの時間を短縮する方式[5]がある．
+しかしながら，精度の観点やシステム制約によって遅れを0にはできないため，遅れそのものに対する対策は必要となる．</p><p>遅れを踏まえた準備では，前述の予測的なアプローチが考えられる．
+三宅らの手法[1]では，予測と事前起動によりこれらの遅れを考慮するが，本番環境の誤差への課題が残る．
+そこで，スミスの予測法[6]のようにフィードバック制御において遅れによる影響を踏まえた制御量を算出する手法がある．
+一方で，予測のためには精度の高い予測モデルの構築が必要であり，追従にはここの自動化が必須となる．</p><h1 id=提案手法>提案手法</h1><p>多環境での運用性を考慮したアプリケーション特性の把握の自動化と安定性の両立のためには，以下の要件が必要となる．</p><ol><li>Webアプリケーション特性として負荷に対する実施量の関係が把握できる</li><li>これを不必要な負荷をかけることなく実行時に自動で把握できる</li><li>把握したWebアプリケーション特性と実環境に誤差が生じた場合に修正できる</li><li>これを実現するリアクティブなアプローチで発生する”遅れ”へ対処できる</li></ol><p>そこで，フィードフォワード制御を中心とし，実環境の特性把握・追従のためにフィードバック制御を組み込んだ2自由度のオートスケーリング制御系を提案する．
+提案手法により，特性把握・追従の自動化ならびに待ち行列理論を用いた決定的な台数算出・遅れ補償による安定化が見込める．
+なお，本提案手法の実装はKaburaya AutoScalerとして，OSSでの公開・開発を続けている．</p><ul><li><a href=https://github.com/monochromegane/kaburaya-autoscaler>monochromegane/kaburaya-autoscaler</a></li></ul><p>提案手法では，Webアプリケーション特性を求めるにあたって低負荷時では理想的なレスポンスタイム，高負荷時ではスループット限界を用いることで対象のWebアプリケーションに不必要な負荷をかけることなく現状に即したWebアプリケーション特性を把握することができる．
+また，仮想サーバ起動までの遅れに伴う負荷状況を予測し，これを見越した実施量を見積もる遅れ補償機構を設けた．</p><p>提案手法のアーキテクチャを以下に示す．</p><p><img src=https://user-images.githubusercontent.com/1845486/65784527-35289080-e18d-11e9-98eb-a155ed8967cc.png alt="Kaburaya AutoScaler Architecture"></p><p>ここで$F$はフィードフォワード制御部である． 現状の負荷状況に応じて実施量であるサーバ台数を算出する．
+算出には待ち行列理論の窓口利用率を求める式を変形した$\lambda/\rho\mu$を用いる．
+なお，$\lambda$は平均到着率（req/単位時間），$\mu$は平均サービス率（req/単位時間），$\rho$は窓口利用率を表す．
+提案手法では$\rho$には0より大きく1未満の任意の値を設定することができる．</p><p>$P$はプラントであり，$F$で求めたサーバ台数を用いて実際にWebサービスを運用する実環境である．
 提案手法では実環境の計測誤差をフィードバックすることで自動かつ継続的な安定性を保つ． $P$は計測結果として単位時間での平均レスポンスタイムである$T_s$と単位時間での1台あたりの処理数である$\mu$を返却する．
-これらの値は，$F$における新しい$\mu$に用いられる．</p>
-<p>提案手法では仮想サーバ起動までの遅れに伴う負荷状況を予測し，これを見越した実施量を見積もる遅れ補償機構を設けた．
+これらの値は，$F$における新しい$\mu$に用いられる．</p><p>提案手法では仮想サーバ起動までの遅れに伴う負荷状況を予測し，これを見越した実施量を見積もる遅れ補償機構を設けた．
 待ち行列理論では無限時間の平均した待ち時間を求めるため，窓口利用率が1以上の場合に発散し，理論を適用することができない．
 一方で，遅れ時間は有限であることから，窓口利用率が1以上の場合であっても待ち行列の長さを求めることができると考えた．
-そこで$(\lambda^{t-1}-s^{t-1}\mu^{t-1})\gamma$のように不足処理能力による待ち行列の長さとて加えて，これを捌くことができるサーバ台数を求めている．</p>
-<h1 id=評価>評価</h1>
-<p>プラントのシミュレータを使って提案手法によるオートスケーリングの自律・適応の性能を評価した．</p>
-<p><img src=https://user-images.githubusercontent.com/1845486/65784472-16c29500-e18d-11e9-9fee-718bac3bbdbd.png alt=Evaluation></p>
-<p>右下のグラフにより$\mu$の推定・追従が行えていること，左上のグラフにより遅れ補償が働きアクセス増加時に一時的に多いサーバを投入することで収束できていることが確認できる．
-個別の評価についてはスライドを参照されたい．</p>
-<h1 id=発表スライド>発表スライド</h1>
-<h1 id=まとめ>まとめ</h1>
-<p>本研究会ではオートスケーリングと開発運用者間の関係をなめらかにするための多環境での運用を考慮した自律適応型オートスケーリング制御系を提案した．
+そこで$(\lambda^{t-1}-s^{t-1}\mu^{t-1})\gamma$のように不足処理能力による待ち行列の長さとて加えて，これを捌くことができるサーバ台数を求めている．</p><h1 id=評価>評価</h1><p>プラントのシミュレータを使って提案手法によるオートスケーリングの自律・適応の性能を評価した．</p><p><img src=https://user-images.githubusercontent.com/1845486/65784472-16c29500-e18d-11e9-9fee-718bac3bbdbd.png alt=Evaluation></p><p>右下のグラフにより$\mu$の推定・追従が行えていること，左上のグラフにより遅れ補償が働きアクセス増加時に一時的に多いサーバを投入することで収束できていることが確認できる．
+個別の評価についてはスライドを参照されたい．</p><h1 id=発表スライド>発表スライド</h1><h1 id=まとめ>まとめ</h1><p>本研究会ではオートスケーリングと開発運用者間の関係をなめらかにするための多環境での運用を考慮した自律適応型オートスケーリング制御系を提案した．
 評価ではM/M/Sモデルを前提としたプラントシミュレータによってこれらが達成可能なことを示した．
 実用化に向けて今後はプラントに実際のWebサーバ/アプリケーションサーバを適用した評価や実際の到着，サービス時間間隔に近い分布での評価が必要である．
-また，提案手法では入力の遅れに伴い単位時間内に待ちリクエストが必ず発生するため変化点検出などで遅れ時間自体を短縮する方式も検討したい．</p>
-<h1 id=発表を終えて>発表を終えて</h1>
-<p>今回のWSA研究会もとても面白かった．
+また，提案手法では入力の遅れに伴い単位時間内に待ちリクエストが必ず発生するため変化点検出などで遅れ時間自体を短縮する方式も検討したい．</p><h1 id=発表を終えて>発表を終えて</h1><p>今回のWSA研究会もとても面白かった．
 Webシステムアーキテクチャという題材で色々な分野の人が集まって議論することで持ち寄ったアイディアが前進して行くのを何度も見ている．
 自分自身の取り組みも研究としてWSA#3からWSA#4を通してGopherConで登壇できるぐらいに育った．
 加えて，今回は，オートスケーリングの課題に着目して新しいアプローチを試してみる中で，制御工学や待ち行列理論などを学び楽しめた．
 このような普段の研究から少し離れた取り組みであっても，定期的に発表を促されることで形にすることができるのはとても大切で，やりっぱなし学びっぱなしではなく一つの区切りまで考え実装することで次回以降の研究への糧となる．
-Webシステムアーキテクチャに関する運用知見を研究的アプローチで前進させること興味がある方は次回開催の参加を検討してみてはいかがでしょうか．</p>
-<ul>
-<li><a href=https://websystemarchitecture.hatenablog.jp/entry/2017/11/16/182041>Web System Architecture研究会の発足と挨拶</a></li>
-<li><a href=https://websystemarchitecture.hatenablog.jp/purpose>研究会の目的</a></li>
-</ul>
-<h1 id=リファレンス>リファレンス</h1>
-<ul>
-<li>[1]: 三宅 悠介, 松本 亮介, 力武 健次, 栗林 健太郎, アクセス頻度予測に基づく仮想サーバの計画的オートスケーリング, FIT 2018 第17回情報科学技術フォーラム, CL-002, Sep 2018.</li>
-<li>[2]: 全自動パラメータチューニングさん <a href=https://blog.mirakui.com/entry/2013/02/20/003401>https://blog.mirakui.com/entry/2013/02/20/003401</a></li>
-<li>[3]: Yusuke Miyake, Optimization for Number of goroutines Using Feedback Control, GopherCon Marriott Marquis San Diego Marina, California, July 2019.</li>
-<li>[4]: 三宅 悠介, Ebira: アクセス負荷に応じて継続的にスケーリング基準を最適化する汎用オートスケーリング機構, 第四回 Webシステムアーキテクチャ研究会, 2019年4月.</li>
-<li>[5]: 松本 亮介, 近藤 宇智朗, CRIUを利用したHTTPリクエスト単位でコンテナを再配置できる低コストで高速なスケジューリング手法, 研究報告インターネットと運用技術（IOT）, Vol.2019-IOT-44, pp.1-8, Feb 2019.</li>
-<li>[6]: O. Smith, &ldquo;Closer control of loops with dead time&rdquo;, Chemical engineering progress, Vol. 53, No. 5, pp. 217-219, 1957.</li>
-</ul>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/wsa%E7%A0%94>WSA研</a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<div class=social-btn>
-<div>
-<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2019/10/04/wsa5_kaburaya_autoscaler/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
-</div>
-<div>
-<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
-</div>
-</div>
-</div>
-<footer class=footer>
-<div class=author></div>
-<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
-<p>monochromegane (モノクロめがね) と申します。</p>
-<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-<ul class=social>
-<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
-<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
-<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
-</ul>
-<p class=copyright>
-<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
-</p>
-</footer>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
-<script>hljs.initHighlightingOnLoad()</script>
-<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
-</body>
-</html>
+Webシステムアーキテクチャに関する運用知見を研究的アプローチで前進させること興味がある方は次回開催の参加を検討してみてはいかがでしょうか．</p><ul><li><a href=https://websystemarchitecture.hatenablog.jp/entry/2017/11/16/182041>Web System Architecture研究会の発足と挨拶</a></li><li><a href=https://websystemarchitecture.hatenablog.jp/purpose>研究会の目的</a></li></ul><h1 id=リファレンス>リファレンス</h1><ul><li>[1]: 三宅 悠介, 松本 亮介, 力武 健次, 栗林 健太郎, アクセス頻度予測に基づく仮想サーバの計画的オートスケーリング, FIT 2018 第17回情報科学技術フォーラム, CL-002, Sep 2018.</li><li>[2]: 全自動パラメータチューニングさん <a href=https://blog.mirakui.com/entry/2013/02/20/003401>https://blog.mirakui.com/entry/2013/02/20/003401</a></li><li>[3]: Yusuke Miyake, Optimization for Number of goroutines Using Feedback Control, GopherCon Marriott Marquis San Diego Marina, California, July 2019.</li><li>[4]: 三宅 悠介, Ebira: アクセス負荷に応じて継続的にスケーリング基準を最適化する汎用オートスケーリング機構, 第四回 Webシステムアーキテクチャ研究会, 2019年4月.</li><li>[5]: 松本 亮介, 近藤 宇智朗, CRIUを利用したHTTPリクエスト単位でコンテナを再配置できる低コストで高速なスケジューリング手法, 研究報告インターネットと運用技術（IOT）, Vol.2019-IOT-44, pp.1-8, Feb 2019.</li><li>[6]: O. Smith, &ldquo;Closer control of loops with dead time&rdquo;, Chemical engineering progress, Vol. 53, No. 5, pp. 217-219, 1957.</li></ul></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/wsa%E7%A0%94>WSA研</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2019/10/04/wsa5_kaburaya_autoscaler/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

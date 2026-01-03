@@ -1,161 +1,54 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width">
-<meta name=author content>
-<title>[Ruby] ThorでWebAPIサービスを立ち上げるGem"トールハンマー"をつくった &#183; THINKING MEGANE</title>
-<meta name=twitter:card content="summary">
-<meta name=twitter:site content="@monochromegane">
-<meta property="og:description" content="コマンドラインツールをつくって、もっと多くのひとに気軽に利用してもらいたいとき、Webアプリとして作りなおすのが面倒だなーと思うことがあります。
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>[Ruby] ThorでWebAPIサービスを立ち上げるGem"トールハンマー"をつくった &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="コマンドラインツールをつくって、もっと多くのひとに気軽に利用してもらいたいとき、Webアプリとして作りなおすのが面倒だなーと思うことがあります。
 コマンドラインツールをそのままWebアプリとして使えるようにする仕組みが欲しくて、そんな Gem、ThorHammerトールハンマーをつくりました。
-Thorって？ Thor（トール、ソー、雷神）はRubyでコマンドラインツールをかんたんにつくるためのGemです。
-ThorHammerって？ ThorHammerはThorでつくったCLIをWebAPIにするGemです。
+
+Thorって？
+Thor（トール、ソー、雷神）はRubyでコマンドラインツールをかんたんにつくるためのGemです。
+
+ThorHammerって？
+ThorHammerはThorでつくったCLIをWebAPIにするGemです。
 マイティー・ソーが武器のハンマーをつかって、雷を広げて攻撃するように、ThorでつくったCLI機能をWebに広げるGemです。※1
-どう使うの？ ThorHammerは、RailsアプリとしてWebAPIを公開します。
-インストール Railsのプロジェクトを作成して、Gemfileに以下を追記します。
-gem 'thor_hammer' gem 'Your Thor CLI' # WebAPIとして公開するThorのCLI あとはbundle installでOKです。
-ジェネレータ ThorHammerは、WebAPIを作成するためのジェネレータを提供します。
-$ rails g thor_hammer:api ThorCliのクラス名 公開APIのパス 引数に指定する値は以下を参考にしてください。
-ThorCliのクラス名 第一引数は、Thor CLI の起点となるクラス名を指定します。 起点となるクラス名は、Thor を継承したクラスとして作成されているはずです。 また、モジュール名も必要になります。
-以下のような Thor CLI の場合、SampleThorCli::Runnerを指定します。
-module SampleThorCli class Runner < Thor # 中略 end end 公開APIのパス 第二引数は、WebAPIの公開時のパスを指定します。 省略時は、第一引数をunderscoreしたものが適用されます。
- 省略時  rails g thor_hammer:api SampleThorCli::Runner => http://hostname/sample_thor_cli/runner
- 指定時  rails g thor_hammer:api SampleThorCli::Runner api => http://hostname/api">
-<meta property="og:title" content="[Ruby] ThorでWebAPIサービスを立ち上げるGem&#34;トールハンマー&#34;をつくった">
-<meta property="og:url" content="https://blog.monochromegane.com/blog/2013/06/15/thor-hammer/">
-<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-<link rel=stylesheet href=/css/reset.css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
-<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
-<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
-<link rel=stylesheet href=/css/text.css>
-<link rel=stylesheet href=/css/color.css>
-<link rel=stylesheet href=/css/layout.css>
-<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
-<link rel="shortcut icon" href=/images/favicon.ico>
-<link rel=canonical href=https://blog.monochromegane.com/blog/2013/06/15/thor-hammer/>
-<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
-</head>
-<body>
-<div class=header>
-<header>
-<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
-<nav>
-<ul class=menu>
-<li><a href=/self-introduction/>Home</a></li>
-<li><a href=/post/>Archives</a></li>
-<li><a href=/diary/>Diary</a></li>
-<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
-</ul>
-</nav>
-</header>
-</div>
-<div class=container>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/blog/2013/06/15/thor-hammer/>[Ruby] ThorでWebAPIサービスを立ち上げるGem"トールハンマー"をつくった</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2013-06-15</div></time>
-</header>
-<div class=post-inner>
-<p>コマンドラインツールをつくって、もっと多くのひとに気軽に利用してもらいたいとき、Webアプリとして作りなおすのが面倒だなーと思うことがあります。</p>
-<p>コマンドラインツールをそのままWebアプリとして使えるようにする仕組みが欲しくて、そんな Gem、<code>ThorHammer</code>トールハンマーをつくりました。</p>
-<h1 id=thorって>Thorって？</h1>
-<p><a href=http://whatisthor.com/>Thor</a>（トール、ソー、雷神）はRubyでコマンドラインツールをかんたんにつくるためのGemです。</p>
-<h1 id=thorhammerって>ThorHammerって？</h1>
-<p><a href=https://github.com/monochromegane/thor_hammer>ThorHammer</a>はThorでつくったCLIをWebAPIにするGemです。</p>
-<p>マイティー・ソーが武器のハンマーをつかって、雷を広げて攻撃するように、ThorでつくったCLI機能をWebに広げるGemです。※1</p>
-<p><img src=/images/2013/06/thor_hammer.png alt="Thor Hammer"></p>
-<h1 id=どう使うの>どう使うの？</h1>
-<p>ThorHammerは、RailsアプリとしてWebAPIを公開します。</p>
-<h2 id=インストール>インストール</h2>
-<p>Railsのプロジェクトを作成して、Gemfileに以下を追記します。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby>gem <span style=color:#e6db74>&#39;thor_hammer&#39;</span>
-gem <span style=color:#e6db74>&#39;Your Thor CLI&#39;</span> <span style=color:#75715e># WebAPIとして公開するThorのCLI</span>
-</code></pre></div><p>あとは<code>bundle install</code>でOKです。</p>
-<h2 id=ジェネレータ>ジェネレータ</h2>
-<p>ThorHammerは、WebAPIを作成するためのジェネレータを提供します。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ rails g thor_hammer:api ThorCliのクラス名 公開APIのパス
-</code></pre></div><p>引数に指定する値は以下を参考にしてください。</p>
-<h3 id=thorcliのクラス名>ThorCliのクラス名</h3>
-<p>第一引数は、Thor CLI の起点となるクラス名を指定します。
+
+
+どう使うの？
+ThorHammerは、RailsアプリとしてWebAPIを公開します。
+インストール
+Railsのプロジェクトを作成して、Gemfileに以下を追記します。
+gem 'thor_hammer'
+gem 'Your Thor CLI' # WebAPIとして公開するThorのCLI
+あとはbundle installでOKです。
+ジェネレータ
+ThorHammerは、WebAPIを作成するためのジェネレータを提供します。
+$ rails g thor_hammer:api ThorCliのクラス名 公開APIのパス
+引数に指定する値は以下を参考にしてください。
+ThorCliのクラス名
+第一引数は、Thor CLI の起点となるクラス名を指定します。
 起点となるクラス名は、Thor を継承したクラスとして作成されているはずです。
-また、モジュール名も必要になります。</p>
-<p>以下のような Thor CLI の場合、<code>SampleThorCli::Runner</code>を指定します。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#66d9ef>module</span> SampleThorCli
-  <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Runner</span> <span style=color:#f92672>&lt;</span> <span style=color:#66d9ef>Thor</span>
-    <span style=color:#75715e># 中略</span>
-  <span style=color:#66d9ef>end</span>
-<span style=color:#66d9ef>end</span>
-</code></pre></div><h3 id=公開apiのパス>公開APIのパス</h3>
-<p>第二引数は、WebAPIの公開時のパスを指定します。
-省略時は、第一引数を<code>underscore</code>したものが適用されます。</p>
-<ul>
-<li>省略時</li>
-</ul>
-<p><code>rails g thor_hammer:api SampleThorCli::Runner</code> => <code>http://hostname/sample_thor_cli/runner</code></p>
-<ul>
-<li>指定時</li>
-</ul>
-<p><code>rails g thor_hammer:api SampleThorCli::Runner api</code> => <code>http://hostname/api</code></p>
-<h2 id=アクセス>アクセス</h2>
-<p>以上で、あなたのThor CLI がWebAPIとして公開する準備が整いました。
-<code>rails server</code>でRailsアプリを起動し、アクセスしてください。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ curl http://hostname/api/subcommand/arg1,arg2
-</code></pre></div><p>CLIとして利用した場合と同じ結果をそのまま取得することができます。（JSON, XML形式への対応は今後予定）</p>
-<h3 id=subcommand>subcommand</h3>
-<p>サブコマンドは、あなたのThor CLIのサブコマンドを指定します。</p>
-<h3 id=arg1arg2>arg1,arg2</h3>
-<p>サブコマンドに引数があれば、指定することができます。
-引数が複数の場合は、<code>,</code>を間に挟んで指定します。</p>
-<p>今はThor限定ですが、Rakeタスクなんかもできるようにして、CIと組み合わせると面白くなるかも。</p>
-<p>※1. はい、もちろん後付けです。</p>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/thor>thor</a></li>
-<li><a class=tag-link href=/tags/ruby>ruby</a></li>
-<li><a class=tag-link href=/tags/rails>rails</a></li>
-<li><a class=tag-link href=/tags/gem>gem</a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<div class=social-btn>
-<div>
-<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/06/15/thor-hammer/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
-</div>
-<div>
-<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
-</div>
-</div>
-</div>
-<footer class=footer>
-<div class=author></div>
-<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
-<p>monochromegane (モノクロめがね) と申します。</p>
-<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-<ul class=social>
-<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
-<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
-<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
-</ul>
-<p class=copyright>
-<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
-</p>
-</footer>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
-<script>hljs.initHighlightingOnLoad()</script>
-<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
-</body>
-</html>
+また、モジュール名も必要になります。
+以下のような Thor CLI の場合、SampleThorCli::Runnerを指定します。
+module SampleThorCli
+  class Runner < Thor
+    # 中略
+  end
+end
+公開APIのパス
+第二引数は、WebAPIの公開時のパスを指定します。
+省略時は、第一引数をunderscoreしたものが適用されます。
+
+省略時
+
+rails g thor_hammer:api SampleThorCli::Runner => http://hostname/sample_thor_cli/runner"><meta property="og:title" content='[Ruby] ThorでWebAPIサービスを立ち上げるGem"トールハンマー"をつくった'><meta property="og:url" content="https://blog.monochromegane.com/blog/2013/06/15/thor-hammer/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2013/06/15/thor-hammer/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2013/06/15/thor-hammer/>[Ruby] ThorでWebAPIサービスを立ち上げるGem"トールハンマー"をつくった</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2013-06-15</div></time></header><div class=post-inner><p>コマンドラインツールをつくって、もっと多くのひとに気軽に利用してもらいたいとき、Webアプリとして作りなおすのが面倒だなーと思うことがあります。</p><p>コマンドラインツールをそのままWebアプリとして使えるようにする仕組みが欲しくて、そんな Gem、<code>ThorHammer</code>トールハンマーをつくりました。</p><h1 id=thorって>Thorって？</h1><p><a href=http://whatisthor.com/>Thor</a>（トール、ソー、雷神）はRubyでコマンドラインツールをかんたんにつくるためのGemです。</p><h1 id=thorhammerって>ThorHammerって？</h1><p><a href=https://github.com/monochromegane/thor_hammer>ThorHammer</a>はThorでつくったCLIをWebAPIにするGemです。</p><p>マイティー・ソーが武器のハンマーをつかって、雷を広げて攻撃するように、ThorでつくったCLI機能をWebに広げるGemです。※1</p><p><img src=/images/2013/06/thor_hammer.png alt="Thor Hammer"></p><h1 id=どう使うの>どう使うの？</h1><p>ThorHammerは、RailsアプリとしてWebAPIを公開します。</p><h2 id=インストール>インストール</h2><p>Railsのプロジェクトを作成して、Gemfileに以下を追記します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=display:flex><span>gem <span style=color:#e6db74>&#39;thor_hammer&#39;</span>
+</span></span><span style=display:flex><span>gem <span style=color:#e6db74>&#39;Your Thor CLI&#39;</span> <span style=color:#75715e># WebAPIとして公開するThorのCLI</span>
+</span></span></code></pre></div><p>あとは<code>bundle install</code>でOKです。</p><h2 id=ジェネレータ>ジェネレータ</h2><p>ThorHammerは、WebAPIを作成するためのジェネレータを提供します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ rails g thor_hammer:api ThorCliのクラス名 公開APIのパス
+</span></span></code></pre></div><p>引数に指定する値は以下を参考にしてください。</p><h3 id=thorcliのクラス名>ThorCliのクラス名</h3><p>第一引数は、Thor CLI の起点となるクラス名を指定します。
+起点となるクラス名は、Thor を継承したクラスとして作成されているはずです。
+また、モジュール名も必要になります。</p><p>以下のような Thor CLI の場合、<code>SampleThorCli::Runner</code>を指定します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=display:flex><span><span style=color:#66d9ef>module</span> SampleThorCli
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Runner</span> <span style=color:#f92672>&lt;</span> <span style=color:#66d9ef>Thor</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 中略</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>end</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>end</span>
+</span></span></code></pre></div><h3 id=公開apiのパス>公開APIのパス</h3><p>第二引数は、WebAPIの公開時のパスを指定します。
+省略時は、第一引数を<code>underscore</code>したものが適用されます。</p><ul><li>省略時</li></ul><p><code>rails g thor_hammer:api SampleThorCli::Runner</code> => <code>http://hostname/sample_thor_cli/runner</code></p><ul><li>指定時</li></ul><p><code>rails g thor_hammer:api SampleThorCli::Runner api</code> => <code>http://hostname/api</code></p><h2 id=アクセス>アクセス</h2><p>以上で、あなたのThor CLI がWebAPIとして公開する準備が整いました。
+<code>rails server</code>でRailsアプリを起動し、アクセスしてください。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ curl http://hostname/api/subcommand/arg1,arg2
+</span></span></code></pre></div><p>CLIとして利用した場合と同じ結果をそのまま取得することができます。（JSON, XML形式への対応は今後予定）</p><h3 id=subcommand>subcommand</h3><p>サブコマンドは、あなたのThor CLIのサブコマンドを指定します。</p><h3 id=arg1arg2>arg1,arg2</h3><p>サブコマンドに引数があれば、指定することができます。
+引数が複数の場合は、<code>,</code>を間に挟んで指定します。</p><p>今はThor限定ですが、Rakeタスクなんかもできるようにして、CIと組み合わせると面白くなるかも。</p><p>※1. はい、もちろん後付けです。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/thor>thor</a></li><li><a class=tag-link href=/tags/ruby>ruby</a></li><li><a class=tag-link href=/tags/rails>rails</a></li><li><a class=tag-link href=/tags/gem>gem</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/06/15/thor-hammer/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

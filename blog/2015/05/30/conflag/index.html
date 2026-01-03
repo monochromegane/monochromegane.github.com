@@ -1,161 +1,65 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width">
-<meta name=author content>
-<title>Go言語でコマンドラインオプションをさくっと設定ファイル対応させるライブラリをつくった &#183; THINKING MEGANE</title>
-<meta name=twitter:card content="summary">
-<meta name=twitter:site content="@monochromegane">
-<meta property="og:description" content="Goでコマンドラインオプションのあるツールを提供していると設定ファイルに定義できるようにしてほしいという要望が来ますが、意外とオプションと設定ファイルで定義が冗長になったりして煩わしいのでライブラリにしてみました。
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>Go言語でコマンドラインオプションをさくっと設定ファイル対応させるライブラリをつくった &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content='Goでコマンドラインオプションのあるツールを提供していると設定ファイルに定義できるようにしてほしいという要望が来ますが、意外とオプションと設定ファイルで定義が冗長になったりして煩わしいのでライブラリにしてみました。
+
 conf+flagでconflagです。
 いつものコードに 3行 追加するだけでコマンドラインオプションを設定ファイルに書いておけるようになります。
-使い方 以下のような感じで、flag.Parse()を実行する前に、設定ファイルからflagに設定する値を呼び出すコードを追加します。
-// フラグを定義します var procs int flag.IntVar(&procs, &#34;procs&#34;, runtime.NumCPU(), &#34;GOMAXPROCS&#34;) // コマンドラインオプションを解析する前に設定ファイルからフラグに値を設定します if args, err := conflag.ArgsFrom(&#34;/path/to/config.toml&#34;); err == nil { flag.CommandLine.Parse(args) } // コマンドラインオプションを解析します flag.Parse() 設定ファイルをつくります。ここではTOML形式の設定ファイルを使いました（その他の対応フォーマットは後述）
-procs = 2 この状態でコマンドラインオプションを渡さずに実行すると、設定ファイルに定義していた2がflagに設定されます。
-便利っぽい。
-flagの優先順位 flagの優先順位は
-コマンドラインオプション > 設定ファイルの値 > flagのデフォルト値 となります。
-上の例で言えば、こんな感じです。
-$ myapp -procs 3 # 設定ファイルあり procs => 3 $ myapp # 設定ファイルあり procs => 2 $ myapp # 設定ファイルなし procs => runtime.NumCPU() (flagのデフォルト値) オプションの位置 そのツール用の設定ファイルがコマンドラインオプションだけを設定するものとは限らないので、適宜階層化されていると思います。 conflagではArgsFrom関数に渡す引数で設定ファイル内でコマンドラインオプションを定義している場所を指定できます。">
-<meta property="og:title" content="Go言語でコマンドラインオプションをさくっと設定ファイル対応させるライブラリをつくった">
-<meta property="og:url" content="https://blog.monochromegane.com/blog/2015/05/30/conflag/">
-<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-<link rel=stylesheet href=/css/reset.css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
-<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
-<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
-<link rel=stylesheet href=/css/text.css>
-<link rel=stylesheet href=/css/color.css>
-<link rel=stylesheet href=/css/layout.css>
-<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
-<link rel="shortcut icon" href=/images/favicon.ico>
-<link rel=canonical href=https://blog.monochromegane.com/blog/2015/05/30/conflag/>
-<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
-</head>
-<body>
-<div class=header>
-<header>
-<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
-<nav>
-<ul class=menu>
-<li><a href=/self-introduction/>Home</a></li>
-<li><a href=/post/>Archives</a></li>
-<li><a href=/diary/>Diary</a></li>
-<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
-</ul>
-</nav>
-</header>
-</div>
-<div class=container>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/blog/2015/05/30/conflag/>Go言語でコマンドラインオプションをさくっと設定ファイル対応させるライブラリをつくった</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2015-05-30</div></time>
-</header>
-<div class=post-inner>
-<p>Goでコマンドラインオプションのあるツールを提供していると設定ファイルに定義できるようにしてほしいという要望が来ますが、意外とオプションと設定ファイルで定義が冗長になったりして煩わしいのでライブラリにしてみました。</p>
-<p>conf+flagで<code>conflag</code>です。</p>
-<p>いつものコードに <strong>3行</strong> 追加するだけでコマンドラインオプションを設定ファイルに書いておけるようになります。</p>
-<h2 id=使い方>使い方</h2>
-<p>以下のような感じで、flag.Parse()を実行する前に、設定ファイルからflagに設定する値を呼び出すコードを追加します。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#75715e>// フラグを定義します
-</span><span style=color:#75715e></span><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>procs</span> <span style=color:#66d9ef>int</span>
-<span style=color:#a6e22e>flag</span>.<span style=color:#a6e22e>IntVar</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>procs</span>, <span style=color:#e6db74>&#34;procs&#34;</span>, <span style=color:#a6e22e>runtime</span>.<span style=color:#a6e22e>NumCPU</span>(), <span style=color:#e6db74>&#34;GOMAXPROCS&#34;</span>)
+使い方
+以下のような感じで、flag.Parse()を実行する前に、設定ファイルからflagに設定する値を呼び出すコードを追加します。
+// フラグを定義します
+var procs int
+flag.IntVar(&amp;procs, "procs", runtime.NumCPU(), "GOMAXPROCS")
 
-<span style=color:#75715e>// コマンドラインオプションを解析する前に設定ファイルからフラグに値を設定します
-</span><span style=color:#75715e></span><span style=color:#66d9ef>if</span> <span style=color:#a6e22e>args</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>conflag</span>.<span style=color:#a6e22e>ArgsFrom</span>(<span style=color:#e6db74>&#34;/path/to/config.toml&#34;</span>); <span style=color:#a6e22e>err</span> <span style=color:#f92672>==</span> <span style=color:#66d9ef>nil</span> {
-	<span style=color:#a6e22e>flag</span>.<span style=color:#a6e22e>CommandLine</span>.<span style=color:#a6e22e>Parse</span>(<span style=color:#a6e22e>args</span>)
+// コマンドラインオプションを解析する前に設定ファイルからフラグに値を設定します
+if args, err := conflag.ArgsFrom("/path/to/config.toml"); err == nil {
+	flag.CommandLine.Parse(args)
 }
 
-<span style=color:#75715e>// コマンドラインオプションを解析します
-</span><span style=color:#75715e></span><span style=color:#a6e22e>flag</span>.<span style=color:#a6e22e>Parse</span>()
-</code></pre></div><p>設定ファイルをつくります。ここではTOML形式の設定ファイルを使いました（その他の対応フォーマットは後述）</p>
-<pre tabindex=0><code>procs = 2
-</code></pre><p>この状態でコマンドラインオプションを渡さずに実行すると、設定ファイルに定義していた<code>2</code>がflagに設定されます。</p>
-<p>便利っぽい。</p>
-<h3 id=flagの優先順位>flagの優先順位</h3>
-<p>flagの優先順位は</p>
-<p><code>コマンドラインオプション</code> > <code>設定ファイルの値</code> > <code>flagのデフォルト値</code> となります。</p>
-<p>上の例で言えば、こんな感じです。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ myapp -procs <span style=color:#ae81ff>3</span> <span style=color:#75715e># 設定ファイルあり procs =&gt; 3</span>
-$ myapp          <span style=color:#75715e># 設定ファイルあり procs =&gt; 2</span>
-$ myapp          <span style=color:#75715e># 設定ファイルなし procs =&gt; runtime.NumCPU() (flagのデフォルト値)</span>
-</code></pre></div><h3 id=オプションの位置>オプションの位置</h3>
-<p>そのツール用の設定ファイルがコマンドラインオプションだけを設定するものとは限らないので、適宜階層化されていると思います。
-conflagでは<code>ArgsFrom</code>関数に渡す引数で設定ファイル内でコマンドラインオプションを定義している場所を指定できます。</p>
-<p>このような設定ファイル構造の場合</p>
-<pre tabindex=0><code>[options]
-flag = &quot;value&quot;
+// コマンドラインオプションを解析します
+flag.Parse()
+設定ファイルをつくります。ここではTOML形式の設定ファイルを使いました（その他の対応フォーマットは後述）
+procs = 2
+この状態でコマンドラインオプションを渡さずに実行すると、設定ファイルに定義していた2がflagに設定されます。
+便利っぽい。
+flagの優先順位
+flagの優先順位は
+コマンドラインオプション > 設定ファイルの値 > flagのデフォルト値 となります。
+上の例で言えば、こんな感じです。
+$ myapp -procs 3 # 設定ファイルあり procs => 3
+$ myapp          # 設定ファイルあり procs => 2
+$ myapp          # 設定ファイルなし procs => runtime.NumCPU() (flagのデフォルト値)
+オプションの位置
+そのツール用の設定ファイルがコマンドラインオプションだけを設定するものとは限らないので、適宜階層化されていると思います。
+conflagではArgsFrom関数に渡す引数で設定ファイル内でコマンドラインオプションを定義している場所を指定できます。
+このような設定ファイル構造の場合
+[options]
+flag = "value"
 
 [other settings]
-hoge = &quot;fuga&quot;
-</code></pre><p>第二引数に<code>options</code>を指定します。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#75715e>// [options]の配下のみを解析します
-</span><span style=color:#75715e></span><span style=color:#a6e22e>conflag</span>.<span style=color:#a6e22e>ArgsFrom</span>(<span style=color:#e6db74>&#34;/path/to/config.toml&#34;</span>, <span style=color:#e6db74>&#34;options&#34;</span>)
-</code></pre></div><p>階層が深い場合は、第三引数以降に続けて指定してください。</p>
-<h3 id=ファイルフォーマット>ファイルフォーマット</h3>
-<p>現在のところファイルフォーマットは<code>TOML</code>と<code>JSON</code>に対応しています。
-YAMLやHCLなども使いたいと思われた方、PullRequestチャンスです。</p>
-<h2 id=インストール>インストール</h2>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ go get github.com/monochromegane/conflag
-</code></pre></div><p>です。</p>
-<hr>
-<h1 id=実装について>実装について</h1>
-<p>実装すごい簡単です。</p>
-<p>flagパッケージはデフォルトのFlagSetをCommandLineという名前で持っているのでそれに対してコマンドラインオプションを渡すことでflag.Parse()相当の処理が行えます。</p>
-<p>あとは設定ファイルからコマンドラインオプション一覧を生成して渡すだけ。
-conflagは生成するところまでを担当します。</p>
-<p>各種コマンドラインオプションの便利パッケージでも内部でflagパッケージ使っていれば実装によっては同じように利用できるかもしれません（できないかもしれません）</p>
-<hr>
-<h1 id=まとめ>まとめ</h1>
-<p>import文含めたら4行でした&mldr;</p>
-<p>今度<a href=https://github.com/monochromegane/the_platinum_searcher>プラチナサーチャー</a>でも導入してみようと思います。</p>
-<p>よければご利用ください。</p>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/golang>golang</a></li>
-<li><a class=tag-link href=/tags/conflag>conflag</a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<div class=social-btn>
-<div>
-<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2015/05/30/conflag/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
-</div>
-<div>
-<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
-</div>
-</div>
-</div>
-<footer class=footer>
-<div class=author></div>
-<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
-<p>monochromegane (モノクロめがね) と申します。</p>
-<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-<ul class=social>
-<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
-<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
-<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
-</ul>
-<p class=copyright>
-<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
-</p>
-</footer>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
-<script>hljs.initHighlightingOnLoad()</script>
-<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
-</body>
-</html>
+hoge = "fuga"
+第二引数にoptionsを指定します。'><meta property="og:title" content="Go言語でコマンドラインオプションをさくっと設定ファイル対応させるライブラリをつくった"><meta property="og:url" content="https://blog.monochromegane.com/blog/2015/05/30/conflag/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2015/05/30/conflag/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2015/05/30/conflag/>Go言語でコマンドラインオプションをさくっと設定ファイル対応させるライブラリをつくった</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2015-05-30</div></time></header><div class=post-inner><p>Goでコマンドラインオプションのあるツールを提供していると設定ファイルに定義できるようにしてほしいという要望が来ますが、意外とオプションと設定ファイルで定義が冗長になったりして煩わしいのでライブラリにしてみました。</p><p>conf+flagで<code>conflag</code>です。</p><p>いつものコードに <strong>3行</strong> 追加するだけでコマンドラインオプションを設定ファイルに書いておけるようになります。</p><h2 id=使い方>使い方</h2><p>以下のような感じで、flag.Parse()を実行する前に、設定ファイルからflagに設定する値を呼び出すコードを追加します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// フラグを定義します</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>procs</span> <span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>flag</span>.<span style=color:#a6e22e>IntVar</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>procs</span>, <span style=color:#e6db74>&#34;procs&#34;</span>, <span style=color:#a6e22e>runtime</span>.<span style=color:#a6e22e>NumCPU</span>(), <span style=color:#e6db74>&#34;GOMAXPROCS&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// コマンドラインオプションを解析する前に設定ファイルからフラグに値を設定します</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#a6e22e>args</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>conflag</span>.<span style=color:#a6e22e>ArgsFrom</span>(<span style=color:#e6db74>&#34;/path/to/config.toml&#34;</span>); <span style=color:#a6e22e>err</span> <span style=color:#f92672>==</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>flag</span>.<span style=color:#a6e22e>CommandLine</span>.<span style=color:#a6e22e>Parse</span>(<span style=color:#a6e22e>args</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// コマンドラインオプションを解析します</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>flag</span>.<span style=color:#a6e22e>Parse</span>()
+</span></span></code></pre></div><p>設定ファイルをつくります。ここではTOML形式の設定ファイルを使いました（その他の対応フォーマットは後述）</p><pre tabindex=0><code>procs = 2
+</code></pre><p>この状態でコマンドラインオプションを渡さずに実行すると、設定ファイルに定義していた<code>2</code>がflagに設定されます。</p><p>便利っぽい。</p><h3 id=flagの優先順位>flagの優先順位</h3><p>flagの優先順位は</p><p><code>コマンドラインオプション</code> > <code>設定ファイルの値</code> > <code>flagのデフォルト値</code> となります。</p><p>上の例で言えば、こんな感じです。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ myapp -procs <span style=color:#ae81ff>3</span> <span style=color:#75715e># 設定ファイルあり procs =&gt; 3</span>
+</span></span><span style=display:flex><span>$ myapp          <span style=color:#75715e># 設定ファイルあり procs =&gt; 2</span>
+</span></span><span style=display:flex><span>$ myapp          <span style=color:#75715e># 設定ファイルなし procs =&gt; runtime.NumCPU() (flagのデフォルト値)</span>
+</span></span></code></pre></div><h3 id=オプションの位置>オプションの位置</h3><p>そのツール用の設定ファイルがコマンドラインオプションだけを設定するものとは限らないので、適宜階層化されていると思います。
+conflagでは<code>ArgsFrom</code>関数に渡す引数で設定ファイル内でコマンドラインオプションを定義している場所を指定できます。</p><p>このような設定ファイル構造の場合</p><pre tabindex=0><code>[options]
+flag = &#34;value&#34;
+
+[other settings]
+hoge = &#34;fuga&#34;
+</code></pre><p>第二引数に<code>options</code>を指定します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// [options]の配下のみを解析します</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>conflag</span>.<span style=color:#a6e22e>ArgsFrom</span>(<span style=color:#e6db74>&#34;/path/to/config.toml&#34;</span>, <span style=color:#e6db74>&#34;options&#34;</span>)
+</span></span></code></pre></div><p>階層が深い場合は、第三引数以降に続けて指定してください。</p><h3 id=ファイルフォーマット>ファイルフォーマット</h3><p>現在のところファイルフォーマットは<code>TOML</code>と<code>JSON</code>に対応しています。
+YAMLやHCLなども使いたいと思われた方、PullRequestチャンスです。</p><h2 id=インストール>インストール</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ go get github.com/monochromegane/conflag
+</span></span></code></pre></div><p>です。</p><hr><h1 id=実装について>実装について</h1><p>実装すごい簡単です。</p><p>flagパッケージはデフォルトのFlagSetをCommandLineという名前で持っているのでそれに対してコマンドラインオプションを渡すことでflag.Parse()相当の処理が行えます。</p><p>あとは設定ファイルからコマンドラインオプション一覧を生成して渡すだけ。
+conflagは生成するところまでを担当します。</p><p>各種コマンドラインオプションの便利パッケージでも内部でflagパッケージ使っていれば実装によっては同じように利用できるかもしれません（できないかもしれません）</p><hr><h1 id=まとめ>まとめ</h1><p>import文含めたら4行でした&mldr;</p><p>今度<a href=https://github.com/monochromegane/the_platinum_searcher>プラチナサーチャー</a>でも導入してみようと思います。</p><p>よければご利用ください。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/golang>golang</a></li><li><a class=tag-link href=/tags/conflag>conflag</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2015/05/30/conflag/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

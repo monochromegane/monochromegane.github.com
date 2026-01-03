@@ -1,146 +1,51 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width">
-<meta name=author content>
-<title>MySQLのslow_logテーブルをサマライズするGemをつくった &#183; THINKING MEGANE</title>
-<meta name=twitter:card content="summary">
-<meta name=twitter:site content="@monochromegane">
-<meta property="og:description" content="MySQLにはログファイルに出力したスロークエリをサマライズするmysqldumpslowコマンドがあって重宝していたのですが、出力先をテーブルに変更すると使えなくなってしまったので、同じことができるmysql_dump_slowというGemをつくりました。
-使い方 ActiveRecordで取得したスローログを渡して使います。
-# ActiveRecordでmysql.slow_logテーブルのレコードを取得します logs = SlowLog.all # スローログをサマライズします summary = MysqlDumpSlow.summarize(logs) summary.each do |counter| # mysqldumpslowコマンド形式で出力することができます counter.to_mysqldumpslow # => Count: 2 Time=100s (200s) Lock=200s (400s) Rows=300 (600), 2hosts # SELECT * FROM T end to_mysqldumpを使って、サマリした結果ごとにmysqldumpslowコマンドの形式で出力することができます。
-社内ではこんな感じで前日分のスロークエリをSlackに通知するrakeタスクに組み込んで使っています。
-このように某清貧会会長に煽られるので緊張感もってスロークエリの撲滅に取り組んでいます。
-getter 自分で結果を整形して使いたい場合は、それぞれの total, average の値を取得できます。
-counter.total_query_time # => 100000 counter.average_query_time # => 100000 以下の値を取得可能です。
- total_count [ total | average ]_query_time [ total | average ]_lock_time [ total | average ]_rows_set user_hosts  サマリについて mysqldumpslowと同じ方式でサマライズします。">
-<meta property="og:title" content="MySQLのslow_logテーブルをサマライズするGemをつくった">
-<meta property="og:url" content="https://blog.monochromegane.com/blog/2015/07/20/mysql-dump-slow/">
-<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-<link rel=stylesheet href=/css/reset.css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
-<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
-<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
-<link rel=stylesheet href=/css/text.css>
-<link rel=stylesheet href=/css/color.css>
-<link rel=stylesheet href=/css/layout.css>
-<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
-<link rel="shortcut icon" href=/images/favicon.ico>
-<link rel=canonical href=https://blog.monochromegane.com/blog/2015/07/20/mysql-dump-slow/>
-<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
-</head>
-<body>
-<div class=header>
-<header>
-<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
-<nav>
-<ul class=menu>
-<li><a href=/self-introduction/>Home</a></li>
-<li><a href=/post/>Archives</a></li>
-<li><a href=/diary/>Diary</a></li>
-<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
-</ul>
-</nav>
-</header>
-</div>
-<div class=container>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/blog/2015/07/20/mysql-dump-slow/>MySQLのslow_logテーブルをサマライズするGemをつくった</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2015-07-20</div></time>
-</header>
-<div class=post-inner>
-<p>MySQLにはログファイルに出力したスロークエリをサマライズする<code>mysqldumpslow</code>コマンドがあって重宝していたのですが、出力先をテーブルに変更すると使えなくなってしまったので、同じことができるmysql_dump_slowというGemをつくりました。</p>
-<h1 id=使い方>使い方</h1>
-<p>ActiveRecordで取得したスローログを渡して使います。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#75715e># ActiveRecordでmysql.slow_logテーブルのレコードを取得します</span>
-logs <span style=color:#f92672>=</span> <span style=color:#66d9ef>SlowLog</span><span style=color:#f92672>.</span>all
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>MySQLのslow_logテーブルをサマライズするGemをつくった &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="MySQLにはログファイルに出力したスロークエリをサマライズするmysqldumpslowコマンドがあって重宝していたのですが、出力先をテーブルに変更すると使えなくなってしまったので、同じことができるmysql_dump_slowというGemをつくりました。
 
-<span style=color:#75715e># スローログをサマライズします</span>
-summary <span style=color:#f92672>=</span> <span style=color:#66d9ef>MysqlDumpSlow</span><span style=color:#f92672>.</span>summarize(logs)
-summary<span style=color:#f92672>.</span>each <span style=color:#66d9ef>do</span> <span style=color:#f92672>|</span>counter<span style=color:#f92672>|</span>
-  <span style=color:#75715e># mysqldumpslowコマンド形式で出力することができます</span>
-  counter<span style=color:#f92672>.</span>to_mysqldumpslow
-  <span style=color:#75715e># =&gt; Count: 2  Time=100s (200s)  Lock=200s (400s)  Rows=300 (600),  2hosts</span>
-  <span style=color:#75715e>#      SELECT * FROM T</span>
-<span style=color:#66d9ef>end</span>
-</code></pre></div><p><code>to_mysqldump</code>を使って、サマリした結果ごとに<code>mysqldumpslow</code>コマンドの形式で出力することができます。</p>
-<p>社内ではこんな感じで前日分のスロークエリをSlackに通知するrakeタスクに組み込んで使っています。</p>
-<p><img src=/images/2015/07/mysql_dump_slow.png alt=mysql\_dump\_slow></p>
-<p>このように某清貧会会長に煽られるので緊張感もってスロークエリの撲滅に取り組んでいます。</p>
-<h2 id=getter>getter</h2>
-<p>自分で結果を整形して使いたい場合は、それぞれの total, average の値を取得できます。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby>counter<span style=color:#f92672>.</span>total_query_time   <span style=color:#75715e># =&gt; 100000</span>
-counter<span style=color:#f92672>.</span>average_query_time <span style=color:#75715e># =&gt; 100000</span>
-</code></pre></div><p>以下の値を取得可能です。</p>
-<ul>
-<li>total_count</li>
-<li>[ total | average ]_query_time</li>
-<li>[ total | average ]_lock_time</li>
-<li>[ total | average ]_rows_set</li>
-<li>user_hosts</li>
-</ul>
-<h2 id=サマリについて>サマリについて</h2>
-<p><code>mysqldumpslow</code>と同じ方式でサマライズします。</p>
-<p>具体的には、同じクエリに対してそれぞれの実行時間、ロック時間、取得行数を集計し、合計、平均を求めます。</p>
-<p>また、クエリについてはパラメタを抽象化しており、条件の値が違うだけのクエリであれば同じクエリと見なします。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=color:#66d9ef>SELECT</span> <span style=color:#f92672>*</span> <span style=color:#66d9ef>FROM</span> <span style=color:#f92672>`</span>users<span style=color:#f92672>`</span> <span style=color:#66d9ef>WHERE</span> <span style=color:#f92672>`</span>users<span style=color:#f92672>`</span>.<span style=color:#f92672>`</span>name<span style=color:#f92672>`</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;hoge&#39;</span> <span style=color:#66d9ef>AND</span> <span style=color:#f92672>`</span>users<span style=color:#f92672>`</span>.<span style=color:#f92672>`</span>age<span style=color:#f92672>`</span> <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>20</span>
-</code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=color:#66d9ef>SELECT</span> <span style=color:#f92672>*</span> <span style=color:#66d9ef>FROM</span> <span style=color:#f92672>`</span>users<span style=color:#f92672>`</span> <span style=color:#66d9ef>WHERE</span> <span style=color:#f92672>`</span>users<span style=color:#f92672>`</span>.<span style=color:#f92672>`</span>name<span style=color:#f92672>`</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;fuga&#39;</span> <span style=color:#66d9ef>AND</span> <span style=color:#f92672>`</span>users<span style=color:#f92672>`</span>.<span style=color:#f92672>`</span>age<span style=color:#f92672>`</span> <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>30</span>
-</code></pre></div><p>のようなクエリは</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=color:#66d9ef>SELECT</span> <span style=color:#f92672>*</span> <span style=color:#66d9ef>FROM</span> <span style=color:#f92672>`</span>users<span style=color:#f92672>`</span> <span style=color:#66d9ef>WHERE</span> <span style=color:#f92672>`</span>users<span style=color:#f92672>`</span>.<span style=color:#f92672>`</span>name<span style=color:#f92672>`</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;S&#39;</span> <span style=color:#66d9ef>AND</span> <span style=color:#f92672>`</span>users<span style=color:#f92672>`</span>.<span style=color:#f92672>`</span>age<span style=color:#f92672>`</span> <span style=color:#f92672>&gt;</span> N
-</code></pre></div><p>のように抽象化され、同じクエリと見なします。</p>
-<h1 id=インストール>インストール</h1>
-<p>RubyGemsに公開しているのでGemfileに書いてbundle installすればOKです。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby>gem <span style=color:#e6db74>&#39;mysql_dump_slow&#39;</span>
-</code></pre></div><h1 id=まとめ>まとめ</h1>
-<p>ログファイルの場合、解析するためにファイルを取得する必要があって少し手間がかかっていたのが、テーブルに出力することでクエリで取得できるようになって取り扱いしやすくなりました。</p>
-<p>実装にあたっては同僚の<a href=https://github.com/mizoR>@mizoR</a>にいろいろアドバイスもらえて助かりました。Thanks!</p>
-<p>スロークエリが常に通知される状態になったことで、どんどん撲滅していくぞという空気が生まれるんじゃないかなと思ってます。よければ使ってみてください。</p>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/mysql>mysql</a></li>
-<li><a class=tag-link href=/tags/ruby>ruby</a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<div class=social-btn>
-<div>
-<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2015/07/20/mysql-dump-slow/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
-</div>
-<div>
-<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
-</div>
-</div>
-</div>
-<footer class=footer>
-<div class=author></div>
-<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
-<p>monochromegane (モノクロめがね) と申します。</p>
-<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-<ul class=social>
-<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
-<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
-<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
-</ul>
-<p class=copyright>
-<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
-</p>
-</footer>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
-<script>hljs.initHighlightingOnLoad()</script>
-<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
-</body>
-</html>
+使い方
+ActiveRecordで取得したスローログを渡して使います。
+# ActiveRecordでmysql.slow_logテーブルのレコードを取得します
+logs = SlowLog.all
+
+# スローログをサマライズします
+summary = MysqlDumpSlow.summarize(logs)
+summary.each do |counter|
+  # mysqldumpslowコマンド形式で出力することができます
+  counter.to_mysqldumpslow
+  # => Count: 2  Time=100s (200s)  Lock=200s (400s)  Rows=300 (600),  2hosts
+  #      SELECT * FROM T
+end
+to_mysqldumpを使って、サマリした結果ごとにmysqldumpslowコマンドの形式で出力することができます。
+社内ではこんな感じで前日分のスロークエリをSlackに通知するrakeタスクに組み込んで使っています。
+
+このように某清貧会会長に煽られるので緊張感もってスロークエリの撲滅に取り組んでいます。
+getter
+自分で結果を整形して使いたい場合は、それぞれの total, average の値を取得できます。
+counter.total_query_time   # => 100000
+counter.average_query_time # => 100000
+以下の値を取得可能です。
+
+total_count
+[ total | average ]_query_time
+[ total | average ]_lock_time
+[ total | average ]_rows_set
+user_hosts
+
+サマリについて
+mysqldumpslowと同じ方式でサマライズします。"><meta property="og:title" content="MySQLのslow_logテーブルをサマライズするGemをつくった"><meta property="og:url" content="https://blog.monochromegane.com/blog/2015/07/20/mysql-dump-slow/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2015/07/20/mysql-dump-slow/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2015/07/20/mysql-dump-slow/>MySQLのslow_logテーブルをサマライズするGemをつくった</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2015-07-20</div></time></header><div class=post-inner><p>MySQLにはログファイルに出力したスロークエリをサマライズする<code>mysqldumpslow</code>コマンドがあって重宝していたのですが、出力先をテーブルに変更すると使えなくなってしまったので、同じことができるmysql_dump_slowというGemをつくりました。</p><h1 id=使い方>使い方</h1><p>ActiveRecordで取得したスローログを渡して使います。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=display:flex><span><span style=color:#75715e># ActiveRecordでmysql.slow_logテーブルのレコードを取得します</span>
+</span></span><span style=display:flex><span>logs <span style=color:#f92672>=</span> <span style=color:#66d9ef>SlowLog</span><span style=color:#f92672>.</span>all
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># スローログをサマライズします</span>
+</span></span><span style=display:flex><span>summary <span style=color:#f92672>=</span> <span style=color:#66d9ef>MysqlDumpSlow</span><span style=color:#f92672>.</span>summarize(logs)
+</span></span><span style=display:flex><span>summary<span style=color:#f92672>.</span>each <span style=color:#66d9ef>do</span> <span style=color:#f92672>|</span>counter<span style=color:#f92672>|</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e># mysqldumpslowコマンド形式で出力することができます</span>
+</span></span><span style=display:flex><span>  counter<span style=color:#f92672>.</span>to_mysqldumpslow
+</span></span><span style=display:flex><span>  <span style=color:#75715e># =&gt; Count: 2  Time=100s (200s)  Lock=200s (400s)  Rows=300 (600),  2hosts</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>#      SELECT * FROM T</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>end</span>
+</span></span></code></pre></div><p><code>to_mysqldump</code>を使って、サマリした結果ごとに<code>mysqldumpslow</code>コマンドの形式で出力することができます。</p><p>社内ではこんな感じで前日分のスロークエリをSlackに通知するrakeタスクに組み込んで使っています。</p><p><img src=/images/2015/07/mysql_dump_slow.png alt=mysql_dump_slow></p><p>このように某清貧会会長に煽られるので緊張感もってスロークエリの撲滅に取り組んでいます。</p><h2 id=getter>getter</h2><p>自分で結果を整形して使いたい場合は、それぞれの total, average の値を取得できます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=display:flex><span>counter<span style=color:#f92672>.</span>total_query_time   <span style=color:#75715e># =&gt; 100000</span>
+</span></span><span style=display:flex><span>counter<span style=color:#f92672>.</span>average_query_time <span style=color:#75715e># =&gt; 100000</span>
+</span></span></code></pre></div><p>以下の値を取得可能です。</p><ul><li>total_count</li><li>[ total | average ]_query_time</li><li>[ total | average ]_lock_time</li><li>[ total | average ]_rows_set</li><li>user_hosts</li></ul><h2 id=サマリについて>サマリについて</h2><p><code>mysqldumpslow</code>と同じ方式でサマライズします。</p><p>具体的には、同じクエリに対してそれぞれの実行時間、ロック時間、取得行数を集計し、合計、平均を求めます。</p><p>また、クエリについてはパラメタを抽象化しており、条件の値が違うだけのクエリであれば同じクエリと見なします。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#66d9ef>SELECT</span> <span style=color:#f92672>*</span> <span style=color:#66d9ef>FROM</span> <span style=color:#f92672>`</span>users<span style=color:#f92672>`</span> <span style=color:#66d9ef>WHERE</span> <span style=color:#f92672>`</span>users<span style=color:#f92672>`</span>.<span style=color:#f92672>`</span>name<span style=color:#f92672>`</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;hoge&#39;</span> <span style=color:#66d9ef>AND</span> <span style=color:#f92672>`</span>users<span style=color:#f92672>`</span>.<span style=color:#f92672>`</span>age<span style=color:#f92672>`</span> <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>20</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#66d9ef>SELECT</span> <span style=color:#f92672>*</span> <span style=color:#66d9ef>FROM</span> <span style=color:#f92672>`</span>users<span style=color:#f92672>`</span> <span style=color:#66d9ef>WHERE</span> <span style=color:#f92672>`</span>users<span style=color:#f92672>`</span>.<span style=color:#f92672>`</span>name<span style=color:#f92672>`</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;fuga&#39;</span> <span style=color:#66d9ef>AND</span> <span style=color:#f92672>`</span>users<span style=color:#f92672>`</span>.<span style=color:#f92672>`</span>age<span style=color:#f92672>`</span> <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>30</span>
+</span></span></code></pre></div><p>のようなクエリは</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#66d9ef>SELECT</span> <span style=color:#f92672>*</span> <span style=color:#66d9ef>FROM</span> <span style=color:#f92672>`</span>users<span style=color:#f92672>`</span> <span style=color:#66d9ef>WHERE</span> <span style=color:#f92672>`</span>users<span style=color:#f92672>`</span>.<span style=color:#f92672>`</span>name<span style=color:#f92672>`</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;S&#39;</span> <span style=color:#66d9ef>AND</span> <span style=color:#f92672>`</span>users<span style=color:#f92672>`</span>.<span style=color:#f92672>`</span>age<span style=color:#f92672>`</span> <span style=color:#f92672>&gt;</span> N
+</span></span></code></pre></div><p>のように抽象化され、同じクエリと見なします。</p><h1 id=インストール>インストール</h1><p>RubyGemsに公開しているのでGemfileに書いてbundle installすればOKです。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=display:flex><span>gem <span style=color:#e6db74>&#39;mysql_dump_slow&#39;</span>
+</span></span></code></pre></div><h1 id=まとめ>まとめ</h1><p>ログファイルの場合、解析するためにファイルを取得する必要があって少し手間がかかっていたのが、テーブルに出力することでクエリで取得できるようになって取り扱いしやすくなりました。</p><p>実装にあたっては同僚の<a href=https://github.com/mizoR>@mizoR</a>にいろいろアドバイスもらえて助かりました。Thanks!</p><p>スロークエリが常に通知される状態になったことで、どんどん撲滅していくぞという空気が生まれるんじゃないかなと思ってます。よければ使ってみてください。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/mysql>mysql</a></li><li><a class=tag-link href=/tags/ruby>ruby</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2015/07/20/mysql-dump-slow/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

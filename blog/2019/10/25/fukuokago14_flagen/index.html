@@ -1,169 +1,84 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width">
-<meta name=author content>
-<title>コマンドラインオプションをパースするコードをコマンドラインオプションから生成するツールをつくった &#183; THINKING MEGANE</title>
-<meta name=twitter:card content="summary">
-<meta name=twitter:site content="@monochromegane">
-<meta property="og:description" content="コマンドラインオプションの形式は決まったけれども、パース処理を実装するために各言語やライブラリのドキュメントを読むことを繰り返していたので、この手間を省くためのツールをつくりました。
-flagenは、先に決めたコマンドラインオプションから、これを解析するための各言語用のコードを出力するツールです。 オプション名から変数名や変数の型、デフォルト値が決定されるため、汎用的なボイラーテンプレートと比較して編集の手間が少なくなります。 また、テンプレートによって任意の出力を行えるため、エディタや自前のボイラーテンプレート出力ツールとの連携が容易です。 使いやすくするため、プリセットのテンプレートとしてGo、Ruby、Python、Shellのものを提供しています。
-使い方 使い方は、テンプレートと実際に使う時のコマンドラインオプションを渡すだけです。
-$ flagen YOUR_TEMPLATE YOUR_COMMAND_LINE_OPTIONS... 例えば、
-$ flagen go --dist erlang -e k/l --lambda 1.5 -k 1 -v と指定すると、Go用のコマンドラインオプションの解析処理を出力します。
-var ( dist	string e	string lambda	float64 k	int v	bool ) func init() { flag.StringVar(&dist, &#34;dist&#34;, &#34;erlang&#34;, &#34;usage of dist&#34;) flag.StringVar(&e, &#34;e&#34;, &#34;k/l&#34;, &#34;usage of e&#34;) flag.Float64Var(&lambda, &#34;lambda&#34;, 1.5, &#34;usage of lambda&#34;) flag.IntVar(&k, &#34;k&#34;, 1, &#34;usage of k&#34;) flag.BoolVar(&v, &#34;v&#34;, false, &#34;usage of v&#34;) } 指定されたコマンドラインオプションから変数名、オプション名、型、デフォルト値が設定されることで編集の手間が極力ない状態になっています。">
-<meta property="og:title" content="コマンドラインオプションをパースするコードをコマンドラインオプションから生成するツールをつくった">
-<meta property="og:url" content="https://blog.monochromegane.com/blog/2019/10/25/fukuokago14_flagen/">
-<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-<link rel=stylesheet href=/css/reset.css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
-<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
-<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
-<link rel=stylesheet href=/css/text.css>
-<link rel=stylesheet href=/css/color.css>
-<link rel=stylesheet href=/css/layout.css>
-<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
-<link rel="shortcut icon" href=/images/favicon.ico>
-<link rel=canonical href=https://blog.monochromegane.com/blog/2019/10/25/fukuokago14_flagen/>
-<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
-</head>
-<body>
-<div class=header>
-<header>
-<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
-<nav>
-<ul class=menu>
-<li><a href=/self-introduction/>Home</a></li>
-<li><a href=/post/>Archives</a></li>
-<li><a href=/diary/>Diary</a></li>
-<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
-</ul>
-</nav>
-</header>
-</div>
-<div class=container>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/blog/2019/10/25/fukuokago14_flagen/>コマンドラインオプションをパースするコードをコマンドラインオプションから生成するツールをつくった</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2019-10-25</div></time>
-</header>
-<div class=post-inner>
-<p>コマンドラインオプションの形式は決まったけれども、パース処理を実装するために各言語やライブラリのドキュメントを読むことを繰り返していたので、この手間を省くためのツールをつくりました。</p>
-<p>flagenは、先に決めたコマンドラインオプションから、これを解析するための各言語用のコードを出力するツールです。
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>コマンドラインオプションをパースするコードをコマンドラインオプションから生成するツールをつくった &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content='コマンドラインオプションの形式は決まったけれども、パース処理を実装するために各言語やライブラリのドキュメントを読むことを繰り返していたので、この手間を省くためのツールをつくりました。
+
+flagenは、先に決めたコマンドラインオプションから、これを解析するための各言語用のコードを出力するツールです。
 オプション名から変数名や変数の型、デフォルト値が決定されるため、汎用的なボイラーテンプレートと比較して編集の手間が少なくなります。
 また、テンプレートによって任意の出力を行えるため、エディタや自前のボイラーテンプレート出力ツールとの連携が容易です。
-使いやすくするため、プリセットのテンプレートとしてGo、Ruby、Python、Shellのものを提供しています。</p>
-<h1 id=使い方>使い方</h1>
-<p>使い方は、テンプレートと実際に使う時のコマンドラインオプションを渡すだけです。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ flagen YOUR_TEMPLATE YOUR_COMMAND_LINE_OPTIONS...
-</code></pre></div><p>例えば、</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ flagen go --dist erlang -e k/l --lambda 1.5 -k <span style=color:#ae81ff>1</span> -v
-</code></pre></div><p>と指定すると、Go用のコマンドラインオプションの解析処理を出力します。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#66d9ef>var</span> (
-	<span style=color:#a6e22e>dist</span>	<span style=color:#66d9ef>string</span>
-	<span style=color:#a6e22e>e</span>	<span style=color:#66d9ef>string</span>
-	<span style=color:#a6e22e>lambda</span>	<span style=color:#66d9ef>float64</span>
-	<span style=color:#a6e22e>k</span>	<span style=color:#66d9ef>int</span>
-	<span style=color:#a6e22e>v</span>	<span style=color:#66d9ef>bool</span>
+使いやすくするため、プリセットのテンプレートとしてGo、Ruby、Python、Shellのものを提供しています。
+使い方
+使い方は、テンプレートと実際に使う時のコマンドラインオプションを渡すだけです。
+$ flagen YOUR_TEMPLATE YOUR_COMMAND_LINE_OPTIONS...
+例えば、
+$ flagen go --dist erlang -e k/l --lambda 1.5 -k 1 -v
+と指定すると、Go用のコマンドラインオプションの解析処理を出力します。
+var (
+	dist	string
+	e	string
+	lambda	float64
+	k	int
+	v	bool
 )
 
-<span style=color:#66d9ef>func</span> <span style=color:#a6e22e>init</span>() {
-	<span style=color:#a6e22e>flag</span>.<span style=color:#a6e22e>StringVar</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>dist</span>, <span style=color:#e6db74>&#34;dist&#34;</span>, <span style=color:#e6db74>&#34;erlang&#34;</span>, <span style=color:#e6db74>&#34;usage of dist&#34;</span>)
-	<span style=color:#a6e22e>flag</span>.<span style=color:#a6e22e>StringVar</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>e</span>, <span style=color:#e6db74>&#34;e&#34;</span>, <span style=color:#e6db74>&#34;k/l&#34;</span>, <span style=color:#e6db74>&#34;usage of e&#34;</span>)
-	<span style=color:#a6e22e>flag</span>.<span style=color:#a6e22e>Float64Var</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>lambda</span>, <span style=color:#e6db74>&#34;lambda&#34;</span>, <span style=color:#ae81ff>1.5</span>, <span style=color:#e6db74>&#34;usage of lambda&#34;</span>)
-	<span style=color:#a6e22e>flag</span>.<span style=color:#a6e22e>IntVar</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>k</span>, <span style=color:#e6db74>&#34;k&#34;</span>, <span style=color:#ae81ff>1</span>, <span style=color:#e6db74>&#34;usage of k&#34;</span>)
-	<span style=color:#a6e22e>flag</span>.<span style=color:#a6e22e>BoolVar</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>v</span>, <span style=color:#e6db74>&#34;v&#34;</span>, <span style=color:#66d9ef>false</span>, <span style=color:#e6db74>&#34;usage of v&#34;</span>)
+func init() {
+	flag.StringVar(&amp;dist, "dist", "erlang", "usage of dist")
+	flag.StringVar(&amp;e, "e", "k/l", "usage of e")
+	flag.Float64Var(&amp;lambda, "lambda", 1.5, "usage of lambda")
+	flag.IntVar(&amp;k, "k", 1, "usage of k")
+	flag.BoolVar(&amp;v, "v", false, "usage of v")
 }
-</code></pre></div><p>指定されたコマンドラインオプションから変数名、オプション名、型、デフォルト値が設定されることで編集の手間が極力ない状態になっています。</p>
-<p>Python、Ruby、Shellの例は<a href=https://godoc.org/github.com/monochromegane/flagen#pkg-examples>GodocのExamples</a>を参考にしてください。</p>
-<h1 id=テンプレート>テンプレート</h1>
-<p>テンプレートはGoの<a href=https://golang.org/pkg/text/template/>text/template</a>を利用して解析されます。
-テンプレート内では、<code>.Flags</code>（解析したオプションの情報）と<code>.Args</code>（残りのコマンドライン引数）が利用可能です。
-<code>.Flags</code>は<code>Name</code>と<code>Value</code>をもち、<code>Value</code>は更に<code>Type</code>と<code>Get</code>をもちます。</p>
-<p>以下は、解析したオプションの情報を列挙するシンプルなテンプレート(my.tmpl)です。</p>
-<pre tabindex=0><code>{{ range $flag := .Flags -}}
+指定されたコマンドラインオプションから変数名、オプション名、型、デフォルト値が設定されることで編集の手間が極力ない状態になっています。
+Python、Ruby、Shellの例はGodocのExamplesを参考にしてください。
+テンプレート
+テンプレートはGoのtext/templateを利用して解析されます。
+テンプレート内では、.Flags（解析したオプションの情報）と.Args（残りのコマンドライン引数）が利用可能です。
+.FlagsはNameとValueをもち、Valueは更にTypeとGetをもちます。
+以下は、解析したオプションの情報を列挙するシンプルなテンプレート(my.tmpl)です。
+{{ range $flag := .Flags -}}
   {{ $flag.Name }}={{ $flag.Value.Get}}({{ $flag.Value.Type }})
 {{ end }}
-</code></pre><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ flagen my.tmpl --dist erlang -e k/l --lambda 1.5 -k <span style=color:#ae81ff>1</span> -v
-</code></pre></div><p>このテンプレートから以下の出力を得ることができます</p>
-<pre tabindex=0><code>dist=erlang(string)
+$ flagen my.tmpl --dist erlang -e k/l --lambda 1.5 -k 1 -v
+このテンプレートから以下の出力を得ることができます'><meta property="og:title" content="コマンドラインオプションをパースするコードをコマンドラインオプションから生成するツールをつくった"><meta property="og:url" content="https://blog.monochromegane.com/blog/2019/10/25/fukuokago14_flagen/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2019/10/25/fukuokago14_flagen/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2019/10/25/fukuokago14_flagen/>コマンドラインオプションをパースするコードをコマンドラインオプションから生成するツールをつくった</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2019-10-25</div></time></header><div class=post-inner><p>コマンドラインオプションの形式は決まったけれども、パース処理を実装するために各言語やライブラリのドキュメントを読むことを繰り返していたので、この手間を省くためのツールをつくりました。</p><p>flagenは、先に決めたコマンドラインオプションから、これを解析するための各言語用のコードを出力するツールです。
+オプション名から変数名や変数の型、デフォルト値が決定されるため、汎用的なボイラーテンプレートと比較して編集の手間が少なくなります。
+また、テンプレートによって任意の出力を行えるため、エディタや自前のボイラーテンプレート出力ツールとの連携が容易です。
+使いやすくするため、プリセットのテンプレートとしてGo、Ruby、Python、Shellのものを提供しています。</p><h1 id=使い方>使い方</h1><p>使い方は、テンプレートと実際に使う時のコマンドラインオプションを渡すだけです。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ flagen YOUR_TEMPLATE YOUR_COMMAND_LINE_OPTIONS...
+</span></span></code></pre></div><p>例えば、</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ flagen go --dist erlang -e k/l --lambda 1.5 -k <span style=color:#ae81ff>1</span> -v
+</span></span></code></pre></div><p>と指定すると、Go用のコマンドラインオプションの解析処理を出力します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>var</span> (
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>dist</span>	<span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>e</span>	<span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>lambda</span>	<span style=color:#66d9ef>float64</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>k</span>	<span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>v</span>	<span style=color:#66d9ef>bool</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>init</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>flag</span>.<span style=color:#a6e22e>StringVar</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>dist</span>, <span style=color:#e6db74>&#34;dist&#34;</span>, <span style=color:#e6db74>&#34;erlang&#34;</span>, <span style=color:#e6db74>&#34;usage of dist&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>flag</span>.<span style=color:#a6e22e>StringVar</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>e</span>, <span style=color:#e6db74>&#34;e&#34;</span>, <span style=color:#e6db74>&#34;k/l&#34;</span>, <span style=color:#e6db74>&#34;usage of e&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>flag</span>.<span style=color:#a6e22e>Float64Var</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>lambda</span>, <span style=color:#e6db74>&#34;lambda&#34;</span>, <span style=color:#ae81ff>1.5</span>, <span style=color:#e6db74>&#34;usage of lambda&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>flag</span>.<span style=color:#a6e22e>IntVar</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>k</span>, <span style=color:#e6db74>&#34;k&#34;</span>, <span style=color:#ae81ff>1</span>, <span style=color:#e6db74>&#34;usage of k&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>flag</span>.<span style=color:#a6e22e>BoolVar</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>v</span>, <span style=color:#e6db74>&#34;v&#34;</span>, <span style=color:#66d9ef>false</span>, <span style=color:#e6db74>&#34;usage of v&#34;</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>指定されたコマンドラインオプションから変数名、オプション名、型、デフォルト値が設定されることで編集の手間が極力ない状態になっています。</p><p>Python、Ruby、Shellの例は<a href=https://godoc.org/github.com/monochromegane/flagen#pkg-examples>GodocのExamples</a>を参考にしてください。</p><h1 id=テンプレート>テンプレート</h1><p>テンプレートはGoの<a href=https://golang.org/pkg/text/template/>text/template</a>を利用して解析されます。
+テンプレート内では、<code>.Flags</code>（解析したオプションの情報）と<code>.Args</code>（残りのコマンドライン引数）が利用可能です。
+<code>.Flags</code>は<code>Name</code>と<code>Value</code>をもち、<code>Value</code>は更に<code>Type</code>と<code>Get</code>をもちます。</p><p>以下は、解析したオプションの情報を列挙するシンプルなテンプレート(my.tmpl)です。</p><pre tabindex=0><code>{{ range $flag := .Flags -}}
+  {{ $flag.Name }}={{ $flag.Value.Get}}({{ $flag.Value.Type }})
+{{ end }}
+</code></pre><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ flagen my.tmpl --dist erlang -e k/l --lambda 1.5 -k <span style=color:#ae81ff>1</span> -v
+</span></span></code></pre></div><p>このテンプレートから以下の出力を得ることができます</p><pre tabindex=0><code>dist=erlang(string)
 e=k/l(string)
 lambda=1.5(float)
 k=1(int)
 v=false(bool)
 </code></pre><p>また、テンプレート内では文字列のケース変換のための関数を利用することができます。
 主に変数を言語の命名規約に合わせるのに使えます。
-使える関数は、<a href=https://godoc.org/github.com/monochromegane/flagen#pkg-variables>こちら</a> で確認ください。</p>
-<h1 id=連携>連携</h1>
-<h2 id=vim>Vim</h2>
-<p>flagenの結果は標準出力を使っているため、エディタとの連携も容易です。
-例えば、Vimでは以下により、カーソル位置に結果を挿入することができます。</p>
-<pre tabindex=0><code>:r!flagen YOUR_TEMPLATE YOUR_COMMAND_LINE_OPTIONS...
-</code></pre><h2 id=ボイラーテンプレート出力ツール>ボイラーテンプレート出力ツール</h2>
-<p>flagenはライブラリとして利用することができるため、自前のボイラーテンプレート出力ツールがGo製であれば以下のように呼び出すことができます。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go>	<span style=color:#a6e22e>tmpl</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>flagen</span>.<span style=color:#a6e22e>NewTemplate</span>(<span style=color:#a6e22e>args</span>[<span style=color:#ae81ff>0</span>])
-	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
-		<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>err</span>
-	}
-	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>tmpl</span>.<span style=color:#a6e22e>Execute</span>(<span style=color:#a6e22e>outStream</span>, <span style=color:#a6e22e>args</span>[<span style=color:#ae81ff>1</span>:])
-</code></pre></div><p>また、独自の関数が必要な場合は <code>flagen.TemplateFuncMap</code>に設定することでテンプレート内で利用することができます。</p>
-<h1 id=ワークアラウンド>ワークアラウンド</h1>
-<h2 id=曖昧なフラグ>曖昧なフラグ</h2>
-<p>flagenはオプションに値が指定されていないときにboolだと見なすため、以下のようにboolフラグで終わって引数がある場合に判断がつきません。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ flagen TEMPLATE --bool-flag arg1
-</code></pre></div><p>想定どおりにするためには値としてtrue or falseを受け取ることを明示する必要があります。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ flagen TEMPLATE --bool-flag<span style=color:#f92672>=</span>false arg1
-</code></pre></div><h1 id=まとめ>まとめ</h1>
-<p>様々な実装が提供されているコマンドラインオプションの解析処理を利用形式から動的に生成するジェネレーターとしてflagenをつくりました。実際にいくつかの言語のテンプレートを用意してエディタと連携させることでCLI開発の効率が改善しています。</p>
-<p>今後はflagen自体のオプションとしてprefixなどを提供すれば構造体の変数に設定する用途などのテンプレートとの相性もよくなりそうだと考えています。
-便利なテンプレート追加のプルリクエストやイシュー、ボイラーテンプレートのツールへ組み込んだ報告などお待ちしています。</p>
-<h1 id=fukuokago>Fukuoka.go</h1>
-<p>このツールは<a href=https://fukuokago.connpass.com/event/146447/>Fukuoka.go#14+Umeda.go</a>で発表しました。
-発表資料はこちらです。</p>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/golang>golang</a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<div class=social-btn>
-<div>
-<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2019/10/25/fukuokago14_flagen/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
-</div>
-<div>
-<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
-</div>
-</div>
-</div>
-<footer class=footer>
-<div class=author></div>
-<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
-<p>monochromegane (モノクロめがね) と申します。</p>
-<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-<ul class=social>
-<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
-<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
-<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
-</ul>
-<p class=copyright>
-<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
-</p>
-</footer>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
-<script>hljs.initHighlightingOnLoad()</script>
-<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
-</body>
-</html>
+使える関数は、<a href=https://godoc.org/github.com/monochromegane/flagen#pkg-variables>こちら</a> で確認ください。</p><h1 id=連携>連携</h1><h2 id=vim>Vim</h2><p>flagenの結果は標準出力を使っているため、エディタとの連携も容易です。
+例えば、Vimでは以下により、カーソル位置に結果を挿入することができます。</p><pre tabindex=0><code>:r!flagen YOUR_TEMPLATE YOUR_COMMAND_LINE_OPTIONS...
+</code></pre><h2 id=ボイラーテンプレート出力ツール>ボイラーテンプレート出力ツール</h2><p>flagenはライブラリとして利用することができるため、自前のボイラーテンプレート出力ツールがGo製であれば以下のように呼び出すことができます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span>	<span style=color:#a6e22e>tmpl</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>flagen</span>.<span style=color:#a6e22e>NewTemplate</span>(<span style=color:#a6e22e>args</span>[<span style=color:#ae81ff>0</span>])
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>tmpl</span>.<span style=color:#a6e22e>Execute</span>(<span style=color:#a6e22e>outStream</span>, <span style=color:#a6e22e>args</span>[<span style=color:#ae81ff>1</span>:])
+</span></span></code></pre></div><p>また、独自の関数が必要な場合は <code>flagen.TemplateFuncMap</code>に設定することでテンプレート内で利用することができます。</p><h1 id=ワークアラウンド>ワークアラウンド</h1><h2 id=曖昧なフラグ>曖昧なフラグ</h2><p>flagenはオプションに値が指定されていないときにboolだと見なすため、以下のようにboolフラグで終わって引数がある場合に判断がつきません。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ flagen TEMPLATE --bool-flag arg1
+</span></span></code></pre></div><p>想定どおりにするためには値としてtrue or falseを受け取ることを明示する必要があります。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ flagen TEMPLATE --bool-flag<span style=color:#f92672>=</span>false arg1
+</span></span></code></pre></div><h1 id=まとめ>まとめ</h1><p>様々な実装が提供されているコマンドラインオプションの解析処理を利用形式から動的に生成するジェネレーターとしてflagenをつくりました。実際にいくつかの言語のテンプレートを用意してエディタと連携させることでCLI開発の効率が改善しています。</p><p>今後はflagen自体のオプションとしてprefixなどを提供すれば構造体の変数に設定する用途などのテンプレートとの相性もよくなりそうだと考えています。
+便利なテンプレート追加のプルリクエストやイシュー、ボイラーテンプレートのツールへ組み込んだ報告などお待ちしています。</p><h1 id=fukuokago>Fukuoka.go</h1><p>このツールは<a href=https://fukuokago.connpass.com/event/146447/>Fukuoka.go#14+Umeda.go</a>で発表しました。
+発表資料はこちらです。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/golang>golang</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2019/10/25/fukuokago14_flagen/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

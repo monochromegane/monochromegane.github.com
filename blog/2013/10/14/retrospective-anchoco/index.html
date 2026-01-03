@@ -1,149 +1,43 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width">
-<meta name=author content>
-<title>ふりかえりファシリテーターあんちょこを作ってみた &#183; THINKING MEGANE</title>
-<meta name=twitter:card content="summary">
-<meta name=twitter:site content="@monochromegane">
-<meta property="og:description" content="ふりかえり、やっていますか？ 最近、プロジェクトやチームのふりかえりのファシリテーターをやる機会があるのですが、いざやると時間配分だったり、会のコントロールだったり結構難しいです。
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>ふりかえりファシリテーターあんちょこを作ってみた &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content='ふりかえり、やっていますか？
+最近、プロジェクトやチームのふりかえりのファシリテーターをやる機会があるのですが、いざやると時間配分だったり、会のコントロールだったり結構難しいです。
 特に、ファシリテーター役を回すとなると、みんなが初めてのファシリテーターだったりして、ふりかえりのレベルが向上するまでちょっと時間がかかってしまうというのも悩みだったりします。
 なので、今回、ファシリテーター役が各工程で行うこと、気をつけることを箇条書きでまとめた、「ふりかえりファシリテーターあんちょこ」を作ってみました。
- ふりかえりファシリテーターあんちょこ GitHub: monochromegane/retrospective-anchoco  ふりかえりファシリテーターあんちょこ ふりかえりファシリテーターあんちょこは、ふりかえりのファシリテーターを行うときに使える&#34;あんちょこ&#34;です。
+
+ふりかえりファシリテーターあんちょこ
+GitHub: monochromegane/retrospective-anchoco
+
+
+ふりかえりファシリテーターあんちょこ
+ふりかえりファシリテーターあんちょこは、ふりかえりのファシリテーターを行うときに使える"あんちょこ"です。
 各工程のタイムテーブルと工程ごとに行うこと、気をつけることを箇条書きでまとめてみました。
 また、ファシリテーターとしてのナレッジの共有も目的としているので、MarkdownをGithubで管理するような構成をとっています。
- スライドショー形式の見やすい箇条書き。ファシリテーターしながらさっと目が通せる Markdownでだれでも編集。あんちょこ自体を改善し、ナレッジを共有 GitHubで管理。Forkしてチーム向けにカスタマイズ  &ldquo;あんちょこ&#34;でできること、できないこと この&#34;あんちょこ&#34;は、ふりかえりの開始から終了までに行うことを、各工程が1ページになるようにまとめています。
+
+スライドショー形式の見やすい箇条書き。ファシリテーターしながらさっと目が通せる
+Markdownでだれでも編集。あんちょこ自体を改善し、ナレッジを共有
+GitHubで管理。Forkしてチーム向けにカスタマイズ
+
+&ldquo;あんちょこ"でできること、できないこと
+この"あんちょこ"は、ふりかえりの開始から終了までに行うことを、各工程が1ページになるようにまとめています。
 ファシリテーターはこの資料を印刷もしくはスライドショーを表示するなどして、次の工程に移る前に最低限行わなければならないことを確認することができます。
 反対に、ふりかえりを導入するための資料ではありません。ふりかえりの意義や効果を知りたい人、もっと突っ込んだふりかえりの手法が知りたい人は、各種参考文献を読むことをお勧めします。
-&ldquo;あんちょこ&#34;の更新 ふりかえりファシリテーターあんちょこは、Markdown記法で書かれたファイルをcleaverを使って印刷用のスライドショー形式に変換しています。
+&ldquo;あんちょこ"の更新
+ふりかえりファシリテーターあんちょこは、Markdown記法で書かれたファイルをcleaverを使って印刷用のスライドショー形式に変換しています。
 cleaverが入っていない場合は、NPMでインストールしてください。
-$ npm install -g cleaver あんちょこのMarkdownファイルはretrospective-anchoco.mdです。修正後、以下のコマンドによりretrospective-anchoco.htmlが作成されます。
-$ cleaver retrospective-anchoco.md できあがったhtmlファイルをブラウザで開き、必要に応じて印刷して利用してください。
-テンプレートの変更 この&#34;あんちょこ&#34;は、印刷用のテンプレートを使っています。
+$ npm install -g cleaver
+あんちょこのMarkdownファイルはretrospective-anchoco.mdです。修正後、以下のコマンドによりretrospective-anchoco.htmlが作成されます。
+$ cleaver retrospective-anchoco.md
+できあがったhtmlファイルをブラウザで開き、必要に応じて印刷して利用してください。
+テンプレートの変更
+この"あんちょこ"は、印刷用のテンプレートを使っています。
 PCでスライドショー形式で表示しておきたいひとは、retrospective-anchoco.mdのtemplate行を削除してcleaverを実行してください。
-参考 ふりかえりの意義や効果を知りたい人、もっと突っ込んだふりかえりの手法が知りたい人向け。
+
+参考
+ふりかえりの意義や効果を知りたい人、もっと突っ込んだふりかえりの手法が知りたい人向け。
 ふりかえりも回を重ねるごとに、課題が出てきますが、そのあたりの指針や分析方法などが詳しく書かれています。
- プロジェクトファシリテーション 実践編 ふりかえりガイド これだけ! KPT  ">
-<meta property="og:title" content="ふりかえりファシリテーターあんちょこを作ってみた">
-<meta property="og:url" content="https://blog.monochromegane.com/blog/2013/10/14/retrospective-anchoco/">
-<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-<link rel=stylesheet href=/css/reset.css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
-<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
-<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
-<link rel=stylesheet href=/css/text.css>
-<link rel=stylesheet href=/css/color.css>
-<link rel=stylesheet href=/css/layout.css>
-<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
-<link rel="shortcut icon" href=/images/favicon.ico>
-<link rel=canonical href=https://blog.monochromegane.com/blog/2013/10/14/retrospective-anchoco/>
-<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
-</head>
-<body>
-<div class=header>
-<header>
-<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
-<nav>
-<ul class=menu>
-<li><a href=/self-introduction/>Home</a></li>
-<li><a href=/post/>Archives</a></li>
-<li><a href=/diary/>Diary</a></li>
-<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
-</ul>
-</nav>
-</header>
-</div>
-<div class=container>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/blog/2013/10/14/retrospective-anchoco/>ふりかえりファシリテーターあんちょこを作ってみた</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2013-10-14</div></time>
-</header>
-<div class=post-inner>
-<h1 id=ふりかえりやっていますか>ふりかえり、やっていますか？</h1>
-<p>最近、プロジェクトやチームのふりかえりのファシリテーターをやる機会があるのですが、いざやると時間配分だったり、会のコントロールだったり結構難しいです。</p>
-<p>特に、ファシリテーター役を回すとなると、みんなが初めてのファシリテーターだったりして、ふりかえりのレベルが向上するまでちょっと時間がかかってしまうというのも悩みだったりします。</p>
-<p>なので、今回、ファシリテーター役が各工程で行うこと、気をつけることを箇条書きでまとめた、「ふりかえりファシリテーターあんちょこ」を作ってみました。</p>
-<ul>
-<li><a href=/retrospective-anchoco/retrospective-anchoco.html>ふりかえりファシリテーターあんちょこ</a></li>
-<li><a href=https://github.com/monochromegane/retrospective-anchoco>GitHub: monochromegane/retrospective-anchoco</a></li>
-</ul>
-<h1 id=ふりかえりファシリテーターあんちょこ>ふりかえりファシリテーターあんちょこ</h1>
-<p><a href=/retrospective-anchoco/retrospective-anchoco.html>ふりかえりファシリテーターあんちょこ</a>は、ふりかえりのファシリテーターを行うときに使える"あんちょこ"です。</p>
-<p>各工程のタイムテーブルと工程ごとに行うこと、気をつけることを箇条書きでまとめてみました。</p>
-<p>また、ファシリテーターとしてのナレッジの共有も目的としているので、MarkdownをGithubで管理するような構成をとっています。</p>
-<ul>
-<li>スライドショー形式の見やすい箇条書き。ファシリテーターしながらさっと目が通せる</li>
-<li>Markdownでだれでも編集。あんちょこ自体を改善し、ナレッジを共有</li>
-<li>GitHubで管理。Forkしてチーム向けにカスタマイズ</li>
-</ul>
-<h2 id=あんちょこでできることできないこと>&ldquo;あんちょこ"でできること、できないこと</h2>
-<p>この"あんちょこ"は、ふりかえりの開始から終了までに行うことを、各工程が1ページになるようにまとめています。</p>
-<p>ファシリテーターはこの資料を印刷もしくはスライドショーを表示するなどして、次の工程に移る前に最低限行わなければならないことを確認することができます。</p>
-<p>反対に、ふりかえりを導入するための資料ではありません。ふりかえりの意義や効果を知りたい人、もっと突っ込んだふりかえりの手法が知りたい人は、各種参考文献を読むことをお勧めします。</p>
-<h2 id=あんちょこの更新>&ldquo;あんちょこ"の更新</h2>
-<p>ふりかえりファシリテーターあんちょこは、Markdown記法で書かれたファイルを<a href=http://jdan.github.io/cleaver/>cleaver</a>を使って印刷用のスライドショー形式に変換しています。</p>
-<p>cleaverが入っていない場合は、NPMでインストールしてください。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ npm install -g cleaver
-</code></pre></div><p>あんちょこのMarkdownファイルは<code>retrospective-anchoco.md</code>です。修正後、以下のコマンドにより<code>retrospective-anchoco.html</code>が作成されます。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ cleaver retrospective-anchoco.md
-</code></pre></div><p>できあがったhtmlファイルをブラウザで開き、必要に応じて印刷して利用してください。</p>
-<h2 id=テンプレートの変更>テンプレートの変更</h2>
-<p>この"あんちょこ"は、印刷用のテンプレートを使っています。</p>
-<p>PCでスライドショー形式で表示しておきたいひとは、<code>retrospective-anchoco.md</code>の<code>template</code>行を削除してcleaverを実行してください。</p>
-<h1 id=参考>参考</h1>
-<p>ふりかえりの意義や効果を知りたい人、もっと突っ込んだふりかえりの手法が知りたい人向け。<br>
-ふりかえりも回を重ねるごとに、課題が出てきますが、そのあたりの指針や分析方法などが詳しく書かれています。</p>
-<ul>
-<li><a href=http://www.objectclub.jp/download/files/pf/RetrospectiveMeetingGuide.pdf>プロジェクトファシリテーション 実践編 ふりかえりガイド</a></li>
-<li><a href=http://www.amazon.co.jp/%E3%81%93%E3%82%8C%E3%81%A0%E3%81%91-KPT-%E5%A4%A9%E9%87%8E-%E5%8B%9D/dp/4799102753>これだけ! KPT</a></li>
-</ul>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/%E3%81%B5%E3%82%8A%E3%81%8B%E3%81%88%E3%82%8A>ふりかえり</a></li>
-<li><a class=tag-link href=/tags/%E3%81%82%E3%82%93%E3%81%A1%E3%82%87%E3%81%93>あんちょこ</a></li>
-<li><a class=tag-link href=/tags/%E3%83%95%E3%82%A1%E3%82%B7%E3%83%AA%E3%83%86%E3%83%BC%E3%82%BF%E3%83%BC>ファシリテーター</a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<div class=social-btn>
-<div>
-<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/10/14/retrospective-anchoco/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
-</div>
-<div>
-<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
-</div>
-</div>
-</div>
-<footer class=footer>
-<div class=author></div>
-<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
-<p>monochromegane (モノクロめがね) と申します。</p>
-<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-<ul class=social>
-<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
-<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
-<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
-</ul>
-<p class=copyright>
-<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
-</p>
-</footer>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
-<script>hljs.initHighlightingOnLoad()</script>
-<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
-</body>
-</html>
+
+プロジェクトファシリテーション 実践編 ふりかえりガイド
+これだけ! KPT
+'><meta property="og:title" content="ふりかえりファシリテーターあんちょこを作ってみた"><meta property="og:url" content="https://blog.monochromegane.com/blog/2013/10/14/retrospective-anchoco/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2013/10/14/retrospective-anchoco/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2013/10/14/retrospective-anchoco/>ふりかえりファシリテーターあんちょこを作ってみた</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2013-10-14</div></time></header><div class=post-inner><h1 id=ふりかえりやっていますか>ふりかえり、やっていますか？</h1><p>最近、プロジェクトやチームのふりかえりのファシリテーターをやる機会があるのですが、いざやると時間配分だったり、会のコントロールだったり結構難しいです。</p><p>特に、ファシリテーター役を回すとなると、みんなが初めてのファシリテーターだったりして、ふりかえりのレベルが向上するまでちょっと時間がかかってしまうというのも悩みだったりします。</p><p>なので、今回、ファシリテーター役が各工程で行うこと、気をつけることを箇条書きでまとめた、「ふりかえりファシリテーターあんちょこ」を作ってみました。</p><ul><li><a href=/retrospective-anchoco/retrospective-anchoco.html>ふりかえりファシリテーターあんちょこ</a></li><li><a href=https://github.com/monochromegane/retrospective-anchoco>GitHub: monochromegane/retrospective-anchoco</a></li></ul><h1 id=ふりかえりファシリテーターあんちょこ>ふりかえりファシリテーターあんちょこ</h1><p><a href=/retrospective-anchoco/retrospective-anchoco.html>ふりかえりファシリテーターあんちょこ</a>は、ふりかえりのファシリテーターを行うときに使える"あんちょこ"です。</p><p>各工程のタイムテーブルと工程ごとに行うこと、気をつけることを箇条書きでまとめてみました。</p><p>また、ファシリテーターとしてのナレッジの共有も目的としているので、MarkdownをGithubで管理するような構成をとっています。</p><ul><li>スライドショー形式の見やすい箇条書き。ファシリテーターしながらさっと目が通せる</li><li>Markdownでだれでも編集。あんちょこ自体を改善し、ナレッジを共有</li><li>GitHubで管理。Forkしてチーム向けにカスタマイズ</li></ul><h2 id=あんちょこでできることできないこと>&ldquo;あんちょこ"でできること、できないこと</h2><p>この"あんちょこ"は、ふりかえりの開始から終了までに行うことを、各工程が1ページになるようにまとめています。</p><p>ファシリテーターはこの資料を印刷もしくはスライドショーを表示するなどして、次の工程に移る前に最低限行わなければならないことを確認することができます。</p><p>反対に、ふりかえりを導入するための資料ではありません。ふりかえりの意義や効果を知りたい人、もっと突っ込んだふりかえりの手法が知りたい人は、各種参考文献を読むことをお勧めします。</p><h2 id=あんちょこの更新>&ldquo;あんちょこ"の更新</h2><p>ふりかえりファシリテーターあんちょこは、Markdown記法で書かれたファイルを<a href=http://jdan.github.io/cleaver/>cleaver</a>を使って印刷用のスライドショー形式に変換しています。</p><p>cleaverが入っていない場合は、NPMでインストールしてください。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>$ npm install -g cleaver
+</span></span></code></pre></div><p>あんちょこのMarkdownファイルは<code>retrospective-anchoco.md</code>です。修正後、以下のコマンドにより<code>retrospective-anchoco.html</code>が作成されます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>$ cleaver retrospective-anchoco.md
+</span></span></code></pre></div><p>できあがったhtmlファイルをブラウザで開き、必要に応じて印刷して利用してください。</p><h2 id=テンプレートの変更>テンプレートの変更</h2><p>この"あんちょこ"は、印刷用のテンプレートを使っています。</p><p>PCでスライドショー形式で表示しておきたいひとは、<code>retrospective-anchoco.md</code>の<code>template</code>行を削除してcleaverを実行してください。</p><h1 id=参考>参考</h1><p>ふりかえりの意義や効果を知りたい人、もっと突っ込んだふりかえりの手法が知りたい人向け。<br>ふりかえりも回を重ねるごとに、課題が出てきますが、そのあたりの指針や分析方法などが詳しく書かれています。</p><ul><li><a href=http://www.objectclub.jp/download/files/pf/RetrospectiveMeetingGuide.pdf>プロジェクトファシリテーション 実践編 ふりかえりガイド</a></li><li><a href=http://www.amazon.co.jp/%E3%81%93%E3%82%8C%E3%81%A0%E3%81%91-KPT-%E5%A4%A9%E9%87%8E-%E5%8B%9D/dp/4799102753>これだけ! KPT</a></li></ul></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/%E3%81%B5%E3%82%8A%E3%81%8B%E3%81%88%E3%82%8A>ふりかえり</a></li><li><a class=tag-link href=/tags/%E3%81%82%E3%82%93%E3%81%A1%E3%82%87%E3%81%93>あんちょこ</a></li><li><a class=tag-link href=/tags/%E3%83%95%E3%82%A1%E3%82%B7%E3%83%AA%E3%83%86%E3%83%BC%E3%82%BF%E3%83%BC>ファシリテーター</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/10/14/retrospective-anchoco/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

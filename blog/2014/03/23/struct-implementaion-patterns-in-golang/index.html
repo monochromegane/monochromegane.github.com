@@ -1,320 +1,239 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width">
-<meta name=author content>
-<title>Go言語での構造体実装パターン &#183; THINKING MEGANE</title>
-<meta name=twitter:card content="summary">
-<meta name=twitter:site content="@monochromegane">
-<meta property="og:description" content="Go言語での構造体実装は、埋込や独自コンセプトのインターフェースといったGo言語独自の機能を理解して行う必要があります。 今年からGo言語を始めましたが理解が曖昧なままだと実装に迷うことが何度かありました。今回よい機会なので、Go言語での構造体実装パターンとしてまとめてみることにしました。
-構造体実装パターン 実装パターンの洗い出しとして、GoFデザインパターンをGo言語で実装する手法をとりました。 その中で繰り返し現れる実装をGo言語での構造体実装パターンとしてまとめてみました。
- コンストラクタ関数 エクスポートによるアクセス許可 インターフェースによるポリモフィズム 構造体によるポリモフィズム 構造体によるサブクラス・レスポンシビリティ 構造体による移譲 関数による移譲  以下、それぞれのパターンを解説していきます。
-コンストラクタ関数 Go言語には構造体のコンストラクタがないため、構造体の初期化を行うには構造体の属するパッケージにコンストラクタ関数を定義します。
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>Go言語での構造体実装パターン &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content='Go言語での構造体実装は、埋込や独自コンセプトのインターフェースといったGo言語独自の機能を理解して行う必要があります。
+今年からGo言語を始めましたが理解が曖昧なままだと実装に迷うことが何度かありました。今回よい機会なので、Go言語での構造体実装パターンとしてまとめてみることにしました。
+
+構造体実装パターン
+実装パターンの洗い出しとして、GoFデザインパターンをGo言語で実装する手法をとりました。
+その中で繰り返し現れる実装をGo言語での構造体実装パターンとしてまとめてみました。
+
+コンストラクタ関数
+エクスポートによるアクセス許可
+インターフェースによるポリモフィズム
+構造体によるポリモフィズム
+構造体によるサブクラス・レスポンシビリティ
+構造体による移譲
+関数による移譲
+
+以下、それぞれのパターンを解説していきます。
+コンストラクタ関数
+Go言語には構造体のコンストラクタがないため、構造体の初期化を行うには構造体の属するパッケージにコンストラクタ関数を定義します。
 慣例では関数名としてNew + 構造体名() が用いられています。
-type StructA struct { Name string } // 初期化時に行いたい処理 func (self *StructA) SomeInitialize() { // Some initialize } // コンストラクタ関数を定義 func NewStructA(name string) *StructA { structA := &StructA{Name: name} structA.SomeInitialize() return structA } func main() { _ = NewStructA(&#34;name&#34;) } コンストラクタ関数を用いることには以下の利点があります。
- 構造体の生成と同時に行いたい処理を利用側から隠す 埋込構造体を利用側から隠す（構造体の構造を利用側から隠す。埋込構造体の存在を隠すことにも使えます（後述））  エクスポートによるアクセス許可 Go言語ではパッケージ外へのアクセス許可は、名前の先頭を大文字にすることで行います（エクスポート）。 これを利用することでシングルトンのようなインスタンス生成の制御を行うことが可能です。
-package singleton // 構造体の名前を小文字にすることでパッケージ外へのエクスポートを行わない type singleton struct { } // インスタンスを保持する変数も小文字にすることでエクスポートを行わない var instance *singleton // インスタンス取得用の関数のみエクスポートしておき、ここでインスタンスが // 一意であることを保証する func GetInstance() *singleton { if instance == nil { instance = &singleton{} } return instance } 省略書式:=を使うことで構造体自体をエクスポートしなくても利用できます。">
-<meta property="og:title" content="Go言語での構造体実装パターン">
-<meta property="og:url" content="https://blog.monochromegane.com/blog/2014/03/23/struct-implementaion-patterns-in-golang/">
-<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-<link rel=stylesheet href=/css/reset.css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
-<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
-<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
-<link rel=stylesheet href=/css/text.css>
-<link rel=stylesheet href=/css/color.css>
-<link rel=stylesheet href=/css/layout.css>
-<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
-<link rel="shortcut icon" href=/images/favicon.ico>
-<link rel=canonical href=https://blog.monochromegane.com/blog/2014/03/23/struct-implementaion-patterns-in-golang/>
-<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
-</head>
-<body>
-<div class=header>
-<header>
-<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
-<nav>
-<ul class=menu>
-<li><a href=/self-introduction/>Home</a></li>
-<li><a href=/post/>Archives</a></li>
-<li><a href=/diary/>Diary</a></li>
-<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
-</ul>
-</nav>
-</header>
-</div>
-<div class=container>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/blog/2014/03/23/struct-implementaion-patterns-in-golang/>Go言語での構造体実装パターン</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2014-03-23</div></time>
-</header>
-<div class=post-inner>
-<p>Go言語での構造体実装は、埋込や独自コンセプトのインターフェースといったGo言語独自の機能を理解して行う必要があります。
-今年からGo言語を始めましたが理解が曖昧なままだと実装に迷うことが何度かありました。今回よい機会なので、Go言語での構造体実装パターンとしてまとめてみることにしました。</p>
-<h1 id=構造体実装パターン>構造体実装パターン</h1>
-<p>実装パターンの洗い出しとして、GoFデザインパターンをGo言語で実装する手法をとりました。
-その中で繰り返し現れる実装をGo言語での構造体実装パターンとしてまとめてみました。</p>
-<ul>
-<li>コンストラクタ関数</li>
-<li>エクスポートによるアクセス許可</li>
-<li>インターフェースによるポリモフィズム</li>
-<li>構造体によるポリモフィズム</li>
-<li>構造体によるサブクラス・レスポンシビリティ</li>
-<li>構造体による移譲</li>
-<li>関数による移譲</li>
-</ul>
-<p>以下、それぞれのパターンを解説していきます。</p>
-<h2 id=コンストラクタ関数>コンストラクタ関数</h2>
-<p>Go言語には構造体のコンストラクタがないため、構造体の初期化を行うには構造体の属するパッケージにコンストラクタ関数を定義します。</p>
-<p>慣例では関数名としてNew + 構造体名() が用いられています。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>StructA</span> <span style=color:#66d9ef>struct</span> {
-	<span style=color:#a6e22e>Name</span> <span style=color:#66d9ef>string</span>
+type StructA struct {
+	Name string
 }
 
-<span style=color:#75715e>// 初期化時に行いたい処理
-</span><span style=color:#75715e></span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>self</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>StructA</span>) <span style=color:#a6e22e>SomeInitialize</span>() {
-	<span style=color:#75715e>// Some initialize
-</span><span style=color:#75715e></span>}
-
-<span style=color:#75715e>// コンストラクタ関数を定義
-</span><span style=color:#75715e></span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewStructA</span>(<span style=color:#a6e22e>name</span> <span style=color:#66d9ef>string</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>StructA</span> {
-	<span style=color:#a6e22e>structA</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>StructA</span>{<span style=color:#a6e22e>Name</span>: <span style=color:#a6e22e>name</span>}
-	<span style=color:#a6e22e>structA</span>.<span style=color:#a6e22e>SomeInitialize</span>()
-	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>structA</span>
+// 初期化時に行いたい処理
+func (self *StructA) SomeInitialize() {
+	// Some initialize
 }
 
-<span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
-	<span style=color:#a6e22e>_</span> = <span style=color:#a6e22e>NewStructA</span>(<span style=color:#e6db74>&#34;name&#34;</span>)
-}
-</code></pre></div><p>コンストラクタ関数を用いることには以下の利点があります。</p>
-<ul>
-<li>構造体の生成と同時に行いたい処理を利用側から隠す</li>
-<li>埋込構造体を利用側から隠す（構造体の構造を利用側から隠す。埋込構造体の存在を隠すことにも使えます（後述））</li>
-</ul>
-<h2 id=エクスポートによるアクセス許可>エクスポートによるアクセス許可</h2>
-<p>Go言語ではパッケージ外へのアクセス許可は、名前の先頭を大文字にすることで行います（エクスポート）。
-これを利用することでシングルトンのようなインスタンス生成の制御を行うことが可能です。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#f92672>package</span> <span style=color:#a6e22e>singleton</span>
-
-<span style=color:#75715e>// 構造体の名前を小文字にすることでパッケージ外へのエクスポートを行わない
-</span><span style=color:#75715e></span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>singleton</span> <span style=color:#66d9ef>struct</span> {
+// コンストラクタ関数を定義
+func NewStructA(name string) *StructA {
+	structA := &amp;StructA{Name: name}
+	structA.SomeInitialize()
+	return structA
 }
 
-<span style=color:#75715e>// インスタンスを保持する変数も小文字にすることでエクスポートを行わない
-</span><span style=color:#75715e></span><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>instance</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>singleton</span>
+func main() {
+	_ = NewStructA("name")
+}
+コンストラクタ関数を用いることには以下の利点があります。
 
-<span style=color:#75715e>// インスタンス取得用の関数のみエクスポートしておき、ここでインスタンスが
-</span><span style=color:#75715e>// 一意であることを保証する
-</span><span style=color:#75715e></span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>GetInstance</span>() <span style=color:#f92672>*</span><span style=color:#a6e22e>singleton</span> {
-	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>instance</span> <span style=color:#f92672>==</span> <span style=color:#66d9ef>nil</span> {
-	     <span style=color:#a6e22e>instance</span> = <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>singleton</span>{}
+構造体の生成と同時に行いたい処理を利用側から隠す
+埋込構造体を利用側から隠す（構造体の構造を利用側から隠す。埋込構造体の存在を隠すことにも使えます（後述））
+
+エクスポートによるアクセス許可
+Go言語ではパッケージ外へのアクセス許可は、名前の先頭を大文字にすることで行います（エクスポート）。
+これを利用することでシングルトンのようなインスタンス生成の制御を行うことが可能です。
+package singleton
+
+// 構造体の名前を小文字にすることでパッケージ外へのエクスポートを行わない
+type singleton struct {
+}
+
+// インスタンスを保持する変数も小文字にすることでエクスポートを行わない
+var instance *singleton
+
+// インスタンス取得用の関数のみエクスポートしておき、ここでインスタンスが
+// 一意であることを保証する
+func GetInstance() *singleton {
+	if instance == nil {
+	     instance = &amp;singleton{}
 	}
-	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>instance</span>
+	return instance
 }
-</code></pre></div><p>省略書式<code>:=</code>を使うことで構造体自体をエクスポートしなくても利用できます。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#a6e22e>singleton</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>singleton</span>.<span style=color:#a6e22e>GetInstance</span>()
-</code></pre></div><h2 id=インターフェースによるポリモフィズム>インターフェースによるポリモフィズム</h2>
-<p>Go言語には型の継承機能が用意されていませんが、インターフェースを用いることでポリモフィズムを実現できます。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#75715e>// インターフェースの定義
-</span><span style=color:#75715e></span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>SomeBehivor</span> <span style=color:#66d9ef>interface</span> {
-	<span style=color:#a6e22e>DoSomething</span>(<span style=color:#a6e22e>arg</span> <span style=color:#66d9ef>string</span>) <span style=color:#66d9ef>string</span>
-}
-
-<span style=color:#75715e>// 構造体の定義
-</span><span style=color:#75715e></span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>StructA</span> <span style=color:#66d9ef>struct</span> {
-}
-
-<span style=color:#75715e>// インターフェースの実装
-</span><span style=color:#75715e></span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>self</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>StructA</span>) <span style=color:#a6e22e>DoSomething</span>(<span style=color:#a6e22e>arg</span> <span style=color:#66d9ef>string</span>) <span style=color:#66d9ef>string</span> {
-	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>arg</span>
-}
-
-<span style=color:#75715e>// ポリモフィズム
-</span><span style=color:#75715e></span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
-	<span style=color:#75715e>// インターフェース型の変数に格納できる
-</span><span style=color:#75715e></span>	<span style=color:#66d9ef>var</span> <span style=color:#a6e22e>behivor</span> <span style=color:#a6e22e>SomeBehivor</span>
-	<span style=color:#a6e22e>behivor</span> = <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>StructA</span>{}
-	<span style=color:#a6e22e>behivor</span>.<span style=color:#a6e22e>DoSomething</span>(<span style=color:#e6db74>&#34;A&#34;</span>)
-}
-</code></pre></div><p>構造体の埋込により擬似的な継承ができると説明しているものがありますが、これはあくまで透過的に構造体を利用できるだけで、&ldquo;型"としてポリモフィズムを実現できるわけではないことに注意してください。</p>
-<h2 id=構造体によるポリモフィズム>構造体によるポリモフィズム</h2>
-<p>ポリモフィズムを実現しつつ、構造体に共通の実装やメンバを定義したい場合があります。
-この場合は、インターフェースを実装した構造体を用意して、それを埋め込む方法を取ります。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#75715e>// インターフェースの定義
-</span><span style=color:#75715e></span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>SomeBehivor</span> <span style=color:#66d9ef>interface</span> {
-	<span style=color:#a6e22e>DoSomething</span>() <span style=color:#66d9ef>string</span>
-}
-
-<span style=color:#75715e>// 共通構造体の定義
-</span><span style=color:#75715e></span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>DefaultStruct</span> <span style=color:#66d9ef>struct</span> {
-	<span style=color:#75715e>// 共通メンバ
-</span><span style=color:#75715e></span>	<span style=color:#a6e22e>Name</span> <span style=color:#66d9ef>string</span>
-}
-
-<span style=color:#75715e>// 共通構造体にインターフェースを実装
-</span><span style=color:#75715e></span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>self</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>DefaultStruct</span>) <span style=color:#a6e22e>DoSomething</span>() <span style=color:#66d9ef>string</span> {
-	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>self</span>.<span style=color:#a6e22e>Name</span>
-}
-
-<span style=color:#75715e>// 共通構造体を埋め込む
-</span><span style=color:#75715e></span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>StructA</span> <span style=color:#66d9ef>struct</span> {
-	<span style=color:#f92672>*</span><span style=color:#a6e22e>DefaultStruct</span>
-}
-
-<span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
-	<span style=color:#75715e>// インターフェース型の変数に格納できる
-</span><span style=color:#75715e></span>	<span style=color:#a6e22e>behivor</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>StructA</span>{<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>DefaultStruct</span>{<span style=color:#e6db74>&#34;A&#34;</span>}}
-
-	<span style=color:#75715e>// 共通実装とメンバを使うことができる
-</span><span style=color:#75715e></span>	<span style=color:#a6e22e>behivor</span>.<span style=color:#a6e22e>DoSomething</span>()
-}
-</code></pre></div><p>ただし、この場合、利用側が初期化時に埋込構造体を意識する必要があるため、前述のコンストラクタ関数を用意するとよいでしょう。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#75715e>// コンストラクタ関数
-</span><span style=color:#75715e></span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewStructA</span>(<span style=color:#a6e22e>name</span> <span style=color:#66d9ef>string</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>StructA</span> {
-	<span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>StructA</span>{<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>DefaultStruct</span>{<span style=color:#e6db74>&#34;A&#34;</span>}}
-}
-<span style=color:#75715e>// 利用側は埋込構造体の存在を意識しない
-</span><span style=color:#75715e></span><span style=color:#a6e22e>behivor</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>NewStructA</span>(<span style=color:#e6db74>&#34;A&#34;</span>)
-</code></pre></div><h2 id=構造体によるサブクラスレスポンシビリティ>構造体によるサブクラス・レスポンシビリティ</h2>
-<p>Go言語では、埋め込まれた構造体がもとの構造体の実装を利用することができません（Dispatch backされないと言います）。</p>
-<p>そのため、TemplateMethodパターンのように子クラスに処理の実装を任せる機能をつくる場合、埋め込まれた構造体のメソッドに対してレシーバとなる、もとの構造体の参照を渡す必要があります。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Behivor</span> <span style=color:#66d9ef>interface</span> {
-	<span style=color:#a6e22e>DoSomethingByOther</span>()
-}
-
-<span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Abstract</span> <span style=color:#66d9ef>struct</span> {
-}
-
-<span style=color:#75715e>// 内部で、もとの構造体の実装を利用するメソッド
-</span><span style=color:#75715e></span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>self</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Abstract</span>) <span style=color:#a6e22e>DoSomething</span>(<span style=color:#a6e22e>behivor</span> <span style=color:#a6e22e>Behivor</span>) {
-	<span style=color:#a6e22e>behivor</span>.<span style=color:#a6e22e>DoSomethingByOther</span>()
-
-	<span style=color:#75715e>// 仮にここで AbstractにBehivorを埋め込むなど、メソッドがある状態でコンパイルを通るようにして、
-</span><span style=color:#75715e></span>	<span style=color:#75715e>// self.DoSomethingByOther()としてもpanic: runtime error: invalid memory address or nil pointer dereferenceが
-</span><span style=color:#75715e></span>	<span style=color:#75715e>// 発生し、Dispatch backされないことがわかる
-</span><span style=color:#75715e></span>}
-
-<span style=color:#75715e>// 上で定義した構造体を埋め込む
-</span><span style=color:#75715e></span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Concrete</span> <span style=color:#66d9ef>struct</span> {
-	<span style=color:#f92672>*</span><span style=color:#a6e22e>Abstract</span>
-}
-
-<span style=color:#75715e>// インターフェースを実装
-</span><span style=color:#75715e></span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>self</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Concrete</span>) <span style=color:#a6e22e>DoSomethingByOther</span>() {
-	<span style=color:#75715e>// Do something
-</span><span style=color:#75715e></span>}
-
-<span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
-	<span style=color:#a6e22e>concrete</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>Concrete</span>{}
-	<span style=color:#75715e>// レシーバとなる自分自身を渡す
-</span><span style=color:#75715e></span>	<span style=color:#a6e22e>concrete</span>.<span style=color:#a6e22e>DoSomething</span>(<span style=color:#a6e22e>concrete</span>)
-}
-</code></pre></div><p>このレシーバを自ら指定する方法は、継承を利用できない言語で<code>Client-specified self</code>というパターンという名前で使われているようです。
-ただし構造体間の依存関係が高くなるため、どうしても継承関係が必要な場合を除き、後述の構造体による移譲、または関数による移譲を検討するほうがよいでしょう。</p>
-<h2 id=構造体による移譲>構造体による移譲</h2>
-<p>Go言語では、処理の実装を適切な責務を持つ構造体に任せる移譲は簡単に実現できます。
-それには構造体をメンバとして保持し、必要に応じて、その構造体のメソッドを呼ぶようにします。</p>
-<p>また、Strategyパターンのようにインターフェースに対して移譲するような設計にしておくと依存性をより下げることができるでしょう。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Strategy</span> <span style=color:#66d9ef>interface</span> {
-	<span style=color:#a6e22e>DoSomething</span>()
-}
-
-<span style=color:#66d9ef>type</span> <span style=color:#a6e22e>ConcreteStrategy</span> <span style=color:#66d9ef>struct</span> {
-}
-
-<span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>self</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>ConcreteStrategy</span>) <span style=color:#a6e22e>DoSomething</span>() {
-	<span style=color:#75715e>// Do something
-</span><span style=color:#75715e></span>}
-
-<span style=color:#66d9ef>type</span> <span style=color:#a6e22e>StructA</span> <span style=color:#66d9ef>struct</span> {
-	<span style=color:#75715e>// 移譲先をメンバに保持
-</span><span style=color:#75715e></span>	<span style=color:#a6e22e>strategy</span> <span style=color:#a6e22e>Strategy</span>
-}
-
-<span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>self</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>StructA</span>) <span style=color:#a6e22e>Operation</span>() {
-	<span style=color:#75715e>// 埋め込んだ構造体に処理を移譲
-</span><span style=color:#75715e></span>	<span style=color:#a6e22e>self</span>.<span style=color:#a6e22e>strategy</span>.<span style=color:#a6e22e>DoSomething</span>()
-}
-</code></pre></div><h2 id=関数による移譲>関数による移譲</h2>
-<p>Go言語では、関数をファーストクラスの型として扱えるため、移譲する処理を関数として渡す手法もとることができます。
+省略書式:=を使うことで構造体自体をエクスポートしなくても利用できます。'><meta property="og:title" content="Go言語での構造体実装パターン"><meta property="og:url" content="https://blog.monochromegane.com/blog/2014/03/23/struct-implementaion-patterns-in-golang/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2014/03/23/struct-implementaion-patterns-in-golang/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2014/03/23/struct-implementaion-patterns-in-golang/>Go言語での構造体実装パターン</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2014-03-23</div></time></header><div class=post-inner><p>Go言語での構造体実装は、埋込や独自コンセプトのインターフェースといったGo言語独自の機能を理解して行う必要があります。
+今年からGo言語を始めましたが理解が曖昧なままだと実装に迷うことが何度かありました。今回よい機会なので、Go言語での構造体実装パターンとしてまとめてみることにしました。</p><h1 id=構造体実装パターン>構造体実装パターン</h1><p>実装パターンの洗い出しとして、GoFデザインパターンをGo言語で実装する手法をとりました。
+その中で繰り返し現れる実装をGo言語での構造体実装パターンとしてまとめてみました。</p><ul><li>コンストラクタ関数</li><li>エクスポートによるアクセス許可</li><li>インターフェースによるポリモフィズム</li><li>構造体によるポリモフィズム</li><li>構造体によるサブクラス・レスポンシビリティ</li><li>構造体による移譲</li><li>関数による移譲</li></ul><p>以下、それぞれのパターンを解説していきます。</p><h2 id=コンストラクタ関数>コンストラクタ関数</h2><p>Go言語には構造体のコンストラクタがないため、構造体の初期化を行うには構造体の属するパッケージにコンストラクタ関数を定義します。</p><p>慣例では関数名としてNew + 構造体名() が用いられています。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>StructA</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>Name</span> <span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 初期化時に行いたい処理</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>self</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>StructA</span>) <span style=color:#a6e22e>SomeInitialize</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Some initialize</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// コンストラクタ関数を定義</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewStructA</span>(<span style=color:#a6e22e>name</span> <span style=color:#66d9ef>string</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>StructA</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>structA</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>StructA</span>{<span style=color:#a6e22e>Name</span>: <span style=color:#a6e22e>name</span>}
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>structA</span>.<span style=color:#a6e22e>SomeInitialize</span>()
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>structA</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>_</span> = <span style=color:#a6e22e>NewStructA</span>(<span style=color:#e6db74>&#34;name&#34;</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>コンストラクタ関数を用いることには以下の利点があります。</p><ul><li>構造体の生成と同時に行いたい処理を利用側から隠す</li><li>埋込構造体を利用側から隠す（構造体の構造を利用側から隠す。埋込構造体の存在を隠すことにも使えます（後述））</li></ul><h2 id=エクスポートによるアクセス許可>エクスポートによるアクセス許可</h2><p>Go言語ではパッケージ外へのアクセス許可は、名前の先頭を大文字にすることで行います（エクスポート）。
+これを利用することでシングルトンのようなインスタンス生成の制御を行うことが可能です。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>singleton</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 構造体の名前を小文字にすることでパッケージ外へのエクスポートを行わない</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>singleton</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// インスタンスを保持する変数も小文字にすることでエクスポートを行わない</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>instance</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>singleton</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// インスタンス取得用の関数のみエクスポートしておき、ここでインスタンスが</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 一意であることを保証する</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>GetInstance</span>() <span style=color:#f92672>*</span><span style=color:#a6e22e>singleton</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>instance</span> <span style=color:#f92672>==</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>	     <span style=color:#a6e22e>instance</span> = <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>singleton</span>{}
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>instance</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>省略書式<code>:=</code>を使うことで構造体自体をエクスポートしなくても利用できます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#a6e22e>singleton</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>singleton</span>.<span style=color:#a6e22e>GetInstance</span>()
+</span></span></code></pre></div><h2 id=インターフェースによるポリモフィズム>インターフェースによるポリモフィズム</h2><p>Go言語には型の継承機能が用意されていませんが、インターフェースを用いることでポリモフィズムを実現できます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// インターフェースの定義</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>SomeBehivor</span> <span style=color:#66d9ef>interface</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>DoSomething</span>(<span style=color:#a6e22e>arg</span> <span style=color:#66d9ef>string</span>) <span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 構造体の定義</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>StructA</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// インターフェースの実装</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>self</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>StructA</span>) <span style=color:#a6e22e>DoSomething</span>(<span style=color:#a6e22e>arg</span> <span style=color:#66d9ef>string</span>) <span style=color:#66d9ef>string</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>arg</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// ポリモフィズム</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// インターフェース型の変数に格納できる</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>var</span> <span style=color:#a6e22e>behivor</span> <span style=color:#a6e22e>SomeBehivor</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>behivor</span> = <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>StructA</span>{}
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>behivor</span>.<span style=color:#a6e22e>DoSomething</span>(<span style=color:#e6db74>&#34;A&#34;</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>構造体の埋込により擬似的な継承ができると説明しているものがありますが、これはあくまで透過的に構造体を利用できるだけで、&ldquo;型"としてポリモフィズムを実現できるわけではないことに注意してください。</p><h2 id=構造体によるポリモフィズム>構造体によるポリモフィズム</h2><p>ポリモフィズムを実現しつつ、構造体に共通の実装やメンバを定義したい場合があります。
+この場合は、インターフェースを実装した構造体を用意して、それを埋め込む方法を取ります。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// インターフェースの定義</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>SomeBehivor</span> <span style=color:#66d9ef>interface</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>DoSomething</span>() <span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 共通構造体の定義</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>DefaultStruct</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// 共通メンバ</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>Name</span> <span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 共通構造体にインターフェースを実装</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>self</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>DefaultStruct</span>) <span style=color:#a6e22e>DoSomething</span>() <span style=color:#66d9ef>string</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>self</span>.<span style=color:#a6e22e>Name</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 共通構造体を埋め込む</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>StructA</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>	<span style=color:#f92672>*</span><span style=color:#a6e22e>DefaultStruct</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// インターフェース型の変数に格納できる</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>behivor</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>StructA</span>{<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>DefaultStruct</span>{<span style=color:#e6db74>&#34;A&#34;</span>}}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// 共通実装とメンバを使うことができる</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>behivor</span>.<span style=color:#a6e22e>DoSomething</span>()
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>ただし、この場合、利用側が初期化時に埋込構造体を意識する必要があるため、前述のコンストラクタ関数を用意するとよいでしょう。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// コンストラクタ関数</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewStructA</span>(<span style=color:#a6e22e>name</span> <span style=color:#66d9ef>string</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>StructA</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>StructA</span>{<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>DefaultStruct</span>{<span style=color:#e6db74>&#34;A&#34;</span>}}
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#75715e>// 利用側は埋込構造体の存在を意識しない</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>behivor</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>NewStructA</span>(<span style=color:#e6db74>&#34;A&#34;</span>)
+</span></span></code></pre></div><h2 id=構造体によるサブクラスレスポンシビリティ>構造体によるサブクラス・レスポンシビリティ</h2><p>Go言語では、埋め込まれた構造体がもとの構造体の実装を利用することができません（Dispatch backされないと言います）。</p><p>そのため、TemplateMethodパターンのように子クラスに処理の実装を任せる機能をつくる場合、埋め込まれた構造体のメソッドに対してレシーバとなる、もとの構造体の参照を渡す必要があります。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Behivor</span> <span style=color:#66d9ef>interface</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>DoSomethingByOther</span>()
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Abstract</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 内部で、もとの構造体の実装を利用するメソッド</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>self</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Abstract</span>) <span style=color:#a6e22e>DoSomething</span>(<span style=color:#a6e22e>behivor</span> <span style=color:#a6e22e>Behivor</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>behivor</span>.<span style=color:#a6e22e>DoSomethingByOther</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// 仮にここで AbstractにBehivorを埋め込むなど、メソッドがある状態でコンパイルを通るようにして、</span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// self.DoSomethingByOther()としてもpanic: runtime error: invalid memory address or nil pointer dereferenceが</span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// 発生し、Dispatch backされないことがわかる</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 上で定義した構造体を埋め込む</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Concrete</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>	<span style=color:#f92672>*</span><span style=color:#a6e22e>Abstract</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// インターフェースを実装</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>self</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Concrete</span>) <span style=color:#a6e22e>DoSomethingByOther</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Do something</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>concrete</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>Concrete</span>{}
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// レシーバとなる自分自身を渡す</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>concrete</span>.<span style=color:#a6e22e>DoSomething</span>(<span style=color:#a6e22e>concrete</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>このレシーバを自ら指定する方法は、継承を利用できない言語で<code>Client-specified self</code>というパターンという名前で使われているようです。
+ただし構造体間の依存関係が高くなるため、どうしても継承関係が必要な場合を除き、後述の構造体による移譲、または関数による移譲を検討するほうがよいでしょう。</p><h2 id=構造体による移譲>構造体による移譲</h2><p>Go言語では、処理の実装を適切な責務を持つ構造体に任せる移譲は簡単に実現できます。
+それには構造体をメンバとして保持し、必要に応じて、その構造体のメソッドを呼ぶようにします。</p><p>また、Strategyパターンのようにインターフェースに対して移譲するような設計にしておくと依存性をより下げることができるでしょう。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Strategy</span> <span style=color:#66d9ef>interface</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>DoSomething</span>()
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>ConcreteStrategy</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>self</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>ConcreteStrategy</span>) <span style=color:#a6e22e>DoSomething</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Do something</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>StructA</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// 移譲先をメンバに保持</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>strategy</span> <span style=color:#a6e22e>Strategy</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>self</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>StructA</span>) <span style=color:#a6e22e>Operation</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// 埋め込んだ構造体に処理を移譲</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>self</span>.<span style=color:#a6e22e>strategy</span>.<span style=color:#a6e22e>DoSomething</span>()
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=関数による移譲>関数による移譲</h2><p>Go言語では、関数をファーストクラスの型として扱えるため、移譲する処理を関数として渡す手法もとることができます。
 Go言語の基本パッケージを見ていると、移譲処理を外部から注入する機能を提供する場合、関数型を渡すような設計になっているのが多いように思われます。
-　</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go>
-<span style=color:#75715e>// 関数型を定義
-</span><span style=color:#75715e></span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>DoSomething</span> <span style=color:#66d9ef>func</span>()
-
-
-<span style=color:#66d9ef>type</span> <span style=color:#a6e22e>StructA</span> <span style=color:#66d9ef>struct</span> {
-}
-
-<span style=color:#75715e>// 関数型を引数で受け取るメソッドを定義
-</span><span style=color:#75715e></span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>self</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>StructA</span>) <span style=color:#a6e22e>Operation</span>(<span style=color:#a6e22e>strategy</span> <span style=color:#a6e22e>DoSomething</span>) {
-	<span style=color:#75715e>// 受け取った関数型に処理を移譲
-</span><span style=color:#75715e></span>	<span style=color:#a6e22e>strategy</span>()
-}
-
-<span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
-	<span style=color:#a6e22e>structA</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>StructA</span>{}
-
-	<span style=color:#75715e>// 関数リテラルで引数として渡す
-</span><span style=color:#75715e></span>	<span style=color:#a6e22e>structA</span>.<span style=color:#a6e22e>Operation</span>(<span style=color:#66d9ef>func</span>(){
-	     <span style=color:#75715e>// Do something
-</span><span style=color:#75715e></span>	})
-}
-</code></pre></div>
-<h1 id=go言語でのデザインパターン>Go言語でのデザインパターン</h1>
-<p>今回、パターンの洗い出しに使ったGo言語でのデザインパターン実装はこちらのリポジトリに公開しています。</p>
-<ul>
-<li><a href=https://github.com/monochromegane/go_design_pattern>monochromegane/go_design_pattern</a></li>
-</ul>
-<p>パターン実装にあたっては、結城 浩さんの<a href="http://www.amazon.co.jp/%E5%A2%97%E8%A3%9C%E6%94%B9%E8%A8%82%E7%89%88Java%E8%A8%80%E8%AA%9E%E3%81%A7%E5%AD%A6%E3%81%B6%E3%83%87%E3%82%B6%E3%82%A4%E3%83%B3%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3%E5%85%A5%E9%96%80-%E7%B5%90%E5%9F%8E-%E6%B5%A9/dp/4797327030/ref=sr_1_2?ie=UTF8&qid=1395468803&sr=8-2&keywords=%E3%83%87%E3%82%B6%E3%82%A4%E3%83%B3%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3">増補改訂版Java言語で学ぶデザインパターン入門</a>を参考にしました。
-各デザインパターンの解説についてはそちらを参考にしてください。</p>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/go>go</a></li>
-<li><a class=tag-link href=/tags/golang>golang</a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<div class=social-btn>
-<div>
-<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2014/03/23/struct-implementaion-patterns-in-golang/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
-</div>
-<div>
-<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
-</div>
-</div>
-</div>
-<footer class=footer>
-<div class=author></div>
-<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
-<p>monochromegane (モノクロめがね) と申します。</p>
-<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-<ul class=social>
-<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
-<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
-<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
-</ul>
-<p class=copyright>
-<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
-</p>
-</footer>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
-<script>hljs.initHighlightingOnLoad()</script>
-<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
-</body>
-</html>
+　</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 関数型を定義</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>DoSomething</span> <span style=color:#66d9ef>func</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>StructA</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 関数型を引数で受け取るメソッドを定義</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>self</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>StructA</span>) <span style=color:#a6e22e>Operation</span>(<span style=color:#a6e22e>strategy</span> <span style=color:#a6e22e>DoSomething</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// 受け取った関数型に処理を移譲</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>strategy</span>()
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>structA</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>StructA</span>{}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// 関数リテラルで引数として渡す</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>structA</span>.<span style=color:#a6e22e>Operation</span>(<span style=color:#66d9ef>func</span>(){
+</span></span><span style=display:flex><span>	     <span style=color:#75715e>// Do something</span>
+</span></span><span style=display:flex><span>	})
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h1 id=go言語でのデザインパターン>Go言語でのデザインパターン</h1><p>今回、パターンの洗い出しに使ったGo言語でのデザインパターン実装はこちらのリポジトリに公開しています。</p><ul><li><a href=https://github.com/monochromegane/go_design_pattern>monochromegane/go_design_pattern</a></li></ul><p>パターン実装にあたっては、結城 浩さんの<a href="http://www.amazon.co.jp/%E5%A2%97%E8%A3%9C%E6%94%B9%E8%A8%82%E7%89%88Java%E8%A8%80%E8%AA%9E%E3%81%A7%E5%AD%A6%E3%81%B6%E3%83%87%E3%82%B6%E3%82%A4%E3%83%B3%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3%E5%85%A5%E9%96%80-%E7%B5%90%E5%9F%8E-%E6%B5%A9/dp/4797327030/ref=sr_1_2?ie=UTF8&amp;qid=1395468803&amp;sr=8-2&amp;keywords=%E3%83%87%E3%82%B6%E3%82%A4%E3%83%B3%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3">増補改訂版Java言語で学ぶデザインパターン入門</a>を参考にしました。
+各デザインパターンの解説についてはそちらを参考にしてください。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/go>go</a></li><li><a class=tag-link href=/tags/golang>golang</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2014/03/23/struct-implementaion-patterns-in-golang/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

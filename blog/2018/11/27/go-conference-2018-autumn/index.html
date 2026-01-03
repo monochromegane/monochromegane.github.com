@@ -1,119 +1,26 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width">
-<meta name=author content>
-<title>Go Conference 2018 Autumnで発表してきた(3年ぶり3回目) &#183; THINKING MEGANE</title>
-<meta name=twitter:card content="summary">
-<meta name=twitter:site content="@monochromegane">
-<meta property="og:description" content="11/25にGo Conference 2018 Autumnというイベントでフィードバック制御によるGoroutine起動数の最適化を発表してきました．
-Goでの開発時に常に悩んでいたGoroutine起動数に関してフィードバック制御という切り口でKaburayaアーキテクチャと題して解決策を検討したものです． 直前にWSA研向けに研究として再定義したことでGoroutineにこだわらない，より汎用的な問題に対するアプローチとして検討し直すことができ，まだ最適解は模索中ですが，面白いと思っていただける発表ができたのではと考えています．
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>Go Conference 2018 Autumnで発表してきた(3年ぶり3回目) &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content='11/25にGo Conference 2018 Autumnというイベントでフィードバック制御によるGoroutine起動数の最適化を発表してきました．
+Goでの開発時に常に悩んでいたGoroutine起動数に関してフィードバック制御という切り口でKaburayaアーキテクチャと題して解決策を検討したものです．
+直前にWSA研向けに研究として再定義したことでGoroutineにこだわらない，より汎用的な問題に対するアプローチとして検討し直すことができ，まだ最適解は模索中ですが，面白いと思っていただける発表ができたのではと考えています．
+
+
 歴史ある制御工学という分野の手法を用いることで蓄積されたノウハウを活用できると考えていましたが，発表後に早速有意義なアドバイスなど頂くことができ，今後の精度，速度向上並びに汎用化に向けて面白くなってきそうです．
 ちなみに開発にあたってGoランタイムを調べていた時の資料も#goconハッシュタグで放流したところ，こちらも好評でしたので改めて置いておきます．
-発表を終えて GoConでの登壇は今回で3回目となりました．ここ数年，自分のキャリアや興味範囲が広がっていく中でも，Go言語はずっと相棒として付き合ってくれる言語でしたし，Go言語を中心に色々な付き合いができていると感じています． そしてその契機となったGoConと，これを継続して開催してくれている運営の方々に本当に感謝いたします．
-主催するFukuoka.goでも微力ながらコミュニティの活発化に繋がるよう引き続き&#34;楽しみながら&ldquo;やっていきたいと思います．
+
+発表を終えて
+GoConでの登壇は今回で3回目となりました．ここ数年，自分のキャリアや興味範囲が広がっていく中でも，Go言語はずっと相棒として付き合ってくれる言語でしたし，Go言語を中心に色々な付き合いができていると感じています．
+そしてその契機となったGoConと，これを継続して開催してくれている運営の方々に本当に感謝いたします．
+主催するFukuoka.goでも微力ながらコミュニティの活発化に繋がるよう引き続き"楽しみながら&ldquo;やっていきたいと思います．
 次は海外カンファレンスで登壇するぞう．
-Gopherくん 今回で登壇特典のGopherくん全色コンプリート！！
-過去の発表  Go Conference 2014 spring で発表してきた - 発表資料: pt & Goroutine Go Conference 2015 summer で発表してきた - 発表資料: Generative Programming in Go  ">
-<meta property="og:title" content="Go Conference 2018 Autumnで発表してきた(3年ぶり3回目)">
-<meta property="og:url" content="https://blog.monochromegane.com/blog/2018/11/27/go-conference-2018-autumn/">
-<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-<link rel=stylesheet href=/css/reset.css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
-<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
-<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
-<link rel=stylesheet href=/css/text.css>
-<link rel=stylesheet href=/css/color.css>
-<link rel=stylesheet href=/css/layout.css>
-<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
-<link rel="shortcut icon" href=/images/favicon.ico>
-<link rel=canonical href=https://blog.monochromegane.com/blog/2018/11/27/go-conference-2018-autumn/>
-<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
-</head>
-<body>
-<div class=header>
-<header>
-<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
-<nav>
-<ul class=menu>
-<li><a href=/self-introduction/>Home</a></li>
-<li><a href=/post/>Archives</a></li>
-<li><a href=/diary/>Diary</a></li>
-<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
-</ul>
-</nav>
-</header>
-</div>
-<div class=container>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/blog/2018/11/27/go-conference-2018-autumn/>Go Conference 2018 Autumnで発表してきた(3年ぶり3回目)</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2018-11-27</div></time>
-</header>
-<div class=post-inner>
-<p>11/25に<a href=https://gocon.jp/>Go Conference 2018 Autumn</a>というイベントで<code>フィードバック制御によるGoroutine起動数の最適化</code>を発表してきました．</p>
-<p>Goでの開発時に常に悩んでいたGoroutine起動数に関してフィードバック制御という切り口でKaburayaアーキテクチャと題して解決策を検討したものです．
-直前に<a href=/blog/2018/11/25/wsa_3_kaburaya/>WSA研向けに研究として再定義した</a>ことでGoroutineにこだわらない，より汎用的な問題に対するアプローチとして検討し直すことができ，まだ最適解は模索中ですが，面白いと思っていただける発表ができたのではと考えています．</p>
-<p>歴史ある制御工学という分野の手法を用いることで蓄積されたノウハウを活用できると考えていましたが，発表後に早速有意義なアドバイスなど頂くことができ，今後の精度，速度向上並びに汎用化に向けて面白くなってきそうです．</p>
-<p>ちなみに開発にあたってGoランタイムを調べていた時の資料も<code>#gocon</code>ハッシュタグで放流したところ，こちらも好評でしたので改めて置いておきます．</p>
-<h2 id=発表を終えて>発表を終えて</h2>
-<p>GoConでの登壇は今回で3回目となりました．ここ数年，自分のキャリアや興味範囲が広がっていく中でも，Go言語はずっと相棒として付き合ってくれる言語でしたし，Go言語を中心に色々な付き合いができていると感じています．
-そしてその契機となったGoConと，これを継続して開催してくれている運営の方々に本当に感謝いたします．</p>
-<p>主催するFukuoka.goでも微力ながらコミュニティの活発化に繋がるよう引き続き"<a href=https://press.forkwell.com/entry/2018/10/01/community_lovers>楽しみながら</a>&ldquo;やっていきたいと思います．</p>
-<p>次は海外カンファレンスで登壇するぞう．</p>
-<h2 id=gopherくん>Gopherくん</h2>
-<p>今回で登壇特典のGopherくん全色コンプリート！！</p>
-<p><img src=/images/2018/11/gophers.jpg alt=gophers></p>
-<h2 id=過去の発表>過去の発表</h2>
-<ul>
-<li><a href=https://blog.monochromegane.com/blog/2014/06/08/go-conference-2014-spring/>Go Conference 2014 spring で発表してきた</a> - <a href=https://speakerdeck.com/monochromegane/pt-and-goroutines>発表資料: pt & Goroutine</a></li>
-<li><a href=https://blog.monochromegane.com/blog/2015/06/23/go-conference-2015-summer/>Go Conference 2015 summer で発表してきた</a> - <a href=https://speakerdeck.com/monochromegane/generative-programming-in-go>発表資料: Generative Programming in Go</a></li>
-</ul>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/golang>golang</a></li>
-<li><a class=tag-link href=/tags/gocon>gocon</a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<div class=social-btn>
-<div>
-<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2018/11/27/go-conference-2018-autumn/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
-</div>
-<div>
-<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
-</div>
-</div>
-</div>
-<footer class=footer>
-<div class=author></div>
-<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
-<p>monochromegane (モノクロめがね) と申します。</p>
-<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-<ul class=social>
-<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
-<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
-<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
-</ul>
-<p class=copyright>
-<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
-</p>
-</footer>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
-<script>hljs.initHighlightingOnLoad()</script>
-<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
-</body>
-</html>
+
+
+Gopherくん
+今回で登壇特典のGopherくん全色コンプリート！！
+
+過去の発表
+
+Go Conference 2014 spring で発表してきた - 発表資料: pt & Goroutine
+Go Conference 2015 summer で発表してきた - 発表資料: Generative Programming in Go
+'><meta property="og:title" content="Go Conference 2018 Autumnで発表してきた(3年ぶり3回目)"><meta property="og:url" content="https://blog.monochromegane.com/blog/2018/11/27/go-conference-2018-autumn/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2018/11/27/go-conference-2018-autumn/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2018/11/27/go-conference-2018-autumn/>Go Conference 2018 Autumnで発表してきた(3年ぶり3回目)</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2018-11-27</div></time></header><div class=post-inner><p>11/25に<a href=https://gocon.jp/>Go Conference 2018 Autumn</a>というイベントで<code>フィードバック制御によるGoroutine起動数の最適化</code>を発表してきました．</p><p>Goでの開発時に常に悩んでいたGoroutine起動数に関してフィードバック制御という切り口でKaburayaアーキテクチャと題して解決策を検討したものです．
+直前に<a href=/blog/2018/11/25/wsa_3_kaburaya/>WSA研向けに研究として再定義した</a>ことでGoroutineにこだわらない，より汎用的な問題に対するアプローチとして検討し直すことができ，まだ最適解は模索中ですが，面白いと思っていただける発表ができたのではと考えています．</p><p>歴史ある制御工学という分野の手法を用いることで蓄積されたノウハウを活用できると考えていましたが，発表後に早速有意義なアドバイスなど頂くことができ，今後の精度，速度向上並びに汎用化に向けて面白くなってきそうです．</p><p>ちなみに開発にあたってGoランタイムを調べていた時の資料も<code>#gocon</code>ハッシュタグで放流したところ，こちらも好評でしたので改めて置いておきます．</p><h2 id=発表を終えて>発表を終えて</h2><p>GoConでの登壇は今回で3回目となりました．ここ数年，自分のキャリアや興味範囲が広がっていく中でも，Go言語はずっと相棒として付き合ってくれる言語でしたし，Go言語を中心に色々な付き合いができていると感じています．
+そしてその契機となったGoConと，これを継続して開催してくれている運営の方々に本当に感謝いたします．</p><p>主催するFukuoka.goでも微力ながらコミュニティの活発化に繋がるよう引き続き"<a href=https://press.forkwell.com/entry/2018/10/01/community_lovers>楽しみながら</a>&ldquo;やっていきたいと思います．</p><p>次は海外カンファレンスで登壇するぞう．</p><h2 id=gopherくん>Gopherくん</h2><p>今回で登壇特典のGopherくん全色コンプリート！！</p><p><img src=/images/2018/11/gophers.jpg alt=gophers></p><h2 id=過去の発表>過去の発表</h2><ul><li><a href=https://blog.monochromegane.com/blog/2014/06/08/go-conference-2014-spring/>Go Conference 2014 spring で発表してきた</a> - <a href=https://speakerdeck.com/monochromegane/pt-and-goroutines>発表資料: pt & Goroutine</a></li><li><a href=https://blog.monochromegane.com/blog/2015/06/23/go-conference-2015-summer/>Go Conference 2015 summer で発表してきた</a> - <a href=https://speakerdeck.com/monochromegane/generative-programming-in-go>発表資料: Generative Programming in Go</a></li></ul></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/golang>golang</a></li><li><a class=tag-link href=/tags/gocon>gocon</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2018/11/27/go-conference-2018-autumn/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

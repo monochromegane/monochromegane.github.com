@@ -1,164 +1,46 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width">
-<meta name=author content>
-<title>Android Studioを使うときに調べたこと、いくつか &#183; THINKING MEGANE</title>
-<meta name=twitter:card content="summary">
-<meta name=twitter:site content="@monochromegane">
-<meta property="og:description" content="ひさびさにAndroidアプリをつくるのに、せっかくなので公開されたAndroid Studioを使ってみました。
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>Android Studioを使うときに調べたこと、いくつか &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content='ひさびさにAndroidアプリをつくるのに、せっかくなので公開されたAndroid Studioを使ってみました。
 Eclipseでの開発環境と違いなど、調べたことがいくつかあったのでまとめておきます。
+
 今回調べたのは以下の4つです。
- assetsディレクトリが作成されない エミュレータでプロキシを使いたい 日本語コメントを入れるとコンパイルできない ライブラリ(jar)追加でコンパイルできない  なお、環境は2013/07/08時点での最新版、Android Studio (I/O Preview) AI-130.729444です。
-1. assetsディレクトリが作成されない Android Studioではプロジェクト作成時にassetsディレクトリが作成されませんでした。
+
+assetsディレクトリが作成されない
+エミュレータでプロキシを使いたい
+日本語コメントを入れるとコンパイルできない
+ライブラリ(jar)追加でコンパイルできない
+
+なお、環境は2013/07/08時点での最新版、Android Studio (I/O Preview) AI-130.729444です。
+
+1. assetsディレクトリが作成されない
+Android Studioではプロジェクト作成時にassetsディレクトリが作成されませんでした。
 また、assetsディレクトリを作成する場合、src/mainの下に作成しないといけませんでした。
-どこで定義されている？ Eclipseでの開発時はassetsディレクトリはプロジェクト直下にありますが、Android Studioではそこにディレクトリを作成してもアプリから認識されません。
+どこで定義されている？
+Eclipseでの開発時はassetsディレクトリはプロジェクト直下にありますが、Android Studioではそこにディレクトリを作成してもアプリから認識されません。
 これは、モジュール定義ファイル(.iml)に以下のように定義されているためです。
-<sourceFolder url=&#34;file://$MODULE_DIR$/src/main/assets&#34; isTestSource=&#34;false&#34; /> [Run]メニュー > [Edit Configurations&mldr;]を選択し、開いたウィンドウから[Emulator]タブを選択します。
+<sourceFolder url="file://$MODULE_DIR$/src/main/assets" isTestSource="false" />
+
+[Run]メニュー > [Edit Configurations&mldr;]を選択し、開いたウィンドウから[Emulator]タブを選択します。
 [Additional command line options:]にチェックを入れ、以下のコマンドラインオプションを追加します。
--http-proxy http://hostname:port Android Studioで、Javaソース内に日本語でコメントを入れると以下のエラーが出てコンパイルに失敗します。
-この文字は、エンコーディングsjisにマップできません。 VMのオプションを設定ファイルに追記する必要があるようです。
+-http-proxy http://hostname:port
+
+Android Studioで、Javaソース内に日本語でコメントを入れると以下のエラーが出てコンパイルに失敗します。
+この文字は、エンコーディングsjisにマップできません。
+VMのオプションを設定ファイルに追記する必要があるようです。
 /Applications/Android Studio.app/Contents/Info.plist
-<key>VMOptions</key> <string>-ea -Dsun.io.useCanonCaches=false -XX:+HeapDumpOnOutOfMemoryError -Xverify:none -Xbootclasspath/a:../lib/boot.jar -Dgroovy.source.encoding=UTF-8 -Dfile.encoding=UTF-8</string> -Dgroovy.source.encoding=UTF-8 -Dfile.encoding=UTF-8を追加しています。 追加後にAndroid Studioを再起動すればOKです。
+<key>VMOptions</key>
+<string>-ea -Dsun.io.useCanonCaches=false -XX:+HeapDumpOnOutOfMemoryError -Xverify:none -Xbootclasspath/a:../lib/boot.jar -Dgroovy.source.encoding=UTF-8 -Dfile.encoding=UTF-8</string>
+-Dgroovy.source.encoding=UTF-8 -Dfile.encoding=UTF-8を追加しています。
+追加後にAndroid Studioを再起動すればOKです。
 *こちらを参考にさせていただきました。
-takatoshi blog / [AndroidStudio]この文字は、エンコーディングsjisにマップできません。コンパイルエラーへの対処
-ライブラリを追加した場合、以下の2つの設定を行なう必要がありました。
-特に実行時の設定がない場合、実行時に以下のエラーが発生します。
-パッケージ xxx は存在しません コンパイルのための設定  プロジェクト直下のlibsディレクトリにjarファイルを配置する。 Android Studioで該当のjarファイルを右クリック > Add as Library&mldr; を行う  実行時の設定 build.">
-<meta property="og:title" content="Android Studioを使うときに調べたこと、いくつか">
-<meta property="og:url" content="https://blog.monochromegane.com/blog/2013/07/08/android-studio-tips/">
-<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-<link rel=stylesheet href=/css/reset.css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
-<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
-<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
-<link rel=stylesheet href=/css/text.css>
-<link rel=stylesheet href=/css/color.css>
-<link rel=stylesheet href=/css/layout.css>
-<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
-<link rel="shortcut icon" href=/images/favicon.ico>
-<link rel=canonical href=https://blog.monochromegane.com/blog/2013/07/08/android-studio-tips/>
-<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
-</head>
-<body>
-<div class=header>
-<header>
-<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
-<nav>
-<ul class=menu>
-<li><a href=/self-introduction/>Home</a></li>
-<li><a href=/post/>Archives</a></li>
-<li><a href=/diary/>Diary</a></li>
-<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
-</ul>
-</nav>
-</header>
-</div>
-<div class=container>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/blog/2013/07/08/android-studio-tips/>Android Studioを使うときに調べたこと、いくつか</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2013-07-08</div></time>
-</header>
-<div class=post-inner>
-<p>ひさびさにAndroidアプリをつくるのに、せっかくなので公開された<a href=http://developer.android.com/sdk/installing/studio.html>Android Studio</a>を使ってみました。</p>
-<p>Eclipseでの開発環境と違いなど、調べたことがいくつかあったのでまとめておきます。</p>
-<p><img src=/images/2013/07/android_studio.png alt="Android Studio"></p>
-<p>今回調べたのは以下の4つです。</p>
-<ol>
-<li>assetsディレクトリが作成されない</li>
-<li>エミュレータでプロキシを使いたい</li>
-<li>日本語コメントを入れるとコンパイルできない</li>
-<li>ライブラリ(jar)追加でコンパイルできない</li>
-</ol>
-<p>なお、環境は2013/07/08時点での最新版、<code>Android Studio (I/O Preview) AI-130.729444</code>です。</p>
-<h1 id=1-assetsディレクトリが作成されない>1. assetsディレクトリが作成されない</h1>
-<p>Android Studioではプロジェクト作成時にassetsディレクトリが作成されませんでした。</p>
-<p>また、assetsディレクトリを作成する場合、<code>src/main</code>の下に作成しないといけませんでした。</p>
-<h3 id=どこで定義されている>どこで定義されている？</h3>
-<p>Eclipseでの開発時はassetsディレクトリはプロジェクト直下にありますが、Android Studioではそこにディレクトリを作成してもアプリから認識されません。</p>
-<p>これは、モジュール定義ファイル(.iml)に以下のように定義されているためです。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-xml data-lang=xml><span style=color:#f92672>&lt;sourceFolder</span> <span style=color:#a6e22e>url=</span><span style=color:#e6db74>&#34;file://$MODULE_DIR$/src/main/assets&#34;</span> <span style=color:#a6e22e>isTestSource=</span><span style=color:#e6db74>&#34;false&#34;</span> <span style=color:#f92672>/&gt;</span>
-</code></pre></div>
-<p>[Run]メニュー > [Edit Configurations&mldr;]を選択し、開いたウィンドウから[Emulator]タブを選択します。</p>
-<p>[Additional command line options:]にチェックを入れ、以下のコマンドラインオプションを追加します。</p>
-<pre tabindex=0><code>-http-proxy http://hostname:port
-</code></pre>
-<p>Android Studioで、Javaソース内に日本語でコメントを入れると以下のエラーが出てコンパイルに失敗します。</p>
-<pre tabindex=0><code>この文字は、エンコーディングsjisにマップできません。
-</code></pre><p>VMのオプションを設定ファイルに追記する必要があるようです。</p>
-<p><code>/Applications/Android Studio.app/Contents/Info.plist</code></p>
-<pre tabindex=0><code>&lt;key&gt;VMOptions&lt;/key&gt;
+takatoshi blog / [AndroidStudio]この文字は、エンコーディングsjisにマップできません。コンパイルエラーへの対処'><meta property="og:title" content="Android Studioを使うときに調べたこと、いくつか"><meta property="og:url" content="https://blog.monochromegane.com/blog/2013/07/08/android-studio-tips/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2013/07/08/android-studio-tips/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2013/07/08/android-studio-tips/>Android Studioを使うときに調べたこと、いくつか</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2013-07-08</div></time></header><div class=post-inner><p>ひさびさにAndroidアプリをつくるのに、せっかくなので公開された<a href=http://developer.android.com/sdk/installing/studio.html>Android Studio</a>を使ってみました。</p><p>Eclipseでの開発環境と違いなど、調べたことがいくつかあったのでまとめておきます。</p><p><img src=/images/2013/07/android_studio.png alt="Android Studio"></p><p>今回調べたのは以下の4つです。</p><ol><li>assetsディレクトリが作成されない</li><li>エミュレータでプロキシを使いたい</li><li>日本語コメントを入れるとコンパイルできない</li><li>ライブラリ(jar)追加でコンパイルできない</li></ol><p>なお、環境は2013/07/08時点での最新版、<code>Android Studio (I/O Preview) AI-130.729444</code>です。</p><h1 id=1-assetsディレクトリが作成されない>1. assetsディレクトリが作成されない</h1><p>Android Studioではプロジェクト作成時にassetsディレクトリが作成されませんでした。</p><p>また、assetsディレクトリを作成する場合、<code>src/main</code>の下に作成しないといけませんでした。</p><h3 id=どこで定義されている>どこで定義されている？</h3><p>Eclipseでの開発時はassetsディレクトリはプロジェクト直下にありますが、Android Studioではそこにディレクトリを作成してもアプリから認識されません。</p><p>これは、モジュール定義ファイル(.iml)に以下のように定義されているためです。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-xml data-lang=xml><span style=display:flex><span><span style=color:#f92672>&lt;sourceFolder</span> <span style=color:#a6e22e>url=</span><span style=color:#e6db74>&#34;file://$MODULE_DIR$/src/main/assets&#34;</span> <span style=color:#a6e22e>isTestSource=</span><span style=color:#e6db74>&#34;false&#34;</span> <span style=color:#f92672>/&gt;</span>
+</span></span></code></pre></div><p>[Run]メニュー > [Edit Configurations&mldr;]を選択し、開いたウィンドウから[Emulator]タブを選択します。</p><p>[Additional command line options:]にチェックを入れ、以下のコマンドラインオプションを追加します。</p><pre tabindex=0><code>-http-proxy http://hostname:port
+</code></pre><p>Android Studioで、Javaソース内に日本語でコメントを入れると以下のエラーが出てコンパイルに失敗します。</p><pre tabindex=0><code>この文字は、エンコーディングsjisにマップできません。
+</code></pre><p>VMのオプションを設定ファイルに追記する必要があるようです。</p><p><code>/Applications/Android Studio.app/Contents/Info.plist</code></p><pre tabindex=0><code>&lt;key&gt;VMOptions&lt;/key&gt;
 &lt;string&gt;-ea -Dsun.io.useCanonCaches=false -XX:+HeapDumpOnOutOfMemoryError -Xverify:none -Xbootclasspath/a:../lib/boot.jar -Dgroovy.source.encoding=UTF-8 -Dfile.encoding=UTF-8&lt;/string&gt;
 </code></pre><p><code>-Dgroovy.source.encoding=UTF-8 -Dfile.encoding=UTF-8</code>を追加しています。
-追加後にAndroid Studioを再起動すればOKです。</p>
-<p>*こちらを参考にさせていただきました。</p>
-<p><a href=http://takatoshimaeda.github.io/blog/2013/05/20/android-studio-character-code-build-error/>takatoshi blog / [AndroidStudio]この文字は、エンコーディングsjisにマップできません。コンパイルエラーへの対処</a></p>
-<p>ライブラリを追加した場合、以下の2つの設定を行なう必要がありました。</p>
-<p>特に<code>実行時の設定</code>がない場合、実行時に以下のエラーが発生します。</p>
-<pre tabindex=0><code>パッケージ xxx は存在しません
-</code></pre><h3 id=コンパイルのための設定>コンパイルのための設定</h3>
-<ol>
-<li>プロジェクト直下のlibsディレクトリにjarファイルを配置する。</li>
-<li>Android Studioで該当のjarファイルを右クリック > Add as Library&mldr; を行う</li>
-</ol>
-<h3 id=実行時の設定>実行時の設定</h3>
-<p><code>build.gradle</code></p>
-<pre tabindex=0><code>dependencies {
-    compile files('libs/android-support-v4.jar')
-    compile files('libs/your-library.jar')
+追加後にAndroid Studioを再起動すればOKです。</p><p>*こちらを参考にさせていただきました。</p><p><a href=http://takatoshimaeda.github.io/blog/2013/05/20/android-studio-character-code-build-error/>takatoshi blog / [AndroidStudio]この文字は、エンコーディングsjisにマップできません。コンパイルエラーへの対処</a></p><p>ライブラリを追加した場合、以下の2つの設定を行なう必要がありました。</p><p>特に<code>実行時の設定</code>がない場合、実行時に以下のエラーが発生します。</p><pre tabindex=0><code>パッケージ xxx は存在しません
+</code></pre><h3 id=コンパイルのための設定>コンパイルのための設定</h3><ol><li>プロジェクト直下のlibsディレクトリにjarファイルを配置する。</li><li>Android Studioで該当のjarファイルを右クリック > Add as Library&mldr; を行う</li></ol><h3 id=実行時の設定>実行時の設定</h3><p><code>build.gradle</code></p><pre tabindex=0><code>dependencies {
+    compile files(&#39;libs/android-support-v4.jar&#39;)
+    compile files(&#39;libs/your-library.jar&#39;)
 }
-</code></pre><p><code>dependencies</code>内にjarファイル名を追加します。</p>
-<p>以上、いくつか調べることはありましたがAndroid Studio、なかなか快適です。</p>
-<p>Eclipseで開発している方であれば、比較的すんなり移行できると思います。</p>
-<p>設定ファイルまわりの編集作業はAndroid Studioのバージョンが上がれば不要になってくる作業と思いますが、現時点ではこういう設定もあるということを覚えておいてもいいかもしれません。</p>
-<p>以上です。</p>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/android>android</a></li>
-<li><a class=tag-link href=/tags/studio>studio</a></li>
-<li><a class=tag-link href=/tags/java>java</a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<div class=social-btn>
-<div>
-<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/07/08/android-studio-tips/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
-</div>
-<div>
-<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
-</div>
-</div>
-</div>
-<footer class=footer>
-<div class=author></div>
-<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
-<p>monochromegane (モノクロめがね) と申します。</p>
-<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-<ul class=social>
-<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
-<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
-<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
-</ul>
-<p class=copyright>
-<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
-</p>
-</footer>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
-<script>hljs.initHighlightingOnLoad()</script>
-<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
-</body>
-</html>
+</code></pre><p><code>dependencies</code>内にjarファイル名を追加します。</p><p>以上、いくつか調べることはありましたがAndroid Studio、なかなか快適です。</p><p>Eclipseで開発している方であれば、比較的すんなり移行できると思います。</p><p>設定ファイルまわりの編集作業はAndroid Studioのバージョンが上がれば不要になってくる作業と思いますが、現時点ではこういう設定もあるということを覚えておいてもいいかもしれません。</p><p>以上です。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/android>android</a></li><li><a class=tag-link href=/tags/studio>studio</a></li><li><a class=tag-link href=/tags/java>java</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/07/08/android-studio-tips/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

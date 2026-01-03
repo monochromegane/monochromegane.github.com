@@ -1,149 +1,54 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width">
-<meta name=author content>
-<title>HoiとSlackで内緒話をする &#183; THINKING MEGANE</title>
-<meta name=twitter:card content="summary">
-<meta name=twitter:site content="@monochromegane">
-<meta property="og:description" content="社内のチャットツールをSlackに移行中です。Slack使いやすくて満足度高いのですが、クラウドサービスゆえにこれまで社内IRCサーバ上でやりとりしていた情報の一部を載せてはいけなくなりました。
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>HoiとSlackで内緒話をする &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content='社内のチャットツールをSlackに移行中です。Slack使いやすくて満足度高いのですが、クラウドサービスゆえにこれまで社内IRCサーバ上でやりとりしていた情報の一部を載せてはいけなくなりました。
 以前つくった「ほい、これ」ってファイルを渡せる Hoi というツールを使うことで外部から参照できないページのURLをやりとりに使えるのですが、やりとり用にファイルが必要だったり、URLを別途通知するという手番が面倒になってきました。(GH:EのGistでも同様ですね)
- monochromegane/hoi  面倒は解決しましょう。以下、Hoiのｿﾘｭｰｼｮﾝです。
-メッセージをやりとりする 今までのファイルやりとりに加え、メッセージにもURLを付与できるようになりました。 使い方は今までと同じで、引数が存在しないファイルの場合にメッセージと見なします。
-$ hoi message 以下のようなURLが出力されます。
-http://192.168.0.103:8082/uqhrip3fvy71x791s00mj2r24kb8yiwu/message.txt message.txtにメッセージが記載されています。引数を複数にしたり、&#34;&#34;で囲んで改行込にしてもOKです。
-URLを通知する 最後に@accountをつけるとSlackにURLを通知できるようになりました。便利。
-$ hoi message @you 通知にはSlackAPIもしくはtakosanが使えます。チームで使う場合は takosan があったほうが便利だと思います。たこさん最高。
+
+monochromegane/hoi
+
+面倒は解決しましょう。以下、Hoiのｿﾘｭｰｼｮﾝです。
+メッセージをやりとりする
+今までのファイルやりとりに加え、メッセージにもURLを付与できるようになりました。
+使い方は今までと同じで、引数が存在しないファイルの場合にメッセージと見なします。
+$ hoi message
+以下のようなURLが出力されます。
+http://192.168.0.103:8082/uqhrip3fvy71x791s00mj2r24kb8yiwu/message.txt
+message.txtにメッセージが記載されています。引数を複数にしたり、""で囲んで改行込にしてもOKです。
+URLを通知する
+最後に@accountをつけるとSlackにURLを通知できるようになりました。便利。
+$ hoi message @you
+通知にはSlackAPIもしくはtakosanが使えます。チームで使う場合は takosan があったほうが便利だと思います。たこさん最高。
 こんな感じで通知されます。
-設定 なお、通知先に関する設定は~/.hoi/config.jsonで行います。
-{ &#34;notification&#34;: { &#34;from&#34;: &#34;YOUR SLACK ACCOUNT&#34;, &#34;to&#34;: &#34;takosan&#34;, &#34;host&#34;: &#34;TAKOSAN HOST NAME&#34;, &#34;port&#34;: TAKOSAN PORT NUMBER, } } その他設定はこちらを参考のこと
- Hoi Configuration   これでクラウドサービスに載せたくない情報をさくっとこそっとやりとりできるようになりました。
-インストールもさくっとできるよう各種揃えてます。よければご利用ください。
- go get github.com/monochromegane/hoi/... brew tap monochromegane/hoi && brew install hoi バイナリはこちら。Windows/Linuxあります  ">
-<meta property="og:title" content="HoiとSlackで内緒話をする">
-<meta property="og:url" content="https://blog.monochromegane.com/blog/2015/03/01/hoi-and-slack/">
-<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-<link rel=stylesheet href=/css/reset.css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
-<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
-<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
-<link rel=stylesheet href=/css/text.css>
-<link rel=stylesheet href=/css/color.css>
-<link rel=stylesheet href=/css/layout.css>
-<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
-<link rel="shortcut icon" href=/images/favicon.ico>
-<link rel=canonical href=https://blog.monochromegane.com/blog/2015/03/01/hoi-and-slack/>
-<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
-</head>
-<body>
-<div class=header>
-<header>
-<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
-<nav>
-<ul class=menu>
-<li><a href=/self-introduction/>Home</a></li>
-<li><a href=/post/>Archives</a></li>
-<li><a href=/diary/>Diary</a></li>
-<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
-</ul>
-</nav>
-</header>
-</div>
-<div class=container>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/blog/2015/03/01/hoi-and-slack/>HoiとSlackで内緒話をする</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2015-03-01</div></time>
-</header>
-<div class=post-inner>
-<p>社内のチャットツールをSlackに移行中です。Slack使いやすくて満足度高いのですが、クラウドサービスゆえにこれまで社内IRCサーバ上でやりとりしていた情報の一部を載せてはいけなくなりました。</p>
-<p>以前つくった<a href=/blog/2014/07/17/hoi/>「ほい、これ」ってファイルを渡せる Hoi というツール</a>を使うことで外部から参照できないページのURLをやりとりに使えるのですが、やりとり用にファイルが必要だったり、URLを別途通知するという手番が面倒になってきました。(GH:EのGistでも同様ですね)</p>
-<ul>
-<li><a href=https://github.com/monochromegane/hoi>monochromegane/hoi</a></li>
-</ul>
-<p>面倒は解決しましょう。以下、Hoiのｿﾘｭｰｼｮﾝです。</p>
-<h2 id=メッセージをやりとりする>メッセージをやりとりする</h2>
-<p>今までのファイルやりとりに加え、メッセージにもURLを付与できるようになりました。
-使い方は今までと同じで、引数が存在しないファイルの場合にメッセージと見なします。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ hoi message
-</code></pre></div><p>以下のようなURLが出力されます。</p>
-<pre tabindex=0><code>http://192.168.0.103:8082/uqhrip3fvy71x791s00mj2r24kb8yiwu/message.txt
-</code></pre><p>message.txtにメッセージが記載されています。引数を複数にしたり、<code>""</code>で囲んで改行込にしてもOKです。</p>
-<h2 id=urlを通知する>URLを通知する</h2>
-<p>最後に<code>@account</code>をつけるとSlackにURLを通知できるようになりました。便利。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ hoi message @you
-</code></pre></div><p>通知にはSlackAPIもしくは<a href=https://github.com/kentaro/takosan>takosan</a>が使えます。チームで使う場合は takosan があったほうが便利だと思います。たこさん最高。</p>
-<p>こんな感じで通知されます。</p>
-<p><img src=/images/2015/03/hoi-notification.png alt=hoi-notification></p>
-<h2 id=設定>設定</h2>
-<p>なお、通知先に関する設定は<code>~/.hoi/config.json</code>で行います。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>{
-  <span style=color:#f92672>&#34;notification&#34;</span>: {
-    <span style=color:#f92672>&#34;from&#34;</span>: <span style=color:#e6db74>&#34;YOUR SLACK ACCOUNT&#34;</span>,
-    <span style=color:#f92672>&#34;to&#34;</span>:   <span style=color:#e6db74>&#34;takosan&#34;</span>,
-    <span style=color:#f92672>&#34;host&#34;</span>: <span style=color:#e6db74>&#34;TAKOSAN HOST NAME&#34;</span>,
-    <span style=color:#f92672>&#34;port&#34;</span>: <span style=color:#960050;background-color:#1e0010>TAKOSAN</span> <span style=color:#960050;background-color:#1e0010>PORT</span> <span style=color:#960050;background-color:#1e0010>NUMBER</span>,
+
+設定
+なお、通知先に関する設定は~/.hoi/config.jsonで行います。
+{
+  "notification": {
+    "from": "YOUR SLACK ACCOUNT",
+    "to":   "takosan",
+    "host": "TAKOSAN HOST NAME",
+    "port": TAKOSAN PORT NUMBER,
   }
 }
-</code></pre></div><p>その他設定はこちらを参考のこと</p>
-<ul>
-<li><a href=https://github.com/monochromegane/hoi#configuration>Hoi Configuration</a></li>
-</ul>
-<hr>
-<p>これでクラウドサービスに載せたくない情報をさくっとこそっとやりとりできるようになりました。</p>
-<p>インストールもさくっとできるよう各種揃えてます。よければご利用ください。</p>
-<ul>
-<li><code>go get github.com/monochromegane/hoi/...</code></li>
-<li><code>brew tap monochromegane/hoi && brew install hoi</code></li>
-<li><a href=https://github.com/monochromegane/hoi/releases>バイナリはこちら。Windows/Linuxあります</a></li>
-</ul>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/hoi>hoi</a></li>
-<li><a class=tag-link href=/tags/golang>golang</a></li>
-<li><a class=tag-link href=/tags/slack>slack</a></li>
-<li><a class=tag-link href=/tags/takosan>takosan</a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<div class=social-btn>
-<div>
-<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2015/03/01/hoi-and-slack/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
-</div>
-<div>
-<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
-</div>
-</div>
-</div>
-<footer class=footer>
-<div class=author></div>
-<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
-<p>monochromegane (モノクロめがね) と申します。</p>
-<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-<ul class=social>
-<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
-<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
-<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
-</ul>
-<p class=copyright>
-<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
-</p>
-</footer>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
-<script>hljs.initHighlightingOnLoad()</script>
-<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
-</body>
-</html>
+その他設定はこちらを参考のこと
+
+Hoi Configuration
+
+
+これでクラウドサービスに載せたくない情報をさくっとこそっとやりとりできるようになりました。
+インストールもさくっとできるよう各種揃えてます。よければご利用ください。
+
+go get github.com/monochromegane/hoi/...
+brew tap monochromegane/hoi && brew install hoi
+バイナリはこちら。Windows/Linuxあります
+'><meta property="og:title" content="HoiとSlackで内緒話をする"><meta property="og:url" content="https://blog.monochromegane.com/blog/2015/03/01/hoi-and-slack/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2015/03/01/hoi-and-slack/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2015/03/01/hoi-and-slack/>HoiとSlackで内緒話をする</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2015-03-01</div></time></header><div class=post-inner><p>社内のチャットツールをSlackに移行中です。Slack使いやすくて満足度高いのですが、クラウドサービスゆえにこれまで社内IRCサーバ上でやりとりしていた情報の一部を載せてはいけなくなりました。</p><p>以前つくった<a href=/blog/2014/07/17/hoi/>「ほい、これ」ってファイルを渡せる Hoi というツール</a>を使うことで外部から参照できないページのURLをやりとりに使えるのですが、やりとり用にファイルが必要だったり、URLを別途通知するという手番が面倒になってきました。(GH:EのGistでも同様ですね)</p><ul><li><a href=https://github.com/monochromegane/hoi>monochromegane/hoi</a></li></ul><p>面倒は解決しましょう。以下、Hoiのｿﾘｭｰｼｮﾝです。</p><h2 id=メッセージをやりとりする>メッセージをやりとりする</h2><p>今までのファイルやりとりに加え、メッセージにもURLを付与できるようになりました。
+使い方は今までと同じで、引数が存在しないファイルの場合にメッセージと見なします。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ hoi message
+</span></span></code></pre></div><p>以下のようなURLが出力されます。</p><pre tabindex=0><code>http://192.168.0.103:8082/uqhrip3fvy71x791s00mj2r24kb8yiwu/message.txt
+</code></pre><p>message.txtにメッセージが記載されています。引数を複数にしたり、<code>""</code>で囲んで改行込にしてもOKです。</p><h2 id=urlを通知する>URLを通知する</h2><p>最後に<code>@account</code>をつけるとSlackにURLを通知できるようになりました。便利。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ hoi message @you
+</span></span></code></pre></div><p>通知にはSlackAPIもしくは<a href=https://github.com/kentaro/takosan>takosan</a>が使えます。チームで使う場合は takosan があったほうが便利だと思います。たこさん最高。</p><p>こんな感じで通知されます。</p><p><img src=/images/2015/03/hoi-notification.png alt=hoi-notification></p><h2 id=設定>設定</h2><p>なお、通知先に関する設定は<code>~/.hoi/config.json</code>で行います。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&#34;notification&#34;</span>: {
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;from&#34;</span>: <span style=color:#e6db74>&#34;YOUR SLACK ACCOUNT&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;to&#34;</span>:   <span style=color:#e6db74>&#34;takosan&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;host&#34;</span>: <span style=color:#e6db74>&#34;TAKOSAN HOST NAME&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;port&#34;</span>: <span style=color:#960050;background-color:#1e0010>TAKOSAN</span> <span style=color:#960050;background-color:#1e0010>PORT</span> <span style=color:#960050;background-color:#1e0010>NUMBER</span>,
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>その他設定はこちらを参考のこと</p><ul><li><a href=https://github.com/monochromegane/hoi#configuration>Hoi Configuration</a></li></ul><hr><p>これでクラウドサービスに載せたくない情報をさくっとこそっとやりとりできるようになりました。</p><p>インストールもさくっとできるよう各種揃えてます。よければご利用ください。</p><ul><li><code>go get github.com/monochromegane/hoi/...</code></li><li><code>brew tap monochromegane/hoi && brew install hoi</code></li><li><a href=https://github.com/monochromegane/hoi/releases>バイナリはこちら。Windows/Linuxあります</a></li></ul></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/hoi>hoi</a></li><li><a class=tag-link href=/tags/golang>golang</a></li><li><a class=tag-link href=/tags/slack>slack</a></li><li><a class=tag-link href=/tags/takosan>takosan</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2015/03/01/hoi-and-slack/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

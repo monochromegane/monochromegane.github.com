@@ -1,246 +1,134 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width">
-<meta name=author content>
-<title>ComposerとPackagistでPHPライブラリを開発、テスト、公開する(1/2) &#183; THINKING MEGANE</title>
-<meta name=twitter:card content="summary">
-<meta name=twitter:site content="@monochromegane">
-<meta property="og:description" content="PHP: The Right Wayを読んで、そのコンセプトに共感したので、今回、ComposerとPackagistでライブラリを開発、テスト、公開する手順をまとめておこうと思います。
-Composerって Composerは、PHPのライブラリ依存管理ツールです。RubyのBundlerのように依存するライブラリを設定ファイルに書いてコマンドたたけばライブラリのインストールと利用準備が整います。
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>ComposerとPackagistでPHPライブラリを開発、テスト、公開する(1/2) &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content='PHP: The Right Wayを読んで、そのコンセプトに共感したので、今回、ComposerとPackagistでライブラリを開発、テスト、公開する手順をまとめておこうと思います。
+Composerって
+Composerは、PHPのライブラリ依存管理ツールです。RubyのBundlerのように依存するライブラリを設定ファイルに書いてコマンドたたけばライブラリのインストールと利用準備が整います。
+
 また、Composer用のリポジトリだけでなく、PEARやGithubのリポジトリもComposer経由で取得できるので、とても便利です。
-基本的な使い方 インストール プロジェクトのカレントディレクトリにcomposer.pharをダウンロードする。これだけ。
-$ cd MyProject $ curl -s http://getcomposer.org/installer | php 使いたいライブラリをcomposer.jsonに書く カレントディレクトリにcomposer.jsonというファイルをつくって必要なライブラリを記述します。
-composer.json
-{ &#34;require&#34;: { &#34;monochromegane/query-builder&#34;: &#34;dev-master&#34; } } ライブラリをダウンロードする $ php composer.phar install カレントディレクトリにcomposer.lockとvendorというディレクトリができていれば成功。 ライブラリを使うには、使う側でvendor/autoload.phpを読み込むだけでOKです。 かんたん、かんたん。
-require_once(&#34;vendor/autoload.php&#34;); Composerに対応したライブラリをつくる では、実際にComposerに対応したライブラリを開発していきましょう。 サンプルとして、今回公開した、QueryBuilderを使います。必要に応じてGithubの資産も参考にしてください。
-プロジェクトの準備 $ mkdir MyLibrary $ cd MyLibrary $ curl -s http://getcomposer.org/installer | php ライブラリの情報を定義する プロジェクトのトップディレクトリにcomposer.jsonをつくります。
-composer.json
-{ &#34;name&#34;: &#34;monochromegane/query-builder&#34;, &#34;description&#34;: &#34;Simple query builder&#34;, &#34;keywords&#34;: [&#34;query&#34;, &#34;builder&#34;, &#34;pdo&#34;], &#34;type&#34;: &#34;library&#34;, &#34;license&#34;: &#34;MIT&#34;, &#34;homepage&#34;: &#34;https://github.">
-<meta property="og:title" content="ComposerとPackagistでPHPライブラリを開発、テスト、公開する(1/2)">
-<meta property="og:url" content="https://blog.monochromegane.com/blog/2013/06/02/development-php-composer-library-at-packagist-1/">
-<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-<link rel=stylesheet href=/css/reset.css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
-<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
-<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
-<link rel=stylesheet href=/css/text.css>
-<link rel=stylesheet href=/css/color.css>
-<link rel=stylesheet href=/css/layout.css>
-<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
-<link rel="shortcut icon" href=/images/favicon.ico>
-<link rel=canonical href=https://blog.monochromegane.com/blog/2013/06/02/development-php-composer-library-at-packagist-1/>
-<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
-</head>
-<body>
-<div class=header>
-<header>
-<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
-<nav>
-<ul class=menu>
-<li><a href=/self-introduction/>Home</a></li>
-<li><a href=/post/>Archives</a></li>
-<li><a href=/diary/>Diary</a></li>
-<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
-</ul>
-</nav>
-</header>
-</div>
-<div class=container>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/blog/2013/06/02/development-php-composer-library-at-packagist-1/>ComposerとPackagistでPHPライブラリを開発、テスト、公開する(1/2)</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2013-06-02</div></time>
-</header>
-<div class=post-inner>
-<p><a href=http://ja.phptherightway.com/>PHP: The Right Way</a>を読んで、そのコンセプトに共感したので、今回、ComposerとPackagistでライブラリを開発、テスト、公開する手順をまとめておこうと思います。</p>
-<h1 id=composerって>Composerって</h1>
-<p><a href=http://getcomposer.org/>Composer</a>は、PHPのライブラリ依存管理ツールです。RubyのBundlerのように依存するライブラリを設定ファイルに書いてコマンドたたけばライブラリのインストールと利用準備が整います。</p>
-<p><img src=/images/2013/06/logo-composer-transparent.png alt=logo-composer-transparent></p>
-<p>また、Composer用のリポジトリだけでなく、PEARやGithubのリポジトリもComposer経由で取得できるので、とても便利です。</p>
-<h1 id=基本的な使い方>基本的な使い方</h1>
-<h2 id=インストール>インストール</h2>
-<p>プロジェクトのカレントディレクトリに<code>composer.phar</code>をダウンロードする。これだけ。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ cd MyProject
+基本的な使い方
+インストール
+プロジェクトのカレントディレクトリにcomposer.pharをダウンロードする。これだけ。
+$ cd MyProject
 $ curl -s http://getcomposer.org/installer | php
-</code></pre></div><h2 id=使いたいライブラリをcomposerjsonに書く>使いたいライブラリをcomposer.jsonに書く</h2>
-<p>カレントディレクトリにcomposer.jsonというファイルをつくって必要なライブラリを記述します。</p>
-<p><code>composer.json</code></p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>{
-    <span style=color:#f92672>&#34;require&#34;</span>: {
-        <span style=color:#f92672>&#34;monochromegane/query-builder&#34;</span>: <span style=color:#e6db74>&#34;dev-master&#34;</span>
+使いたいライブラリをcomposer.jsonに書く
+カレントディレクトリにcomposer.jsonというファイルをつくって必要なライブラリを記述します。
+composer.json
+{
+    "require": {
+        "monochromegane/query-builder": "dev-master"
     }
 }
-</code></pre></div><h2 id=ライブラリをダウンロードする>ライブラリをダウンロードする</h2>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ php composer.phar install
-</code></pre></div><p>カレントディレクトリにcomposer.lockとvendorというディレクトリができていれば成功。
+ライブラリをダウンロードする
+$ php composer.phar install
+カレントディレクトリにcomposer.lockとvendorというディレクトリができていれば成功。
 ライブラリを使うには、使う側でvendor/autoload.phpを読み込むだけでOKです。
-かんたん、かんたん。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#66d9ef>require_once</span>(<span style=color:#e6db74>&#34;vendor/autoload.php&#34;</span>);
-</code></pre></div>
-<h1 id=composerに対応したライブラリをつくる>Composerに対応したライブラリをつくる</h1>
-<p>では、実際にComposerに対応したライブラリを開発していきましょう。
-サンプルとして、今回公開した、<a href=https://github.com/monochromegane/QueryBuilder>QueryBuilder</a>を使います。必要に応じてGithubの資産も参考にしてください。</p>
-<h2 id=プロジェクトの準備>プロジェクトの準備</h2>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ mkdir MyLibrary
+かんたん、かんたん。
+require_once("vendor/autoload.php");
+
+Composerに対応したライブラリをつくる
+では、実際にComposerに対応したライブラリを開発していきましょう。
+サンプルとして、今回公開した、QueryBuilderを使います。必要に応じてGithubの資産も参考にしてください。
+プロジェクトの準備
+$ mkdir MyLibrary
 $ cd MyLibrary
 $ curl -s http://getcomposer.org/installer | php
-</code></pre></div><h2 id=ライブラリの情報を定義する>ライブラリの情報を定義する</h2>
-<p>プロジェクトのトップディレクトリにcomposer.jsonをつくります。</p>
-<p><code>composer.json</code></p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>{
-    <span style=color:#f92672>&#34;name&#34;</span>: <span style=color:#e6db74>&#34;monochromegane/query-builder&#34;</span>,
-    <span style=color:#f92672>&#34;description&#34;</span>: <span style=color:#e6db74>&#34;Simple query builder&#34;</span>,
-    <span style=color:#f92672>&#34;keywords&#34;</span>: [<span style=color:#e6db74>&#34;query&#34;</span>, <span style=color:#e6db74>&#34;builder&#34;</span>, <span style=color:#e6db74>&#34;pdo&#34;</span>],
-    <span style=color:#f92672>&#34;type&#34;</span>: <span style=color:#e6db74>&#34;library&#34;</span>,
-    <span style=color:#f92672>&#34;license&#34;</span>: <span style=color:#e6db74>&#34;MIT&#34;</span>,
-    <span style=color:#f92672>&#34;homepage&#34;</span>: <span style=color:#e6db74>&#34;https://github.com/monochromegane/QueryBuilder&#34;</span>,
-    <span style=color:#f92672>&#34;authors&#34;</span>: [
+ライブラリの情報を定義する
+プロジェクトのトップディレクトリにcomposer.jsonをつくります。
+composer.json
+{
+    "name": "monochromegane/query-builder",
+    "description": "Simple query builder",
+    "keywords": ["query", "builder", "pdo"],
+    "type": "library",
+    "license": "MIT",
+    "homepage": "https://github.com/monochromegane/QueryBuilder",
+    "authors": [
       {
-        <span style=color:#f92672>&#34;name&#34;</span>: <span style=color:#e6db74>&#34;Your account&#34;</span>,
-        <span style=color:#f92672>&#34;email&#34;</span>: <span style=color:#e6db74>&#34;Your email&#34;</span>
+        "name": "Your account",
+        "email": "Your email"
       }
     ],
-    <span style=color:#f92672>&#34;require-dev&#34;</span>: {
-        <span style=color:#f92672>&#34;phpunit/phpunit&#34;</span>: <span style=color:#e6db74>&#34;3.7.*&#34;</span>
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*"
     },
-    <span style=color:#f92672>&#34;autoload&#34;</span>: {
-      <span style=color:#f92672>&#34;psr-0&#34;</span>: {
-        <span style=color:#f92672>&#34;Monochromegane\\QueryBuilder&#34;</span>: <span style=color:#e6db74>&#34;src/&#34;</span>
+    "autoload": {
+      "psr-0": {
+        "Monochromegane\\QueryBuilder": "src/"
       }
     }
 }
-</code></pre></div><ul>
-<li>
-<p>name</p>
-<ul>
-<li>重複回避のため、必ずベンダー名を先頭につけてください。ベンダー名はGithubのアカウント名がよさそうです。</li>
-</ul>
-</li>
-<li>
-<p>keywords</p>
-<ul>
-<li>後述のライブラリ公開サイトでの検索キーワードとして利用されます。複数指定可。</li>
-</ul>
-</li>
-<li>
-<p>require-dev</p>
-<ul>
-<li>開発環境でのみ使われるライブラリを定義します。テストは必要なのでここは常に書いておきましょう。</li>
-</ul>
-</li>
-<li>
-<p>autoload</p>
-<ul>
-<li>これからつくるライブラリがどのディレクトリにあって、名前空間がなんなのかを記載します。名前空間にもベンダー名をつけておきましょう。ちなみにここがないとうまくautoloadされないとおもいます。</li>
-</ul>
-</li>
-</ul>
-<h2 id=ライブラリをつくる>ライブラリをつくる</h2>
-<h3 id=ディレクトリ構成>ディレクトリ構成</h3>
-<p><code>autoload</code>の項で<code>ベンダー名\\ライブラリ名: "ライブラリ格納先"</code>と定義している場合、以下のようなディレクトリ構成をとります。</p>
-<p><code>src/Monochromegane/QueryBuilder</code>(ライブラリ格納先/ベンダー名/ライブラリ名)</p>
-<h3 id=ファイル配置と名前空間>ファイル配置と名前空間</h3>
-<p>上記で作成したディレクトリにライブラリ資産を作成します。</p>
-<p><code>src/Monochromegane/QueryBuilder/Query.php</code>(ライブラリ格納先/ベンダー名/ライブラリ名/ファイル名)</p>
-<pre tabindex=0><code>&lt;?php
+
+
+name'><meta property="og:title" content="ComposerとPackagistでPHPライブラリを開発、テスト、公開する(1/2)"><meta property="og:url" content="https://blog.monochromegane.com/blog/2013/06/02/development-php-composer-library-at-packagist-1/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2013/06/02/development-php-composer-library-at-packagist-1/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2013/06/02/development-php-composer-library-at-packagist-1/>ComposerとPackagistでPHPライブラリを開発、テスト、公開する(1/2)</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2013-06-02</div></time></header><div class=post-inner><p><a href=http://ja.phptherightway.com/>PHP: The Right Way</a>を読んで、そのコンセプトに共感したので、今回、ComposerとPackagistでライブラリを開発、テスト、公開する手順をまとめておこうと思います。</p><h1 id=composerって>Composerって</h1><p><a href=http://getcomposer.org/>Composer</a>は、PHPのライブラリ依存管理ツールです。RubyのBundlerのように依存するライブラリを設定ファイルに書いてコマンドたたけばライブラリのインストールと利用準備が整います。</p><p><img src=/images/2013/06/logo-composer-transparent.png alt=logo-composer-transparent></p><p>また、Composer用のリポジトリだけでなく、PEARやGithubのリポジトリもComposer経由で取得できるので、とても便利です。</p><h1 id=基本的な使い方>基本的な使い方</h1><h2 id=インストール>インストール</h2><p>プロジェクトのカレントディレクトリに<code>composer.phar</code>をダウンロードする。これだけ。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ cd MyProject
+</span></span><span style=display:flex><span>$ curl -s http://getcomposer.org/installer | php
+</span></span></code></pre></div><h2 id=使いたいライブラリをcomposerjsonに書く>使いたいライブラリをcomposer.jsonに書く</h2><p>カレントディレクトリにcomposer.jsonというファイルをつくって必要なライブラリを記述します。</p><p><code>composer.json</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;require&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&#34;monochromegane/query-builder&#34;</span>: <span style=color:#e6db74>&#34;dev-master&#34;</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=ライブラリをダウンロードする>ライブラリをダウンロードする</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ php composer.phar install
+</span></span></code></pre></div><p>カレントディレクトリにcomposer.lockとvendorというディレクトリができていれば成功。
+ライブラリを使うには、使う側でvendor/autoload.phpを読み込むだけでOKです。
+かんたん、かんたん。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=display:flex><span><span style=color:#66d9ef>require_once</span>(<span style=color:#e6db74>&#34;vendor/autoload.php&#34;</span>);
+</span></span></code></pre></div><h1 id=composerに対応したライブラリをつくる>Composerに対応したライブラリをつくる</h1><p>では、実際にComposerに対応したライブラリを開発していきましょう。
+サンプルとして、今回公開した、<a href=https://github.com/monochromegane/QueryBuilder>QueryBuilder</a>を使います。必要に応じてGithubの資産も参考にしてください。</p><h2 id=プロジェクトの準備>プロジェクトの準備</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ mkdir MyLibrary
+</span></span><span style=display:flex><span>$ cd MyLibrary
+</span></span><span style=display:flex><span>$ curl -s http://getcomposer.org/installer | php
+</span></span></code></pre></div><h2 id=ライブラリの情報を定義する>ライブラリの情報を定義する</h2><p>プロジェクトのトップディレクトリにcomposer.jsonをつくります。</p><p><code>composer.json</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;name&#34;</span>: <span style=color:#e6db74>&#34;monochromegane/query-builder&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;description&#34;</span>: <span style=color:#e6db74>&#34;Simple query builder&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;keywords&#34;</span>: [<span style=color:#e6db74>&#34;query&#34;</span>, <span style=color:#e6db74>&#34;builder&#34;</span>, <span style=color:#e6db74>&#34;pdo&#34;</span>],
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;type&#34;</span>: <span style=color:#e6db74>&#34;library&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;license&#34;</span>: <span style=color:#e6db74>&#34;MIT&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;homepage&#34;</span>: <span style=color:#e6db74>&#34;https://github.com/monochromegane/QueryBuilder&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;authors&#34;</span>: [
+</span></span><span style=display:flex><span>      {
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&#34;name&#34;</span>: <span style=color:#e6db74>&#34;Your account&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&#34;email&#34;</span>: <span style=color:#e6db74>&#34;Your email&#34;</span>
+</span></span><span style=display:flex><span>      }
+</span></span><span style=display:flex><span>    ],
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;require-dev&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&#34;phpunit/phpunit&#34;</span>: <span style=color:#e6db74>&#34;3.7.*&#34;</span>
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;autoload&#34;</span>: {
+</span></span><span style=display:flex><span>      <span style=color:#f92672>&#34;psr-0&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&#34;Monochromegane\\QueryBuilder&#34;</span>: <span style=color:#e6db74>&#34;src/&#34;</span>
+</span></span><span style=display:flex><span>      }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><ul><li><p>name</p><ul><li>重複回避のため、必ずベンダー名を先頭につけてください。ベンダー名はGithubのアカウント名がよさそうです。</li></ul></li><li><p>keywords</p><ul><li>後述のライブラリ公開サイトでの検索キーワードとして利用されます。複数指定可。</li></ul></li><li><p>require-dev</p><ul><li>開発環境でのみ使われるライブラリを定義します。テストは必要なのでここは常に書いておきましょう。</li></ul></li><li><p>autoload</p><ul><li>これからつくるライブラリがどのディレクトリにあって、名前空間がなんなのかを記載します。名前空間にもベンダー名をつけておきましょう。ちなみにここがないとうまくautoloadされないとおもいます。</li></ul></li></ul><h2 id=ライブラリをつくる>ライブラリをつくる</h2><h3 id=ディレクトリ構成>ディレクトリ構成</h3><p><code>autoload</code>の項で<code>ベンダー名\\ライブラリ名: "ライブラリ格納先"</code>と定義している場合、以下のようなディレクトリ構成をとります。</p><p><code>src/Monochromegane/QueryBuilder</code>(ライブラリ格納先/ベンダー名/ライブラリ名)</p><h3 id=ファイル配置と名前空間>ファイル配置と名前空間</h3><p>上記で作成したディレクトリにライブラリ資産を作成します。</p><p><code>src/Monochromegane/QueryBuilder/Query.php</code>(ライブラリ格納先/ベンダー名/ライブラリ名/ファイル名)</p><pre tabindex=0><code>&lt;?php
 namespace Monochromegane\QueryBuilder;
 class Query
 {
 }
-</code></pre><p>ファイルの先頭に名前空間を定義します。名前空間はディレクトリ構成をバックスラッシュで区切った記述になります。</p>
-<h2 id=テストする>テストする</h2>
-<p>テストないライブラリとか使う気がしないと思うのでテストを書きます。</p>
-<h3 id=phpunitのインストール>PHPUnitのインストール</h3>
-<p><code>require-dev</code>項にphpunitを記載していれば以下のコマンドでテスト環境が作成されます。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ php composer.phar install --dev
-</code></pre></div><p>vendor/bin/phpunitが格納されていればOKです。</p>
-<h3 id=phpunitxmlを作成する>phpunit.xmlを作成する</h3>
-<p>phpunit.xmlを作成しておけば、テストの実行が楽になります。</p>
-<p><code>tests/phpunit.xml</code></p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-xml data-lang=xml><span style=color:#f92672>&lt;phpunit</span> <span style=color:#a6e22e>backupGlobals=</span><span style=color:#e6db74>&#34;false&#34;</span>
-         <span style=color:#a6e22e>backupStaticAttributes=</span><span style=color:#e6db74>&#34;false&#34;</span>
-         <span style=color:#a6e22e>bootstrap=</span><span style=color:#e6db74>&#34;../vendor/autoload.php&#34;</span>
-         <span style=color:#a6e22e>cacheTokens=</span><span style=color:#e6db74>&#34;true&#34;</span>
-         <span style=color:#a6e22e>colors=</span><span style=color:#e6db74>&#34;true&#34;</span>
-         <span style=color:#a6e22e>convertErrorsToExceptions=</span><span style=color:#e6db74>&#34;true&#34;</span>
-         <span style=color:#a6e22e>convertNoticesToExceptions=</span><span style=color:#e6db74>&#34;true&#34;</span>
-         <span style=color:#a6e22e>convertWarningsToExceptions=</span><span style=color:#e6db74>&#34;true&#34;</span>
-         <span style=color:#a6e22e>processIsolation=</span><span style=color:#e6db74>&#34;false&#34;</span>
-         <span style=color:#a6e22e>stopOnFailure=</span><span style=color:#e6db74>&#34;false&#34;</span>
-         <span style=color:#a6e22e>syntaxCheck=</span><span style=color:#e6db74>&#34;false&#34;</span>
-         <span style=color:#a6e22e>verbose=</span><span style=color:#e6db74>&#34;false&#34;</span><span style=color:#f92672>&gt;</span>
-    <span style=color:#f92672>&lt;filter&gt;</span>
-        <span style=color:#f92672>&lt;whitelist</span> <span style=color:#a6e22e>addUncoveredFilesFromWhitelist=</span><span style=color:#e6db74>&#34;false&#34;</span><span style=color:#f92672>&gt;</span>
-            <span style=color:#f92672>&lt;directory&gt;</span>../src/Monochromegane/<span style=color:#f92672>&lt;/directory&gt;</span>
-        <span style=color:#f92672>&lt;/whitelist&gt;</span>
-    <span style=color:#f92672>&lt;/filter&gt;</span>
-    <span style=color:#f92672>&lt;testsuite</span> <span style=color:#a6e22e>name=</span><span style=color:#e6db74>&#34;Monochromegane\QueryBuilder Test Suite&#34;</span><span style=color:#f92672>&gt;</span>
-        <span style=color:#f92672>&lt;directory&gt;</span>.<span style=color:#f92672>&lt;/directory&gt;</span>
-    <span style=color:#f92672>&lt;/testsuite&gt;</span>
-<span style=color:#f92672>&lt;/phpunit&gt;</span>
-</code></pre></div><h3 id=テストを作成する>テストを作成する</h3>
-<p><code>tests/ベンダー名/ライブラリ名/テストファイル名</code>のような構成でテストを作成します。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#f92672>&lt;?</span><span style=color:#a6e22e>php</span>
-<span style=color:#66d9ef>namespace</span> <span style=color:#a6e22e>Monochromegane\QueryBuilder\Tests</span>;
-
-<span style=color:#66d9ef>class</span> <span style=color:#a6e22e>QueryTest</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>\PHPUnit_Framework_TestCase</span>
-{
-}
-</code></pre></div><p>ここにも名前空間を適用しておきましょう。</p>
-<h3 id=テストを実行する>テストを実行する</h3>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ cd tests
-$ ../vendor/bin/phpunit
-</code></pre></div><p>あとはライブラリとテストを整備していけばOKです。
-長くなってきたので公開編は、別エントリにわけたいと思います。</p>
-<p><a href=/blog/2013/06/02/development-php-composer-library-at-packagist-2/>ComposerとPackagistでPHPライブラリを開発、テスト、公開する(2/2)</a></p>
-<p>PHP: The Right Way !</p>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/php>php</a></li>
-<li><a class=tag-link href=/tags/composer>composer</a></li>
-<li><a class=tag-link href=/tags/packagist>packagist</a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<div class=social-btn>
-<div>
-<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/06/02/development-php-composer-library-at-packagist-1/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
-</div>
-<div>
-<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
-</div>
-</div>
-</div>
-<footer class=footer>
-<div class=author></div>
-<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
-<p>monochromegane (モノクロめがね) と申します。</p>
-<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-<ul class=social>
-<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
-<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
-<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
-</ul>
-<p class=copyright>
-<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
-</p>
-</footer>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
-<script>hljs.initHighlightingOnLoad()</script>
-<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
-</body>
-</html>
+</code></pre><p>ファイルの先頭に名前空間を定義します。名前空間はディレクトリ構成をバックスラッシュで区切った記述になります。</p><h2 id=テストする>テストする</h2><p>テストないライブラリとか使う気がしないと思うのでテストを書きます。</p><h3 id=phpunitのインストール>PHPUnitのインストール</h3><p><code>require-dev</code>項にphpunitを記載していれば以下のコマンドでテスト環境が作成されます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ php composer.phar install --dev
+</span></span></code></pre></div><p>vendor/bin/phpunitが格納されていればOKです。</p><h3 id=phpunitxmlを作成する>phpunit.xmlを作成する</h3><p>phpunit.xmlを作成しておけば、テストの実行が楽になります。</p><p><code>tests/phpunit.xml</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-xml data-lang=xml><span style=display:flex><span><span style=color:#f92672>&lt;phpunit</span> <span style=color:#a6e22e>backupGlobals=</span><span style=color:#e6db74>&#34;false&#34;</span>
+</span></span><span style=display:flex><span>         <span style=color:#a6e22e>backupStaticAttributes=</span><span style=color:#e6db74>&#34;false&#34;</span>
+</span></span><span style=display:flex><span>         <span style=color:#a6e22e>bootstrap=</span><span style=color:#e6db74>&#34;../vendor/autoload.php&#34;</span>
+</span></span><span style=display:flex><span>         <span style=color:#a6e22e>cacheTokens=</span><span style=color:#e6db74>&#34;true&#34;</span>
+</span></span><span style=display:flex><span>         <span style=color:#a6e22e>colors=</span><span style=color:#e6db74>&#34;true&#34;</span>
+</span></span><span style=display:flex><span>         <span style=color:#a6e22e>convertErrorsToExceptions=</span><span style=color:#e6db74>&#34;true&#34;</span>
+</span></span><span style=display:flex><span>         <span style=color:#a6e22e>convertNoticesToExceptions=</span><span style=color:#e6db74>&#34;true&#34;</span>
+</span></span><span style=display:flex><span>         <span style=color:#a6e22e>convertWarningsToExceptions=</span><span style=color:#e6db74>&#34;true&#34;</span>
+</span></span><span style=display:flex><span>         <span style=color:#a6e22e>processIsolation=</span><span style=color:#e6db74>&#34;false&#34;</span>
+</span></span><span style=display:flex><span>         <span style=color:#a6e22e>stopOnFailure=</span><span style=color:#e6db74>&#34;false&#34;</span>
+</span></span><span style=display:flex><span>         <span style=color:#a6e22e>syntaxCheck=</span><span style=color:#e6db74>&#34;false&#34;</span>
+</span></span><span style=display:flex><span>         <span style=color:#a6e22e>verbose=</span><span style=color:#e6db74>&#34;false&#34;</span><span style=color:#f92672>&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;filter&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&lt;whitelist</span> <span style=color:#a6e22e>addUncoveredFilesFromWhitelist=</span><span style=color:#e6db74>&#34;false&#34;</span><span style=color:#f92672>&gt;</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>&lt;directory&gt;</span>../src/Monochromegane/<span style=color:#f92672>&lt;/directory&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&lt;/whitelist&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;/filter&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;testsuite</span> <span style=color:#a6e22e>name=</span><span style=color:#e6db74>&#34;Monochromegane\QueryBuilder Test Suite&#34;</span><span style=color:#f92672>&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&lt;directory&gt;</span>.<span style=color:#f92672>&lt;/directory&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;/testsuite&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>&lt;/phpunit&gt;</span>
+</span></span></code></pre></div><h3 id=テストを作成する>テストを作成する</h3><p><code>tests/ベンダー名/ライブラリ名/テストファイル名</code>のような構成でテストを作成します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=display:flex><span><span style=color:#f92672>&lt;?</span><span style=color:#a6e22e>php</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> <span style=color:#a6e22e>Monochromegane\QueryBuilder\Tests</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>QueryTest</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>\PHPUnit_Framework_TestCase</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>ここにも名前空間を適用しておきましょう。</p><h3 id=テストを実行する>テストを実行する</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ cd tests
+</span></span><span style=display:flex><span>$ ../vendor/bin/phpunit
+</span></span></code></pre></div><p>あとはライブラリとテストを整備していけばOKです。
+長くなってきたので公開編は、別エントリにわけたいと思います。</p><p><a href=/blog/2013/06/02/development-php-composer-library-at-packagist-2/>ComposerとPackagistでPHPライブラリを開発、テスト、公開する(2/2)</a></p><p>PHP: The Right Way !</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/php>php</a></li><li><a class=tag-link href=/tags/composer>composer</a></li><li><a class=tag-link href=/tags/packagist>packagist</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2013/06/02/development-php-composer-library-at-packagist-1/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

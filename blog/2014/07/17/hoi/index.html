@@ -1,147 +1,44 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width">
-<meta name=author content>
-<title>「ほい、これ」ってファイルを渡せる Hoi というツールをつくった &#183; THINKING MEGANE</title>
-<meta name=twitter:card content="summary">
-<meta name=twitter:site content="@monochromegane">
-<meta property="og:description" content="PC間でのファイル受け渡しのときにファイルサーバを使うことがたまにありますが、OSによってファイルパスやその書式が違ったり、受け渡し用のディレクトリをつくるとか、ファイル渡したいだけなのに、なんだか小さなひっかかりがあってスマートじゃないなあといつも感じてました。
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>「ほい、これ」ってファイルを渡せる Hoi というツールをつくった &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content='PC間でのファイル受け渡しのときにファイルサーバを使うことがたまにありますが、OSによってファイルパスやその書式が違ったり、受け渡し用のディレクトリをつくるとか、ファイル渡したいだけなのに、なんだか小さなひっかかりがあってスマートじゃないなあといつも感じてました。
 なので、もっと直感的に「ほい、これ」って渡せるツールをつくってみました。
- Hoi Hoiはファイルの受け渡しを簡単に行うためのコマンドラインツールです。Go言語で書かれており、HTTPファイルサーバを利用して機能を提供します。
- monochromegane/hoi (An easy file transfer tool using http file server.)  ファイルを渡す 使い方は簡単でローカルのファイルパスをhoiコマンドの引数に渡すだけです。
-$ hoi ~/Documents/hoge.txt そうすると以下のような、ダウンロード用のURLが出力されます。
+
+Hoi
+Hoiはファイルの受け渡しを簡単に行うためのコマンドラインツールです。Go言語で書かれており、HTTPファイルサーバを利用して機能を提供します。
+
+monochromegane/hoi (An easy file transfer tool using http file server.)
+
+ファイルを渡す
+使い方は簡単でローカルのファイルパスをhoiコマンドの引数に渡すだけです。
+$ hoi ~/Documents/hoge.txt
+そうすると以下のような、ダウンロード用のURLが出力されます。
 http://192.168.0.100:8081/h6un2x8zx6018xuhhn3bu7twwnf4ol1y/hoge.txt
 これをIRCなりなんなりで相手に伝えてください。
-仕組み 特に難しいことはしていません。主な処理はこういう感じです。
- ファイルダウンロード用にHTTPサーバを起動する HTTPサーバのDocumentRootに対して引数のファイルのシンボリックリンクをはる  見ての通り、シンボリックリンクさえはればどんなファイルでもダウンロード対象になりますし、HTTPSでもないので、
+仕組み
+特に難しいことはしていません。主な処理はこういう感じです。
+
+ファイルダウンロード用にHTTPサーバを起動する
+HTTPサーバのDocumentRootに対して引数のファイルのシンボリックリンクをはる
+
+見ての通り、シンボリックリンクさえはればどんなファイルでもダウンロード対象になりますし、HTTPSでもないので、
 必ず信頼できるネットワーク上で使うようにしてください。
-ファイルを消す $ hoi --clear で公開しているファイルのシンボリックリンクを削除します。
+ファイルを消す
+$ hoi --clear
+で公開しているファイルのシンボリックリンクを削除します。
 そのうち、定期的に消すような処理を入れようかなと思ってます。
-デーモン化について HTTPサーバのデーモン化、Supervisordとか使わず Hoi 単体だけでできるように、こんな感じのシンプルなやつにしてます。
-func runAsDaemon() { cmd := exec.Command(os.Args[0], &#34;--server&#34;) cmd.Start() } 今のところ、PIDでしかHTTPサーバのプロセスにたどり着く手段がなくて、サーバのstatus/stopとかの実装をどうしようか思案中です。
-Go言語でのデーモン化についてよい案をお持ちのかた、アドバイスお待ちしてます。
- Go言語、HTTPサーバを立てるだけならすぐできてしまって便利ですね。
-ファイルの受け渡しのためにローカルにHTTPサーバを立てるというのはある意味ぜいたくですが、全然負荷もかからないので、こんな風に使ってみるのもありかなとちょっと遊んでみました。">
-<meta property="og:title" content="「ほい、これ」ってファイルを渡せる Hoi というツールをつくった">
-<meta property="og:url" content="https://blog.monochromegane.com/blog/2014/07/17/hoi/">
-<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-<link rel=stylesheet href=/css/reset.css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
-<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
-<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
-<link rel=stylesheet href=/css/text.css>
-<link rel=stylesheet href=/css/color.css>
-<link rel=stylesheet href=/css/layout.css>
-<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
-<link rel="shortcut icon" href=/images/favicon.ico>
-<link rel=canonical href=https://blog.monochromegane.com/blog/2014/07/17/hoi/>
-<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
-</head>
-<body>
-<div class=header>
-<header>
-<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
-<nav>
-<ul class=menu>
-<li><a href=/self-introduction/>Home</a></li>
-<li><a href=/post/>Archives</a></li>
-<li><a href=/diary/>Diary</a></li>
-<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
-</ul>
-</nav>
-</header>
-</div>
-<div class=container>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/blog/2014/07/17/hoi/>「ほい、これ」ってファイルを渡せる Hoi というツールをつくった</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2014-07-17</div></time>
-</header>
-<div class=post-inner>
-<p>PC間でのファイル受け渡しのときにファイルサーバを使うことがたまにありますが、OSによってファイルパスやその書式が違ったり、受け渡し用のディレクトリをつくるとか、ファイル渡したいだけなのに、なんだか小さなひっかかりがあってスマートじゃないなあといつも感じてました。</p>
-<p>なので、もっと直感的に「ほい、これ」って渡せるツールをつくってみました。</p>
-<hr>
-<h1 id=hoi>Hoi</h1>
-<p><strong>Hoi</strong>はファイルの受け渡しを簡単に行うためのコマンドラインツールです。Go言語で書かれており、HTTPファイルサーバを利用して機能を提供します。</p>
-<ul>
-<li><a href=https://github.com/monochromegane/hoi>monochromegane/hoi (An easy file transfer tool using http file server.)</a></li>
-</ul>
-<h2 id=ファイルを渡す>ファイルを渡す</h2>
-<p>使い方は簡単でローカルのファイルパスを<code>hoi</code>コマンドの引数に渡すだけです。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ hoi ~/Documents/hoge.txt
-</code></pre></div><p>そうすると以下のような、ダウンロード用のURLが出力されます。</p>
-<p><code>http://192.168.0.100:8081/h6un2x8zx6018xuhhn3bu7twwnf4ol1y/hoge.txt</code></p>
-<p>これをIRCなりなんなりで相手に伝えてください。</p>
-<h3 id=仕組み>仕組み</h3>
-<p>特に難しいことはしていません。主な処理はこういう感じです。</p>
-<ul>
-<li>ファイルダウンロード用にHTTPサーバを起動する</li>
-<li>HTTPサーバのDocumentRootに対して引数のファイルのシンボリックリンクをはる</li>
-</ul>
-<p>見ての通り、シンボリックリンクさえはればどんなファイルでもダウンロード対象になりますし、HTTPSでもないので、<br>
-<strong>必ず信頼できるネットワーク上で使うようにしてください。</strong></p>
-<h2 id=ファイルを消す>ファイルを消す</h2>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>$ hoi --clear
-</code></pre></div><p>で公開しているファイルのシンボリックリンクを削除します。</p>
-<p>そのうち、定期的に消すような処理を入れようかなと思ってます。</p>
-<h2 id=デーモン化について>デーモン化について</h2>
-<p>HTTPサーバのデーモン化、Supervisordとか使わず Hoi 単体だけでできるように、こんな感じのシンプルなやつにしてます。</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>runAsDaemon</span>() {
-	<span style=color:#a6e22e>cmd</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>exec</span>.<span style=color:#a6e22e>Command</span>(<span style=color:#a6e22e>os</span>.<span style=color:#a6e22e>Args</span>[<span style=color:#ae81ff>0</span>], <span style=color:#e6db74>&#34;--server&#34;</span>)
-	<span style=color:#a6e22e>cmd</span>.<span style=color:#a6e22e>Start</span>()
+デーモン化について
+HTTPサーバのデーモン化、Supervisordとか使わず Hoi 単体だけでできるように、こんな感じのシンプルなやつにしてます。
+func runAsDaemon() {
+	cmd := exec.Command(os.Args[0], "--server")
+	cmd.Start()
 }
-</code></pre></div><p>今のところ、PIDでしかHTTPサーバのプロセスにたどり着く手段がなくて、サーバのstatus/stopとかの実装をどうしようか思案中です。</p>
-<p>Go言語でのデーモン化についてよい案をお持ちのかた、アドバイスお待ちしてます。</p>
-<hr>
-<p>Go言語、HTTPサーバを立てるだけならすぐできてしまって便利ですね。</p>
-<p>ファイルの受け渡しのためにローカルにHTTPサーバを立てるというのはある意味ぜいたくですが、全然負荷もかからないので、こんな風に使ってみるのもありかなとちょっと遊んでみました。</p>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/hoi>hoi</a></li>
-<li><a class=tag-link href=/tags/go>go</a></li>
-<li><a class=tag-link href=/tags/golang>golang</a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<div class=social-btn>
-<div>
-<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2014/07/17/hoi/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
-</div>
-<div>
-<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
-</div>
-</div>
-</div>
-<footer class=footer>
-<div class=author></div>
-<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
-<p>monochromegane (モノクロめがね) と申します。</p>
-<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-<ul class=social>
-<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
-<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
-<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
-</ul>
-<p class=copyright>
-<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
-</p>
-</footer>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
-<script>hljs.initHighlightingOnLoad()</script>
-<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
-</body>
-</html>
+今のところ、PIDでしかHTTPサーバのプロセスにたどり着く手段がなくて、サーバのstatus/stopとかの実装をどうしようか思案中です。
+Go言語でのデーモン化についてよい案をお持ちのかた、アドバイスお待ちしてます。
+
+Go言語、HTTPサーバを立てるだけならすぐできてしまって便利ですね。
+ファイルの受け渡しのためにローカルにHTTPサーバを立てるというのはある意味ぜいたくですが、全然負荷もかからないので、こんな風に使ってみるのもありかなとちょっと遊んでみました。'><meta property="og:title" content="「ほい、これ」ってファイルを渡せる Hoi というツールをつくった"><meta property="og:url" content="https://blog.monochromegane.com/blog/2014/07/17/hoi/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2014/07/17/hoi/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2014/07/17/hoi/>「ほい、これ」ってファイルを渡せる Hoi というツールをつくった</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2014-07-17</div></time></header><div class=post-inner><p>PC間でのファイル受け渡しのときにファイルサーバを使うことがたまにありますが、OSによってファイルパスやその書式が違ったり、受け渡し用のディレクトリをつくるとか、ファイル渡したいだけなのに、なんだか小さなひっかかりがあってスマートじゃないなあといつも感じてました。</p><p>なので、もっと直感的に「ほい、これ」って渡せるツールをつくってみました。</p><hr><h1 id=hoi>Hoi</h1><p><strong>Hoi</strong>はファイルの受け渡しを簡単に行うためのコマンドラインツールです。Go言語で書かれており、HTTPファイルサーバを利用して機能を提供します。</p><ul><li><a href=https://github.com/monochromegane/hoi>monochromegane/hoi (An easy file transfer tool using http file server.)</a></li></ul><h2 id=ファイルを渡す>ファイルを渡す</h2><p>使い方は簡単でローカルのファイルパスを<code>hoi</code>コマンドの引数に渡すだけです。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ hoi ~/Documents/hoge.txt
+</span></span></code></pre></div><p>そうすると以下のような、ダウンロード用のURLが出力されます。</p><p><code>http://192.168.0.100:8081/h6un2x8zx6018xuhhn3bu7twwnf4ol1y/hoge.txt</code></p><p>これをIRCなりなんなりで相手に伝えてください。</p><h3 id=仕組み>仕組み</h3><p>特に難しいことはしていません。主な処理はこういう感じです。</p><ul><li>ファイルダウンロード用にHTTPサーバを起動する</li><li>HTTPサーバのDocumentRootに対して引数のファイルのシンボリックリンクをはる</li></ul><p>見ての通り、シンボリックリンクさえはればどんなファイルでもダウンロード対象になりますし、HTTPSでもないので、<br><strong>必ず信頼できるネットワーク上で使うようにしてください。</strong></p><h2 id=ファイルを消す>ファイルを消す</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ hoi --clear
+</span></span></code></pre></div><p>で公開しているファイルのシンボリックリンクを削除します。</p><p>そのうち、定期的に消すような処理を入れようかなと思ってます。</p><h2 id=デーモン化について>デーモン化について</h2><p>HTTPサーバのデーモン化、Supervisordとか使わず Hoi 単体だけでできるように、こんな感じのシンプルなやつにしてます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>runAsDaemon</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>cmd</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>exec</span>.<span style=color:#a6e22e>Command</span>(<span style=color:#a6e22e>os</span>.<span style=color:#a6e22e>Args</span>[<span style=color:#ae81ff>0</span>], <span style=color:#e6db74>&#34;--server&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>cmd</span>.<span style=color:#a6e22e>Start</span>()
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>今のところ、PIDでしかHTTPサーバのプロセスにたどり着く手段がなくて、サーバのstatus/stopとかの実装をどうしようか思案中です。</p><p>Go言語でのデーモン化についてよい案をお持ちのかた、アドバイスお待ちしてます。</p><hr><p>Go言語、HTTPサーバを立てるだけならすぐできてしまって便利ですね。</p><p>ファイルの受け渡しのためにローカルにHTTPサーバを立てるというのはある意味ぜいたくですが、全然負荷もかからないので、こんな風に使ってみるのもありかなとちょっと遊んでみました。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/hoi>hoi</a></li><li><a class=tag-link href=/tags/go>go</a></li><li><a class=tag-link href=/tags/golang>golang</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2014/07/17/hoi/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

@@ -1,136 +1,61 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width">
-<meta name=author content>
-<title>Go言語でTCPやソケット通信を多重化，高速化するsmux(ソケットマルチプレクサ)をつくった &#183; THINKING MEGANE</title>
-<meta name=twitter:card content="summary">
-<meta name=twitter:site content="@monochromegane">
-<meta property="og:description" content="サーバ間で分散処理を行う際の相互通信におけるボトルネックを解消するため，smux(Socket multiplexer)を開発している．
-サーバ間の相互通信におけるボトルネックとその解決策 一対のサーバ間で多数のリクエストとレスポンスが送受信され，信頼性の高い通信としてTCPを利用する場合，コネクション確立のオーバーヘッドを排除するために接続の再利用が行われる．しかしながら，クライアントは送信に対する受信を待つ必要があるため，レスポンスまでに幾許かの処理時間を要する状況では送信のキューがたまってしまう．そこで複数の接続を利用することでこれを解消する方法が取られるが，追加の接続はリソース使用に関するオーバーヘッドを発生させてしまう．なにより各接続におけるレスポンス待ち時間は依然として解決しておらず，接続の利用面から見て非効率である．そこで，単一の接続において，仮想的に並行送受信を行う方法が提案されている．これは，HTTP/2におけるバイナリフレーミングレイヤの役割であり，コネクション内にストリームと呼ばれる仮想的なチャンネルを設けて双方向の通信を並行して行う．下位レイヤの制約であるリクエスト送信後のブロッキングは，リクエストやレスポンスをフレームと呼ばれる単位に分割することで影響を抑えている．
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>Go言語でTCPやソケット通信を多重化，高速化するsmux(ソケットマルチプレクサ)をつくった &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content='サーバ間で分散処理を行う際の相互通信におけるボトルネックを解消するため，smux(Socket multiplexer)を開発している．
+
+サーバ間の相互通信におけるボトルネックとその解決策
+一対のサーバ間で多数のリクエストとレスポンスが送受信され，信頼性の高い通信としてTCPを利用する場合，コネクション確立のオーバーヘッドを排除するために接続の再利用が行われる．しかしながら，クライアントは送信に対する受信を待つ必要があるため，レスポンスまでに幾許かの処理時間を要する状況では送信のキューがたまってしまう．そこで複数の接続を利用することでこれを解消する方法が取られるが，追加の接続はリソース使用に関するオーバーヘッドを発生させてしまう．なにより各接続におけるレスポンス待ち時間は依然として解決しておらず，接続の利用面から見て非効率である．そこで，単一の接続において，仮想的に並行送受信を行う方法が提案されている．これは，HTTP/2におけるバイナリフレーミングレイヤの役割であり，コネクション内にストリームと呼ばれる仮想的なチャンネルを設けて双方向の通信を並行して行う．下位レイヤの制約であるリクエスト送信後のブロッキングは，リクエストやレスポンスをフレームと呼ばれる単位に分割することで影響を抑えている．
 このように多数のリクエストとレスポンスが送受信され，レスポンスまでに幾許かの処理時間を要する状況においては，HTTP/2は非常に魅力的であり，はじめに採用を検討すべき価値がある．一方で，HTTP/2を利用する場合，HTTPプロトコルに依存した一定のオーバーヘッドは発生する．もちろんHTTP/2にはバイナリ化やヘッダ圧縮などの多数の対策が組み込まれているため，自身の適用課題において十分な性能が見込めるならば問題ないが，より最適化したパフォーマンスが必要な状況では，これらのオーバーヘッドの除去も検討の余地がある．
-smux(Socket multiplexer) smux(Socket multiplexer)はこのような状況において，非常にシンプルなバイナリフレーミングレイヤの振る舞いをアプリケーションに提供する．すなわち，単一コネクションの仮想多重化である．アプリケーションは独自の（そしておそらく簡潔な）プロトコルに則ってストリーム経由でデータを送受信する．複数コネクションのハンドリングが不要になり，複数のリクエストを並行して発行することができるため，アプリケーション実装は簡潔に，通信は高速になることが見込める．
+smux(Socket multiplexer)
+smux(Socket multiplexer)はこのような状況において，非常にシンプルなバイナリフレーミングレイヤの振る舞いをアプリケーションに提供する．すなわち，単一コネクションの仮想多重化である．アプリケーションは独自の（そしておそらく簡潔な）プロトコルに則ってストリーム経由でデータを送受信する．複数コネクションのハンドリングが不要になり，複数のリクエストを並行して発行することができるため，アプリケーション実装は簡潔に，通信は高速になることが見込める．
 smuxはGo言語で実装されており，アプリケーションがGo言語であれば，以下のように利用することができる．
-// smux server server := smux.Server{ Network: &#34;tcp&#34;, // or &#34;unix&#34; 	Address: &#34;localhost:3000&#34;, // or &#34;sockfile&#34;  Handler: smux.HandlerFunc(func(w io.Writer, r io.Reader) { io.Copy(ioutil.Discard, r) fmt.Fprint(w, &#34;Hello, smux client!&#34;) }), } server.ListenAndServe() // smux client client := smux.Client{ Network: &#34;tcp&#34;, // or &#34;unix&#34; 	Address: &#34;localhost:3000&#34;, // or &#34;sockfile&#34; } body, _ := client.Post([]byte(&#34;Hello, smux server!&#34;)) fmt.Printf(&#34;%s\n&#34;, body) // &#34;Hello, smux client!">
-<meta property="og:title" content="Go言語でTCPやソケット通信を多重化，高速化するsmux(ソケットマルチプレクサ)をつくった">
-<meta property="og:url" content="https://blog.monochromegane.com/blog/2018/05/03/smux/">
-<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-<link rel=stylesheet href=/css/reset.css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
-<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
-<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
-<link rel=stylesheet href=/css/text.css>
-<link rel=stylesheet href=/css/color.css>
-<link rel=stylesheet href=/css/layout.css>
-<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
-<link rel="shortcut icon" href=/images/favicon.ico>
-<link rel=canonical href=https://blog.monochromegane.com/blog/2018/05/03/smux/>
-<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
-</head>
-<body>
-<div class=header>
-<header>
-<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
-<nav>
-<ul class=menu>
-<li><a href=/self-introduction/>Home</a></li>
-<li><a href=/post/>Archives</a></li>
-<li><a href=/diary/>Diary</a></li>
-<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
-</ul>
-</nav>
-</header>
-</div>
-<div class=container>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/blog/2018/05/03/smux/>Go言語でTCPやソケット通信を多重化，高速化するsmux(ソケットマルチプレクサ)をつくった</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2018-05-03</div></time>
-</header>
-<div class=post-inner>
-<p>サーバ間で分散処理を行う際の相互通信におけるボトルネックを解消するため，smux(Socket multiplexer)を開発している．</p>
-<h2 id=サーバ間の相互通信におけるボトルネックとその解決策>サーバ間の相互通信におけるボトルネックとその解決策</h2>
-<p>一対のサーバ間で多数のリクエストとレスポンスが送受信され，信頼性の高い通信としてTCPを利用する場合，コネクション確立のオーバーヘッドを排除するために接続の再利用が行われる．しかしながら，クライアントは送信に対する受信を待つ必要があるため，レスポンスまでに幾許かの処理時間を要する状況では送信のキューがたまってしまう．そこで複数の接続を利用することでこれを解消する方法が取られるが，追加の接続はリソース使用に関するオーバーヘッドを発生させてしまう．なにより各接続におけるレスポンス待ち時間は依然として解決しておらず，接続の利用面から見て非効率である．そこで，単一の接続において，仮想的に並行送受信を行う方法が提案されている．これは，HTTP/2におけるバイナリフレーミングレイヤの役割であり，コネクション内にストリームと呼ばれる仮想的なチャンネルを設けて双方向の通信を並行して行う．下位レイヤの制約であるリクエスト送信後のブロッキングは，リクエストやレスポンスをフレームと呼ばれる単位に分割することで影響を抑えている．</p>
-<p>このように多数のリクエストとレスポンスが送受信され，レスポンスまでに幾許かの処理時間を要する状況においては，HTTP/2は非常に魅力的であり，はじめに採用を検討すべき価値がある．一方で，HTTP/2を利用する場合，HTTPプロトコルに依存した一定のオーバーヘッドは発生する．もちろんHTTP/2にはバイナリ化やヘッダ圧縮などの多数の対策が組み込まれているため，自身の適用課題において十分な性能が見込めるならば問題ないが，より最適化したパフォーマンスが必要な状況では，これらのオーバーヘッドの除去も検討の余地がある．</p>
-<h2 id=smuxsocket-multiplexer>smux(Socket multiplexer)</h2>
-<p>smux(Socket multiplexer)はこのような状況において，非常にシンプルなバイナリフレーミングレイヤの振る舞いをアプリケーションに提供する．すなわち，単一コネクションの仮想多重化である．アプリケーションは独自の（そしておそらく簡潔な）プロトコルに則ってストリーム経由でデータを送受信する．複数コネクションのハンドリングが不要になり，複数のリクエストを並行して発行することができるため，アプリケーション実装は簡潔に，通信は高速になることが見込める．</p>
-<p>smuxはGo言語で実装されており，アプリケーションがGo言語であれば，以下のように利用することができる．</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#75715e>// smux server
-</span><span style=color:#75715e></span><span style=color:#a6e22e>server</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>smux</span>.<span style=color:#a6e22e>Server</span>{
-	<span style=color:#a6e22e>Network</span>: <span style=color:#e6db74>&#34;tcp&#34;</span>, <span style=color:#75715e>// or &#34;unix&#34;
-</span><span style=color:#75715e></span>	<span style=color:#a6e22e>Address</span>: <span style=color:#e6db74>&#34;localhost:3000&#34;</span>, <span style=color:#75715e>// or &#34;sockfile&#34;
-</span><span style=color:#75715e></span>        <span style=color:#a6e22e>Handler</span>: <span style=color:#a6e22e>smux</span>.<span style=color:#a6e22e>HandlerFunc</span>(<span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>w</span> <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>Writer</span>, <span style=color:#a6e22e>r</span> <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>Reader</span>) {
-                <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>Copy</span>(<span style=color:#a6e22e>ioutil</span>.<span style=color:#a6e22e>Discard</span>, <span style=color:#a6e22e>r</span>)
-		<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Fprint</span>(<span style=color:#a6e22e>w</span>, <span style=color:#e6db74>&#34;Hello, smux client!&#34;</span>)
+// smux server
+server := smux.Server{
+	Network: "tcp", // or "unix"
+	Address: "localhost:3000", // or "sockfile"
+        Handler: smux.HandlerFunc(func(w io.Writer, r io.Reader) {
+                io.Copy(ioutil.Discard, r)
+		fmt.Fprint(w, "Hello, smux client!")
         }),
 }
 
-<span style=color:#a6e22e>server</span>.<span style=color:#a6e22e>ListenAndServe</span>()
-</code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#75715e>// smux client
-</span><span style=color:#75715e></span><span style=color:#a6e22e>client</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>smux</span>.<span style=color:#a6e22e>Client</span>{
-	<span style=color:#a6e22e>Network</span>: <span style=color:#e6db74>&#34;tcp&#34;</span>, <span style=color:#75715e>// or &#34;unix&#34;
-</span><span style=color:#75715e></span>	<span style=color:#a6e22e>Address</span>: <span style=color:#e6db74>&#34;localhost:3000&#34;</span>, <span style=color:#75715e>// or &#34;sockfile&#34;
-</span><span style=color:#75715e></span>}
+server.ListenAndServe()
+// smux client
+client := smux.Client{
+	Network: "tcp", // or "unix"
+	Address: "localhost:3000", // or "sockfile"
+}
 
-<span style=color:#a6e22e>body</span>, <span style=color:#a6e22e>_</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>Post</span>([]byte(<span style=color:#e6db74>&#34;Hello, smux server!&#34;</span>))
-<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;%s\n&#34;</span>, <span style=color:#a6e22e>body</span>) <span style=color:#75715e>// &#34;Hello, smux client!&#34;
-</span></code></pre></div><p>内部的には，streamはReadやWriteのメソッドを持っているため，より最適化したい場合はこれらを自身で利用することもできる．
-また，あくまでソケットインターフェースを経由したやり取りであり，smuxのプロトコルに従えば他の言語での実装も可能である．</p>
-<h2 id=パフォーマンス>パフォーマンス</h2>
-<p>以下は，smuxとHTTP/1.1，HTTP/2を対象としたベンチマークである．それぞれ多重度として，コネクション数やストリーム数を増加させながら，一定数のリクエストを捌くまでの時間を計測した．リクエストとレスポンスの内容，サーバサイドでの処理は各手法で統一している．また，サーバーサイドでの処理の代替に数十msのsleepを入れている．</p>
-<p><img src=https://user-images.githubusercontent.com/1845486/39556184-79a3e0ba-4eb9-11e8-929d-08a8f3291e04.png alt=benchmark></p>
-<p>今回の条件では多重度を上げた場合に，手法によっては性能が頭打ちになる中で，smuxが特に高い多重度において性能を十分に発揮できた．今回のベンチマークはサーバーとクライアントが同一の環境であり，各手法に適したチューニングや適用時の条件によっても変動はあると考えられるため，利用においては条件に合わせたパフォーマンス計測を行うことが望ましい．ベンチマークのコードは<a href=https://github.com/monochromegane/smux/blob/master/cmd/bench>ここ</a>においている．</p>
-<h2 id=まとめ>まとめ</h2>
-<p>サーバ間通信のボトルネックを解決するため，HTTP/2のバイナリフレーミングレイヤを参考に，プロトコルのボトルネックを排除するシンプルなコネクションの仮想多重化を行うsmuxを開発した．手元でのベンチマークでは，できるだけ多くのリクエストを並列に処理したいような状況で効果がありそうであることが確認できた．まだまだ安定性の面などで不安もあるが，引き続き本番運用に向けて開発を継続していきたい．</p>
-<hr>
-<p><strong>2018/05/04追記</strong></p>
-<p>コメントにて先行実装として，<a href=https://github.com/hashicorp/yamux>hashicorp/yamux</a>と<a href=https://github.com/xtaci/smux>xtaci/smux</a>を教えていただいたので，ベンチマークを再実行した．xtaci/smuxはSimple Stream Multiplexingらしいので，ここではssmuxと呼称する．</p>
-<p><img src=https://user-images.githubusercontent.com/1845486/39610904-7695e7da-4f8e-11e8-989c-5a2cfac3a4f9.png alt=benchmark_2></p>
-<p>yamuxに対しては同等以上と言えるが，ssmuxが優秀であるという結果になった．両者とも，ストリームにおけるリクエストに対してレスポンスが発生する場合では，リクエスト側の終了を検知するためにクローズ処理が利用できないため，別途自前でデータサイズを送信する必要があるなど使い勝手に関しては多少の難もありつつも，実装や性能については参考になる部分が多い．まだ改善の余地が残っていること，着眼点自体は良さそうであるという点は喜びたい．並列時の性能に効果があると考えられるフロー制御周りを中心に実装参考しながらパフォーマンスなど改めて見直していく．</p>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/golang>golang</a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<div class=social-btn>
-<div>
-<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2018/05/03/smux/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
-</div>
-<div>
-<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
-</div>
-</div>
-</div>
-<footer class=footer>
-<div class=author></div>
-<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
-<p>monochromegane (モノクロめがね) と申します。</p>
-<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-<ul class=social>
-<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
-<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
-<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
-</ul>
-<p class=copyright>
-<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
-</p>
-</footer>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
-<script>hljs.initHighlightingOnLoad()</script>
-<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
-</body>
-</html>
+body, _ := client.Post([]byte("Hello, smux server!"))
+fmt.Printf("%s\n", body) // "Hello, smux client!"
+内部的には，streamはReadやWriteのメソッドを持っているため，より最適化したい場合はこれらを自身で利用することもできる．
+また，あくまでソケットインターフェースを経由したやり取りであり，smuxのプロトコルに従えば他の言語での実装も可能である．
+パフォーマンス
+以下は，smuxとHTTP/1.1，HTTP/2を対象としたベンチマークである．それぞれ多重度として，コネクション数やストリーム数を増加させながら，一定数のリクエストを捌くまでの時間を計測した．リクエストとレスポンスの内容，サーバサイドでの処理は各手法で統一している．また，サーバーサイドでの処理の代替に数十msのsleepを入れている．
+
+今回の条件では多重度を上げた場合に，手法によっては性能が頭打ちになる中で，smuxが特に高い多重度において性能を十分に発揮できた．今回のベンチマークはサーバーとクライアントが同一の環境であり，各手法に適したチューニングや適用時の条件によっても変動はあると考えられるため，利用においては条件に合わせたパフォーマンス計測を行うことが望ましい．ベンチマークのコードはここにおいている．
+まとめ
+サーバ間通信のボトルネックを解決するため，HTTP/2のバイナリフレーミングレイヤを参考に，プロトコルのボトルネックを排除するシンプルなコネクションの仮想多重化を行うsmuxを開発した．手元でのベンチマークでは，できるだけ多くのリクエストを並列に処理したいような状況で効果がありそうであることが確認できた．まだまだ安定性の面などで不安もあるが，引き続き本番運用に向けて開発を継続していきたい．
+
+2018/05/04追記
+コメントにて先行実装として，hashicorp/yamuxとxtaci/smuxを教えていただいたので，ベンチマークを再実行した．xtaci/smuxはSimple Stream Multiplexingらしいので，ここではssmuxと呼称する．
+
+yamuxに対しては同等以上と言えるが，ssmuxが優秀であるという結果になった．両者とも，ストリームにおけるリクエストに対してレスポンスが発生する場合では，リクエスト側の終了を検知するためにクローズ処理が利用できないため，別途自前でデータサイズを送信する必要があるなど使い勝手に関しては多少の難もありつつも，実装や性能については参考になる部分が多い．まだ改善の余地が残っていること，着眼点自体は良さそうであるという点は喜びたい．並列時の性能に効果があると考えられるフロー制御周りを中心に実装参考しながらパフォーマンスなど改めて見直していく．'><meta property="og:title" content="Go言語でTCPやソケット通信を多重化，高速化するsmux(ソケットマルチプレクサ)をつくった"><meta property="og:url" content="https://blog.monochromegane.com/blog/2018/05/03/smux/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2018/05/03/smux/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2018/05/03/smux/>Go言語でTCPやソケット通信を多重化，高速化するsmux(ソケットマルチプレクサ)をつくった</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2018-05-03</div></time></header><div class=post-inner><p>サーバ間で分散処理を行う際の相互通信におけるボトルネックを解消するため，smux(Socket multiplexer)を開発している．</p><h2 id=サーバ間の相互通信におけるボトルネックとその解決策>サーバ間の相互通信におけるボトルネックとその解決策</h2><p>一対のサーバ間で多数のリクエストとレスポンスが送受信され，信頼性の高い通信としてTCPを利用する場合，コネクション確立のオーバーヘッドを排除するために接続の再利用が行われる．しかしながら，クライアントは送信に対する受信を待つ必要があるため，レスポンスまでに幾許かの処理時間を要する状況では送信のキューがたまってしまう．そこで複数の接続を利用することでこれを解消する方法が取られるが，追加の接続はリソース使用に関するオーバーヘッドを発生させてしまう．なにより各接続におけるレスポンス待ち時間は依然として解決しておらず，接続の利用面から見て非効率である．そこで，単一の接続において，仮想的に並行送受信を行う方法が提案されている．これは，HTTP/2におけるバイナリフレーミングレイヤの役割であり，コネクション内にストリームと呼ばれる仮想的なチャンネルを設けて双方向の通信を並行して行う．下位レイヤの制約であるリクエスト送信後のブロッキングは，リクエストやレスポンスをフレームと呼ばれる単位に分割することで影響を抑えている．</p><p>このように多数のリクエストとレスポンスが送受信され，レスポンスまでに幾許かの処理時間を要する状況においては，HTTP/2は非常に魅力的であり，はじめに採用を検討すべき価値がある．一方で，HTTP/2を利用する場合，HTTPプロトコルに依存した一定のオーバーヘッドは発生する．もちろんHTTP/2にはバイナリ化やヘッダ圧縮などの多数の対策が組み込まれているため，自身の適用課題において十分な性能が見込めるならば問題ないが，より最適化したパフォーマンスが必要な状況では，これらのオーバーヘッドの除去も検討の余地がある．</p><h2 id=smuxsocket-multiplexer>smux(Socket multiplexer)</h2><p>smux(Socket multiplexer)はこのような状況において，非常にシンプルなバイナリフレーミングレイヤの振る舞いをアプリケーションに提供する．すなわち，単一コネクションの仮想多重化である．アプリケーションは独自の（そしておそらく簡潔な）プロトコルに則ってストリーム経由でデータを送受信する．複数コネクションのハンドリングが不要になり，複数のリクエストを並行して発行することができるため，アプリケーション実装は簡潔に，通信は高速になることが見込める．</p><p>smuxはGo言語で実装されており，アプリケーションがGo言語であれば，以下のように利用することができる．</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// smux server</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>server</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>smux</span>.<span style=color:#a6e22e>Server</span>{
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>Network</span>: <span style=color:#e6db74>&#34;tcp&#34;</span>, <span style=color:#75715e>// or &#34;unix&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>Address</span>: <span style=color:#e6db74>&#34;localhost:3000&#34;</span>, <span style=color:#75715e>// or &#34;sockfile&#34;</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>Handler</span>: <span style=color:#a6e22e>smux</span>.<span style=color:#a6e22e>HandlerFunc</span>(<span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>w</span> <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>Writer</span>, <span style=color:#a6e22e>r</span> <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>Reader</span>) {
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>Copy</span>(<span style=color:#a6e22e>ioutil</span>.<span style=color:#a6e22e>Discard</span>, <span style=color:#a6e22e>r</span>)
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Fprint</span>(<span style=color:#a6e22e>w</span>, <span style=color:#e6db74>&#34;Hello, smux client!&#34;</span>)
+</span></span><span style=display:flex><span>        }),
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>server</span>.<span style=color:#a6e22e>ListenAndServe</span>()
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// smux client</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>client</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>smux</span>.<span style=color:#a6e22e>Client</span>{
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>Network</span>: <span style=color:#e6db74>&#34;tcp&#34;</span>, <span style=color:#75715e>// or &#34;unix&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>Address</span>: <span style=color:#e6db74>&#34;localhost:3000&#34;</span>, <span style=color:#75715e>// or &#34;sockfile&#34;</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>body</span>, <span style=color:#a6e22e>_</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>Post</span>([]byte(<span style=color:#e6db74>&#34;Hello, smux server!&#34;</span>))
+</span></span><span style=display:flex><span><span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;%s\n&#34;</span>, <span style=color:#a6e22e>body</span>) <span style=color:#75715e>// &#34;Hello, smux client!&#34;</span>
+</span></span></code></pre></div><p>内部的には，streamはReadやWriteのメソッドを持っているため，より最適化したい場合はこれらを自身で利用することもできる．
+また，あくまでソケットインターフェースを経由したやり取りであり，smuxのプロトコルに従えば他の言語での実装も可能である．</p><h2 id=パフォーマンス>パフォーマンス</h2><p>以下は，smuxとHTTP/1.1，HTTP/2を対象としたベンチマークである．それぞれ多重度として，コネクション数やストリーム数を増加させながら，一定数のリクエストを捌くまでの時間を計測した．リクエストとレスポンスの内容，サーバサイドでの処理は各手法で統一している．また，サーバーサイドでの処理の代替に数十msのsleepを入れている．</p><p><img src=https://user-images.githubusercontent.com/1845486/39556184-79a3e0ba-4eb9-11e8-929d-08a8f3291e04.png alt=benchmark></p><p>今回の条件では多重度を上げた場合に，手法によっては性能が頭打ちになる中で，smuxが特に高い多重度において性能を十分に発揮できた．今回のベンチマークはサーバーとクライアントが同一の環境であり，各手法に適したチューニングや適用時の条件によっても変動はあると考えられるため，利用においては条件に合わせたパフォーマンス計測を行うことが望ましい．ベンチマークのコードは<a href=https://github.com/monochromegane/smux/blob/master/cmd/bench>ここ</a>においている．</p><h2 id=まとめ>まとめ</h2><p>サーバ間通信のボトルネックを解決するため，HTTP/2のバイナリフレーミングレイヤを参考に，プロトコルのボトルネックを排除するシンプルなコネクションの仮想多重化を行うsmuxを開発した．手元でのベンチマークでは，できるだけ多くのリクエストを並列に処理したいような状況で効果がありそうであることが確認できた．まだまだ安定性の面などで不安もあるが，引き続き本番運用に向けて開発を継続していきたい．</p><hr><p><strong>2018/05/04追記</strong></p><p>コメントにて先行実装として，<a href=https://github.com/hashicorp/yamux>hashicorp/yamux</a>と<a href=https://github.com/xtaci/smux>xtaci/smux</a>を教えていただいたので，ベンチマークを再実行した．xtaci/smuxはSimple Stream Multiplexingらしいので，ここではssmuxと呼称する．</p><p><img src=https://user-images.githubusercontent.com/1845486/39610904-7695e7da-4f8e-11e8-989c-5a2cfac3a4f9.png alt=benchmark_2></p><p>yamuxに対しては同等以上と言えるが，ssmuxが優秀であるという結果になった．両者とも，ストリームにおけるリクエストに対してレスポンスが発生する場合では，リクエスト側の終了を検知するためにクローズ処理が利用できないため，別途自前でデータサイズを送信する必要があるなど使い勝手に関しては多少の難もありつつも，実装や性能については参考になる部分が多い．まだ改善の余地が残っていること，着眼点自体は良さそうであるという点は喜びたい．並列時の性能に効果があると考えられるフロー制御周りを中心に実装参考しながらパフォーマンスなど改めて見直していく．</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/golang>golang</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2018/05/03/smux/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

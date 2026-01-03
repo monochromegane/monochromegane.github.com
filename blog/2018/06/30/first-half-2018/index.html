@@ -1,169 +1,60 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width">
-<meta name=author content>
-<title>First Half of 2018 &#183; THINKING MEGANE</title>
-<meta name=twitter:card content="summary">
-<meta name=twitter:site content="@monochromegane">
-<meta property="og:description" content="上期も昨年度から引き続き研究開発に従事した．これまでやってきたいくつかの研究が繋がり始めて&#34;なめらかなマッチング&#34;というおぼろげながら大きな研究テーマが見えてきたように思う． 推薦システムに代表されるような要望と提案のマッチングをなめらかにするためには，マッチング観点からの研究と，それをサービスとして的確かつ即時に提供できるような実装や導入の観点からの両方が必要であり，マッチングを支える仕組み全体に対する研究を進めていきたいと考えるようになった．
-また，上期はこのテーマに基づく各研究内容を実装するにあたって技術的な深堀りを進めることができたこと，継続してアウトプットを続けることができたのも良かった． マッチング観点からは消費者行動や情報探索プロセスも考慮しながら検討している．実装面からは，近似近傍探索を高速かつ高精度に提供するためにSannyやSmux，go-avxなどこれまでよりレイヤを掘り下げながら目的を達成するための最適な実装を検討することができるようになった． アウトプットについても，これらの内容を元に継続的にブログや登壇を行った． 技術的な必要性などをきちんと記述することで反響が大きくなるものもあり論理的な思考やそれを用いて人に伝えることの重要性も感じた．
-それでも，特に論文のような専門的なアウトプット過程において，力不足は常に感じていた． 論文執筆において，初稿はなんとか書き上げられるようになったものの，共著者や査読からの指摘点を踏まえてより良いものにするための議論が上手くできず，徐々にこれがストレスとなってしまっていった． 技術的な背景による新規性についてはサーベイの積み重ねで少しづつでも回答できるが，研究として新規性や有用性を謳う部分，これらを論述する部分の議論において，そもそも前提となる能力が足りないようにも思えた． 論文執筆を続けていく中でこれらの能力が上がるようコツがつかめてくるのかもしれないが，自分としては一旦この足りない能力についてきちんと向き合った上で，今後の研究開発へ取り組んでいきたいと思っている． そのため下期はこれまでの研究開発成果を導入・課題発見の部分に力を注ぎながら，論文執筆に向けたスキルを高めていきたい．
-実績 以下，上期実績を列挙する．
-論文 3本，ジャーナルについては事前査読制度への投稿のみで終わったこともあり，上述した対策を進めた上で再度挑戦したい．
- 三宅 悠介, 松本 亮介, Sanny: 大規模ECサイトのための精度と速度を両立した分散可能な近似近傍探索エンジン, 研究報告インターネットと運用技術（IOT）,2018-IOT-42(2),1-7 (2018-06-21) , 2188-8787 フォーラム投稿1本 ジャーナル論文執筆1本（事前査読のみ）  発表 技術イベントでの発表の他，研究会での発表，大学での登壇など計6回．
- ペパボにおける研究所の役割 - 研究と開発の相乗効果 - @香川大学 Go言語でオンライン外れ値検出エンジンSmartSifterを実装した @Fukuoka.go#10 Sanny: 大規模ECサイトのための精度と速度を両立した分散可能な近似近傍探索エンジン @WSA研#2 分散アプリケーションにおける複数端末利用を考慮したプライベートデータの管理 @Hi-Ether Meetup #4 Fukuoka 近似近傍探索エンジン Sannyを支える技術 @Fukuoka.go#11 Sanny: 大規模ECサイトのための精度と速度を両立した分散可能な近似近傍探索エンジン @IOT42  OSS なめらかなマッチングの実装面の観点から高速かつ高精度，かつ拡張性も備えた近似近傍探索の実装とそれらの要素技術の検討を行っていった． Smuxやgo-avxなどこれまで扱ってこなかったレイヤで課題に対処できるようになってきたと思う．
- Sanny: Scalable Approximate Nearest Neighbors in Golang optimized for embedding vectors. go-avx: AVX(Advanced Vector Extensions) binding for golang.">
-<meta property="og:title" content="First Half of 2018">
-<meta property="og:url" content="https://blog.monochromegane.com/blog/2018/06/30/first-half-2018/">
-<meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png">
-<link rel=stylesheet href=/css/reset.css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Source+Code+Pro" type=text/css>
-<link rel=stylesheet href="//fonts.googleapis.com/css?family=Montserrat" type=text/css>
-<link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css>
-<link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css>
-<link rel=stylesheet href=/css/text.css>
-<link rel=stylesheet href=/css/color.css>
-<link rel=stylesheet href=/css/layout.css>
-<link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png>
-<link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png>
-<link rel="shortcut icon" href=/images/favicon.ico>
-<link rel=canonical href=https://blog.monochromegane.com/blog/2018/06/30/first-half-2018/>
-<link href rel=alternate type=application/rss+xml title="THINKING MEGANE">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML" async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[['$','$'],["\\(","\\)"]],displayMath:[['$$','$$'],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script>
-</head>
-<body>
-<div class=header>
-<header>
-<h1 class=logo><a href=https://blog.monochromegane.com>THINKING MEGANE</a></h1>
-<nav>
-<ul class=menu>
-<li><a href=/self-introduction/>Home</a></li>
-<li><a href=/post/>Archives</a></li>
-<li><a href=/diary/>Diary</a></li>
-<li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li>
-</ul>
-</nav>
-</header>
-</div>
-<div class=container>
-<article>
-<div class=post>
-<header>
-<h1><a href=https://blog.monochromegane.com/blog/2018/06/30/first-half-2018/>First Half of 2018</a></h1>
-<time><div class=day><i class="fa fa-calendar-o day-icon"></i>2018-06-30</div></time>
-</header>
-<div class=post-inner>
-<p>上期も昨年度から引き続き研究開発に従事した．これまでやってきたいくつかの研究が繋がり始めて"なめらかなマッチング"というおぼろげながら大きな研究テーマが見えてきたように思う．
-推薦システムに代表されるような要望と提案のマッチングをなめらかにするためには，マッチング観点からの研究と，それをサービスとして的確かつ即時に提供できるような実装や導入の観点からの両方が必要であり，マッチングを支える仕組み全体に対する研究を進めていきたいと考えるようになった．</p>
-<p>また，上期はこのテーマに基づく各研究内容を実装するにあたって技術的な深堀りを進めることができたこと，継続してアウトプットを続けることができたのも良かった．
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>First Half of 2018 &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content='上期も昨年度から引き続き研究開発に従事した．これまでやってきたいくつかの研究が繋がり始めて"なめらかなマッチング"というおぼろげながら大きな研究テーマが見えてきたように思う．
+推薦システムに代表されるような要望と提案のマッチングをなめらかにするためには，マッチング観点からの研究と，それをサービスとして的確かつ即時に提供できるような実装や導入の観点からの両方が必要であり，マッチングを支える仕組み全体に対する研究を進めていきたいと考えるようになった．
+また，上期はこのテーマに基づく各研究内容を実装するにあたって技術的な深堀りを進めることができたこと，継続してアウトプットを続けることができたのも良かった．
 マッチング観点からは消費者行動や情報探索プロセスも考慮しながら検討している．実装面からは，近似近傍探索を高速かつ高精度に提供するためにSannyやSmux，go-avxなどこれまでよりレイヤを掘り下げながら目的を達成するための最適な実装を検討することができるようになった．
 アウトプットについても，これらの内容を元に継続的にブログや登壇を行った．
-技術的な必要性などをきちんと記述することで反響が大きくなるものもあり論理的な思考やそれを用いて人に伝えることの重要性も感じた．</p>
-<p>それでも，特に論文のような専門的なアウトプット過程において，力不足は常に感じていた．
+技術的な必要性などをきちんと記述することで反響が大きくなるものもあり論理的な思考やそれを用いて人に伝えることの重要性も感じた．
+それでも，特に論文のような専門的なアウトプット過程において，力不足は常に感じていた．
 論文執筆において，初稿はなんとか書き上げられるようになったものの，共著者や査読からの指摘点を踏まえてより良いものにするための議論が上手くできず，徐々にこれがストレスとなってしまっていった．
 技術的な背景による新規性についてはサーベイの積み重ねで少しづつでも回答できるが，研究として新規性や有用性を謳う部分，これらを論述する部分の議論において，そもそも前提となる能力が足りないようにも思えた．
 論文執筆を続けていく中でこれらの能力が上がるようコツがつかめてくるのかもしれないが，自分としては一旦この足りない能力についてきちんと向き合った上で，今後の研究開発へ取り組んでいきたいと思っている．
-そのため下期はこれまでの研究開発成果を導入・課題発見の部分に力を注ぎながら，論文執筆に向けたスキルを高めていきたい．</p>
-<h1 id=実績>実績</h1>
-<p>以下，上期実績を列挙する．</p>
-<h2 id=論文>論文</h2>
-<p>3本，ジャーナルについては事前査読制度への投稿のみで終わったこともあり，上述した対策を進めた上で再度挑戦したい．</p>
-<ul>
-<li><a href=http://id.nii.ac.jp/1001/00190207/>三宅 悠介, 松本 亮介, Sanny: 大規模ECサイトのための精度と速度を両立した分散可能な近似近傍探索エンジン, 研究報告インターネットと運用技術（IOT）,2018-IOT-42(2),1-7 (2018-06-21) , 2188-8787</a></li>
-<li>フォーラム投稿1本</li>
-<li>ジャーナル論文執筆1本（事前査読のみ）</li>
-</ul>
-<h2 id=発表>発表</h2>
-<p>技術イベントでの発表の他，研究会での発表，大学での登壇など計6回．</p>
-<ul>
-<li><a href=https://speakerdeck.com/monochromegane/think-about-research-and-development>ペパボにおける研究所の役割 - 研究と開発の相乗効果 -</a> @香川大学</li>
-<li><a href=https://speakerdeck.com/monochromegane/smartsifter-in-golang>Go言語でオンライン外れ値検出エンジンSmartSifterを実装した</a> @Fukuoka.go#10</li>
-<li><a href=https://speakerdeck.com/monochromegane/wsa-2-sanny>Sanny: 大規模ECサイトのための精度と速度を両立した分散可能な近似近傍探索エンジン</a> @WSA研#2</li>
-<li><a href=https://speakerdeck.com/monochromegane/wsa-1-kaleidoscope>分散アプリケーションにおける複数端末利用を考慮したプライベートデータの管理</a> @Hi-Ether Meetup #4 Fukuoka</li>
-<li><a href=https://speakerdeck.com/monochromegane/sanny-inside>近似近傍探索エンジン Sannyを支える技術</a> @Fukuoka.go#11</li>
-<li><a href=https://speakerdeck.com/monochromegane/iot42-sanny>Sanny: 大規模ECサイトのための精度と速度を両立した分散可能な近似近傍探索エンジン</a> @IOT42</li>
-</ul>
-<h2 id=oss>OSS</h2>
-<p>なめらかなマッチングの実装面の観点から高速かつ高精度，かつ拡張性も備えた近似近傍探索の実装とそれらの要素技術の検討を行っていった．
-Smuxやgo-avxなどこれまで扱ってこなかったレイヤで課題に対処できるようになってきたと思う．</p>
-<ul>
-<li><a href=https://github.com/monochromegane/sanny>Sanny</a>: Scalable Approximate Nearest Neighbors in Golang optimized for embedding vectors.</li>
-<li><a href=https://github.com/monochromegane/go-avx>go-avx</a>: AVX(Advanced Vector Extensions) binding for golang.</li>
-<li><a href=https://github.com/monochromegane/smux>Smux</a>: smux is a socket multiplexer written in Golang. It provides fast communication by efficiently a single connection.</li>
-<li><a href=https://github.com/monochromegane/smartsifter>SmartSifter</a>: SmartSifter (On-line outlier detection) by Golang.</li>
-<li><a href=https://github.com/monochromegane/guardian>Guardian</a>: Monitor file changes and execute custom commands for each event.</li>
-<li><a href=https://github.com/monochromegane/gannoy/tree/ngt>Gannoy(NGT ver.)</a>: Approximate nearest neighbor search server and dynamic index written in Golang.</li>
-</ul>
-<h2 id=コミュニティ活動>コミュニティ活動</h2>
-<p>福岡のGo言語コミュニティ主催として継続的なイベント開催を進めた．
+そのため下期はこれまでの研究開発成果を導入・課題発見の部分に力を注ぎながら，論文執筆に向けたスキルを高めていきたい．
+実績
+以下，上期実績を列挙する．
+論文
+3本，ジャーナルについては事前査読制度への投稿のみで終わったこともあり，上述した対策を進めた上で再度挑戦したい．
+
+三宅 悠介, 松本 亮介, Sanny: 大規模ECサイトのための精度と速度を両立した分散可能な近似近傍探索エンジン, 研究報告インターネットと運用技術（IOT）,2018-IOT-42(2),1-7 (2018-06-21) , 2188-8787
+フォーラム投稿1本
+ジャーナル論文執筆1本（事前査読のみ）
+
+発表
+技術イベントでの発表の他，研究会での発表，大学での登壇など計6回．
+
+ペパボにおける研究所の役割 - 研究と開発の相乗効果 - @香川大学
+Go言語でオンライン外れ値検出エンジンSmartSifterを実装した @Fukuoka.go#10
+Sanny: 大規模ECサイトのための精度と速度を両立した分散可能な近似近傍探索エンジン @WSA研#2
+分散アプリケーションにおける複数端末利用を考慮したプライベートデータの管理 @Hi-Ether Meetup #4 Fukuoka
+近似近傍探索エンジン Sannyを支える技術 @Fukuoka.go#11
+Sanny: 大規模ECサイトのための精度と速度を両立した分散可能な近似近傍探索エンジン @IOT42
+
+OSS
+なめらかなマッチングの実装面の観点から高速かつ高精度，かつ拡張性も備えた近似近傍探索の実装とそれらの要素技術の検討を行っていった．
+Smuxやgo-avxなどこれまで扱ってこなかったレイヤで課題に対処できるようになってきたと思う．
+
+Sanny: Scalable Approximate Nearest Neighbors in Golang optimized for embedding vectors.
+go-avx: AVX(Advanced Vector Extensions) binding for golang.
+Smux: smux is a socket multiplexer written in Golang. It provides fast communication by efficiently a single connection.
+SmartSifter: SmartSifter (On-line outlier detection) by Golang.
+Guardian: Monitor file changes and execute custom commands for each event.
+Gannoy(NGT ver.): Approximate nearest neighbor search server and dynamic index written in Golang.
+
+コミュニティ活動
+福岡のGo言語コミュニティ主催として継続的なイベント開催を進めた．
 研究開発とはまた別の技術の付き合い方ができる活動であり，大切な活動となっている．
-また，分散アプリケーションも興味があるため仮想通貨コミュニティの地方開催もお手伝いさせていただいた．</p>
-<ul>
-<li><a href=https://fukuokago.connpass.com/event/81056/>Fukuoka.go#10</a> 主催</li>
-<li><a href=https://fukuokago.connpass.com/event/87684/>Fukuoka.go#11</a> 主催</li>
-<li><a href="https://techplay.jp/event/668228?pw=HplUa3Vs">Hi-Ether Meetup #4 Fukuoka</a> 運営協力</li>
-</ul>
-<h2 id=ブログ>ブログ</h2>
-<p>実装紹介を主に7本．もう少し気軽に考えをまとめてアウトプットするようにしたい．</p>
-<ul>
-<li><a href=https://blog.monochromegane.com/blog/2018/01/01/2018-the-turn/>2018, 認知的転回</a></li>
-<li><a href=https://blog.monochromegane.com/blog/2018/01/07/information-retrieval-process-model/>情報探索プロセスのモデルについて: 「情報検索のためのユーザインタフェース」を読んで</a></li>
-<li><a href=https://blog.monochromegane.com/blog/2018/01/10/information-need-association-chart/>情報要求を取り巻く技術とプロセスモデル</a></li>
-<li><a href=https://blog.monochromegane.com/blog/2018/02/20/generate-paper-model/>論文生成モデルの検討を通して論文執筆を進めてみる</a></li>
-<li><a href=https://blog.monochromegane.com/blog/2018/02/25/smartsifter/>Go言語でオンライン外れ値検出エンジンSmartSifterを実装した</a></li>
-<li><a href=https://blog.monochromegane.com/blog/2018/05/03/smux/>Go言語でTCPやソケット通信を多重化，高速化するsmux(ソケットマルチプレクサ)をつくった</a></li>
-<li><a href=https://blog.monochromegane.com/blog/2018/05/16/wsa_2_sanny/>Sanny: 大規模ECサイトのための精度と速度を両立した分散可能な近似近傍探索エンジン</a></li>
-</ul>
-<h2 id=読書>読書</h2>
-<p>半期で購入した本と読み直した本を重ねてみた．物理本が54冊．電子書籍を含めるともう少しなりそう．
+また，分散アプリケーションも興味があるため仮想通貨コミュニティの地方開催もお手伝いさせていただいた．'><meta property="og:title" content="First Half of 2018"><meta property="og:url" content="https://blog.monochromegane.com/blog/2018/06/30/first-half-2018/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2018/06/30/first-half-2018/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2018/06/30/first-half-2018/>First Half of 2018</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2018-06-30</div></time></header><div class=post-inner><p>上期も昨年度から引き続き研究開発に従事した．これまでやってきたいくつかの研究が繋がり始めて"なめらかなマッチング"というおぼろげながら大きな研究テーマが見えてきたように思う．
+推薦システムに代表されるような要望と提案のマッチングをなめらかにするためには，マッチング観点からの研究と，それをサービスとして的確かつ即時に提供できるような実装や導入の観点からの両方が必要であり，マッチングを支える仕組み全体に対する研究を進めていきたいと考えるようになった．</p><p>また，上期はこのテーマに基づく各研究内容を実装するにあたって技術的な深堀りを進めることができたこと，継続してアウトプットを続けることができたのも良かった．
+マッチング観点からは消費者行動や情報探索プロセスも考慮しながら検討している．実装面からは，近似近傍探索を高速かつ高精度に提供するためにSannyやSmux，go-avxなどこれまでよりレイヤを掘り下げながら目的を達成するための最適な実装を検討することができるようになった．
+アウトプットについても，これらの内容を元に継続的にブログや登壇を行った．
+技術的な必要性などをきちんと記述することで反響が大きくなるものもあり論理的な思考やそれを用いて人に伝えることの重要性も感じた．</p><p>それでも，特に論文のような専門的なアウトプット過程において，力不足は常に感じていた．
+論文執筆において，初稿はなんとか書き上げられるようになったものの，共著者や査読からの指摘点を踏まえてより良いものにするための議論が上手くできず，徐々にこれがストレスとなってしまっていった．
+技術的な背景による新規性についてはサーベイの積み重ねで少しづつでも回答できるが，研究として新規性や有用性を謳う部分，これらを論述する部分の議論において，そもそも前提となる能力が足りないようにも思えた．
+論文執筆を続けていく中でこれらの能力が上がるようコツがつかめてくるのかもしれないが，自分としては一旦この足りない能力についてきちんと向き合った上で，今後の研究開発へ取り組んでいきたいと思っている．
+そのため下期はこれまでの研究開発成果を導入・課題発見の部分に力を注ぎながら，論文執筆に向けたスキルを高めていきたい．</p><h1 id=実績>実績</h1><p>以下，上期実績を列挙する．</p><h2 id=論文>論文</h2><p>3本，ジャーナルについては事前査読制度への投稿のみで終わったこともあり，上述した対策を進めた上で再度挑戦したい．</p><ul><li><a href=http://id.nii.ac.jp/1001/00190207/>三宅 悠介, 松本 亮介, Sanny: 大規模ECサイトのための精度と速度を両立した分散可能な近似近傍探索エンジン, 研究報告インターネットと運用技術（IOT）,2018-IOT-42(2),1-7 (2018-06-21) , 2188-8787</a></li><li>フォーラム投稿1本</li><li>ジャーナル論文執筆1本（事前査読のみ）</li></ul><h2 id=発表>発表</h2><p>技術イベントでの発表の他，研究会での発表，大学での登壇など計6回．</p><ul><li><a href=https://speakerdeck.com/monochromegane/think-about-research-and-development>ペパボにおける研究所の役割 - 研究と開発の相乗効果 -</a> @香川大学</li><li><a href=https://speakerdeck.com/monochromegane/smartsifter-in-golang>Go言語でオンライン外れ値検出エンジンSmartSifterを実装した</a> @Fukuoka.go#10</li><li><a href=https://speakerdeck.com/monochromegane/wsa-2-sanny>Sanny: 大規模ECサイトのための精度と速度を両立した分散可能な近似近傍探索エンジン</a> @WSA研#2</li><li><a href=https://speakerdeck.com/monochromegane/wsa-1-kaleidoscope>分散アプリケーションにおける複数端末利用を考慮したプライベートデータの管理</a> @Hi-Ether Meetup #4 Fukuoka</li><li><a href=https://speakerdeck.com/monochromegane/sanny-inside>近似近傍探索エンジン Sannyを支える技術</a> @Fukuoka.go#11</li><li><a href=https://speakerdeck.com/monochromegane/iot42-sanny>Sanny: 大規模ECサイトのための精度と速度を両立した分散可能な近似近傍探索エンジン</a> @IOT42</li></ul><h2 id=oss>OSS</h2><p>なめらかなマッチングの実装面の観点から高速かつ高精度，かつ拡張性も備えた近似近傍探索の実装とそれらの要素技術の検討を行っていった．
+Smuxやgo-avxなどこれまで扱ってこなかったレイヤで課題に対処できるようになってきたと思う．</p><ul><li><a href=https://github.com/monochromegane/sanny>Sanny</a>: Scalable Approximate Nearest Neighbors in Golang optimized for embedding vectors.</li><li><a href=https://github.com/monochromegane/go-avx>go-avx</a>: AVX(Advanced Vector Extensions) binding for golang.</li><li><a href=https://github.com/monochromegane/smux>Smux</a>: smux is a socket multiplexer written in Golang. It provides fast communication by efficiently a single connection.</li><li><a href=https://github.com/monochromegane/smartsifter>SmartSifter</a>: SmartSifter (On-line outlier detection) by Golang.</li><li><a href=https://github.com/monochromegane/guardian>Guardian</a>: Monitor file changes and execute custom commands for each event.</li><li><a href=https://github.com/monochromegane/gannoy/tree/ngt>Gannoy(NGT ver.)</a>: Approximate nearest neighbor search server and dynamic index written in Golang.</li></ul><h2 id=コミュニティ活動>コミュニティ活動</h2><p>福岡のGo言語コミュニティ主催として継続的なイベント開催を進めた．
+研究開発とはまた別の技術の付き合い方ができる活動であり，大切な活動となっている．
+また，分散アプリケーションも興味があるため仮想通貨コミュニティの地方開催もお手伝いさせていただいた．</p><ul><li><a href=https://fukuokago.connpass.com/event/81056/>Fukuoka.go#10</a> 主催</li><li><a href=https://fukuokago.connpass.com/event/87684/>Fukuoka.go#11</a> 主催</li><li><a href="https://techplay.jp/event/668228?pw=HplUa3Vs">Hi-Ether Meetup #4 Fukuoka</a> 運営協力</li></ul><h2 id=ブログ>ブログ</h2><p>実装紹介を主に7本．もう少し気軽に考えをまとめてアウトプットするようにしたい．</p><ul><li><a href=https://blog.monochromegane.com/blog/2018/01/01/2018-the-turn/>2018, 認知的転回</a></li><li><a href=https://blog.monochromegane.com/blog/2018/01/07/information-retrieval-process-model/>情報探索プロセスのモデルについて: 「情報検索のためのユーザインタフェース」を読んで</a></li><li><a href=https://blog.monochromegane.com/blog/2018/01/10/information-need-association-chart/>情報要求を取り巻く技術とプロセスモデル</a></li><li><a href=https://blog.monochromegane.com/blog/2018/02/20/generate-paper-model/>論文生成モデルの検討を通して論文執筆を進めてみる</a></li><li><a href=https://blog.monochromegane.com/blog/2018/02/25/smartsifter/>Go言語でオンライン外れ値検出エンジンSmartSifterを実装した</a></li><li><a href=https://blog.monochromegane.com/blog/2018/05/03/smux/>Go言語でTCPやソケット通信を多重化，高速化するsmux(ソケットマルチプレクサ)をつくった</a></li><li><a href=https://blog.monochromegane.com/blog/2018/05/16/wsa_2_sanny/>Sanny: 大規模ECサイトのための精度と速度を両立した分散可能な近似近傍探索エンジン</a></li></ul><h2 id=読書>読書</h2><p>半期で購入した本と読み直した本を重ねてみた．物理本が54冊．電子書籍を含めるともう少しなりそう．
 ベイズは相変わらず分からない．
-これだけ学んだのだという自信が半分，本当に自分の知識として議論へ活かせるようにせねばなという反省が半分．</p>
-<p><img src=/images/2018/06/books.jpg alt=books></p>
-<h1 id=まとめ>まとめ</h1>
-<p>上期はとにかく濃くて長い半年だった．
-論文執筆など自分が上手くできないことに対してストレスと感情の起伏が大きくなってしまって相変わらず未熟だなあと反省しきりであったが，こうして客観的に実績としてまとめてみると進んでいるところももちろんあって，適切に都度自分を認めてあげなくてはなあと思えたのはよかった．</p>
-<p>もちろん力不足で悔しい思いをしているのは事実であるので，下期は研究開発への付き合い方も見直しながら，まわりも見る余裕を持って，どんどん影響を与えていけるよう成長できればなあと思う．</p>
-</div>
-<footer class=tag>
-<i class="fa fa-tags tag-icon"></i>
-<ul>
-<li><a class=tag-link href=/tags/%E3%81%B5%E3%82%8A%E3%81%8B%E3%81%88%E3%82%8A>ふりかえり</a></li>
-</ul>
-<div class=clear></div>
-</footer>
-</div>
-</article>
-<div class=social-btn>
-<div>
-<a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2018/06/30/first-half-2018/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script>
-</div>
-<div>
-<a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(a,c,d){var b,e=a.getElementsByTagName(c)[0],f=/^http:/.test(a.location)?'http':'https';a.getElementById(d)||(b=a.createElement(c),b.id=d,b.src=f+'://platform.twitter.com/widgets.js',e.parentNode.insertBefore(b,e))}(document,'script','twitter-wjs')</script>
-</div>
-</div>
-</div>
-<footer class=footer>
-<div class=author></div>
-<p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p>
-<p>monochromegane (モノクロめがね) と申します。</p>
-<p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p>
-<ul class=social>
-<li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li>
-<li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li>
-<li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li>
-</ul>
-<p class=copyright>
-<small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small>
-</p>
-</footer>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script>
-<script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script>
-<script>hljs.initHighlightingOnLoad()</script>
-<script>(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'),ga('create','UA-38374674-1','auto'),ga('send','pageview')</script>
-</body>
-</html>
+これだけ学んだのだという自信が半分，本当に自分の知識として議論へ活かせるようにせねばなという反省が半分．</p><p><img src=/images/2018/06/books.jpg alt=books></p><h1 id=まとめ>まとめ</h1><p>上期はとにかく濃くて長い半年だった．
+論文執筆など自分が上手くできないことに対してストレスと感情の起伏が大きくなってしまって相変わらず未熟だなあと反省しきりであったが，こうして客観的に実績としてまとめてみると進んでいるところももちろんあって，適切に都度自分を認めてあげなくてはなあと思えたのはよかった．</p><p>もちろん力不足で悔しい思いをしているのは事実であるので，下期は研究開発への付き合い方も見直しながら，まわりも見る余裕を持って，どんどん影響を与えていけるよう成長できればなあと思う．</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/%E3%81%B5%E3%82%8A%E3%81%8B%E3%81%88%E3%82%8A>ふりかえり</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2018/06/30/first-half-2018/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>
