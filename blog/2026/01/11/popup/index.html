@@ -1,0 +1,155 @@
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>tmuxのpopupを使ってターミナル画面でClaude Codeと棲み分ける &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content='Claude CodeをはじめとするCLI型のコーディングエージェントはターミナル画面中の一定領域を占有します。
+元々自分は、ターミナルマルチプレクサであるtmuxを利用していて、リポジトリをプロジェクトとみなし、一つのウィンドウを対応させ、その中でペインを分ける構成をとっていました。
+その配置と各ペインのサイズのなかで、エージェントの入る余地はなく、どうしてもペイン内で共有させるか、異なるウィンドウを割り当てる必要がありました。
+しかしながら、役割を共有させたペインの裏側や異なるウィンドウに散らばったエージェントのセッションを探し回るのは非常に面倒に感じていました。
+そんな中、以下のtmux popupの活用記事がしっくりきたので、参考にさせてもらいました。
+
+【Tmux】Claude Code を popup で快適に使う
+tmuxのpopupが便利
+
+利用の様子
+
+画面の中央の前面領域がtmux popupでClaude Codeを動かしている箇所です。
+このpopupの表示・非表示を指定したキーバインドで瞬時にトグルできる体験が非常に良いです。
+トグルの様子は、上記の記事のデモが分かりやすいのでぜひご覧いただきたいです。
+特に、tmuxのセッションのdetachとattachを行うため、popupを隠しても処理が継続され、ターミナル領域をお気に入りの配置のままコードの確認などが快適に行えるのが非常に有用です。
+また、以下の設定で見ていただける通り、tmux側のpopupやキーバインドを使うため、操作中のClaude Codeに干渉しない点もポイントが高いです。
+（余談ですがIS_DEMO環境変数をつけてClaude Codeを起動すると組織名やメールアドレスが非表示になってこういうスクリーンショットの時に便利です）
+実際の設定
+上記の記事はfishだったのでzshで使うために以下のようにしました。
+functions/_tmuxpopupでカレントディレクトリ（リポジトリ名）をベースにセッション名を組み立て、セッションがなければ作成、あればattachとdetachをトグルできるようにしています。
+セッション名の組み立てのところを自分の環境に合わせると使いまわせると思います。
+function _tmuxpopup() {
+  local initial_cmd="${1:-}"
+  local title="${2:-}"
+
+  local width=&#39;80%&#39;
+  local height=&#39;80%&#39;
+
+  local session
+  session="$(tmux display-message -p -F &#39;#{session_name}&#39; 2>/dev/null)" || return 1
+
+  local pane_path
+  pane_path="$(tmux display-message -p -F &#39;#{pane_current_path}&#39;)" || return 1
+
+  local home_src="${HOME}/src"
+  local key=""
+
+  if [[ "$pane_path" == ${home_src}/*/*/*(|/*) ]]; then
+    local rest="${pane_path#${home_src}/}"
+    local parts=(${(s:/:)rest})
+    local org="${parts[2]}"
+    local repo="${parts[3]}"
+    repo="${repo%-wt}"
+    key="${org}/${repo}"
+  else
+    key="${pane_path:t}"
+  fi
+
+  local safe_key="${key//\//_}"
+  safe_key="${safe_key//[^A-Za-z0-9_.-]/_}"
+
+  local popup_session="popup_${title}_${safe_key}"
+
+  if [[ "$session" == popup_* ]]; then
+    tmux detach-client
+    return 0
+  fi
+
+  local exec_cmd
+  if [[ -n "$initial_cmd" ]]; then
+    exec_cmd="tmux attach -t ${popup_session} || tmux new -s ${popup_session} &#39;${initial_cmd}&#39;"
+  else
+    exec_cmd="tmux attach -t ${popup_session} || tmux new -s ${popup_session}"
+  fi
+
+  tmux display-popup \
+    -d "#{pane_current_path}" \
+    -xC -yC \
+    -w "$width" -h "$height" \
+    -T "$title" \
+    -E "$exec_cmd"
+}
+上記の関数はpopup時に起動したいコマンドとpopupのタイトルを受け付けられる共通関数なので、Claude Codeを立ち上げるため具体的な実装をfunctions/_tmuxpopup-claudeに記述しました。'><meta property="og:title" content="tmuxのpopupを使ってターミナル画面でClaude Codeと棲み分ける"><meta property="og:url" content="https://blog.monochromegane.com/blog/2026/01/11/popup/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2026/01/11/popup/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2026/01/11/popup/>tmuxのpopupを使ってターミナル画面でClaude Codeと棲み分ける</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2026-01-11</div></time></header><div class=post-inner><p>Claude CodeをはじめとするCLI型のコーディングエージェントはターミナル画面中の一定領域を占有します。</p><p>元々自分は、ターミナルマルチプレクサであるtmuxを利用していて、リポジトリをプロジェクトとみなし、一つのウィンドウを対応させ、その中でペインを分ける構成をとっていました。
+その配置と各ペインのサイズのなかで、エージェントの入る余地はなく、どうしてもペイン内で共有させるか、異なるウィンドウを割り当てる必要がありました。
+しかしながら、役割を共有させたペインの裏側や異なるウィンドウに散らばったエージェントのセッションを探し回るのは非常に面倒に感じていました。</p><p>そんな中、以下のtmux popupの活用記事がしっくりきたので、参考にさせてもらいました。</p><ul><li><a href=https://qiita.com/hanlio/items/432ed4065073a2e6196a>【Tmux】Claude Code を popup で快適に使う</a></li><li><a href=https://zenn.dev/skanehira/articles/2020-10-25-tmux-toggle-popup>tmuxのpopupが便利</a></li></ul><h2 id=利用の様子>利用の様子</h2><p><img src=/images/2026/01/popup.png alt=Popup></p><p>画面の中央の前面領域がtmux popupでClaude Codeを動かしている箇所です。
+このpopupの表示・非表示を指定したキーバインドで瞬時にトグルできる体験が非常に良いです。
+トグルの様子は、上記の記事のデモが分かりやすいのでぜひご覧いただきたいです。</p><p>特に、tmuxのセッションのdetachとattachを行うため、popupを隠しても処理が継続され、ターミナル領域をお気に入りの配置のままコードの確認などが快適に行えるのが非常に有用です。
+また、以下の設定で見ていただける通り、tmux側のpopupやキーバインドを使うため、操作中のClaude Codeに干渉しない点もポイントが高いです。</p><p>（余談ですが<code>IS_DEMO</code>環境変数をつけてClaude Codeを起動すると組織名やメールアドレスが非表示になってこういうスクリーンショットの時に便利です）</p><h2 id=実際の設定>実際の設定</h2><p>上記の記事はfishだったのでzshで使うために以下のようにしました。</p><p><code>functions/_tmuxpopup</code>でカレントディレクトリ（リポジトリ名）をベースにセッション名を組み立て、セッションがなければ作成、あればattachとdetachをトグルできるようにしています。
+セッション名の組み立てのところを自分の環境に合わせると使いまわせると思います。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span><span style=color:#66d9ef>function</span> _tmuxpopup<span style=color:#f92672>()</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>  local initial_cmd<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>1<span style=color:#66d9ef>:-</span><span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>  local title<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>2<span style=color:#66d9ef>:-</span><span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  local width<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;80%&#39;</span>
+</span></span><span style=display:flex><span>  local height<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;80%&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  local session
+</span></span><span style=display:flex><span>  session<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;</span><span style=color:#66d9ef>$(</span>tmux display-message -p -F <span style=color:#e6db74>&#39;#{session_name}&#39;</span> 2&gt;/dev/null<span style=color:#66d9ef>)</span><span style=color:#e6db74>&#34;</span> <span style=color:#f92672>||</span> <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  local pane_path
+</span></span><span style=display:flex><span>  pane_path<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;</span><span style=color:#66d9ef>$(</span>tmux display-message -p -F <span style=color:#e6db74>&#39;#{pane_current_path}&#39;</span><span style=color:#66d9ef>)</span><span style=color:#e6db74>&#34;</span> <span style=color:#f92672>||</span> <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  local home_src<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>HOME<span style=color:#e6db74>}</span><span style=color:#e6db74>/src&#34;</span>
+</span></span><span style=display:flex><span>  local key<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> <span style=color:#f92672>[[</span> <span style=color:#e6db74>&#34;</span>$pane_path<span style=color:#e6db74>&#34;</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>${</span>home_src<span style=color:#e6db74>}</span>/*/*/*<span style=color:#f92672>(</span>|/*<span style=color:#f92672>)</span> <span style=color:#f92672>]]</span>; <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>    local rest<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>pane_path#<span style=color:#e6db74>${</span>home_src<span style=color:#e6db74>}</span>/<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    local parts<span style=color:#f92672>=(</span><span style=color:#e6db74>${</span>(s:/:)rest<span style=color:#e6db74>}</span><span style=color:#f92672>)</span>
+</span></span><span style=display:flex><span>    local org<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>parts[2]<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    local repo<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>parts[3]<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    repo<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>repo%-wt<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    key<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>org<span style=color:#e6db74>}</span><span style=color:#e6db74>/</span><span style=color:#e6db74>${</span>repo<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>    key<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>pane_path:t<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>fi</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  local safe_key<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>key//<span style=color:#ae81ff>\/</span>/_<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>  safe_key<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>safe_key//[^A-Za-z0-9_.-]/_<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  local popup_session<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;popup_</span><span style=color:#e6db74>${</span>title<span style=color:#e6db74>}</span><span style=color:#e6db74>_</span><span style=color:#e6db74>${</span>safe_key<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> <span style=color:#f92672>[[</span> <span style=color:#e6db74>&#34;</span>$session<span style=color:#e6db74>&#34;</span> <span style=color:#f92672>==</span> popup_* <span style=color:#f92672>]]</span>; <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>    tmux detach-client
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>fi</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  local exec_cmd
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> <span style=color:#f92672>[[</span> -n <span style=color:#e6db74>&#34;</span>$initial_cmd<span style=color:#e6db74>&#34;</span> <span style=color:#f92672>]]</span>; <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>    exec_cmd<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;tmux attach -t </span><span style=color:#e6db74>${</span>popup_session<span style=color:#e6db74>}</span><span style=color:#e6db74> || tmux new -s </span><span style=color:#e6db74>${</span>popup_session<span style=color:#e6db74>}</span><span style=color:#e6db74> &#39;</span><span style=color:#e6db74>${</span>initial_cmd<span style=color:#e6db74>}</span><span style=color:#e6db74>&#39;&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>    exec_cmd<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;tmux attach -t </span><span style=color:#e6db74>${</span>popup_session<span style=color:#e6db74>}</span><span style=color:#e6db74> || tmux new -s </span><span style=color:#e6db74>${</span>popup_session<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>fi</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  tmux display-popup <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>    -d <span style=color:#e6db74>&#34;#{pane_current_path}&#34;</span> <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>    -xC -yC <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>    -w <span style=color:#e6db74>&#34;</span>$width<span style=color:#e6db74>&#34;</span> -h <span style=color:#e6db74>&#34;</span>$height<span style=color:#e6db74>&#34;</span> <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>    -T <span style=color:#e6db74>&#34;</span>$title<span style=color:#e6db74>&#34;</span> <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>    -E <span style=color:#e6db74>&#34;</span>$exec_cmd<span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span></code></pre></div><p>上記の関数はpopup時に起動したいコマンドとpopupのタイトルを受け付けられる共通関数なので、Claude Codeを立ち上げるため具体的な実装を<code>functions/_tmuxpopup-claude</code>に記述しました。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span><span style=color:#66d9ef>function</span> _tmuxpopup-claude<span style=color:#f92672>()</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>  _tmuxpopup <span style=color:#e6db74>&#34;claude&#34;</span> <span style=color:#e6db74>&#34;claude&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span></code></pre></div><p>上記の関数たちを<code>.zshrc</code>でautoloadしておきます。これでこの関数がいつでも呼び出せるようになります。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>autoload -Uz _tmuxpopup
+</span></span><span style=display:flex><span>autoload -Uz _tmuxpopup-claude
+</span></span></code></pre></div><p>実際の呼び出しはコマンドではなく<code>tmux.conf</code>にキーバインドとして登録しておきます。こうすることで、popup内のClaude Code起動中でもpopupをいつでも隠すことができます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>bind , run-shell <span style=color:#e6db74>&#39;zsh -ic &#34;_tmuxpopup-claude&#34;&#39;</span>
+</span></span></code></pre></div><p>これでprefix + &lsquo;,&lsquo;でpopupをトグルできるようになりました。非常に快適です。</p><h2 id=並列実行>並列実行</h2><p>これだけだと再紹介にしかならないので、並列実行のために試しているものも紹介しておきます。</p><p><a href=https://github.com/kbwo/ccmanager>ccmanager</a>はClaude Codeをはじめとするコーディングエージェントの並列実行を管理するためのツールです。
+エージェント単位でgit worktreeを割り当てることができるので、並列実行時のコンフリクトなども回避することができます。</p><p>上で紹介した<code>_tmuxpopup</code>は起動したいコマンドを差し替えるだけで使えるのでccmanagerを呼ぶようにするだけで良いです。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span><span style=color:#66d9ef>function</span> _tmuxpopup-ccmanager<span style=color:#f92672>()</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>  _tmuxpopup <span style=color:#e6db74>&#34;ccmanager&#34;</span> <span style=color:#e6db74>&#34;ccmanager&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span></code></pre></div><p>これでプロジェクトごとの並列実行はかなり便利になりますが、いわゆる承認疲れの現象が発生するため、ある程度の権限を持たせた上で安全に実行したくなります。
+そこで、Dev Containerと組み合わせます。
+幸い、ccmanagerはDev Containerの利用も視野に入れているようで、探すと専用のオプションがあります。
+それを踏まえて、先の関数を以下のように変更できます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span><span style=color:#66d9ef>function</span> _tmuxpopup-ccmanager<span style=color:#f92672>()</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>  _tmuxpopup <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;ccmanager --devc-up-command &#34;devcontainer up --docker-path podman --workspace-folder .&#34; --devc-exec-command &#34;devcontainer exec --docker-path podman --workspace-folder .&#34;&#39;</span> <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;ccmanager&#39;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span></code></pre></div><p><code>podman</code>を使う場合のオプションが含まれているので環境に応じて適宜読み替えていただければと思います。
+また、予め<a href=https://github.com/devcontainers/cli>Dev Container CLI</a>もインストールしておく必要があります。</p><p>これで、プロジェクトのDev Containerの設定（<code>.devcontainer</code>ディレクトリ）を使ってccmanagerがよしなにやってくれます。
+なお、コンテナ内にClaude Codeが含まれる必要があるため、<a href=https://github.com/anthropics/devcontainer-features>Dev Container Features</a>などで追加しておくと良いです。</p><p>以下のように設定し、Claude Codeのpopupと使い分けることができます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>bind . run-shell <span style=color:#e6db74>&#39;zsh -ic &#34;_tmuxpopup-ccmanager&#34;&#39;</span>
+</span></span></code></pre></div><h2 id=おわりに>おわりに</h2><p>tmux popupを使うことでClaude Codeとターミナル領域をうまく棲み分けることができて非常に快適になりました。
+しかしながら、並列実行の部分は実はまだ試行錯誤中です。
+特に、Dev Container + git worktree + Claude Codeの相性はあまり良くないと思っていて、マウント周りを工夫する必要があり、なかなか全てのリポジトリで気軽に使えてないのが現状です。
+また、Dev Containerであれローカルであれ、単純に自分が起点にエージェントとやりとりする構造から逆転させないと目指す並列は近づけないなあとも思っているので、引き続き試行錯誤していきたいと思います。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/tmux>tmux</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2026/01/11/popup/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

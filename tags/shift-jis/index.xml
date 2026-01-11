@@ -1,4 +1,113 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Shift-Jis on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/shift-jis/</link><description>Recent content in Shift-Jis on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 15 Sep 2013 00:00:00 +0000</lastBuildDate><atom:link href="/tags/shift-jis/" rel="self" type="application/rss+xml"/><item><title>プロジェクトのスケルトンをテンプレートから展開するstampというCLIツールを作った</title><link>https://blog.monochromegane.com/blog/2026/01/10/stamp/</link><pubDate>Sat, 10 Jan 2026 14:17:46 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2026/01/10/stamp/</guid><description>&lt;p&gt;CLIツールを多く作っていると、最初のコミットまでに機械的に準備する自分なりの一式（利用するコマンドラインパーサーによる初期実装、GitHub Actionの定義、Makefile、ライセンスファイル等々）ができてくるかと思います。
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Shift-Jis on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/shift-jis/</link><description>Recent content in Shift-Jis on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 15 Sep 2013 00:00:00 +0000</lastBuildDate><atom:link href="/tags/shift-jis/" rel="self" type="application/rss+xml"/><item><title>tmuxのpopupを使ってターミナル画面でClaude Codeと棲み分ける</title><link>https://blog.monochromegane.com/blog/2026/01/11/popup/</link><pubDate>Sun, 11 Jan 2026 11:47:04 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2026/01/11/popup/</guid><description>&lt;p&gt;Claude CodeをはじめとするCLI型のコーディングエージェントはターミナル画面中の一定領域を占有します。&lt;/p&gt;
+&lt;p&gt;元々自分は、ターミナルマルチプレクサであるtmuxを利用していて、リポジトリをプロジェクトとみなし、一つのウィンドウを対応させ、その中でペインを分ける構成をとっていました。
+その配置と各ペインのサイズのなかで、エージェントの入る余地はなく、どうしてもペイン内で共有させるか、異なるウィンドウを割り当てる必要がありました。
+しかしながら、役割を共有させたペインの裏側や異なるウィンドウに散らばったエージェントのセッションを探し回るのは非常に面倒に感じていました。&lt;/p&gt;
+&lt;p&gt;そんな中、以下のtmux popupの活用記事がしっくりきたので、参考にさせてもらいました。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/hanlio/items/432ed4065073a2e6196a"&gt;【Tmux】Claude Code を popup で快適に使う&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/skanehira/articles/2020-10-25-tmux-toggle-popup"&gt;tmuxのpopupが便利&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="利用の様子"&gt;利用の様子&lt;/h2&gt;
+&lt;p&gt;&lt;img src="https://blog.monochromegane.com/images/2026/01/popup.png" alt="Popup"&gt;&lt;/p&gt;
+&lt;p&gt;画面の中央の前面領域がtmux popupでClaude Codeを動かしている箇所です。
+このpopupの表示・非表示を指定したキーバインドで瞬時にトグルできる体験が非常に良いです。
+トグルの様子は、上記の記事のデモが分かりやすいのでぜひご覧いただきたいです。&lt;/p&gt;
+&lt;p&gt;特に、tmuxのセッションのdetachとattachを行うため、popupを隠しても処理が継続され、ターミナル領域をお気に入りの配置のままコードの確認などが快適に行えるのが非常に有用です。
+また、以下の設定で見ていただける通り、tmux側のpopupやキーバインドを使うため、操作中のClaude Codeに干渉しない点もポイントが高いです。&lt;/p&gt;
+&lt;p&gt;（余談ですが&lt;code&gt;IS_DEMO&lt;/code&gt;環境変数をつけてClaude Codeを起動すると組織名やメールアドレスが非表示になってこういうスクリーンショットの時に便利です）&lt;/p&gt;
+&lt;h2 id="実際の設定"&gt;実際の設定&lt;/h2&gt;
+&lt;p&gt;上記の記事はfishだったのでzshで使うために以下のようにしました。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;functions/_tmuxpopup&lt;/code&gt;でカレントディレクトリ（リポジトリ名）をベースにセッション名を組み立て、セッションがなければ作成、あればattachとdetachをトグルできるようにしています。
+セッション名の組み立てのところを自分の環境に合わせると使いまわせると思います。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;function&lt;/span&gt; _tmuxpopup&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; local initial_cmd&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;1&lt;span style="color:#66d9ef"&gt;:-&lt;/span&gt;&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; local title&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;2&lt;span style="color:#66d9ef"&gt;:-&lt;/span&gt;&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; local width&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;80%&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; local height&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;80%&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; local session
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; session&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;tmux display-message -p -F &lt;span style="color:#e6db74"&gt;&amp;#39;#{session_name}&amp;#39;&lt;/span&gt; 2&amp;gt;/dev/null&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;||&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; local pane_path
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; pane_path&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;tmux display-message -p -F &lt;span style="color:#e6db74"&gt;&amp;#39;#{pane_current_path}&amp;#39;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;||&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; local home_src&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;HOME&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;/src&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; local key&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[[&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$pane_path&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#e6db74"&gt;${&lt;/span&gt;home_src&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;/*/*/*&lt;span style="color:#f92672"&gt;(&lt;/span&gt;|/*&lt;span style="color:#f92672"&gt;)&lt;/span&gt; &lt;span style="color:#f92672"&gt;]]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; local rest&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;pane_path#&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;home_src&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;/&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; local parts&lt;span style="color:#f92672"&gt;=(&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;(s:/:)rest&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; local org&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;parts[2]&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; local repo&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;parts[3]&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; repo&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;repo%-wt&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; key&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;org&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;/&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;repo&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; key&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;pane_path:t&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; local safe_key&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;key//&lt;span style="color:#ae81ff"&gt;\/&lt;/span&gt;/_&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; safe_key&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;safe_key//[^A-Za-z0-9_.-]/_&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; local popup_session&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;popup_&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;title&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;_&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;safe_key&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[[&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$session&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;==&lt;/span&gt; popup_* &lt;span style="color:#f92672"&gt;]]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; tmux detach-client
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; local exec_cmd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[[&lt;/span&gt; -n &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$initial_cmd&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; exec_cmd&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;tmux attach -t &lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;popup_session&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt; || tmux new -s &lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;popup_session&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt; &amp;#39;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;initial_cmd&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; exec_cmd&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;tmux attach -t &lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;popup_session&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt; || tmux new -s &lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;popup_session&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; tmux display-popup &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -d &lt;span style="color:#e6db74"&gt;&amp;#34;#{pane_current_path}&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -xC -yC &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -w &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$width&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; -h &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$height&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -T &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$title&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -E &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$exec_cmd&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;上記の関数はpopup時に起動したいコマンドとpopupのタイトルを受け付けられる共通関数なので、Claude Codeを立ち上げるため具体的な実装を&lt;code&gt;functions/_tmuxpopup-claude&lt;/code&gt;に記述しました。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;function&lt;/span&gt; _tmuxpopup-claude&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; _tmuxpopup &lt;span style="color:#e6db74"&gt;&amp;#34;claude&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;claude&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;上記の関数たちを&lt;code&gt;.zshrc&lt;/code&gt;でautoloadしておきます。これでこの関数がいつでも呼び出せるようになります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;autoload -Uz _tmuxpopup
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;autoload -Uz _tmuxpopup-claude
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;実際の呼び出しはコマンドではなく&lt;code&gt;tmux.conf&lt;/code&gt;にキーバインドとして登録しておきます。こうすることで、popup内のClaude Code起動中でもpopupをいつでも隠すことができます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;bind , run-shell &lt;span style="color:#e6db74"&gt;&amp;#39;zsh -ic &amp;#34;_tmuxpopup-claude&amp;#34;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;これでprefix + &amp;lsquo;,&amp;lsquo;でpopupをトグルできるようになりました。非常に快適です。&lt;/p&gt;
+&lt;h2 id="並列実行"&gt;並列実行&lt;/h2&gt;
+&lt;p&gt;これだけだと再紹介にしかならないので、並列実行のために試しているものも紹介しておきます。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/kbwo/ccmanager"&gt;ccmanager&lt;/a&gt;はClaude Codeをはじめとするコーディングエージェントの並列実行を管理するためのツールです。
+エージェント単位でgit worktreeを割り当てることができるので、並列実行時のコンフリクトなども回避することができます。&lt;/p&gt;
+&lt;p&gt;上で紹介した&lt;code&gt;_tmuxpopup&lt;/code&gt;は起動したいコマンドを差し替えるだけで使えるのでccmanagerを呼ぶようにするだけで良いです。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;function&lt;/span&gt; _tmuxpopup-ccmanager&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; _tmuxpopup &lt;span style="color:#e6db74"&gt;&amp;#34;ccmanager&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;ccmanager&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;これでプロジェクトごとの並列実行はかなり便利になりますが、いわゆる承認疲れの現象が発生するため、ある程度の権限を持たせた上で安全に実行したくなります。
+そこで、Dev Containerと組み合わせます。
+幸い、ccmanagerはDev Containerの利用も視野に入れているようで、探すと専用のオプションがあります。
+それを踏まえて、先の関数を以下のように変更できます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;function&lt;/span&gt; _tmuxpopup-ccmanager&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; _tmuxpopup &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;ccmanager --devc-up-command &amp;#34;devcontainer up --docker-path podman --workspace-folder .&amp;#34; --devc-exec-command &amp;#34;devcontainer exec --docker-path podman --workspace-folder .&amp;#34;&amp;#39;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;ccmanager&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;podman&lt;/code&gt;を使う場合のオプションが含まれているので環境に応じて適宜読み替えていただければと思います。
+また、予め&lt;a href="https://github.com/devcontainers/cli"&gt;Dev Container CLI&lt;/a&gt;もインストールしておく必要があります。&lt;/p&gt;
+&lt;p&gt;これで、プロジェクトのDev Containerの設定（&lt;code&gt;.devcontainer&lt;/code&gt;ディレクトリ）を使ってccmanagerがよしなにやってくれます。
+なお、コンテナ内にClaude Codeが含まれる必要があるため、&lt;a href="https://github.com/anthropics/devcontainer-features"&gt;Dev Container Features&lt;/a&gt;などで追加しておくと良いです。&lt;/p&gt;
+&lt;p&gt;以下のように設定し、Claude Codeのpopupと使い分けることができます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;bind . run-shell &lt;span style="color:#e6db74"&gt;&amp;#39;zsh -ic &amp;#34;_tmuxpopup-ccmanager&amp;#34;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="おわりに"&gt;おわりに&lt;/h2&gt;
+&lt;p&gt;tmux popupを使うことでClaude Codeとターミナル領域をうまく棲み分けることができて非常に快適になりました。
+しかしながら、並列実行の部分は実はまだ試行錯誤中です。
+特に、Dev Container + git worktree + Claude Codeの相性はあまり良くないと思っていて、マウント周りを工夫する必要があり、なかなか全てのリポジトリで気軽に使えてないのが現状です。
+また、Dev Containerであれローカルであれ、単純に自分が起点にエージェントとやりとりする構造から逆転させないと目指す並列は近づけないなあとも思っているので、引き続き試行錯誤していきたいと思います。&lt;/p&gt;</description></item><item><title>プロジェクトのスケルトンをテンプレートから展開するstampというCLIツールを作った</title><link>https://blog.monochromegane.com/blog/2026/01/10/stamp/</link><pubDate>Sat, 10 Jan 2026 14:17:46 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2026/01/10/stamp/</guid><description>&lt;p&gt;CLIツールを多く作っていると、最初のコミットまでに機械的に準備する自分なりの一式（利用するコマンドラインパーサーによる初期実装、GitHub Actionの定義、Makefile、ライセンスファイル等々）ができてくるかと思います。
 このような一式を予め用意しておくことが、普段通りの開発作法に従ってスムーズに開発を始めるための土台となります。
 また、最近では、コーディングエージェントへ依頼する際に、このような一式を揃えて実装時の補助線としてもらう方が、認識が揃うことも多いように感じています。&lt;/p&gt;
 &lt;p&gt;自分の場合、この一式の準備には直近のリポジトリからコピーしてくることが多いですが、細々とした置換などが面倒でした。
@@ -1327,93 +1436,4 @@ Notionで、上述のアレンジ版落合メソッドを含んだテンプレ�
 &lt;p&gt;Notion上の47ページの論文まとめは執筆中、何度も読み直したが自分なりのまとめメモが入っていること、自分の研究との位置づけが一言でまとめられていることから、効率よく記憶が蘇らせることができた。
 結果として、複数の論文同士の関係性を整理するという目標に自身のリソースを采配することができたと思う。&lt;/p&gt;
 &lt;p&gt;一方で、キーワード検索では、既読管理と相性が悪いため、普段のインプットとしての継続的なサーベイには向かない。
-RSSフィード的なインプットの方法を探したい。&lt;/p&gt;</description></item><item><title>2020</title><link>https://blog.monochromegane.com/blog/2020/12/31/2020/</link><pubDate>Thu, 31 Dec 2020 11:47:04 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/12/31/2020/</guid><description>&lt;p&gt;今年は、なんと言っても、6月の初めてのジャーナル論文採録が文句なしに一番嬉しかった出来事だった。
-ペパボ研究所に入って3年半。
-本当に長かったし苦しかった。
-それでもこの期間にたくさん自分自身や研究と向き合うことで、多くのものを得ることができたと思う。
-今は、ただただ「巨人の肩に乗ることから逃げずに真摯に向き合い一歩づつ精進して」いる。&lt;/p&gt;
-&lt;p&gt;10月には、博士後期課程に挑戦し、無事に入学することができた。
-12月のインターネットと運用技術シンポジウムではジャーナル論文の研究を発展させる手法が採録され、優秀プレゼンテーション賞も受賞することができた。
-来年は国際会議に挑戦する。&lt;/p&gt;
-&lt;p&gt;長い暗中模索を抜けたが、スタートラインにやっと立てたとも言える。
-遅れを取り戻すことを動機とはしないが、2021年は、可能な限り、適切な粒度で継続的に分野への貢献を出していきたい。
-また、その貢献を通して周りの人へ直接的間接的に良い影響を与えたいと思う。&lt;/p&gt;
-&lt;p&gt;そのためにも、習慣と計画をうまく使い、仕組みによって淡々と自分を駆動していきたい。
-2020年は1月末からリモートワークに完全移行したが、毎朝の論文読み会によって生活リズムが崩れることはなく研究に取り組めた。
-毎日の業務後に進めるよう計画していた、大学基礎数学の参考書は、微分積分、線形代数、確率統計を一通りこなすことができた。
-一方で、研究開発において、習慣と計画は適用が難しいと感じている。
-研究には終わりがないため、どこまでの試行錯誤を区切りとするのか判断がつきにくい。
-また、アイディアは無限にあるため、いろいろなことをやりたくなり、優先順位の判断がつきにくい。
-つまり、全体をブレイクダウンしてルーティーンに落とし込むところに苦労している。
-ここに関しては、研究日誌のような短期のアウトプットに加えて、もう少しだけ長い視点での判断をする機会を計画や習慣として組み込んでいきたい。
-まずは、その観点でも指導教官や研究所のみんなにも相手になってもらおう。&lt;/p&gt;
-&lt;p&gt;2020年は光が見えた年だった。
-2021年からは、この成果を普段から出せるよう、そして一つ上を目指せるようにしていこうと思う。
-そして、その成果から行動の意義が伝わるような良い影響を与えられるようになりたいと思う。
-来年もよろしくお願いします。&lt;/p&gt;
-&lt;h1 id="実績"&gt;実績&lt;/h1&gt;
-&lt;p&gt;以下、実績を列挙する。&lt;/p&gt;
-&lt;h2 id="表彰"&gt;表彰&lt;/h2&gt;
-&lt;p&gt;2020年は2回の表彰があった。
-コミュニティ活動と研究活動の両面で表彰をいただくことができて、非常に嬉しい。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://www.iot.ipsj.or.jp/awards/symposium/"&gt;IOTS2020 優秀プレゼンテーション賞&lt;/a&gt;, 三宅 悠介, 栗林 健太郎, 変化検出と要約データ構造を用いた利用者の嗜好の変化に迅速に追従する多腕バンディット手法, 2020年12月.&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://efc.fukuoka.jp/information/3116"&gt;エンジニアフレンドリーシティ福岡アワード コミュニティ部門&lt;/a&gt;, 三宅 悠介,小田 知央, Fukuoka.go, 2020年1月.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id="論文"&gt;論文&lt;/h2&gt;
-&lt;p&gt;国内ジャーナル論文1本、査読付き論文1本。研究報告については第一著者のものが1本。
-また、今年は研究報告のラストオーサーを2本務めた。&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;三宅 悠介, 峯 恒憲, &lt;a href="https://search.ieice.org/bin/summary.php?id=j103-d_11_764"&gt;Synapse: 文脈に応じて継続的に推薦手法の選択を最適化する推薦システム&lt;/a&gt;, 電子情報通信学会論文誌D, Vol.J103-D, No.11, pp.764-775, Nov 2020.&lt;/li&gt;
-&lt;li&gt;三宅 悠介, 栗林 健太郎, &lt;a href="http://id.nii.ac.jp/1001/00208105/"&gt;変化検出と要約データ構造を用いた利用者の嗜好の変化に迅速に追従する多腕バンディット手法&lt;/a&gt;, インターネットと運用技術シンポジウム論文集, 2020, pp.1-8, Nov 2020. &lt;a href="https://speakerdeck.com/monochromegane/iots2020-adaptive-linear-mab"&gt;[発表資料]&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;三宅 悠介, 栗林 健太郎, &lt;a href="http://id.nii.ac.jp/1001/00206029/"&gt;非定常な多腕バンディット問題における変化検出アプローチの線形モデルへの拡張&lt;/a&gt;, 研究報告インターネットと運用技術（IOT）, Vol.2020-IOT-50, pp.1-8, July 2020.&lt;a href="http://localhost:4567/papers/iot50-miyakey.pdf"&gt;[論文]&lt;/a&gt; &lt;a href="https://speakerdeck.com/monochromegane/extension-of-change-detection-method-for-non-stationary-linear-multi-armed-bandit"&gt;[発表資料]&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id="国内発表"&gt;国内発表&lt;/h2&gt;
-&lt;p&gt;技術イベント、研究会での発表で計６回（学会の研究会、シンポジウムを除く）。
-Fukuoka.go、WSA研究会といったお馴染みのところに加え、GMOのテックカンファレンス、エンジニアフレンドリーシティ福岡のような声をかけていただいた登壇もあり、バランスは良かったと思う。
-来年は、国際カンファレンス登壇が最初の目標だが、国内でも参加したことがない技術カンファレンスや勉強会なども挑戦してみたい。&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;三宅 悠介 &lt;a href="https://blog.monochromegane.com/blog/2020/11/17/wsa7-local-preference/"&gt;嗜好伝達コミュニケーションの効率化を目指した伝達方式の検討&lt;/a&gt;, &lt;a href="https://wsa.connpass.com/event/187128/"&gt;Web System Architecture 研究会 (WSA研) #7&lt;/a&gt;, 2020年11月.&lt;/li&gt;
-&lt;li&gt;三宅 悠介 &lt;a href="https://speakerdeck.com/monochromegane/coherently-fittable-system"&gt;なめらかなシステムの実現に向けて&lt;/a&gt;, &lt;a href="https://www.gmo.jp/developersday/"&gt;GMO Developers Day 2020&lt;/a&gt;, 2020年7月. [&lt;a href="https://youtu.be/KW-YKuM1ndI"&gt;動画&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;三宅 悠介 &lt;a href="https://speakerdeck.com/monochromegane/fukuokago-stage"&gt;Go言語でシミュレーション用のシンプルなフレームワークStageをつくった&lt;/a&gt;, &lt;a href="https://fukuokago.connpass.com/event/180414/"&gt;Fukuoka.go#16(オンライン開催)&lt;/a&gt;, 2020年7月.&lt;/li&gt;
-&lt;li&gt;三宅 悠介 &lt;a href="https://speakerdeck.com/monochromegane/wsa6-sifter"&gt;軽量なインデックス機構を用いた全文検索ツールの高速化の検討&lt;/a&gt;, &lt;a href="https://websystemarchitecture.hatenablog.jp/entry/2019/12/11/165624"&gt;Web System Architecture 研究会 (WSA研) #6&lt;/a&gt;, 2020年4月.&lt;/li&gt;
-&lt;li&gt;三宅 悠介 &lt;a href="https://speakerdeck.com/monochromegane/fukuokago15-adwin-exphist"&gt;Adaptiveなウィンドウを求めて 〜サーベイと実装 Go言語編〜&lt;/a&gt;, &lt;a href="https://fukuokago.connpass.com/event/164350/"&gt;Fukuoka.go#15 + 鹿児島Gophers(オンライン開催)&lt;/a&gt;, 2020年3月.&lt;/li&gt;
-&lt;li&gt;三宅 悠介, 田中 孝明, 白石 憲正, 浜崎 陽一郎, 松口 健司 &lt;a href="https://efc.fukuoka.jp/information/2562#day2_7"&gt;トークセッション / エンジニアと企業が描く未来のかたち&lt;/a&gt;, &lt;a href="https://efc.fukuoka.jp/information/2562"&gt;エンジニアフレンドリーシティ福岡フェスティバル&lt;/a&gt;, 2020年2月.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id="oss"&gt;OSS&lt;/h2&gt;
-&lt;p&gt;変化検出の手法をはじめ、シミュレーションのフレームワークなど研究開発で取り組む分野の実装が増えてきた。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/monochromegane/adwin-v"&gt;ADWIN-V&lt;/a&gt;: ADWIN-V is an adaptive windowing algorithm for vector data.&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/monochromegane/stage"&gt;stage&lt;/a&gt;: Simple and flexible simulation framework for Go.&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/monochromegane/sifter"&gt;sifter&lt;/a&gt;: A lightweight index for full text search tools using bloom filter.&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/monochromegane/adwin"&gt;adwin&lt;/a&gt;: Adwin is an adaptive windowing algorithm.&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/monochromegane/exponential-histograms"&gt;exponential-histograms&lt;/a&gt;: Exponential histograms is a data structure for sliding windows.&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/monochromegane/random_multivariate_normal"&gt;random_multivariate_normal&lt;/a&gt;: Random number generator from a multivariate normal distribution.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id="コミュニティ活動"&gt;コミュニティ活動&lt;/h2&gt;
-&lt;p&gt;昨年度の活動や昨今の状況でのオンラインでの活動が評価され、表彰やインタビューを受ける機会をいただき非常にありがたいことであった。
-一方で、Fukuoka.go自体の活動実績は2回と例年に比べかなり少なめであった。
-オンライン開催での主催者側のモチベーションをどう維持するかも課題である。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;小田 知央,三宅 悠介,清家 史郎 &lt;a href="https://efc.fukuoka.jp/interview/3704"&gt;勉強会はパーティーだ! ビール片手に楽しくGo言語を学ぶコミュニティ「Fukuoka.go」&lt;/a&gt;, &lt;a href="https://efc.fukuoka.jp/interview"&gt;ENGINEER INTERVIEW - Engineer Friendly City Fukuoka&lt;/a&gt;, 2020年8月.&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://fukuokago.connpass.com/event/180414/"&gt;Fukuoka.go#16 (オンライン開催)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://fukuokago.connpass.com/event/164350/"&gt;Fukuoka.go#15 + 鹿児島Gophers(オンライン開催)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;三宅 悠介,小田 知央 &lt;a href="https://dayori.city.fukuoka.lg.jp/129892/"&gt;エンジニアの技術向上に取り組むコミュニティ･企業を表彰 エンジニアフレンドリーシティ福岡アワード&lt;/a&gt;, &lt;a href="https://dayori.city.fukuoka.lg.jp/"&gt;福岡市政だより&lt;/a&gt;, 2020年3月.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id="ブログ"&gt;ブログ&lt;/h2&gt;
-&lt;p&gt;13本。結果だけでなく、どうしてその考えに至ったかなど、その経緯、考えをまとめるカタチの文章をいくつか出すことができた。特に論文執筆のエントリのような自分なりのまとめは定期的に書いていきたいと思う。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://blog.monochromegane.com/blog/2020/11/17/wsa7-local-preference/"&gt;嗜好伝達コミュニケーションの効率化を目指した伝達方式の検討&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://blog.monochromegane.com/blog/2020/10/14/pen-tablet/"&gt;ペンタブレットでリモートワークのコミュニケーションを改善する&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://blog.monochromegane.com/blog/2020/09/23/structure-of-research-paper/"&gt;構造を意識した抜け漏れがなく主張点が明確な論文執筆&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://blog.monochromegane.com/blog/2020/09/21/isee-kyushu-u/"&gt;九州大学大学院システム情報科学府博士後期課程に入学します&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://blog.monochromegane.com/blog/2020/06/28/my-first-journal/"&gt;ペパ研から研究をはじめてジャーナルでのアクセプトまでいけた日&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://blog.monochromegane.com/blog/2020/05/31/simulation-framework-stage/"&gt;Go言語でシミュレーション用のシンプルなフレームワークStageをつくった&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://blog.monochromegane.com/blog/2020/05/16/bandit-algorithm-ucb1/"&gt;多腕バンディット問題におけるUCB方策を理解する&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://blog.monochromegane.com/blog/2020/04/29/why-fukuokago/"&gt;なぜ勉強会「だった」のか&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://blog.monochromegane.com/blog/2020/04/29/wsa6_sifter/"&gt;軽量なインデックス機構を用いた全文検索ツールの高速化の検討&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://blog.monochromegane.com/blog/2020/03/11/dynamic-gamma-poisson/"&gt;Dynamic Gamma-Poisson modelを試す&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://blog.monochromegane.com/blog/2020/03/03/minimum-start-for-online-event/"&gt;勉強会をオンライン配信するための必要最小限な環境構築&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://blog.monochromegane.com/blog/2020/01/30/memo-getting-start-reinformation-learning-algorithm/"&gt;『強化学習アルゴリズム入門』第1章〜第2章の学習メモ&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://blog.monochromegane.com/blog/2020/01/26/exhalation-and-coherently-fittable-system/"&gt;テッド・チャン『息吹』と「なめらかなシステム」&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item></channel></rss>
+RSSフィード的なインプットの方法を探したい。&lt;/p&gt;</description></item></channel></rss>
