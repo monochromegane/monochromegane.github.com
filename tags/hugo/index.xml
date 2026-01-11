@@ -1,4 +1,107 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Hugo on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/hugo/</link><description>Recent content in Hugo on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sat, 18 Jul 2015 11:07:01 +0900</lastBuildDate><atom:link href="/tags/hugo/" rel="self" type="application/rss+xml"/><item><title>dotfilesを5年ぶりに整備した</title><link>https://blog.monochromegane.com/blog/2026/01/03/dotfiles/</link><pubDate>Sat, 03 Jan 2026 10:21:55 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2026/01/03/dotfiles/</guid><description>&lt;p&gt;なんとdotfilesも5年更新していなかった。
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Hugo on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/hugo/</link><description>Recent content in Hugo on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sat, 18 Jul 2015 11:07:01 +0900</lastBuildDate><atom:link href="/tags/hugo/" rel="self" type="application/rss+xml"/><item><title>プロジェクトのスケルトンをテンプレートから展開するstampというCLIツールを作った</title><link>https://blog.monochromegane.com/blog/2026/01/10/stamp/</link><pubDate>Sat, 10 Jan 2026 14:17:46 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2026/01/10/stamp/</guid><description>&lt;p&gt;CLIツールを多く作っていると、最初のコミットまでに機械的に準備する自分なりの一式（利用するコマンドラインパーサーによる初期実装、GitHub Actionの定義、Makefile、ライセンスファイル等々）ができてくるかと思います。
+このような一式を予め用意しておくことが、普段通りの開発作法に従ってスムーズに開発を始めるための土台となります。
+また、最近では、コーディングエージェントへ依頼する際に、このような一式を揃えて実装時の補助線としてもらう方が、認識が揃うことも多いように感じています。&lt;/p&gt;
+&lt;p&gt;自分の場合、この一式の準備には直近のリポジトリからコピーしてくることが多いですが、細々とした置換などが面倒でした。
+秘蔵スクリプトを持っている方も多いのではないでしょうか。&lt;/p&gt;
+&lt;p&gt;このようなニーズのため、プロジェクトのスケルトンを管理するツールが開発されています（&lt;a href="https://github.com/copier-org/copier"&gt;copier&lt;/a&gt;などがあるようです）。
+一方で、これらのツールはテンプレートの適用後の継続的な同期まで面倒を見るために、プロジェクト開始時に一度展開できれば良いという自分のユースケースに対しては機能的に持て余してしまう印象がありました。&lt;/p&gt;
+&lt;p&gt;そこで、自分用に&lt;a href="https://github.com/monochromegane/stamp"&gt;stamp&lt;/a&gt;と言うCLIツールを作りました。&lt;/p&gt;
+&lt;p&gt;機能は単純で、予め用意しておいた、テンプレート一式（ツールがスタンプなのでシートと呼んでいます）をディレクトリ構造のままコピーしてくるだけです。
+各ファイルはGo言語のテンプレートとして処理されるため、&lt;code&gt;{{.name}}&lt;/code&gt;のような記述に対して、動的な値を設定できます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# my-appシートにhello.txtを登録（拡張子.stampでテンプレートとして解釈）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ echo &lt;span style="color:#e6db74"&gt;&amp;#34;Hello {{.name}}!&amp;#34;&lt;/span&gt; &amp;gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;stamp config-dir&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;&lt;span style="color:#e6db74"&gt;/sheets/my-app/hello.txt.stamp&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# my-appシートを適用&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ cd /path/to/workspace
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ stamp -s my-app name&lt;span style="color:#f92672"&gt;=&lt;/span&gt;alice
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 結果を確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ls
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;hello.txt
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ cat hello.txt
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Hello alice!
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;a href="https://www.chezmoi.io/"&gt;chezmoi&lt;/a&gt;をご存知の方は、これを都度任意のディレクトリへapplyできるものと考えてもらうと想像しやすいかもしれません。&lt;/p&gt;
+&lt;h2 id="使用例"&gt;使用例&lt;/h2&gt;
+&lt;p&gt;自身の具体的な利用ケースとして、Go言語のCLIのリポジトリを作成するシートを用意しています（というかこのために作った）。
+拡張子.stampのファイルに含まれるモジュール名などを作成したいCLIツールの名称等に合わせてコピー時に設定することができます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ tree &lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;stamp config-dir&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;~/.config/stamp/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── sheets
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│   └── go-cli &lt;span style="color:#75715e"&gt;# go-cliというシート名で配下のディレクトリ構造を管理&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│   ├── bootstrap.sh &lt;span style="color:#75715e"&gt;# go mod tidyやgitのinitial commitなどを行う（後述）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│   ├── cmd &lt;span style="color:#75715e"&gt;# 以下はCLIツールのスケルトンやMakefile、LICENSEなど&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│   │   ├── cli_test.go
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│   │   ├── cli.go.stamp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│   │   └── version.go
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│   ├── go.mod.stamp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│   ├── internal
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│   │   └── greet
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│   │   ├── greet_test.go
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│   │   └── greet.go
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│   ├── LICENSE.stamp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│   ├── main.go.stamp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│   ├── Makefile.stamp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│   └── README.md.stamp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;└── stamp.yaml &lt;span style="color:#75715e"&gt;# ユーザー名などのデフォルト値を管理（後述）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;以下のように実行すると、テストが通る状態でプロジェクトを開始できます。また、GitHubにpushすれば&lt;a href="https://github.com/Songmu/tagpr"&gt;tagpr&lt;/a&gt;を用いたリリースの設定まで完了した状態になります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;APPNAME&lt;span style="color:#f92672"&gt;=&lt;/span&gt;sample; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$APPNAME&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; cd &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$APPNAME&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; stamp -s go-cli appname&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$APPNAME&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; sh bootstrap.sh
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;興味がある方はこちらを参照ください。シートをさらにchezmoiで管理していますが内容はそのまま確認できます。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/monochromegane/dotfiles/commit/56ccfd6dc17e53df25e027b86ba142ba29fcab4a"&gt;Go言語のCLIのリポジトリを作成するテンプレート一式（シート）&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="便利な機能"&gt;便利な機能&lt;/h2&gt;
+&lt;p&gt;stampの基本機能はこれだけですが、利用にあたり少し便利な機能ももう少し作っているので軽く紹介します。&lt;/p&gt;
+&lt;h3 id="シート登録の支援"&gt;シート登録の支援&lt;/h3&gt;
+&lt;p&gt;既存のディレクトリやファイルをシートとして登録するための&lt;code&gt;collect&lt;/code&gt;サブコマンドを用意しています。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# カレントディレクトリを再帰的にテンプレートとして（.stamp拡張子をつけて）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# sampleシートとして登録&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ stamp collect -s sample -t .
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="デフォルト値の指定"&gt;デフォルト値の指定&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;$(stamp config-dir)/stamp.yaml&lt;/code&gt;にシートのテンプレート展開時にデフォルトで指定する値をキーごとに設定しておくことができます。
+コマンド実行時に指定があればそちらが優先されます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;year: &lt;span style="color:#ae81ff"&gt;2026&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;username: monochromegane
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="パラメータ不足チェック機能"&gt;パラメータ不足チェック機能&lt;/h3&gt;
+&lt;p&gt;事前にテンプレートに必要なパラメータの値を覚えておいたり覗いて回って思い出すのは時間がかかります。
+stampでは、必要なパラメータをうろ覚えのまま実行しても、不足があれば適用前に教えてくれます。どのファイルに何のパラメータが必要かが分かるので、便利です。&lt;/p&gt;
+&lt;p&gt;例えば、先ほどのgo-cliでは、stamp.yamlで定義しているデフォルトの値の他に、必ずappnameと言うキーに対して値を与えなければなりませんが、これをせずに実行するとこういうエラーがでます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# stamp -s go-cli appname=monochromeganeとして呼ぶべき&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ stamp -s go-cli
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Error: stamp failed: missing required template variables:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - appname
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; used in:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - .gitignore.stamp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - LICENSE.stamp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - Makefile.stamp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - README.md.stamp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - cmd/cli.go.stamp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - go.mod.stamp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - main.go.stamp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Provide missing variables using:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - Command line: stamp -s &amp;lt;sheet&amp;gt; -d &amp;lt;dest&amp;gt; appname&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&amp;lt;value&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - Config file: Create stamp.yaml in sheet or config directory
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="その他"&gt;その他&lt;/h3&gt;
+&lt;p&gt;将来シートを増やした際の共通シートが欲しくなることを想定して、複数シートを同時に指定できる機能なども設けています。&lt;/p&gt;
+&lt;p&gt;なお、機能をシンプルに保ちたいため、適用後に実施したいスクリプトなどを実行する機能は持たせないことにしました。
+ひとまずは、シート中に以下のような&lt;code&gt;bootstrap.sh&lt;/code&gt;などを用意し、stampコマンド実行後に続けて実行する運用にしています。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/usr/bin/env sh
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set -e
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go mod tidy
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git init
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git add . &lt;span style="color:#e6db74"&gt;&amp;#34;:!./&lt;/span&gt;$0&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git commit -m &lt;span style="color:#e6db74"&gt;&amp;#34;Add project skeleton&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;make test
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;rm -- &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$0&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="おわりに"&gt;おわりに&lt;/h2&gt;
+&lt;p&gt;今回のツール実装はClaude Codeに任せ、コマンドラインとしての使い心地の観点からコメントしながら進めました。
+ただし、出発点は上述のシート相当のプロジェクト構成を与えた上で実装を開始してもらったため、実装の方向性については想定した範囲に収まりやすかったかなと感じています。&lt;/p&gt;
+&lt;p&gt;CLIツール開発の着手時の迅速化のみならず、コーディングエージェントへの実装補助線を与えるという点でも役立つツールかなと思いますので、よければ使ってみてください。&lt;/p&gt;</description></item><item><title>dotfilesを5年ぶりに整備した</title><link>https://blog.monochromegane.com/blog/2026/01/03/dotfiles/</link><pubDate>Sat, 03 Jan 2026 10:21:55 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2026/01/03/dotfiles/</guid><description>&lt;p&gt;なんとdotfilesも5年更新していなかった。
 なにかと気忙しいのではあるが、木こりのジレンマに陥らないよう再起動していきたい。&lt;/p&gt;
 &lt;p&gt;さて、昨年末にMacbook Proを新調してまっさらな開発環境が手に入ったのに合わせてdotfilesを見直した。&lt;/p&gt;
 &lt;ul&gt;
@@ -1313,109 +1416,4 @@ Fukuoka.go、WSA研究会といったお馴染みのところに加え、GMOの�
 &lt;li&gt;&lt;a href="https://blog.monochromegane.com/blog/2020/03/03/minimum-start-for-online-event/"&gt;勉強会をオンライン配信するための必要最小限な環境構築&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://blog.monochromegane.com/blog/2020/01/30/memo-getting-start-reinformation-learning-algorithm/"&gt;『強化学習アルゴリズム入門』第1章〜第2章の学習メモ&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://blog.monochromegane.com/blog/2020/01/26/exhalation-and-coherently-fittable-system/"&gt;テッド・チャン『息吹』と「なめらかなシステム」&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>嗜好伝達コミュニケーションの効率化を目指した伝達方式の検討</title><link>https://blog.monochromegane.com/blog/2020/11/17/wsa7-local-preference/</link><pubDate>Tue, 17 Nov 2020 10:46:53 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2020/11/17/wsa7-local-preference/</guid><description>&lt;p&gt;このエントリは、&lt;a href="https://wsa.connpass.com/event/187128/"&gt;第7回 Web System Architecture 研究会 (WSA研)&lt;/a&gt;の予稿です。&lt;/p&gt;
-&lt;h1 id="嗜好伝達コミュニケーションの効率化を目指した伝達方式の検討"&gt;嗜好伝達コミュニケーションの効率化を目指した伝達方式の検討&lt;/h1&gt;
-&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
-&lt;p&gt;適応的なシステムの実現には、システムが利用者の状況をよく知ることが重要になる。
-ECサイトのシステムであれば、利用者の嗜好を把握することで、最適な商品を提案できると考えられる。&lt;/p&gt;
-&lt;p&gt;ECサイトのシステムが利用者の嗜好を把握するためには、特に初期段階における利用者との一定量のコミュニケーションが必要となる。
-明示的なコミュニケーションであれば、システムは利用者に、年齢や居住地、興味関心などのプロファイルの登録を依頼する。
-暗黙的なコミュニケーションであれば、システムは利用者の、閲覧や購買、検索履歴を通して利用者の嗜好を把握する。
-システムはこれらのプロファイルの登録や履歴の蓄積なくして、適応的に振舞うことが難しい。
-一方で、これらのコミュニケーションは利用者に負担を強いる。
-これには、システムごとに発生するプロファイルの登録や履歴蓄積のための労力的な負担の他、プライバシーを守りたいという意識的な負担も考えられる。&lt;/p&gt;
-&lt;p&gt;本研究では、利用者の嗜好伝達に纏わるコミュニケーションの負担を低減しつつ、適応的なシステムによる利便性を常に享受できるインターネット世界に向けて、嗜好伝達コミュニケーションの効率化のための伝達方式の検討を行う。&lt;/p&gt;
-&lt;h2 id="嗜好伝達コミュニケーションの課題"&gt;嗜好伝達コミュニケーションの課題&lt;/h2&gt;
-&lt;p&gt;嗜好伝達コミュニケーションの課題整理にあたり、本研究における「嗜好」を定義する。
-まず、嗜好(preference)とは「利用者の素性(feature)」に基づく「対象(content)への反応(reaction)」と考える。&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;preference(feature,content) #=&amp;gt; reaction
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;対象(content)はシステムごと（ECサイトごと）に異なるため、嗜好伝達にはシステムごとに個別のコミュニケーションが求められる。
-利用者の素性(feature)を示すか、直接、対象(content)への反応(reaction)を示す行為がこれに該当する。
-推薦システムでは、利用者の素性(feature)を示す場合、類似する素性の群の反応を用いて利用者の嗜好が推測される。
-対象(content)への反応(reaction)を示す場合、この反応から、もしくは類似する群から利用者の嗜好が推測される。&lt;/p&gt;
-&lt;p&gt;本研究では、この、利用者の素性(feature)の伝達か、対象(content)への反応(reaction)の伝達に纏わるコミュニケーションの効率化を検討する。&lt;/p&gt;
-&lt;h3 id="利用者の素性featureの伝達の課題"&gt;利用者の素性(feature)の伝達の課題&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;システム内に限定された利用者の素性&lt;/li&gt;
-&lt;li&gt;適切なデータ構造が不明&lt;/li&gt;
-&lt;li&gt;プライバシー保護が必要&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;「1. システム内に限定された利用者の素性」について、利用者の素性(feature)には人口統計的な情報だけでなく、行動データが考えられる。
-利用者の素性をより知るためには、システムを横断して蓄積された行動データを得られることが望ましい。
-しかしながら、通常、システムの把握可能な履歴はシステム内に限定される。
-オンライン広告に見られるアドネットワークやオーディエンスデータの利用により、横断した行動を特定できる。
-しかしながら、これらのcookieなどを用いた名寄せに関してはプライバシー保護意識の高まりもあり、代替手段を検討すべきである（要リファレンス）。&lt;/p&gt;
-&lt;p&gt;「2. 適切なデータ構造が不明」について、利用者の素性(feature)となり得る要因は無限に検討可能なことから、これを全てのシステムで共通に管理することは困難である。
-例えば、訪問したサイトを利用者の素性として扱うとして、多次元のベクトルデータで表現すると、各次元とサイトの紐付けやサイトの追加削除を管理しなければならない。&lt;/p&gt;
-&lt;p&gt;「3. プライバシー保護が必要」について、人口統計的な情報だけでなく、行動データを含む利用者の素性は多くのセンシティブな情報を含むことから、利用者側が開示するにあたって内容の制限が求められるであろう。&lt;/p&gt;
-&lt;h3 id="対象contentへの反応reactionの伝達の課題"&gt;対象(content)への反応(reaction)の伝達の課題&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;システム内に限定された利用者の嗜好&lt;/li&gt;
-&lt;li&gt;プライバシー保護が必要&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;「1. システム内に限定された利用者の嗜好」について、前述の通り、プロファイルの登録や履歴蓄積のための労力的な負担が発生する。
-対象(content)はシステム内に限定されるため、システムごとにその反応を提示しなければならない。
-この時、利用者の嗜好をより知るためには、できるだけ多くの対象(content)に対する反応(reaction)を示せることが望ましいが、労力的な負担は比例して増加する。&lt;/p&gt;
-&lt;p&gt;「2. プライバシー保護が必要」について、利用者の嗜好傾向は（素性と比較して間接的ではあるものの）センシティブな情報を含むことから、利用者側が開示するにあたって内容の制限が求められるであろう。&lt;/p&gt;
-&lt;h2 id="嗜好伝達コミュニケーションの効率化の検討"&gt;嗜好伝達コミュニケーションの効率化の検討&lt;/h2&gt;
-&lt;h3 id="利用者の素性featureの伝達の効率化"&gt;利用者の素性(feature)の伝達の効率化&lt;/h3&gt;
-&lt;p&gt;本研究では、利用者の素性(feature)の伝達の効率化のため、人口統計的な情報だけでなく、システムを横断した行動データを局所管理するアプローチを検討する。
-無限に検討可能な要因を共通して扱うため、Key-Value形式のデータ構造を採用する。
-また、システムへの提示時に、このKey-Value形式のデータをBloomFilterに変換することでプライバシー保護を試みる。
-すなわち、BloomFilterの偽陽性に着目した素性であるKeyを断定することができない特性を利用する。
-また、BloomFilterが保存する要素数に依存しない特性を利用して、無限に検討可能な利用者の素性の要因を固定次元で扱うことができる。&lt;/p&gt;
-&lt;p&gt;なお、あるシステムに提示されるBloomFilterのパラメータは全ての利用者が同じものを用いる必要があるが、これらの共有方式についてはここでは検討しない。&lt;/p&gt;
-&lt;h3 id="対象contentへの反応reactionの伝達の効率化"&gt;対象(content)への反応(reaction)の伝達の効率化&lt;/h3&gt;
-&lt;p&gt;本研究では、対象(content)への反応(reaction)の伝達の効率化のため、嗜好モデルを局所管理するアプローチを検討する。
-提案手法では、システムを横断した行動データから、嗜好モデルを構築するローカルエージェントを設ける。
-構築される嗜好モデルはこれまでの行動データから、未知の対象(content)への反応(reaction)を精度よく推測する。
-ローカルエージェントは、このモデルを使い、システムに対する対象(content)への反応(reaction)の伝達を代理する。
-具体的には、利用者が新しいシステムへのアクセスする際に、（システムが対応していれば）この嗜好モデルを使って、先方のシステムから示された大量の対象(content)への反応(reaction)を回答する。
-先方のシステムは、十分な量のコミュニケーションを終え、利用者に利便性の高い状態から利用を開始してもらうことができる。
-また、予めローカルエージェントの嗜好提示範囲に制限を持たせておくことで、プライバシー管理も行えると考える。&lt;/p&gt;
-&lt;p&gt;なお、これらの方式は検討段階であり、ローカルエージェント、嗜好モデルの具体的な実装はこれから検討していく。&lt;/p&gt;
-&lt;h2 id="評価"&gt;評価&lt;/h2&gt;
-&lt;h3 id="利用者の素性featureの伝達の効率化の評価"&gt;利用者の素性(feature)の伝達の効率化の評価&lt;/h3&gt;
-&lt;p&gt;提案手法の有効性を判断するため、BloomFilterに変換した素性によって嗜好情報の伝達能力を評価した。
-評価として、素性を特徴量として用いた多腕バンディットのシミュレーションを行った。
-元の素性と比較して提案手法の素性で、どの程度精度に変化があったかを確認した。&lt;/p&gt;
-&lt;p&gt;以下は、腕の数が30、密度（＊後述）10倍の実験設定の時の、BloomFilterの次元数と精度の変化を表している。
-ここで、精度の変化とは、元の素性を使ったシミュレーションで選定された腕と同じ腕を選定できた割合を言う。&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;1: 1.0
-2: 0.60425
-3: 0.424515
-4: 0.38845
-5: 0.35002
-6: 0.32798
-7: 0.335945
-8: 0.307885
-9: 0.31443
-10: 0.317955
-20: 0.311235
-30: 0.3068
-40: 0.320385
-50: 0.30193
-60: 0.31655
-70: 0.33412
-80: 0.319935
-90: 0.309365
-100: 0.33812
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;BloomFilterで表現された素性をコンテキスト情報として用いた推定には誤差が生じる。
-そして、この誤差の増加はBloomFilterの偽陽性率の増加に従う。
-今回の問題設定では、例えば100次元のバイナリベクトルを50次元のBloomFilterで表現することである（このような状態を本研究では密度2倍と考える）。
-また、多腕バンディットでは腕の本数の増加に従い、不確実な状況において偶然当たる確率が下がる。
-これらを考慮して、100次元のコンテキスト情報を10次元へ圧縮、30本の腕という問題設定でベストな腕を選択できた割合をサンプリングによって求めた。
-結果として正しい腕を選択できたのは33%程度であった。
-現実の推薦システムにおいてあり得る程度のスケールでも精度に対して大きな影響が発生することがわかった。&lt;/p&gt;
-&lt;h3 id="対象contentへの反応reactionの伝達の効率化の評価"&gt;対象(content)への反応(reaction)の伝達の効率化の評価&lt;/h3&gt;
-&lt;p&gt;今後、実装と評価を行っていく。&lt;/p&gt;
-&lt;h1 id="発表スライド"&gt;発表スライド&lt;/h1&gt;
-&lt;!-- raw HTML omitted --&gt;
-&lt;p&gt;発表後の議論では、アプローチに対する新規性や有用性について、また、Webサービスへの適用のアイディアについても話すことができ、今後にとって非常に有意義なものとなった。&lt;/p&gt;
-&lt;h1 id="発表を終えて"&gt;発表を終えて&lt;/h1&gt;
-&lt;p&gt;今回のWSA研では、最初のアプローチの失敗で終わらず、やりたいことに立ち返り、より良いと思われるアプローチも検討できた点が良かったと思う。
-長期間続く研究であればこそ、個々の結果に一喜一憂ではなく全体として進んでいけるよう全てを糧にしていきたい。&lt;/p&gt;
-&lt;p&gt;そして、このような研究のアイディア段階から前向きに意見を出し合うことができる機会を定期的に設けることができるWSA研はとても良いコンセプトの研究会だと思う。
-何よりその時間はとても楽しい。&lt;/p&gt;
-&lt;p&gt;Webシステムアーキテクチャに関する運用知見を研究的アプローチで前進させること興味がある方は次回開催の参加を検討してみてはいかがでしょうか。&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;</description></item></channel></rss>
+&lt;/ul&gt;</description></item></channel></rss>

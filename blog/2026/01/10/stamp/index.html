@@ -1,0 +1,121 @@
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>プロジェクトのスケルトンをテンプレートから展開するstampというCLIツールを作った &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content='CLIツールを多く作っていると、最初のコミットまでに機械的に準備する自分なりの一式（利用するコマンドラインパーサーによる初期実装、GitHub Actionの定義、Makefile、ライセンスファイル等々）ができてくるかと思います。
+このような一式を予め用意しておくことが、普段通りの開発作法に従ってスムーズに開発を始めるための土台となります。
+また、最近では、コーディングエージェントへ依頼する際に、このような一式を揃えて実装時の補助線としてもらう方が、認識が揃うことも多いように感じています。
+自分の場合、この一式の準備には直近のリポジトリからコピーしてくることが多いですが、細々とした置換などが面倒でした。
+秘蔵スクリプトを持っている方も多いのではないでしょうか。
+このようなニーズのため、プロジェクトのスケルトンを管理するツールが開発されています（copierなどがあるようです）。
+一方で、これらのツールはテンプレートの適用後の継続的な同期まで面倒を見るために、プロジェクト開始時に一度展開できれば良いという自分のユースケースに対しては機能的に持て余してしまう印象がありました。
+そこで、自分用にstampと言うCLIツールを作りました。
+機能は単純で、予め用意しておいた、テンプレート一式（ツールがスタンプなのでシートと呼んでいます）をディレクトリ構造のままコピーしてくるだけです。
+各ファイルはGo言語のテンプレートとして処理されるため、{{.name}}のような記述に対して、動的な値を設定できます。
+# my-appシートにhello.txtを登録（拡張子.stampでテンプレートとして解釈）
+$ echo "Hello {{.name}}!" > "$(stamp config-dir)/sheets/my-app/hello.txt.stamp"
+# my-appシートを適用
+$ cd /path/to/workspace
+$ stamp -s my-app name=alice
+# 結果を確認
+$ ls
+hello.txt
+$ cat hello.txt
+Hello alice!
+chezmoiをご存知の方は、これを都度任意のディレクトリへapplyできるものと考えてもらうと想像しやすいかもしれません。
+使用例
+自身の具体的な利用ケースとして、Go言語のCLIのリポジトリを作成するシートを用意しています（というかこのために作った）。
+拡張子.stampのファイルに含まれるモジュール名などを作成したいCLIツールの名称等に合わせてコピー時に設定することができます。
+$ tree $(stamp config-dir)
+~/.config/stamp/
+├── sheets
+│   └── go-cli            # go-cliというシート名で配下のディレクトリ構造を管理
+│       ├── bootstrap.sh  # go mod tidyやgitのinitial commitなどを行う（後述）
+│       ├── cmd           # 以下はCLIツールのスケルトンやMakefile、LICENSEなど
+│       │   ├── cli_test.go
+│       │   ├── cli.go.stamp
+│       │   └── version.go
+│       ├── go.mod.stamp
+│       ├── internal
+│       │   └── greet
+│       │       ├── greet_test.go
+│       │       └── greet.go
+│       ├── LICENSE.stamp
+│       ├── main.go.stamp
+│       ├── Makefile.stamp
+│       └── README.md.stamp
+└── stamp.yaml            # ユーザー名などのデフォルト値を管理（後述）
+以下のように実行すると、テストが通る状態でプロジェクトを開始できます。また、GitHubにpushすればtagprを用いたリリースの設定まで完了した状態になります。'><meta property="og:title" content="プロジェクトのスケルトンをテンプレートから展開するstampというCLIツールを作った"><meta property="og:url" content="https://blog.monochromegane.com/blog/2026/01/10/stamp/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2026/01/10/stamp/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2026/01/10/stamp/>プロジェクトのスケルトンをテンプレートから展開するstampというCLIツールを作った</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2026-01-10</div></time></header><div class=post-inner><p>CLIツールを多く作っていると、最初のコミットまでに機械的に準備する自分なりの一式（利用するコマンドラインパーサーによる初期実装、GitHub Actionの定義、Makefile、ライセンスファイル等々）ができてくるかと思います。
+このような一式を予め用意しておくことが、普段通りの開発作法に従ってスムーズに開発を始めるための土台となります。
+また、最近では、コーディングエージェントへ依頼する際に、このような一式を揃えて実装時の補助線としてもらう方が、認識が揃うことも多いように感じています。</p><p>自分の場合、この一式の準備には直近のリポジトリからコピーしてくることが多いですが、細々とした置換などが面倒でした。
+秘蔵スクリプトを持っている方も多いのではないでしょうか。</p><p>このようなニーズのため、プロジェクトのスケルトンを管理するツールが開発されています（<a href=https://github.com/copier-org/copier>copier</a>などがあるようです）。
+一方で、これらのツールはテンプレートの適用後の継続的な同期まで面倒を見るために、プロジェクト開始時に一度展開できれば良いという自分のユースケースに対しては機能的に持て余してしまう印象がありました。</p><p>そこで、自分用に<a href=https://github.com/monochromegane/stamp>stamp</a>と言うCLIツールを作りました。</p><p>機能は単純で、予め用意しておいた、テンプレート一式（ツールがスタンプなのでシートと呼んでいます）をディレクトリ構造のままコピーしてくるだけです。
+各ファイルはGo言語のテンプレートとして処理されるため、<code>{{.name}}</code>のような記述に対して、動的な値を設定できます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span><span style=color:#75715e># my-appシートにhello.txtを登録（拡張子.stampでテンプレートとして解釈）</span>
+</span></span><span style=display:flex><span>$ echo <span style=color:#e6db74>&#34;Hello {{.name}}!&#34;</span> &gt; <span style=color:#e6db74>&#34;</span><span style=color:#66d9ef>$(</span>stamp config-dir<span style=color:#66d9ef>)</span><span style=color:#e6db74>/sheets/my-app/hello.txt.stamp&#34;</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span><span style=color:#75715e># my-appシートを適用</span>
+</span></span><span style=display:flex><span>$ cd /path/to/workspace
+</span></span><span style=display:flex><span>$ stamp -s my-app name<span style=color:#f92672>=</span>alice
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span><span style=color:#75715e># 結果を確認</span>
+</span></span><span style=display:flex><span>$ ls
+</span></span><span style=display:flex><span>hello.txt
+</span></span><span style=display:flex><span>$ cat hello.txt
+</span></span><span style=display:flex><span>Hello alice!
+</span></span></code></pre></div><p><a href=https://www.chezmoi.io/>chezmoi</a>をご存知の方は、これを都度任意のディレクトリへapplyできるものと考えてもらうと想像しやすいかもしれません。</p><h2 id=使用例>使用例</h2><p>自身の具体的な利用ケースとして、Go言語のCLIのリポジトリを作成するシートを用意しています（というかこのために作った）。
+拡張子.stampのファイルに含まれるモジュール名などを作成したいCLIツールの名称等に合わせてコピー時に設定することができます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>$ tree <span style=color:#66d9ef>$(</span>stamp config-dir<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>~/.config/stamp/
+</span></span><span style=display:flex><span>├── sheets
+</span></span><span style=display:flex><span>│   └── go-cli            <span style=color:#75715e># go-cliというシート名で配下のディレクトリ構造を管理</span>
+</span></span><span style=display:flex><span>│       ├── bootstrap.sh  <span style=color:#75715e># go mod tidyやgitのinitial commitなどを行う（後述）</span>
+</span></span><span style=display:flex><span>│       ├── cmd           <span style=color:#75715e># 以下はCLIツールのスケルトンやMakefile、LICENSEなど</span>
+</span></span><span style=display:flex><span>│       │   ├── cli_test.go
+</span></span><span style=display:flex><span>│       │   ├── cli.go.stamp
+</span></span><span style=display:flex><span>│       │   └── version.go
+</span></span><span style=display:flex><span>│       ├── go.mod.stamp
+</span></span><span style=display:flex><span>│       ├── internal
+</span></span><span style=display:flex><span>│       │   └── greet
+</span></span><span style=display:flex><span>│       │       ├── greet_test.go
+</span></span><span style=display:flex><span>│       │       └── greet.go
+</span></span><span style=display:flex><span>│       ├── LICENSE.stamp
+</span></span><span style=display:flex><span>│       ├── main.go.stamp
+</span></span><span style=display:flex><span>│       ├── Makefile.stamp
+</span></span><span style=display:flex><span>│       └── README.md.stamp
+</span></span><span style=display:flex><span>└── stamp.yaml            <span style=color:#75715e># ユーザー名などのデフォルト値を管理（後述）</span>
+</span></span></code></pre></div><p>以下のように実行すると、テストが通る状態でプロジェクトを開始できます。また、GitHubにpushすれば<a href=https://github.com/Songmu/tagpr>tagpr</a>を用いたリリースの設定まで完了した状態になります。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>APPNAME<span style=color:#f92672>=</span>sample; <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>mkdir <span style=color:#e6db74>&#34;</span>$APPNAME<span style=color:#e6db74>&#34;</span> <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>  <span style=color:#f92672>&amp;&amp;</span> cd <span style=color:#e6db74>&#34;</span>$APPNAME<span style=color:#e6db74>&#34;</span> <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>  <span style=color:#f92672>&amp;&amp;</span> stamp -s go-cli appname<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;</span>$APPNAME<span style=color:#e6db74>&#34;</span> <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>  <span style=color:#f92672>&amp;&amp;</span> sh bootstrap.sh
+</span></span></code></pre></div><p>興味がある方はこちらを参照ください。シートをさらにchezmoiで管理していますが内容はそのまま確認できます。</p><ul><li><a href=https://github.com/monochromegane/dotfiles/commit/56ccfd6dc17e53df25e027b86ba142ba29fcab4a>Go言語のCLIのリポジトリを作成するテンプレート一式（シート）</a></li></ul><h2 id=便利な機能>便利な機能</h2><p>stampの基本機能はこれだけですが、利用にあたり少し便利な機能ももう少し作っているので軽く紹介します。</p><h3 id=シート登録の支援>シート登録の支援</h3><p>既存のディレクトリやファイルをシートとして登録するための<code>collect</code>サブコマンドを用意しています。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span><span style=color:#75715e># カレントディレクトリを再帰的にテンプレートとして（.stamp拡張子をつけて）</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># sampleシートとして登録</span>
+</span></span><span style=display:flex><span>$ stamp collect -s sample -t .
+</span></span></code></pre></div><h3 id=デフォルト値の指定>デフォルト値の指定</h3><p><code>$(stamp config-dir)/stamp.yaml</code>にシートのテンプレート展開時にデフォルトで指定する値をキーごとに設定しておくことができます。
+コマンド実行時に指定があればそちらが優先されます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>year: <span style=color:#ae81ff>2026</span>
+</span></span><span style=display:flex><span>username: monochromegane
+</span></span></code></pre></div><h3 id=パラメータ不足チェック機能>パラメータ不足チェック機能</h3><p>事前にテンプレートに必要なパラメータの値を覚えておいたり覗いて回って思い出すのは時間がかかります。
+stampでは、必要なパラメータをうろ覚えのまま実行しても、不足があれば適用前に教えてくれます。どのファイルに何のパラメータが必要かが分かるので、便利です。</p><p>例えば、先ほどのgo-cliでは、stamp.yamlで定義しているデフォルトの値の他に、必ずappnameと言うキーに対して値を与えなければなりませんが、これをせずに実行するとこういうエラーがでます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span><span style=color:#75715e># stamp -s go-cli appname=monochromeganeとして呼ぶべき</span>
+</span></span><span style=display:flex><span>$ stamp -s go-cli
+</span></span><span style=display:flex><span>Error: stamp failed: missing required template variables:
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  - appname
+</span></span><span style=display:flex><span>    used in:
+</span></span><span style=display:flex><span>      - .gitignore.stamp
+</span></span><span style=display:flex><span>      - LICENSE.stamp
+</span></span><span style=display:flex><span>      - Makefile.stamp
+</span></span><span style=display:flex><span>      - README.md.stamp
+</span></span><span style=display:flex><span>      - cmd/cli.go.stamp
+</span></span><span style=display:flex><span>      - go.mod.stamp
+</span></span><span style=display:flex><span>      - main.go.stamp
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Provide missing variables using:
+</span></span><span style=display:flex><span>  - Command line: stamp -s &lt;sheet&gt; -d &lt;dest&gt; appname<span style=color:#f92672>=</span>&lt;value&gt;
+</span></span><span style=display:flex><span>  - Config file: Create stamp.yaml in sheet or config directory
+</span></span></code></pre></div><h3 id=その他>その他</h3><p>将来シートを増やした際の共通シートが欲しくなることを想定して、複数シートを同時に指定できる機能なども設けています。</p><p>なお、機能をシンプルに保ちたいため、適用後に実施したいスクリプトなどを実行する機能は持たせないことにしました。
+ひとまずは、シート中に以下のような<code>bootstrap.sh</code>などを用意し、stampコマンド実行後に続けて実行する運用にしています。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span><span style=color:#75715e>#!/usr/bin/env sh
+</span></span></span><span style=display:flex><span>set -e
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>go mod tidy
+</span></span><span style=display:flex><span>git init
+</span></span><span style=display:flex><span>git add . <span style=color:#e6db74>&#34;:!./</span>$0<span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>git commit -m <span style=color:#e6db74>&#34;Add project skeleton&#34;</span>
+</span></span><span style=display:flex><span>make test
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>rm -- <span style=color:#e6db74>&#34;</span>$0<span style=color:#e6db74>&#34;</span>
+</span></span></code></pre></div><h2 id=おわりに>おわりに</h2><p>今回のツール実装はClaude Codeに任せ、コマンドラインとしての使い心地の観点からコメントしながら進めました。
+ただし、出発点は上述のシート相当のプロジェクト構成を与えた上で実装を開始してもらったため、実装の方向性については想定した範囲に収まりやすかったかなと感じています。</p><p>CLIツール開発の着手時の迅速化のみならず、コーディングエージェントへの実装補助線を与えるという点でも役立つツールかなと思いますので、よければ使ってみてください。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/golang>golang</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2026/01/10/stamp/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>
