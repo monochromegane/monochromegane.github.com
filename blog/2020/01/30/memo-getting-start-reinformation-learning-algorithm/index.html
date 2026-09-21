@@ -1,34 +1,34 @@
-<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content><title>『強化学習アルゴリズム入門』第1章〜第2章の学習メモ &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="書籍『強化学習アルゴリズム入門』について第1章〜第2章を読んでの学習メモをまとめる。
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content="monochromegane"><title>『強化学習アルゴリズム入門』第1章〜第2章の学習メモ &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="書籍『強化学習アルゴリズム入門』について第1章〜第2章を読んでの学習メモをまとめる。
 強化学習は一連の行動によって得られる報酬を最大化する行動基準を学習する。
 そのために、「一連の行動」を状態の遷移と捉えて、その状態に対する価値（状態価値）を求める。
 また、各状態には取りうる複数の行動があると考え、その状態の価値を、これらの行動ごとの価値（行動状態価値）から求める。
 強化学習アルゴリズムごとの価値関数
 はじめに、第1章〜第2章までで学ぶ各強化学習アルゴリズムの状態価値関数と行動状態価値関数をまとめておく。
 
-  
-      
-          
-          状態価値関数 $V(S_t)$
-          行動状態価値関数 $Q(S_t,a_t)$
-      
-  
-  
-      
-          動的計画法
-          $V(S_t)=\sum_{a} \pi (a \mid S_t) Q(S_t, a_t) \tag{1}\label{1}$
-          $Q(S_t,a_t)=r_{t+1}+\gamma V(S_{t+1}) \tag{2}\label{2}$
-      
-      
-          モンテカルロ法
-          $V(S_t)=\sum_a Q(S_t,a_t) \frac{N_a}{N} \tag{3}\label{3}$ $V(S_t)=max\{Q(S_t,a_t)\} \tag{4}\label{4}$
-          $Q(S_t,a_t)=\frac{1}{m}\sum_{i=1}^{m} G^i(S_t,a_t) \tag{5}\label{5}$ $Q(S_t,a_t) \gets Q(S_t,a_t)+\alpha[G(S_t,a_t)-Q(S_t,a_t)] \tag{6}\label{6}$ where $G(S_t,a_t)=r_{t+1}+\gamma G(S_{t+1},a_{t+1}) \tag{7}\label{7}$
-      
-      
-          TD(0)法
-          同上
-          $Q(S_t,a_t) \gets Q(S_t,a_t)+\alpha[\{r_{t+1}+\gamma(Q(S_{t+1},a_{t+1}))\}-Q(S_t,a_t)] \tag{8}\label{8}$
-      
-  
+	
+			
+					
+					状態価値関数 $V(S_t)$
+					行動状態価値関数 $Q(S_t,a_t)$
+			
+	
+	
+			
+					動的計画法
+					$V(S_t)=\sum_{a} \pi (a \mid S_t) Q(S_t, a_t) \tag{1}\label{1}$
+					$Q(S_t,a_t)=r_{t+1}+\gamma V(S_{t+1}) \tag{2}\label{2}$
+			
+			
+					モンテカルロ法
+					$V(S_t)=\sum_a Q(S_t,a_t) \frac{N_a}{N} \tag{3}\label{3}$ $V(S_t)=max\{Q(S_t,a_t)\} \tag{4}\label{4}$
+					$Q(S_t,a_t)=\frac{1}{m}\sum_{i=1}^{m} G^i(S_t,a_t) \tag{5}\label{5}$ $Q(S_t,a_t) \gets Q(S_t,a_t)+\alpha[G(S_t,a_t)-Q(S_t,a_t)] \tag{6}\label{6}$ where $G(S_t,a_t)=r_{t+1}+\gamma G(S_{t+1},a_{t+1}) \tag{7}\label{7}$
+			
+			
+					TD(0)法
+					同上
+					$Q(S_t,a_t) \gets Q(S_t,a_t)+\alpha[\{r_{t+1}+\gamma(Q(S_{t+1},a_{t+1}))\}-Q(S_t,a_t)] \tag{8}\label{8}$
+			
+	
 
 以下、各強化学習アルゴリズムについて捕捉する。
 動的計画法
@@ -96,4 +96,4 @@ $\epsilon$-Greedyの探索率$\epsilon=0$の場合は方策に依存しない価
 7. 行動aに従い状態を遷移
 8. 5の報酬rと3と6の行動状態価値QでQ(S_t,a_t)を更新
 </code></pre><h1 id=学習書籍>学習書籍</h1></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/%E5%BC%B7%E5%8C%96%E5%AD%A6%E7%BF%92>強化学習</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2020/01/30/memo-getting-start-reinformation-learning-algorithm/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
-<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; monochromegane <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>

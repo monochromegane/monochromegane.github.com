@@ -19,7 +19,7 @@
 &lt;p&gt;上記の記事はfishだったのでzshで使うために以下のようにしました。&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;functions/_tmuxpopup&lt;/code&gt;でカレントディレクトリ（リポジトリ名）をベースにセッション名を組み立て、セッションがなければ作成、あればattachとdetachをトグルできるようにしています。
 セッション名の組み立てのところを自分の環境に合わせると使いまわせると思います。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;function&lt;/span&gt; _tmuxpopup&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;function&lt;/span&gt; _tmuxpopup&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; local initial_cmd&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;1&lt;span style="color:#66d9ef"&gt;:-&lt;/span&gt;&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; local title&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;2&lt;span style="color:#66d9ef"&gt;:-&lt;/span&gt;&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -71,28 +71,28 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -E &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$exec_cmd&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;上記の関数はpopup時に起動したいコマンドとpopupのタイトルを受け付けられる共通関数なので、Claude Codeを立ち上げるため具体的な実装を&lt;code&gt;functions/_tmuxpopup-claude&lt;/code&gt;に記述しました。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;function&lt;/span&gt; _tmuxpopup-claude&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;function&lt;/span&gt; _tmuxpopup-claude&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; _tmuxpopup &lt;span style="color:#e6db74"&gt;&amp;#34;claude&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;claude&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;上記の関数たちを&lt;code&gt;.zshrc&lt;/code&gt;でautoloadしておきます。これでこの関数がいつでも呼び出せるようになります。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;autoload -Uz _tmuxpopup
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;autoload -Uz _tmuxpopup
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;autoload -Uz _tmuxpopup-claude
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;実際の呼び出しはコマンドではなく&lt;code&gt;tmux.conf&lt;/code&gt;にキーバインドとして登録しておきます。こうすることで、popup内のClaude Code起動中でもpopupをいつでも隠すことができます。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;bind , run-shell &lt;span style="color:#e6db74"&gt;&amp;#39;zsh -ic &amp;#34;_tmuxpopup-claude&amp;#34;&amp;#39;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;bind , run-shell &lt;span style="color:#e6db74"&gt;&amp;#39;zsh -ic &amp;#34;_tmuxpopup-claude&amp;#34;&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;これでprefix + &amp;lsquo;,&amp;lsquo;でpopupをトグルできるようになりました。非常に快適です。&lt;/p&gt;
 &lt;h2 id="並列実行"&gt;並列実行&lt;/h2&gt;
 &lt;p&gt;これだけだと再紹介にしかならないので、並列実行のために試しているものも紹介しておきます。&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/kbwo/ccmanager"&gt;ccmanager&lt;/a&gt;はClaude Codeをはじめとするコーディングエージェントの並列実行を管理するためのツールです。
 エージェント単位でgit worktreeを割り当てることができるので、並列実行時のコンフリクトなども回避することができます。&lt;/p&gt;
 &lt;p&gt;上で紹介した&lt;code&gt;_tmuxpopup&lt;/code&gt;は起動したいコマンドを差し替えるだけで使えるのでccmanagerを呼ぶようにするだけで良いです。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;function&lt;/span&gt; _tmuxpopup-ccmanager&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;function&lt;/span&gt; _tmuxpopup-ccmanager&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; _tmuxpopup &lt;span style="color:#e6db74"&gt;&amp;#34;ccmanager&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;ccmanager&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;これでプロジェクトごとの並列実行はかなり便利になりますが、いわゆる承認疲れの現象が発生するため、ある程度の権限を持たせた上で安全に実行したくなります。
 そこで、Dev Containerと組み合わせます。
 幸い、ccmanagerはDev Containerの利用も視野に入れているようで、探すと専用のオプションがあります。
 それを踏まえて、先の関数を以下のように変更できます。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;function&lt;/span&gt; _tmuxpopup-ccmanager&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;function&lt;/span&gt; _tmuxpopup-ccmanager&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; _tmuxpopup &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;ccmanager --devc-up-command &amp;#34;devcontainer up --docker-path podman --workspace-folder .&amp;#34; --devc-exec-command &amp;#34;devcontainer exec --docker-path podman --workspace-folder .&amp;#34;&amp;#39;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;ccmanager&amp;#39;&lt;/span&gt;
@@ -102,7 +102,7 @@
 &lt;p&gt;これで、プロジェクトのDev Containerの設定（&lt;code&gt;.devcontainer&lt;/code&gt;ディレクトリ）を使ってccmanagerがよしなにやってくれます。
 なお、コンテナ内にClaude Codeが含まれる必要があるため、&lt;a href="https://github.com/anthropics/devcontainer-features"&gt;Dev Container Features&lt;/a&gt;などで追加しておくと良いです。&lt;/p&gt;
 &lt;p&gt;以下のように設定し、Claude Codeのpopupと使い分けることができます。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;bind . run-shell &lt;span style="color:#e6db74"&gt;&amp;#39;zsh -ic &amp;#34;_tmuxpopup-ccmanager&amp;#34;&amp;#39;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;bind . run-shell &lt;span style="color:#e6db74"&gt;&amp;#39;zsh -ic &amp;#34;_tmuxpopup-ccmanager&amp;#34;&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="おわりに"&gt;おわりに&lt;/h2&gt;
 &lt;p&gt;tmux popupを使うことでClaude Codeとターミナル領域をうまく棲み分けることができて非常に快適になりました。
 しかしながら、並列実行の部分は実はまだ試行錯誤中です。
@@ -117,12 +117,12 @@
 &lt;p&gt;そこで、自分用に&lt;a href="https://github.com/monochromegane/stamp"&gt;stamp&lt;/a&gt;と言うCLIツールを作りました。&lt;/p&gt;
 &lt;p&gt;機能は単純で、予め用意しておいた、テンプレート一式（ツールがスタンプなのでシートと呼んでいます）をディレクトリ構造のままコピーしてくるだけです。
 各ファイルはGo言語のテンプレートとして処理されるため、&lt;code&gt;{{.name}}&lt;/code&gt;のような記述に対して、動的な値を設定できます。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# my-appシートにhello.txtを登録（拡張子.stampでテンプレートとして解釈）&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# my-appシートにhello.txtを登録（拡張子.stampでテンプレートとして解釈）&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ echo &lt;span style="color:#e6db74"&gt;&amp;#34;Hello {{.name}}!&amp;#34;&lt;/span&gt; &amp;gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;stamp config-dir&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;&lt;span style="color:#e6db74"&gt;/sheets/my-app/hello.txt.stamp&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# my-appシートを適用&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# my-appシートを適用&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ cd /path/to/workspace
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ stamp -s my-app name&lt;span style="color:#f92672"&gt;=&lt;/span&gt;alice
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 結果を確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 結果を確認&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ls
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;hello.txt
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ cat hello.txt
@@ -131,7 +131,7 @@
 &lt;h2 id="使用例"&gt;使用例&lt;/h2&gt;
 &lt;p&gt;自身の具体的な利用ケースとして、Go言語のCLIのリポジトリを作成するシートを用意しています（というかこのために作った）。
 拡張子.stampのファイルに含まれるモジュール名などを作成したいCLIツールの名称等に合わせてコピー時に設定することができます。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ tree &lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;stamp config-dir&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ tree &lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;stamp config-dir&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;~/.config/stamp/
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── sheets
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│   └── go-cli &lt;span style="color:#75715e"&gt;# go-cliというシート名で配下のディレクトリ構造を管理&lt;/span&gt;
@@ -151,7 +151,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│   └── README.md.stamp
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;└── stamp.yaml &lt;span style="color:#75715e"&gt;# ユーザー名などのデフォルト値を管理（後述）&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;以下のように実行すると、テストが通る状態でプロジェクトを開始できます。また、GitHubにpushすれば&lt;a href="https://github.com/Songmu/tagpr"&gt;tagpr&lt;/a&gt;を用いたリリースの設定まで完了した状態になります。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;APPNAME&lt;span style="color:#f92672"&gt;=&lt;/span&gt;sample; &lt;span style="color:#ae81ff"&gt;\
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;APPNAME&lt;span style="color:#f92672"&gt;=&lt;/span&gt;sample; &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$APPNAME&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; cd &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$APPNAME&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; stamp -s go-cli appname&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$APPNAME&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
@@ -164,19 +164,19 @@
 &lt;p&gt;stampの基本機能はこれだけですが、利用にあたり少し便利な機能ももう少し作っているので軽く紹介します。&lt;/p&gt;
 &lt;h3 id="シート登録の支援"&gt;シート登録の支援&lt;/h3&gt;
 &lt;p&gt;既存のディレクトリやファイルをシートとして登録するための&lt;code&gt;collect&lt;/code&gt;サブコマンドを用意しています。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# カレントディレクトリを再帰的にテンプレートとして（.stamp拡張子をつけて）&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# カレントディレクトリを再帰的にテンプレートとして（.stamp拡張子をつけて）&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# sampleシートとして登録&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ stamp collect -s sample -t .
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="デフォルト値の指定"&gt;デフォルト値の指定&lt;/h3&gt;
 &lt;p&gt;&lt;code&gt;$(stamp config-dir)/stamp.yaml&lt;/code&gt;にシートのテンプレート展開時にデフォルトで指定する値をキーごとに設定しておくことができます。
 コマンド実行時に指定があればそちらが優先されます。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;year: &lt;span style="color:#ae81ff"&gt;2026&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;year: &lt;span style="color:#ae81ff"&gt;2026&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;username: monochromegane
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="パラメータ不足チェック機能"&gt;パラメータ不足チェック機能&lt;/h3&gt;
 &lt;p&gt;事前にテンプレートに必要なパラメータの値を覚えておいたり覗いて回って思い出すのは時間がかかります。
 stampでは、必要なパラメータをうろ覚えのまま実行しても、不足があれば適用前に教えてくれます。どのファイルに何のパラメータが必要かが分かるので、便利です。&lt;/p&gt;
 &lt;p&gt;例えば、先ほどのgo-cliでは、stamp.yamlで定義しているデフォルトの値の他に、必ずappnameと言うキーに対して値を与えなければなりませんが、これをせずに実行するとこういうエラーがでます。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# stamp -s go-cli appname=monochromeganeとして呼ぶべき&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# stamp -s go-cli appname=monochromeganeとして呼ぶべき&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ stamp -s go-cli
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Error: stamp failed: missing required template variables:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -197,7 +197,7 @@ stampでは、必要なパラメータをうろ覚えのまま実行しても、
 &lt;p&gt;将来シートを増やした際の共通シートが欲しくなることを想定して、複数シートを同時に指定できる機能なども設けています。&lt;/p&gt;
 &lt;p&gt;なお、機能をシンプルに保ちたいため、適用後に実施したいスクリプトなどを実行する機能は持たせないことにしました。
 ひとまずは、シート中に以下のような&lt;code&gt;bootstrap.sh&lt;/code&gt;などを用意し、stampコマンド実行後に続けて実行する運用にしています。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/usr/bin/env sh
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/usr/bin/env sh
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set -e
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go mod tidy
@@ -231,7 +231,7 @@ stampでは、必要なパラメータをうろ覚えのまま実行しても、
 命名規則はホームディレクトリ以下のディレクトリもしくはファイル名のそれぞれについて&lt;code&gt;.&lt;/code&gt;を&lt;code&gt;dot_&lt;/code&gt;に置き換えたものになる。
 例えば、&lt;code&gt;~/.config/zsh/.zshrc&lt;/code&gt;であれば&lt;code&gt;dot_config/zsh/dot_zshrc&lt;/code&gt;として管理する。&lt;/p&gt;
 &lt;p&gt;自分の場合は、このタイミングでXDG Base Directoryに合わせるようにもしたかったのと新しいPCで&lt;code&gt;~&lt;/code&gt;が綺麗だったのもあり、chezmoi側（&lt;code&gt;chezmoi cd&lt;/code&gt;で移動できるリポジトリのclone先。&lt;code&gt;~/.local/share/chezmoi&lt;/code&gt;）で上記の命名に合わせて変更した上で、&lt;code&gt;chezmoi apply&lt;/code&gt;をすることで反映する方法を取った。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ chezmoi init git@github.com:monochromegane/dotfiles.git
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ chezmoi init git@github.com:monochromegane/dotfiles.git
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ chezmoi cd
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ mv zshrc dot_config/zsh/dot_zshrc
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;(&lt;/span&gt;snip&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
@@ -243,7 +243,7 @@ stampでは、必要なパラメータをうろ覚えのまま実行しても、
 dotfilesリポジトリの直下におくこともできるが&lt;code&gt;.chezmoiscripts&lt;/code&gt;という名前のディレクトリを作ると複数スクリプトがあっても整理されるのでこの構成を採用した。&lt;/p&gt;
 &lt;p&gt;管理用ツールを導入するからには動作確認の必要な自作スクリプトの役割は最低限にしたかったので、パッケージ管理ツールのインストールのみに抑え、各パッケージのインストールなどはパッケージマネージャーに任せるようにしている。&lt;/p&gt;
 &lt;p&gt;具体的には、ツールや開発環境のパッケージ管理のためのHomebrew、miseと、Vim用のミニマルなパッケージ管理である&lt;a href="https://github.com/k-takata/minpac"&gt;minpac&lt;/a&gt;だけをインストールしている。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ chezmoi cd
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ chezmoi cd
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ls .chezmoiscripts
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;run_once_after_01_install-brew.sh run_once_after_03_install-mise.sh
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;run_once_after_02_install-minpac.sh
@@ -257,7 +257,7 @@ dotfilesリポジトリの直下におくこともできるが&lt;code&gt;.chezm
 &lt;h2 id="ghostty"&gt;Ghostty&lt;/h2&gt;
 &lt;p&gt;長年iTerm2を使っていて特に不満はなかったが、chezmoi導入にあたって設定をファイルで管理したくなり、Ghosttyを使ってみることにした。&lt;/p&gt;
 &lt;p&gt;&amp;ldquo;Zero Configuration Philosophy&amp;quot;を謳っているだけあり、以下の設定で十分、動作も軽快で特に問題なく利用できている。念の為iTerm2もまだ入れているがこのまま乗り換えで良さそう。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-txt" data-lang="txt"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;command = /opt/homebrew/bin/zsh -l
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-txt" data-lang="txt"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;command = /opt/homebrew/bin/zsh -l
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mouse-hide-while-typing = true
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Theme
@@ -287,9 +287,9 @@ dotfilesリポジトリの直下におくこともできるが&lt;code&gt;.chezm
 &lt;p&gt;また、テーマには、ダーク系のテーマでVim側ともマッチするものとして、&lt;code&gt;Dracula+&lt;/code&gt;テーマを採用した。
 &lt;a href="https://draculatheme.com/ghostty"&gt;Dracula Theme for Ghostty&lt;/a&gt;としてもあるが、標準で選択できるようになっている。
 Vim側も&lt;a href="https://draculatheme.com/vim"&gt;Dracula Theme for Vim&lt;/a&gt;として公開されているので、minpackで以下のように設定を追加した。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-vimrc" data-lang="vimrc"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;call&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;minpac&lt;/span&gt;#&lt;span style="color:#a6e22e"&gt;add&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;dracula/vim&amp;#39;&lt;/span&gt;, {&lt;span style="color:#e6db74"&gt;&amp;#39;name&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;dracula&amp;#39;&lt;/span&gt;})
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-vimrc" data-lang="vimrc"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;call&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;minpac&lt;/span&gt;#&lt;span style="color:#a6e22e"&gt;add&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;dracula/vim&amp;#39;&lt;/span&gt;, {&lt;span style="color:#e6db74"&gt;&amp;#39;name&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;dracula&amp;#39;&lt;/span&gt;})
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;テーマそのままだと背景がグレー寄りで個人的にはややぼやけたように見えてしまうので、Ghostty側で&lt;code&gt;background&lt;/code&gt;を設定し、以下のようにctermbgをNoneにすることでGhostty側の背景色と同じにして統一感を出している。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-vimrc" data-lang="vimrc"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;#34;colorschemeを設定する&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-vimrc" data-lang="vimrc"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;#34;colorschemeを設定する&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;function&lt;/span&gt;! &lt;span style="color:#a6e22e"&gt;s&lt;/span&gt;:&lt;span style="color:#a6e22e"&gt;customize_dracula_bg&lt;/span&gt;() &lt;span style="color:#a6e22e"&gt;abort&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;highlight&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Normal&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;ctermbg&lt;/span&gt;=&lt;span style="color:#a6e22e"&gt;None&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;highlight&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;CursorLine&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;ctermbg&lt;/span&gt;=&lt;span style="color:#a6e22e"&gt;None&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;cterm&lt;/span&gt;=underline
@@ -504,7 +504,7 @@ Vim側も&lt;a href="https://draculatheme.com/vim"&gt;Dracula Theme for Vim&lt;/
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;</description></item><item><title>ターミナルフレンドリーなAIコマンド、afaを作った</title><link>https://blog.monochromegane.com/blog/2024/09/16/afa/</link><pubDate>Mon, 16 Sep 2024 10:48:05 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2024/09/16/afa/</guid><description>&lt;p&gt;Go言語で、AIモデルに対する推論をコマンドラインで実行する&lt;a href="https://github.com/monochromegane/afa"&gt;afa&lt;/a&gt;というツールを作りました。入出力としてテキストストリームを前提としており、パイプやリダイレクトを用いて他のコマンドと連携しやすいのが特徴です。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ echo $ERROR_MESSAGE | afa new -p &lt;span style="color:#e6db74"&gt;&amp;#34;What is happening?&amp;#34;&lt;/span&gt; /path/to/file1 /path/to/file2
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ echo $ERROR_MESSAGE | afa new -p &lt;span style="color:#e6db74"&gt;&amp;#34;What is happening?&amp;#34;&lt;/span&gt; /path/to/file1 /path/to/file2
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;与えるプロンプトやコンテキスト情報によってAIモデルが柔軟に振る舞いを変えてくれるので、これまでの個別ツールでは対応が難しかった用途における自動化にも有用でしょう。
 また、テキストストリームを扱えるリッチなTUIのコマンド&lt;a href="https://github.com/monochromegane/afa-tui"&gt;afa-tui&lt;/a&gt;も別途提供しているので、ターミナル上でのチャットも快適です。&lt;/p&gt;
 &lt;h2 id="デモ"&gt;デモ&lt;/h2&gt;
@@ -531,29 +531,29 @@ Vim側も&lt;a href="https://draculatheme.com/vim"&gt;Dracula Theme for Vim&lt;/
 &lt;p&gt;なお、この文章は、英語で書かれたafaのREADMEのFeatures項目をコピーして、&lt;code&gt;pbpaste | afa new -script -p &amp;quot;翻訳して&amp;quot; | pbcopy&lt;/code&gt;で貼り付けました。便利ですね。&lt;/p&gt;
 &lt;h2 id="基本的な使い方"&gt;基本的な使い方&lt;/h2&gt;
 &lt;p&gt;Viewerを使用しないシンプルなチャットを起動する。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ afa new
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ afa new
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Viewerを使用してチャットを起動する。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ afa new -V
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ afa new -V
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;コンテキスト情報を加えてチャットを起動する。コンテキスト情報には「標準入力」「プロンプトメッセージ(-pオプションによるもの)」、そして「ファイルパス」を与えることができる。
 ただし、仕様上、標準入力を与えるとキーボードからの入力を継続できないため、インタラクティブなチャットはできない。この場合は、プロセス置換（&lt;code&gt;&amp;lt;()&lt;/code&gt;）をファイルパスとして与えることを検討されたい。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ echo $ERROR_MESSAGE | afa new -p &lt;span style="color:#e6db74"&gt;&amp;#34;What is happening?&amp;#34;&lt;/span&gt; /path/to/file1 /path/to/file2
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ echo $ERROR_MESSAGE | afa new -p &lt;span style="color:#e6db74"&gt;&amp;#34;What is happening?&amp;#34;&lt;/span&gt; /path/to/file1 /path/to/file2
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Please be cautious; when standard input is provided, interactive mode is disabled.&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Consider using process substitution.&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#=&amp;gt; afa new -p &amp;#34;What is happening?&amp;#34; /path/to/file1 /path/to/file2 &amp;lt;( echo $ERROR_MESSAGE )&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;直近のセッションを再開する。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ afa resume
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ afa resume
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;指定したセッションを再開する。なお、&lt;code&gt;afa list&lt;/code&gt;コマンドでセッション一覧を表示できる。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# The command `afa list` displays past sessions.&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# The command `afa list` displays past sessions.&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ afa source -l SESSION_NAME
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;ユーザープロンプトを指定する。ユーザープロンプトは、Go言語のテンプレート形式であり、テンプレート内ではプリセットの値としてコンテキスト情報に対応する、&lt;code&gt;Message&lt;/code&gt;、&lt;code&gt;MessageStdin&lt;/code&gt;、そして &lt;code&gt;Name&lt;/code&gt;と&lt;code&gt;Content&lt;/code&gt;をメンバとする&lt;code&gt;File&lt;/code&gt;構造体のリストである&lt;code&gt;Files&lt;/code&gt;を以下のように呼べる。これにより動的なプロンプトの生成が可能となる。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# `Message`, `MessageStdin`, and `Files` that include `File` with `Name` and `Content` members can be used in the template file.&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# `Message`, `MessageStdin`, and `Files` that include `File` with `Name` and `Content` members can be used in the template file.&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ echo &lt;span style="color:#e6db74"&gt;&amp;#34;Please explain the following.\n{{ (index .Files 0).Content }}&amp;#34;&lt;/span&gt; &amp;gt; CONFIG_PATH/templates/user/explain.tmpl
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;afa -u explain /path/to/file
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;スクリプトモードを指定して起動する。コマンドライン実行に適したモードのオプション設定を一括で行う&lt;code&gt;-script&lt;/code&gt;オプションを指定することで、他のコマンドとの連携が容易になる。具体的には&lt;code&gt;-I=false -H=false -S=false -V=false -L=false&lt;/code&gt;が設定される。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pbpaste | afa new -script -p &lt;span style="color:#e6db74"&gt;&amp;#34;Transrate this&amp;#34;&lt;/span&gt; | pbcopy
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pbpaste | afa new -script -p &lt;span style="color:#e6db74"&gt;&amp;#34;Transrate this&amp;#34;&lt;/span&gt; | pbcopy
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;OpenAI&lt;/code&gt;の独自機能として提供される&lt;code&gt;Structured Output&lt;/code&gt;用のスキーマを指定できる。これは指定したJSON構造体に沿うような出力を強制する機能である。例えば、余分な説明が不要なコマンド提案などに適している。
 クオート文字のエスケープを担う&lt;code&gt;-Q&lt;/code&gt;オプションと合わせて使うことで&lt;code&gt;jq&lt;/code&gt;による整形が容易になるので活用されたい。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ cat &lt;span style="color:#f92672"&gt;&amp;lt;&amp;lt;&amp;lt;&lt;/span&gt; EOS &amp;gt; CONFIG_PATH/schemas/command_suggestion.json
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ cat &lt;span style="color:#f92672"&gt;&amp;lt;&amp;lt;&amp;lt;&lt;/span&gt; EOS &amp;gt; CONFIG_PATH/schemas/command_suggestion.json
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;{&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;type&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;object&amp;#34;&lt;/span&gt;,
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;properties&amp;#34;&lt;/span&gt;: &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
@@ -959,11 +959,11 @@ $Z$は$N \times R$であるものの、逆行列のサイズは$R \times R$と�
 &lt;p&gt;非常に便利に使わせていただいている一方で、自分の場合、スムーズに書けないことがありました。
 理由としては、計算結果の受け取り方法に対する一貫性の崩れがあるだろうと考えています。&lt;/p&gt;
 &lt;p&gt;matパッケージでは、予め空の行列を用意し、これをレシーバーとして計算対象となる行列を引数で渡します。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;c&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;mat&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Dense&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;c&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;mat&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Dense&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;c&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Product&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;a&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;元の行列が維持されるこの設計は非常にありがたいです。
 しかしながら、一部の関数（例えば &lt;code&gt;Dense.T&lt;/code&gt;）は結果が戻り値として得られます。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;ct&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;c&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;T&lt;/span&gt;()
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;ct&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;c&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;T&lt;/span&gt;()
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;この一貫性の崩れは不変と可変の混在にあるのではないかと考えています。
 gonum/matパッケージでは、&lt;a href="https://pkg.go.dev/gonum.org/v1/gonum/mat#hdr-Invariants"&gt;引数で渡す行列は計算操作に対して不変&lt;/a&gt;とされています。
 これは、関数のパラメータの方が、&lt;code&gt;mat.Matrix&lt;/code&gt;インターフェースであることからも読み取れます。
@@ -978,12 +978,12 @@ gonum/matパッケージでは、&lt;a href="https://pkg.go.dev/gonum.org/v1/gon
 &lt;p&gt;Matrix Adapterを適用した場合、先ほどの例は以下のようになります。
 &lt;code&gt;c&lt;/code&gt;がレシーバーではなく、先ほどは引数となっていた&lt;code&gt;a&lt;/code&gt;がレシーバーとなっていることに注意してください。
 &lt;code&gt;c&lt;/code&gt;は戻り値として受け取ることになりました。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;c&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;a&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Product&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;)
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;c&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;a&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Product&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="実装と使い方"&gt;実装と使い方&lt;/h2&gt;
 &lt;p&gt;Adapterの実装は単純明快で、元の構造体を埋め込み（embedding）し、結果を戻り値で返すように関数のシグネチャを変更しました。
 変更が不要なものは移譲されます。
 いわゆるGoFのデザインパターンにおけるAdapterパターンというやつです。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;type&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Dense&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;struct&lt;/span&gt; {
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;type&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Dense&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;struct&lt;/span&gt; {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;mat&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Dense&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -994,7 +994,7 @@ gonum/matパッケージでは、&lt;a href="https://pkg.go.dev/gonum.org/v1/gon
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;現状、DenseとVecDenseに対するAdapterを提供しています。
 既存と同名の&lt;code&gt;NewDense()&lt;/code&gt;と&lt;code&gt;NewVecDense()&lt;/code&gt;を使って、ラップされたDenseやVecDenseを作成できます。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;package&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;main&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;package&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;main&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; (
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;fmt&amp;#34;&lt;/span&gt;
@@ -1011,7 +1011,7 @@ gonum/matパッケージでは、&lt;a href="https://pkg.go.dev/gonum.org/v1/gon
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;ちなみに、提供されるDenseとVecDenseは&lt;code&gt;fmt.Stringer&lt;/code&gt;インターフェースを実装し、行列の内容を整形して出力するようにしています。&lt;/p&gt;
 &lt;p&gt;ここで、少し実践的な例として、リッジ回帰によるパラメータ推定（$\hat{\theta} = (X^{\top}X + \lambda I)^{-1} X^{\top}Y$）を実装し、比較してみます。&lt;/p&gt;
 &lt;h3 id="matrix-adapterでの実装"&gt;Matrix Adapterでの実装&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;X&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;Y&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;syntheticData&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;N&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;theta&lt;/span&gt;) &lt;span style="color:#75715e"&gt;// Return adapter.Dense&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;X&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;Y&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;syntheticData&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;N&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;theta&lt;/span&gt;) &lt;span style="color:#75715e"&gt;// Return adapter.Dense&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;I&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;mat&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewDiagDense&lt;/span&gt;(&lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;, []&lt;span style="color:#66d9ef"&gt;float64&lt;/span&gt;{&lt;span style="color:#ae81ff"&gt;1.0&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;1.0&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;1.0&lt;/span&gt;})
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;reg&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;DenseCopyOf&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;I&lt;/span&gt;).&lt;span style="color:#a6e22e"&gt;Scale&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;lambda&lt;/span&gt;)
@@ -1021,7 +1021,7 @@ gonum/matパッケージでは、&lt;a href="https://pkg.go.dev/gonum.org/v1/gon
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;estimated&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;XTXinv&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Product&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;XTY&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="gonummatでの実装"&gt;gonum/matでの実装&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;X&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;Y&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;syntheticData&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;N&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;theta&lt;/span&gt;) &lt;span style="color:#75715e"&gt;// Return adapter.Dense&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;X&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;Y&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;syntheticData&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;N&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;theta&lt;/span&gt;) &lt;span style="color:#75715e"&gt;// Return adapter.Dense&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;XTXinv&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;mat&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewDense&lt;/span&gt;(&lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;, &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;XTXinv&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Product&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;X&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;T&lt;/span&gt;(), &lt;span style="color:#a6e22e"&gt;X&lt;/span&gt;)
@@ -1050,7 +1050,7 @@ Go言語におけるMethod Chainは、errorを含む多値の戻り値との相�
 よって、ラップされた&lt;code&gt;adapter.Dense&lt;/code&gt;（や&lt;code&gt;adapter.VecDense&lt;/code&gt;）を既存の関数の入力として渡すことができます。&lt;/p&gt;
 &lt;p&gt;また、&lt;code&gt;T()&lt;/code&gt;は&lt;code&gt;mat.Matrix&lt;/code&gt;として維持しなければならない関数であることから、同等の&lt;code&gt;Transpose()&lt;/code&gt;を提供しています。
 これにより、転置行列がレシーバーとなるような呼び出しであっても、&lt;code&gt;adapter.Dense&lt;/code&gt;として振る舞うことができるようになり、Matrix Adapterとの親和性が向上します。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// X.T().Product(Y) is invalid due to mat.Matrix has no method Product.&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// X.T().Product(Y) is invalid due to mat.Matrix has no method Product.&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;XTY&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;X&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Transpose&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;Product&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;Y&lt;/span&gt;) &lt;span style="color:#75715e"&gt;// Valid&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id="まとめ"&gt;まとめ&lt;/h1&gt;
 &lt;p&gt;本エントリでは、gonum/matパッケージを直感的に操作するための&lt;a href="https://github.com/monochromegane/mat"&gt;Matrix Adapter&lt;/a&gt;を紹介しました。
@@ -1174,7 +1174,7 @@ Go言語におけるMethod Chainは、errorを含む多値の戻り値との相�
 &lt;h2 id="100倍アイオーのために"&gt;100倍アイオーのために&lt;/h2&gt;
 &lt;p&gt;今月はTwitterを制限して読書量が増えたので良かった。
 全然見ないというのも情報収集に支障が出るので、以下のような雑スクリプトを一日一回だけ実行している。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/bash
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/bash
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;argv&lt;span style="color:#f92672"&gt;=(&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$@&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; i in &lt;span style="color:#e6db74"&gt;`&lt;/span&gt;seq &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; $#&lt;span style="color:#e6db74"&gt;`&lt;/span&gt;
@@ -1184,7 +1184,7 @@ Go言語におけるMethod Chainは、errorを含む多値の戻り値との相�
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; open $encoded
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;done&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;以下のように実行すると、@hogeさんと@fugaさんと@piyoさんの昨日のTweetだけがそれぞれ検索結果のページとして開く。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ./tw.sh hoge fuga piyo
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ./tw.sh hoge fuga piyo
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Twitterの中毒性は、未読を消化するべく無限に見てしまうことだと思う。
 この検索結果のページでは過去にスクロールできないため、やめ時が明確になる点が良い。
 今のところはうまくいっていると思う。&lt;/p&gt;
