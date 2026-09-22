@@ -1,4 +1,80 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Shift-Jis on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/shift-jis/</link><description>Recent content in Shift-Jis on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 15 Sep 2013 00:00:00 +0000</lastBuildDate><atom:link href="/tags/shift-jis/" rel="self" type="application/rss+xml"/><item><title>tmuxのpopupを使ってターミナル画面でClaude Codeと棲み分ける</title><link>https://blog.monochromegane.com/blog/2026/01/11/popup/</link><pubDate>Sun, 11 Jan 2026 11:47:04 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2026/01/11/popup/</guid><description>&lt;p&gt;Claude CodeをはじめとするCLI型のコーディングエージェントはターミナル画面中の一定領域を占有します。&lt;/p&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Shift-Jis on THINKING MEGANE</title><link>https://blog.monochromegane.com/tags/shift-jis/</link><description>Recent content in Shift-Jis on THINKING MEGANE</description><generator>Hugo -- gohugo.io</generator><language>ja-jp</language><lastBuildDate>Sun, 15 Sep 2013 00:00:00 +0000</lastBuildDate><atom:link href="/tags/shift-jis/" rel="self" type="application/rss+xml"/><item><title>Jev的なDecision Modelの実現方式を分類してみる</title><link>https://blog.monochromegane.com/blog/2026/09/21/jev/</link><pubDate>Mon, 21 Sep 2026 09:12:23 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2026/09/21/jev/</guid><description>&lt;p&gt;&lt;a href="https://docs.typesafe.ai/introduction"&gt;Jev&lt;/a&gt;はTypeSafe AI社からリリースされた意思決定のためのモデルです。その推論速度と汎用性の高さから注目されていますが、具体的なアーキテクチャは公開されておらず、モデルの再現を試みる取り組みも活発に行われています。&lt;/p&gt;
+&lt;p&gt;自分自身もJevそのものを使って遊ぶというより、その方式の解明や、それを通したローカル環境での実現に興味があり、色々調べていました。
+せっかくなので、見つけた実現方式を分類しながらまとめておこうと思います。&lt;/p&gt;
+&lt;h2 id="jevとは"&gt;Jevとは&lt;/h2&gt;
+&lt;p&gt;Jevは意思決定モデルとして、背景情報であるState、そのStateにおける質問群Questions、これらの質問に対する回答の選択肢Candidatesを自然言語で与えると、モデルが選択した回答を確信度（Confidence）付きで返すモデルです。
+この回答は、従来のLLMのように1トークンずつ推論するdecode過程を経ずに行われるとされています。
+また、複数の質問に対してもその回答時間はあまり増加しないともされています。&lt;/p&gt;
+&lt;p&gt;これらの特徴により、複雑な背景情報や高度な推論が必要とされず、かつ、即時性が求められる意思決定の場面への適用が考えられます。
+加えて、LLMのように自然言語で幅広いタスクを扱え、タスクごとの追加学習なしで導入できるという汎用性の高さも注目すべきところです。&lt;/p&gt;
+&lt;p&gt;以下では、このような要件を再現するためのいくつかの取り組みを分類していきます。&lt;/p&gt;
+&lt;h2 id="分類について"&gt;分類について&lt;/h2&gt;
+&lt;p&gt;このエントリでは、実現方式を大きくは「既存のLM headをそのまま利用する方式」と「潜在表現から専用のHeadを学習する方式」の2系統に分類しています。
+それぞれ、Direct Logit型、Decision Head型と呼ぶことにします。
+特に、Decision Head型の方はいくつかの派生があり、候補の処理方法や複数質問の並列化方法がそれぞれ異なるため小分類を示します。&lt;/p&gt;
+&lt;h2 id="direct-logit型"&gt;Direct Logit型&lt;/h2&gt;
+&lt;p&gt;Jev再現実装として最初に想起されるのは、学習済みのLLMに対してState/Question/Candidatesを渡し、prefill過程を経て得られた次トークン用の語彙全体に対するlogits（以下、語彙logits）を用いる方式です。
+通常の推論ではこの語彙logitsを素として次の1トークンの選択を繰り返すdecode過程が発生しますが、プロンプトを工夫して、回答候補を1トークンで識別（例えば、A: chicken、B: beefの、A/B）できるようにするだけで、decode過程を省略して候補を選択できます。
+これだけであれば構造化出力のdecode部分を省いたものと考えられますが、この方式では、候補に対応する種類数のトークンのlogitを用いてsoftmax操作を実行することで、候補のスコアも求められます。&lt;/p&gt;
+&lt;p&gt;この方式での再現実装としては、以下が挙げられます。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/featherless-ai/simple-jev"&gt;Simple Jev&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/TheoLeeCJ/SemIf"&gt;SemIf（元Open Jev）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/kishida/llama.cpp/blob/jev/docs/jev.md"&gt;llama.cppのJev対応fork&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;この方式の利点はなんと言っても、学習済みのオープンウェイトモデルをそのまま利用できる点だと思います。実際に、Jev対応forkでは、様々なモデルをそのままJevっぽく振る舞わせることができるようになっています。
+大きなモデルの知識量や指示追従性能の恩恵に預かることができるので汎用性も高いと言えそうです。&lt;/p&gt;
+&lt;p&gt;一方で、複数質問への対応は、バッチ推論での解決です（State部分のKVキャッシュの共有などによる冗長計算の削減の仕組みなどは提供されていました）。
+この課題へのモデルのアーキテクチャ水準での解決策として、拡散推論モデルであるDiffusionGemmaなどを使った並列回答が提案されています。
+推論サーバーである&lt;a href="https://github.com/vllm-project/vllm/pull/57250"&gt;vLLM上でこの機能の実装提案&lt;/a&gt;では、質問や回答欄を初期canvasとして用いて、canvas中の全トークンに対して並列推論した結果のうち、回答欄に対応するトークンのlogitから選択結果を得ます。
+ただし、手元で試した中では、canvas中の全てのトークンが推論対象であったり、初期canvasのランダム性に依存して回答が変動し、単純にノイズを取り除くためのラウンド数を増やしても安定するとは限らなかったです。&lt;/p&gt;
+&lt;p&gt;なお、この方式での選択結果のスコアは、どのtokenを次に出すかの相対比率であり、その回答が正しい確率としてキャリブレーションされた値ではないことにも注意する必要があります。&lt;/p&gt;
+&lt;h2 id="decision-head型"&gt;Decision Head型&lt;/h2&gt;
+&lt;p&gt;次に、潜在表現から専用のHeadを学習する方式について整理します。
+この系統では、潜在表現を作る方式にBERTなどのEncoder型のモデルを使うか、GPT系のDecoder型のモデルを使うかで分類してみました。&lt;/p&gt;
+&lt;h3 id="encoder系"&gt;Encoder系&lt;/h3&gt;
+&lt;p&gt;潜在表現の獲得のため自然に採用されるのは、事前学習済みのBERTやRoBERTa、ModernBERTといったEncoder系のモデルであろうかと思います。
+Jevの再現実装は、これらのモデルから得られる潜在表現ベクトルを入力とする分類用のヘッドをつけ、Jevの想定するState、Questionと、回答の組でそのヘッドをファインチューニングする方式が考えられます。
+元々、多肢選択問題にも利用されており、各選択肢に対応するスコアも出力することができるので、入出力の形式の観点からは、Jevらしさは高いと思えます。&lt;/p&gt;
+&lt;p&gt;この方式による再現実装としては、&lt;a href="https://huggingface.co/argos1111/modernbert-ja-310m-jev"&gt;modernbert-ja-310m-jev&lt;/a&gt;が挙げられます。
+この方式での再現実装は、蓄積されてきたBERTとファインチューニングのやり方が踏襲できること、モデルのパラメータ数が（近年のLLMモデルと比べると）少ないことによる、推論速度をはじめとする取り回しの良さが利点です。&lt;/p&gt;
+&lt;p&gt;しかしながら、パラメータ数の少なさに加え、チャットやエージェントを想定したモデルのような指示追従能力を前提にできないこともあり、それを補うためのタスクごとのファインチューニングが必要となり、汎用性が低下します。
+また、候補ごとにState/Question/Candidateの組で推論するため、質問や候補数に応じて計算量は増加します。
+もちろんバッチ推論による並列化は可能ですが、候補ごと（または工夫により質問ごと）の計算という構造自体は残ります。&lt;/p&gt;
+&lt;p&gt;この計算量の課題に対して、&lt;a href="https://huggingface.co/convaiinnovations/laya"&gt;laya&lt;/a&gt;は、全ての候補を一つの系列で入力し、各候補の潜在表現を得ることで解決を図ります。
+layaでは、&lt;code&gt;[CLS] &amp;lt;type&amp;gt; instructions [SEP] [MASK] opt0 [MASK] opt1 ... [SEP] state [SEP]&lt;/code&gt;のように、候補ごとに&lt;code&gt;[MASK]&lt;/code&gt;トークンを配置し、それらのトークンに対応する潜在表現の一覧を分類器に渡します。
+なお、この配置であっても、双方向のアテンションであるので、各候補のMASKトークンには質問や候補の内容も反映されています。
+分類器は、比較的複雑で、2層のTransformerが組み込まれています。
+また、ベースとなるモデルはModernBERT-largeを、このためにファインチューンしているようです。
+さらに、回答確率がキャリブレーションされることを目標としたRLCDによる学習も採用しています。&lt;/p&gt;
+&lt;h3 id="decoder系"&gt;Decoder系&lt;/h3&gt;
+&lt;p&gt;最後に潜在表現をQwenなどのDecoder系のモデルから得る方式です。
+&lt;a href="https://github.com/jaredpalmer/kev"&gt;kev&lt;/a&gt;では、&lt;code&gt;&amp;lt;state&amp;gt; state &amp;lt;q&amp;gt; question &amp;lt;opt&amp;gt; opt0 &amp;lt;/opt&amp;gt; &amp;lt;opt&amp;gt; opt1 &amp;lt;/opt&amp;gt; ... &amp;lt;decide&amp;gt;&lt;/code&gt;のように、State、Question、各Candidateを特殊トークンで区切って1系列に配置します。
+そして、各候補末尾の&lt;code&gt;&amp;lt;/opt&amp;gt;&lt;/code&gt;に対応する潜在表現と、全候補を読み終えた&lt;code&gt;&amp;lt;decide&amp;gt;&lt;/code&gt;に対応する潜在表現を取り出し、分類器で比較します。
+なお、この特殊トークンは追加導入ではなく、Qwen系モデルなどであまり使われていないとされる&lt;code&gt;&amp;lt;|fim_prefix|&amp;gt;&lt;/code&gt;などを、別用途で利用しているようです。&lt;/p&gt;
+&lt;p&gt;Direct Logit型で重要な要素であった次トークンの語彙logitsを使わず、その手前の潜在表現から独自に分類器を構築するのはやや不思議ではありますが、以下の意図があるのではないかなあと考えています。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;複数質問・候補との親和性: 各質問や候補に対応する特殊トークンの潜在表現を直接利用できるため、複数質問の並列処理や、A/B/Cのような回答ラベルに依存しない可変数の候補を扱いやすい。&lt;/li&gt;
+&lt;li&gt;分類器との親和性: 語彙logitをそのまま利用するのではなく、候補ごとの&lt;code&gt;&amp;lt;/opt&amp;gt;&lt;/code&gt;と全候補を読んだ&lt;code&gt;&amp;lt;decide&amp;gt;&lt;/code&gt;の潜在表現から、意思決定に適した比較方法自体を学習できる。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;分類器自体は比較的単純で、&lt;code&gt;&amp;lt;decide&amp;gt;&lt;/code&gt;と各&lt;code&gt;&amp;lt;/opt&amp;gt;&lt;/code&gt;の潜在表現をそれぞれ線形変換した後、その内積によって候補のスコアを計算します。&lt;/p&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;本エントリでは、Jev的なDecision Modelを実現する方式について、Direct Logit型とDecision Head型として整理しました。&lt;/p&gt;
+&lt;p&gt;調査から、単純に「文章を生成せず、候補の中から選択する」だけであれば、既存のLLMの次トークンlogitを利用することで比較的簡単に実現できることが改めて分かりました。
+並列回答についてもモデル側というよりは推論サーバー側の機構に移譲すれば良いと決めてしまえば、構成としてはかなり近づけられそうです。
+Jevの魅力の一つは、自然言語で幅広いタスクを記述でき、ある程度の精度でそのまま利用できる汎用性にあると思います。その観点では、ある程度大きなオープンウェイトの汎用モデルを推論サーバー上で効率よく動かす方向が実用的に思えました。&lt;/p&gt;
+&lt;p&gt;一方で、Jevらしい複数質問への並列回答の計算効率や、Confidenceまで含めて考えると途端に方式が複雑になることも確認できました。
+もちろん、利用量が十分に多くコストに見合うのであれば、Layaやkevのように用途に合わせた独自モデルを学習するのが最も良さそうです。一方、すべてのタスクごとにモデルやAPIを増やしていくのも運用上は大変かなと思います。その場合、モデル自体は共通化しつつ、利用側で&lt;a href="https://github.com/sutro-sh/jev-align"&gt;jev-align&lt;/a&gt;のように、実データや人間のフィードバックを使ってプロンプトを継続的に改善していく仕組みと組み合わせるのも面白そうです。&lt;/p&gt;
+&lt;p&gt;個人的には、Confidenceはもっと積極的に使われてもよい機能だと感じました。単に最も良い候補を選ぶだけでなく、「十分な確信がないので今回は採用しない」「人間に確認する」といった判断まで含められると、Decision Modelの使い道は広がるでしょう。このConfidenceを自前のモデルやDirect Logit型の仕組みでどう実現していくかは、今後も追跡していきたいと思います。&lt;/p&gt;
+&lt;h2 id="おまけ"&gt;おまけ&lt;/h2&gt;
+&lt;p&gt;今回出てきたTransformerの内部表現やAttention、潜在表現についてもう少し理解したい場合は、以前作った以下の資料も参考になるかもしれません。よければご参照ください。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://speakerdeck.com/monochromegane/fukuokago23-transformer"&gt;Transformerの仕組みに関する資料&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://speakerdeck.com/monochromegane/inside-vector-search"&gt;ベクトル検索の理解に必要な概念の説明資料&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;本エントリは2026/09/20までに調べた内容を元に執筆しました。
+読まれた時点では、各方式もさらにアップデートされたり他の方式も登場しているかもしれないことにご留意ください。&lt;/p&gt;</description></item><item><title>tmuxのpopupを使ってターミナル画面でClaude Codeと棲み分ける</title><link>https://blog.monochromegane.com/blog/2026/01/11/popup/</link><pubDate>Sun, 11 Jan 2026 11:47:04 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2026/01/11/popup/</guid><description>&lt;p&gt;Claude CodeをはじめとするCLI型のコーディングエージェントはターミナル画面中の一定領域を占有します。&lt;/p&gt;
 &lt;p&gt;元々自分は、ターミナルマルチプレクサであるtmuxを利用していて、リポジトリをプロジェクトとみなし、一つのウィンドウを対応させ、その中でペインを分ける構成をとっていました。
 その配置と各ペインのサイズのなかで、エージェントの入る余地はなく、どうしてもペイン内で共有させるか、異なるウィンドウを割り当てる必要がありました。
 しかしながら、役割を共有させたペインの裏側や異なるウィンドウに散らばったエージェントのセッションを探し回るのは非常に面倒に感じていました。&lt;/p&gt;
@@ -1348,92 +1424,4 @@ epsilonでは、腕の有効性の変化に追従できず、ε-Greedyの探索�
 &lt;h1 id="発表スライド"&gt;発表スライド&lt;/h1&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;h1 id="発表を終えて"&gt;発表を終えて&lt;/h1&gt;
-&lt;!-- raw HTML omitted --&gt;</description></item><item><title>研究の位置づけを明確にする集中型の論文サーベイ方法</title><link>https://blog.monochromegane.com/blog/2021/05/15/survey-method/</link><pubDate>Sat, 15 May 2021 15:35:14 +0900</pubDate><guid>https://blog.monochromegane.com/blog/2021/05/15/survey-method/</guid><description>&lt;p&gt;博士課程に進学し、国際会議に論文を投稿した際に行った論文サーベイの流れやツールについてまとめておく。
-今回のサーベイを行うにあたり、既存研究に対する自身の研究の位置づけを明らかにすることを目標とした。
-すなわち、自身の提案がある程度カタチになっていることを前提とした集中的サーベイ方法である。&lt;/p&gt;
-&lt;h1 id="論文サーベイの流れ"&gt;論文サーベイの流れ&lt;/h1&gt;
-&lt;p&gt;以下に行った工程を示す。&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;会議名とキーワード検索による候補のリストアップ&lt;/li&gt;
-&lt;li&gt;各候補のアブストラクトによる選定&lt;/li&gt;
-&lt;li&gt;各候補の精読&lt;/li&gt;
-&lt;li&gt;必要に応じて参考になる会議名、キーワード、参照論文を候補に追加&lt;/li&gt;
-&lt;li&gt;候補がなくなるまで繰り返す&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;以降、各工程について利用したツールや工夫などを述べる。&lt;/p&gt;
-&lt;h1 id="1-会議名とキーワード検索による候補のリストアップ"&gt;1. 会議名とキーワード検索による候補のリストアップ&lt;/h1&gt;
-&lt;p&gt;サーベイは十分な量の候補を必要とする。
-自身の研究分野や貢献と完全に一致する論文は多くはないが、全くゼロではない。
-もし多すぎるのであれば、自身の研究の貢献や目的が十分に掘り下げられていない可能性がある。
-もしゼロであれば、自身の研究に有用性がないか、十分な調査ができていないかもしれない。
-自身の研究を信じる我々は、いずれにせよ十分に候補を見つける必要がある。&lt;/p&gt;
-&lt;p&gt;候補の選定には、&lt;a href="https://scholar.google.com/"&gt;Google Scholar&lt;/a&gt;によるキーワード検索を用いる。
-なるべく多くの論文を候補とするため、キーワードは関連しそうなキーワードを複数挙げて、ORで繋ぐと良い。
-この時、指導教官からのアドバイスで会議名を絞って検索するようにした。
-これは、検索クエリに &lt;code&gt;source:SIGKDD&lt;/code&gt; などと指定することで実現できる。&lt;/p&gt;
-&lt;p&gt;そして、検索結果から以下の情報をリスト化する。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Title&lt;/li&gt;
-&lt;li&gt;Citiations&lt;/li&gt;
-&lt;li&gt;URL&lt;/li&gt;
-&lt;li&gt;Authors&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;おおよそ、Google Scholarではキーワードへの関連性が高いものから並べてくれているため、会議ごとに上位20-50本程度を候補とすれば十分であったように思える。&lt;/p&gt;
-&lt;p&gt;リスト化にはGoogleスプレッドシートを利用した。後の工程のため、関連有無フラグとメモ欄をカラムとして追加する。&lt;/p&gt;
-&lt;p&gt;なお、検索〜リスト作成は手動では面倒なので、スクリプトを用意した。&lt;/p&gt;
-&lt;h1 id="2-各候補のアブストラクトによる選定"&gt;2. 各候補のアブストラクトによる選定&lt;/h1&gt;
-&lt;p&gt;1.でリストアップした候補について、精読すべきかの選定を行う。
-なお、選定はアブストラクトのみで行うこと。
-ここで、個別に精読を始めると時間がいくらあっても足りないからである（逆に言えば自身の研究もやはりアブストラクトに提案と貢献をしっかり記述する必要がある）。&lt;/p&gt;
-&lt;p&gt;選定基準は自身の研究や提案、貢献に関連がありそうかとする。
-また、いくつか読んでいく中で判断基準が徐々に形成されていくので、効率よく見直せるよう、メモを書いておく。
-メモには、どういう提案や手法かを一行程度書けば良い。
-精読すべきと判断したものには、リストに丸をつけ、フィルタなり色付けして候補を見つけやすくしておく。&lt;/p&gt;
-&lt;h1 id="3-各候補の精読"&gt;3. 各候補の精読&lt;/h1&gt;
-&lt;p&gt;2.で選定した精読候補を読み、まとめる。
-多くの論文を読まなければならないこと、最終的に自分の研究との相対的な位置づけを整理する必要があるため、効率よく見直せるようまとめを残す必要がある。
-まとめがないと何度も同じ論文をイチから読み直す必要があるので絶対にまとめること。
-以下にまとめの観点とこれを実現するツールについて示す。&lt;/p&gt;
-&lt;h2 id="まとめの観点"&gt;まとめの観点&lt;/h2&gt;
-&lt;p&gt;まとめの粒度や項目が統一されていることが望ましい。
-自分は、&lt;a href="https://www.slideshare.net/Ochyai/1-ftma15/"&gt;落合メソッド&lt;/a&gt;をアレンジして使っている。
-つまり、自分の研究の位置づけを整理するのに適した問いかけにしている。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;どんなもの？&lt;/li&gt;
-&lt;li&gt;先行研究と比べてどこがすごい？（どんな課題を解決する？）&lt;/li&gt;
-&lt;li&gt;技術や手法のキモはどこ？（どうやって解決した？）&lt;/li&gt;
-&lt;li&gt;どうやって有効だと検証した？&lt;/li&gt;
-&lt;li&gt;議論はある？（自分の研究との差異は？）&lt;/li&gt;
-&lt;li&gt;次に読むべき論文は？（他に知らなかった技術や概念は？）&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;括弧内が自分用の問いかけである。
-特に、「議論はある？」を「自分の研究との差異は？」に置き換えることで位置付けの整理を強く意識したまとめができるようになった点が気に入っている。&lt;/p&gt;
-&lt;h2 id="まとめのためのツール"&gt;まとめのためのツール&lt;/h2&gt;
-&lt;p&gt;これまで論文管理には、&lt;a href="https://www.mendeley.com/"&gt;Mendeley&lt;/a&gt;を利用し、&lt;a href="https://www.papershipapp.com/"&gt;PaperShip&lt;/a&gt;と同期、必要に応じてiPadで書き込みを行っていた。&lt;/p&gt;
-&lt;p&gt;しかしながら、今回まとめには&lt;a href="https://www.notion.so/"&gt;Notion&lt;/a&gt;を別途利用した。
-Notionは、論文への直接書き込みの場合の、十分な余白がない点や論文同士の関係性を横串で把握しにくかった点を解消してくれる。
-Notionで、上述のアレンジ版落合メソッドを含んだテンプレートを用意し、サーベイDATABASEに論文ごとに1ページ作り、読みながらまとめを作っていく。&lt;/p&gt;
-&lt;p&gt;この時、最初からまとめようとすると論文全体を覚えておかなくてはならないので、自由に記入可能なメモ欄を用意して、読みながら、そちらにわかったこと疑問に思ったことなどを気楽に書いて、最後にまとめる方法をとっている。
-メモ欄も残したままにしておくと後から読み直した時に記憶が蘇りやすいのでそのまま残している。&lt;/p&gt;
-&lt;p&gt;また、Notionでは各ページに対してPropertyを付与することで絞り込みができるため、会議名タグ、論文の発行年度、論文のURL、その論文を読んだ日付、キーワードのタグをPropertyとして設定している。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://blog.monochromegane.com/images/2021/05/notion_survey_template.png" alt="notion-survey-template"&gt;&lt;/p&gt;
-&lt;h1 id="4-必要に応じて参考になる会議名キーワード参照論文を候補に追加"&gt;4. 必要に応じて参考になる会議名、キーワード、参照論文を候補に追加&lt;/h1&gt;
-&lt;p&gt;精読の中で、気になる会議名、キーワードが追加された場合、もう一度、1.の検索に戻り候補を追加する。
-また、参照されている論文も候補に追加する。&lt;/p&gt;
-&lt;p&gt;コツとしては、追加された候補に対してすぐにアブストや精読を始めずに、候補として追加に止める事。
-この追加した候補はまた新しい候補を増やすので、ゴールが見えなくなってしまうからである。
-なので、最初に決めた候補まで読み切ってから、新しい候補の処理に着手すると気分的に進捗感が出て楽であった（これはまあ人による）。&lt;/p&gt;
-&lt;h1 id="5-候補がなくなるまで繰り返す"&gt;5. 候補がなくなるまで繰り返す&lt;/h1&gt;
-&lt;p&gt;以上を候補がなくなるまで繰り返す。
-参考文献が参考文献を呼んで終わらないのではないかと思われたが、2-3周もすれば新しい文献も出てこなくなってくる。
-まとめの中で自身の研究が位置付けられてくるので、そこを一旦の止め時とした。&lt;/p&gt;
-&lt;h1 id="まとめ"&gt;まとめ&lt;/h1&gt;
-&lt;p&gt;国際会議への投稿にあたって、自身の研究の位置づけを明確にするための論文サーベイの方法をまとめた。
-今回は、最初のリストが243本、精読が47本であった。
-会議を分けてサーベイすることで会議ごとに同じキーワードでも論文に特色があることなどが分かり興味深かった。
-また、トップカンファレンスに限ることで、サーベイ効率も高まったと思う。
-指導教官に感謝である。&lt;/p&gt;
-&lt;p&gt;Notion上の47ページの論文まとめは執筆中、何度も読み直したが自分なりのまとめメモが入っていること、自分の研究との位置づけが一言でまとめられていることから、効率よく記憶が蘇らせることができた。
-結果として、複数の論文同士の関係性を整理するという目標に自身のリソースを采配することができたと思う。&lt;/p&gt;
-&lt;p&gt;一方で、キーワード検索では、既読管理と相性が悪いため、普段のインプットとしての継続的なサーベイには向かない。
-RSSフィード的なインプットの方法を探したい。&lt;/p&gt;</description></item></channel></rss>
+&lt;!-- raw HTML omitted --&gt;</description></item></channel></rss>

@@ -1,0 +1,85 @@
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content="monochromegane"><title>Jev的なDecision Modelの実現方式を分類してみる &#183; THINKING MEGANE</title><meta name=twitter:card content="summary"><meta name=twitter:site content="@monochromegane"><meta property="og:description" content="JevはTypeSafe AI社からリリースされた意思決定のためのモデルです。その推論速度と汎用性の高さから注目されていますが、具体的なアーキテクチャは公開されておらず、モデルの再現を試みる取り組みも活発に行われています。
+自分自身もJevそのものを使って遊ぶというより、その方式の解明や、それを通したローカル環境での実現に興味があり、色々調べていました。
+せっかくなので、見つけた実現方式を分類しながらまとめておこうと思います。
+Jevとは
+Jevは意思決定モデルとして、背景情報であるState、そのStateにおける質問群Questions、これらの質問に対する回答の選択肢Candidatesを自然言語で与えると、モデルが選択した回答を確信度（Confidence）付きで返すモデルです。
+この回答は、従来のLLMのように1トークンずつ推論するdecode過程を経ずに行われるとされています。
+また、複数の質問に対してもその回答時間はあまり増加しないともされています。
+これらの特徴により、複雑な背景情報や高度な推論が必要とされず、かつ、即時性が求められる意思決定の場面への適用が考えられます。
+加えて、LLMのように自然言語で幅広いタスクを扱え、タスクごとの追加学習なしで導入できるという汎用性の高さも注目すべきところです。
+以下では、このような要件を再現するためのいくつかの取り組みを分類していきます。
+分類について
+このエントリでは、実現方式を大きくは「既存のLM headをそのまま利用する方式」と「潜在表現から専用のHeadを学習する方式」の2系統に分類しています。
+それぞれ、Direct Logit型、Decision Head型と呼ぶことにします。
+特に、Decision Head型の方はいくつかの派生があり、候補の処理方法や複数質問の並列化方法がそれぞれ異なるため小分類を示します。
+Direct Logit型
+Jev再現実装として最初に想起されるのは、学習済みのLLMに対してState/Question/Candidatesを渡し、prefill過程を経て得られた次トークン用の語彙全体に対するlogits（以下、語彙logits）を用いる方式です。
+通常の推論ではこの語彙logitsを素として次の1トークンの選択を繰り返すdecode過程が発生しますが、プロンプトを工夫して、回答候補を1トークンで識別（例えば、A: chicken、B: beefの、A/B）できるようにするだけで、decode過程を省略して候補を選択できます。
+これだけであれば構造化出力のdecode部分を省いたものと考えられますが、この方式では、候補に対応する種類数のトークンのlogitを用いてsoftmax操作を実行することで、候補のスコアも求められます。
+この方式での再現実装としては、以下が挙げられます。
+
+Simple Jev
+SemIf（元Open Jev）
+llama.cppのJev対応fork
+
+この方式の利点はなんと言っても、学習済みのオープンウェイトモデルをそのまま利用できる点だと思います。実際に、Jev対応forkでは、様々なモデルをそのままJevっぽく振る舞わせることができるようになっています。
+大きなモデルの知識量や指示追従性能の恩恵に預かることができるので汎用性も高いと言えそうです。
+一方で、複数質問への対応は、バッチ推論での解決です（State部分のKVキャッシュの共有などによる冗長計算の削減の仕組みなどは提供されていました）。
+この課題へのモデルのアーキテクチャ水準での解決策として、拡散推論モデルであるDiffusionGemmaなどを使った並列回答が提案されています。
+推論サーバーであるvLLM上でこの機能の実装提案では、質問や回答欄を初期canvasとして用いて、canvas中の全トークンに対して並列推論した結果のうち、回答欄に対応するトークンのlogitから選択結果を得ます。
+ただし、手元で試した中では、canvas中の全てのトークンが推論対象であったり、初期canvasのランダム性に依存して回答が変動し、単純にノイズを取り除くためのラウンド数を増やしても安定するとは限らなかったです。
+なお、この方式での選択結果のスコアは、どのtokenを次に出すかの相対比率であり、その回答が正しい確率としてキャリブレーションされた値ではないことにも注意する必要があります。
+Decision Head型
+次に、潜在表現から専用のHeadを学習する方式について整理します。
+この系統では、潜在表現を作る方式にBERTなどのEncoder型のモデルを使うか、GPT系のDecoder型のモデルを使うかで分類してみました。
+Encoder系
+潜在表現の獲得のため自然に採用されるのは、事前学習済みのBERTやRoBERTa、ModernBERTといったEncoder系のモデルであろうかと思います。
+Jevの再現実装は、これらのモデルから得られる潜在表現ベクトルを入力とする分類用のヘッドをつけ、Jevの想定するState、Questionと、回答の組でそのヘッドをファインチューニングする方式が考えられます。
+元々、多肢選択問題にも利用されており、各選択肢に対応するスコアも出力することができるので、入出力の形式の観点からは、Jevらしさは高いと思えます。
+この方式による再現実装としては、modernbert-ja-310m-jevが挙げられます。
+この方式での再現実装は、蓄積されてきたBERTとファインチューニングのやり方が踏襲できること、モデルのパラメータ数が（近年のLLMモデルと比べると）少ないことによる、推論速度をはじめとする取り回しの良さが利点です。
+しかしながら、パラメータ数の少なさに加え、チャットやエージェントを想定したモデルのような指示追従能力を前提にできないこともあり、それを補うためのタスクごとのファインチューニングが必要となり、汎用性が低下します。
+また、候補ごとにState/Question/Candidateの組で推論するため、質問や候補数に応じて計算量は増加します。
+もちろんバッチ推論による並列化は可能ですが、候補ごと（または工夫により質問ごと）の計算という構造自体は残ります。
+この計算量の課題に対して、layaは、全ての候補を一つの系列で入力し、各候補の潜在表現を得ることで解決を図ります。
+layaでは、[CLS] <type> instructions [SEP] [MASK] opt0 [MASK] opt1 ... [SEP] state [SEP]のように、候補ごとに[MASK]トークンを配置し、それらのトークンに対応する潜在表現の一覧を分類器に渡します。
+なお、この配置であっても、双方向のアテンションであるので、各候補のMASKトークンには質問や候補の内容も反映されています。
+分類器は、比較的複雑で、2層のTransformerが組み込まれています。
+また、ベースとなるモデルはModernBERT-largeを、このためにファインチューンしているようです。
+さらに、回答確率がキャリブレーションされることを目標としたRLCDによる学習も採用しています。
+Decoder系
+最後に潜在表現をQwenなどのDecoder系のモデルから得る方式です。
+kevでは、<state> state <q> question <opt> opt0 </opt> <opt> opt1 </opt> ... <decide>のように、State、Question、各Candidateを特殊トークンで区切って1系列に配置します。
+そして、各候補末尾の</opt>に対応する潜在表現と、全候補を読み終えた<decide>に対応する潜在表現を取り出し、分類器で比較します。
+なお、この特殊トークンは追加導入ではなく、Qwen系モデルなどであまり使われていないとされる<|fim_prefix|>などを、別用途で利用しているようです。"><meta property="og:title" content="Jev的なDecision Modelの実現方式を分類してみる"><meta property="og:url" content="https://blog.monochromegane.com/blog/2026/09/21/jev/"><meta property="og:image" content="https://blog.monochromegane.com/images/ogp.png"><link rel=stylesheet href=/css/reset.css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Source+Code+Pro' type=text/css><link rel=stylesheet href='//fonts.googleapis.com/css?family=Montserrat' type=text/css><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/ir_black.min.css><link rel=stylesheet href=/css/text.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/layout.css><link rel=apple-touch-icon-precomposed sizes=57x57 href=/images/apple-touch-icon-57-precomposed.png><link rel=apple-touch-icon-precomposed sizes=114x114 href=/images/apple-touch-icon-114-precomposed.png><link rel=apple-touch-icon-precomposed sizes=72x72 href=/images/apple-touch-icon-72-precomposed.png><link rel=apple-touch-icon-precomposed sizes=144x144 href=/images/apple-touch-icon-144-precomposed.png><link rel="shortcut icon" href=/images/favicon.ico><link rel=canonical href=https://blog.monochromegane.com/blog/2026/09/21/jev/><link href rel=alternate type=application/rss+xml title="THINKING MEGANE"><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML' async>MathJax.Hub.Config({HTML:["input/TeX","output/HTML-CSS"],TeX:{Macros:{bm:["\\boldsymbol{#1}",1],argmax:["\\mathop{\\rm arg\\,max}\\limits"],argmin:["\\mathop{\\rm arg\\,min}\\limits"]},extensions:["AMSmath.js","AMSsymbols.js"],equationNumbers:{autoNumber:"AMS"}},extensions:["tex2jax.js"],jax:["input/TeX","output/HTML-CSS"],tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0},"HTML-CSS":{availableFonts:["TeX"],linebreaks:{automatic:!0}}})</script></head><body><div class=header><header><h1 class=logo><a href=https://blog.monochromegane.com/>THINKING MEGANE</a></h1><nav><ul class=menu><li><a href=/self-introduction/>Home</a></li><li><a href=/post/>Archives</a></li><li><a href=/diary/>Diary</a></li><li><a href=http://thinking-megane.blogspot.jp/>Old Blog</a></li></ul></nav></header></div><div class=container><article><div class=post><header><h1><a href=https://blog.monochromegane.com/blog/2026/09/21/jev/>Jev的なDecision Modelの実現方式を分類してみる</a></h1><time><div class=day><i class="fa fa-calendar-o day-icon"></i>2026-09-21</div></time></header><div class=post-inner><p><a href=https://docs.typesafe.ai/introduction>Jev</a>はTypeSafe AI社からリリースされた意思決定のためのモデルです。その推論速度と汎用性の高さから注目されていますが、具体的なアーキテクチャは公開されておらず、モデルの再現を試みる取り組みも活発に行われています。</p><p>自分自身もJevそのものを使って遊ぶというより、その方式の解明や、それを通したローカル環境での実現に興味があり、色々調べていました。
+せっかくなので、見つけた実現方式を分類しながらまとめておこうと思います。</p><h2 id=jevとは>Jevとは</h2><p>Jevは意思決定モデルとして、背景情報であるState、そのStateにおける質問群Questions、これらの質問に対する回答の選択肢Candidatesを自然言語で与えると、モデルが選択した回答を確信度（Confidence）付きで返すモデルです。
+この回答は、従来のLLMのように1トークンずつ推論するdecode過程を経ずに行われるとされています。
+また、複数の質問に対してもその回答時間はあまり増加しないともされています。</p><p>これらの特徴により、複雑な背景情報や高度な推論が必要とされず、かつ、即時性が求められる意思決定の場面への適用が考えられます。
+加えて、LLMのように自然言語で幅広いタスクを扱え、タスクごとの追加学習なしで導入できるという汎用性の高さも注目すべきところです。</p><p>以下では、このような要件を再現するためのいくつかの取り組みを分類していきます。</p><h2 id=分類について>分類について</h2><p>このエントリでは、実現方式を大きくは「既存のLM headをそのまま利用する方式」と「潜在表現から専用のHeadを学習する方式」の2系統に分類しています。
+それぞれ、Direct Logit型、Decision Head型と呼ぶことにします。
+特に、Decision Head型の方はいくつかの派生があり、候補の処理方法や複数質問の並列化方法がそれぞれ異なるため小分類を示します。</p><h2 id=direct-logit型>Direct Logit型</h2><p>Jev再現実装として最初に想起されるのは、学習済みのLLMに対してState/Question/Candidatesを渡し、prefill過程を経て得られた次トークン用の語彙全体に対するlogits（以下、語彙logits）を用いる方式です。
+通常の推論ではこの語彙logitsを素として次の1トークンの選択を繰り返すdecode過程が発生しますが、プロンプトを工夫して、回答候補を1トークンで識別（例えば、A: chicken、B: beefの、A/B）できるようにするだけで、decode過程を省略して候補を選択できます。
+これだけであれば構造化出力のdecode部分を省いたものと考えられますが、この方式では、候補に対応する種類数のトークンのlogitを用いてsoftmax操作を実行することで、候補のスコアも求められます。</p><p>この方式での再現実装としては、以下が挙げられます。</p><ul><li><a href=https://github.com/featherless-ai/simple-jev>Simple Jev</a></li><li><a href=https://github.com/TheoLeeCJ/SemIf>SemIf（元Open Jev）</a></li><li><a href=https://github.com/kishida/llama.cpp/blob/jev/docs/jev.md>llama.cppのJev対応fork</a></li></ul><p>この方式の利点はなんと言っても、学習済みのオープンウェイトモデルをそのまま利用できる点だと思います。実際に、Jev対応forkでは、様々なモデルをそのままJevっぽく振る舞わせることができるようになっています。
+大きなモデルの知識量や指示追従性能の恩恵に預かることができるので汎用性も高いと言えそうです。</p><p>一方で、複数質問への対応は、バッチ推論での解決です（State部分のKVキャッシュの共有などによる冗長計算の削減の仕組みなどは提供されていました）。
+この課題へのモデルのアーキテクチャ水準での解決策として、拡散推論モデルであるDiffusionGemmaなどを使った並列回答が提案されています。
+推論サーバーである<a href=https://github.com/vllm-project/vllm/pull/57250>vLLM上でこの機能の実装提案</a>では、質問や回答欄を初期canvasとして用いて、canvas中の全トークンに対して並列推論した結果のうち、回答欄に対応するトークンのlogitから選択結果を得ます。
+ただし、手元で試した中では、canvas中の全てのトークンが推論対象であったり、初期canvasのランダム性に依存して回答が変動し、単純にノイズを取り除くためのラウンド数を増やしても安定するとは限らなかったです。</p><p>なお、この方式での選択結果のスコアは、どのtokenを次に出すかの相対比率であり、その回答が正しい確率としてキャリブレーションされた値ではないことにも注意する必要があります。</p><h2 id=decision-head型>Decision Head型</h2><p>次に、潜在表現から専用のHeadを学習する方式について整理します。
+この系統では、潜在表現を作る方式にBERTなどのEncoder型のモデルを使うか、GPT系のDecoder型のモデルを使うかで分類してみました。</p><h3 id=encoder系>Encoder系</h3><p>潜在表現の獲得のため自然に採用されるのは、事前学習済みのBERTやRoBERTa、ModernBERTといったEncoder系のモデルであろうかと思います。
+Jevの再現実装は、これらのモデルから得られる潜在表現ベクトルを入力とする分類用のヘッドをつけ、Jevの想定するState、Questionと、回答の組でそのヘッドをファインチューニングする方式が考えられます。
+元々、多肢選択問題にも利用されており、各選択肢に対応するスコアも出力することができるので、入出力の形式の観点からは、Jevらしさは高いと思えます。</p><p>この方式による再現実装としては、<a href=https://huggingface.co/argos1111/modernbert-ja-310m-jev>modernbert-ja-310m-jev</a>が挙げられます。
+この方式での再現実装は、蓄積されてきたBERTとファインチューニングのやり方が踏襲できること、モデルのパラメータ数が（近年のLLMモデルと比べると）少ないことによる、推論速度をはじめとする取り回しの良さが利点です。</p><p>しかしながら、パラメータ数の少なさに加え、チャットやエージェントを想定したモデルのような指示追従能力を前提にできないこともあり、それを補うためのタスクごとのファインチューニングが必要となり、汎用性が低下します。
+また、候補ごとにState/Question/Candidateの組で推論するため、質問や候補数に応じて計算量は増加します。
+もちろんバッチ推論による並列化は可能ですが、候補ごと（または工夫により質問ごと）の計算という構造自体は残ります。</p><p>この計算量の課題に対して、<a href=https://huggingface.co/convaiinnovations/laya>laya</a>は、全ての候補を一つの系列で入力し、各候補の潜在表現を得ることで解決を図ります。
+layaでは、<code>[CLS] &lt;type> instructions [SEP] [MASK] opt0 [MASK] opt1 ... [SEP] state [SEP]</code>のように、候補ごとに<code>[MASK]</code>トークンを配置し、それらのトークンに対応する潜在表現の一覧を分類器に渡します。
+なお、この配置であっても、双方向のアテンションであるので、各候補のMASKトークンには質問や候補の内容も反映されています。
+分類器は、比較的複雑で、2層のTransformerが組み込まれています。
+また、ベースとなるモデルはModernBERT-largeを、このためにファインチューンしているようです。
+さらに、回答確率がキャリブレーションされることを目標としたRLCDによる学習も採用しています。</p><h3 id=decoder系>Decoder系</h3><p>最後に潜在表現をQwenなどのDecoder系のモデルから得る方式です。
+<a href=https://github.com/jaredpalmer/kev>kev</a>では、<code>&lt;state> state &lt;q> question &lt;opt> opt0 &lt;/opt> &lt;opt> opt1 &lt;/opt> ... &lt;decide></code>のように、State、Question、各Candidateを特殊トークンで区切って1系列に配置します。
+そして、各候補末尾の<code>&lt;/opt></code>に対応する潜在表現と、全候補を読み終えた<code>&lt;decide></code>に対応する潜在表現を取り出し、分類器で比較します。
+なお、この特殊トークンは追加導入ではなく、Qwen系モデルなどであまり使われていないとされる<code>&lt;|fim_prefix|></code>などを、別用途で利用しているようです。</p><p>Direct Logit型で重要な要素であった次トークンの語彙logitsを使わず、その手前の潜在表現から独自に分類器を構築するのはやや不思議ではありますが、以下の意図があるのではないかなあと考えています。</p><ol><li>複数質問・候補との親和性: 各質問や候補に対応する特殊トークンの潜在表現を直接利用できるため、複数質問の並列処理や、A/B/Cのような回答ラベルに依存しない可変数の候補を扱いやすい。</li><li>分類器との親和性: 語彙logitをそのまま利用するのではなく、候補ごとの<code>&lt;/opt></code>と全候補を読んだ<code>&lt;decide></code>の潜在表現から、意思決定に適した比較方法自体を学習できる。</li></ol><p>分類器自体は比較的単純で、<code>&lt;decide></code>と各<code>&lt;/opt></code>の潜在表現をそれぞれ線形変換した後、その内積によって候補のスコアを計算します。</p><h2 id=まとめ>まとめ</h2><p>本エントリでは、Jev的なDecision Modelを実現する方式について、Direct Logit型とDecision Head型として整理しました。</p><p>調査から、単純に「文章を生成せず、候補の中から選択する」だけであれば、既存のLLMの次トークンlogitを利用することで比較的簡単に実現できることが改めて分かりました。
+並列回答についてもモデル側というよりは推論サーバー側の機構に移譲すれば良いと決めてしまえば、構成としてはかなり近づけられそうです。
+Jevの魅力の一つは、自然言語で幅広いタスクを記述でき、ある程度の精度でそのまま利用できる汎用性にあると思います。その観点では、ある程度大きなオープンウェイトの汎用モデルを推論サーバー上で効率よく動かす方向が実用的に思えました。</p><p>一方で、Jevらしい複数質問への並列回答の計算効率や、Confidenceまで含めて考えると途端に方式が複雑になることも確認できました。
+もちろん、利用量が十分に多くコストに見合うのであれば、Layaやkevのように用途に合わせた独自モデルを学習するのが最も良さそうです。一方、すべてのタスクごとにモデルやAPIを増やしていくのも運用上は大変かなと思います。その場合、モデル自体は共通化しつつ、利用側で<a href=https://github.com/sutro-sh/jev-align>jev-align</a>のように、実データや人間のフィードバックを使ってプロンプトを継続的に改善していく仕組みと組み合わせるのも面白そうです。</p><p>個人的には、Confidenceはもっと積極的に使われてもよい機能だと感じました。単に最も良い候補を選ぶだけでなく、「十分な確信がないので今回は採用しない」「人間に確認する」といった判断まで含められると、Decision Modelの使い道は広がるでしょう。このConfidenceを自前のモデルやDirect Logit型の仕組みでどう実現していくかは、今後も追跡していきたいと思います。</p><h2 id=おまけ>おまけ</h2><p>今回出てきたTransformerの内部表現やAttention、潜在表現についてもう少し理解したい場合は、以前作った以下の資料も参考になるかもしれません。よければご参照ください。</p><ul><li><a href=https://speakerdeck.com/monochromegane/fukuokago23-transformer>Transformerの仕組みに関する資料</a></li><li><a href=https://speakerdeck.com/monochromegane/inside-vector-search>ベクトル検索の理解に必要な概念の説明資料</a></li></ul><hr><p>本エントリは2026/09/20までに調べた内容を元に執筆しました。
+読まれた時点では、各方式もさらにアップデートされたり他の方式も登場しているかもしれないことにご留意ください。</p></div><footer class=tag><i class="fa fa-tags tag-icon"></i><ul><li><a class=tag-link href=/tags/llm>LLM</a></li></ul><div class=clear></div></footer></div></article><div class=social-btn><div><a href=http://b.hatena.ne.jp/entry/s/blog.monochromegane.com/blog/2026/09/21/jev/ class=hatena-bookmark-button data-hatena-bookmark-layout=basic-label-counter data-hatena-bookmark-lang=en title=このエントリーをはてなブックマークに追加><img src=https://b.st-hatena.com/images/entry-button/button-only@2x.png alt=このエントリーをはてなブックマークに追加 width=20 height=20 style=border:none></a><script type=text/javascript src=https://b.st-hatena.com/js/bookmark_button.js async></script></div><div><a href=https://twitter.com/share class=twitter-share-button data-via=monochromegane>Tweet</a>
+<script>!function(e,t,n){var s,o=e.getElementsByTagName(t)[0],i=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(s=e.createElement(t),s.id=n,s.src=i+"://platform.twitter.com/widgets.js",o.parentNode.insertBefore(s,o))}(document,"script","twitter-wjs")</script></div></div></div><footer class=footer><div class=author></div><p class=author-name><a href=https://twitter.com/monochromegane target=_blank>@monochromegane</a></p><p>monochromegane (モノクロめがね) と申します。</p><p>最近はもっぱらGoに夢中です。普段は研究開発をやっています。</p><ul class=social><li><a href=https://twitter.com/monochromegane target=_blank><i class="fa fa-twitter"></i></a></li><li><a href=https://github.com/monochromegane target=_blank><i class="fa fa-github"></i></a></li><li><a href=/index.xml target=_blank><i class="fa fa-rss"></i></a></li></ul><p class=copyright><small>&copy; monochromegane <span>Powered by <a href=http://gohugo.io target=_blank>Hugo</a>, Designed by <a href=https://twitter.com/keita_kawamoto target=_blank>&copy;keita_kawamoto</a></span></small></p></footer><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/go.min.js></script><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/vim.min.js></script><script>hljs.initHighlightingOnLoad()</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,i=t.createElement(n),a=t.getElementsByTagName(n)[0],i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-38374674-1","auto"),ga("send","pageview")</script></body></html>
